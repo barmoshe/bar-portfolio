@@ -93,6 +93,24 @@
   }
 }
 
+/* Mobile-first responsive design improvements */
+@media (max-width: 640px) {
+  .section-heading {
+    font-size: 1.75rem !important;
+    margin-bottom: 1rem;
+  }
+  
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  section {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
+
 /* Custom hero container class */
 .hero-container {
   @apply container mx-auto px-4 relative z-10;
@@ -100,19 +118,19 @@
 
 @media (min-width: 768px) {
   .hero-container {
-    padding-left: 4rem;
-    padding-right: 4rem;
+    @apply px-6;
   }
 }
 
+/* Animation for mobile menu */
 .animate-in {
-  animation: animateIn 0.3s ease-in-out;
+  animation: animateIn 0.3s ease forwards;
 }
 
 @keyframes animateIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;

@@ -120,46 +120,46 @@ export default function Projects() {
           className="w-full"
         >
           <div className="flex justify-center mb-8">
-            <TabsList className="grid grid-cols-3 md:grid-cols-7 gap-2 p-1 bg-secondary/50 backdrop-blur-sm">
+            <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-2 p-1 bg-secondary/50 backdrop-blur-sm overflow-x-auto max-w-full">
               <TabsTrigger
                 value="all"
-                className="data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+                className="data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all text-xs sm:text-sm"
               >
                 All
               </TabsTrigger>
               <TabsTrigger
                 value="backend"
-                className="data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+                className="data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all text-xs sm:text-sm"
               >
                 Backend
               </TabsTrigger>
               <TabsTrigger
                 value="devops"
-                className="data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+                className="data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all text-xs sm:text-sm"
               >
                 DevOps
               </TabsTrigger>
               <TabsTrigger
                 value="fullstack"
-                className="data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+                className="data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all text-xs sm:text-sm"
               >
                 Full Stack
               </TabsTrigger>
               <TabsTrigger
                 value="ml"
-                className="data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+                className="data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all text-xs sm:text-sm"
               >
                 ML
               </TabsTrigger>
               <TabsTrigger
                 value="hardware"
-                className="data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+                className="data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all text-xs sm:text-sm"
               >
                 Hardware
               </TabsTrigger>
               <TabsTrigger
                 value="audio"
-                className="data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+                className="data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all text-xs sm:text-sm"
               >
                 Audio
               </TabsTrigger>
@@ -167,7 +167,7 @@ export default function Projects() {
           </div>
 
           <TabsContent value={activeTab} className="mt-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
               {filteredProjects.map((project, index) => (
                 <motion.div
                   key={project.id}

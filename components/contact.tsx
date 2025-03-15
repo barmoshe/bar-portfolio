@@ -57,77 +57,77 @@ export default function Contact() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: inView ? 1 : 0, x: inView ? 0 : -20 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <Card className="h-full border-border/50 hover-card-effect">
-              <CardContent className="p-6">
-                <h3 className="text-2xl font-semibold mb-6 font-poppins">
+              <CardContent className="p-4 sm:p-6">
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 font-poppins">
                   Contact Information
                 </h3>
 
-                <div className="space-y-6">
-                  <div className="flex items-center gap-4 group">
-                    <div className="bg-primary/10 p-3 rounded-full transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110">
-                      <Mail className="h-6 w-6 text-primary" />
+                <div className="space-y-4 sm:space-y-6">
+                  <div className="flex items-center gap-3 sm:gap-4 group">
+                    <div className="bg-primary/10 p-2 sm:p-3 rounded-full transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110">
+                      <Mail className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Email</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">Email</p>
                       <a
                         href="mailto:1barmoshe1@gmail.com"
-                        className="font-medium hover:text-primary transition-colors underline-effect"
+                        className="text-sm sm:text-base font-medium hover:text-primary transition-colors underline-effect"
                       >
                         1barmoshe1@gmail.com
                       </a>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 group">
-                    <div className="bg-primary/10 p-3 rounded-full transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110">
-                      <Phone className="h-6 w-6 text-primary" />
+                  <div className="flex items-center gap-3 sm:gap-4 group">
+                    <div className="bg-primary/10 p-2 sm:p-3 rounded-full transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110">
+                      <Phone className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Phone</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">Phone</p>
                       <a
                         href="tel:+972546561465"
-                        className="font-medium hover:text-primary transition-colors underline-effect"
+                        className="text-sm sm:text-base font-medium hover:text-primary transition-colors underline-effect"
                       >
                         +972-54-656-1465
                       </a>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 group">
-                    <div className="bg-primary/10 p-3 rounded-full transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110">
-                      <Linkedin className="h-6 w-6 text-primary" />
+                  <div className="flex items-center gap-3 sm:gap-4 group">
+                    <div className="bg-primary/10 p-2 sm:p-3 rounded-full transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110">
+                      <Linkedin className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">LinkedIn</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">LinkedIn</p>
                       <a
                         href="https://linkedin.com/in/barmoshe"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-medium hover:text-primary transition-colors underline-effect"
+                        className="text-sm sm:text-base font-medium hover:text-primary transition-colors underline-effect"
                       >
                         linkedin.com/in/barmoshe
                       </a>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 group">
-                    <div className="bg-primary/10 p-3 rounded-full transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110">
-                      <Github className="h-6 w-6 text-primary" />
+                  <div className="flex items-center gap-3 sm:gap-4 group">
+                    <div className="bg-primary/10 p-2 sm:p-3 rounded-full transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110">
+                      <Github className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">GitHub</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">GitHub</p>
                       <a
                         href="https://github.com/barmoshe"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-medium hover:text-primary transition-colors underline-effect"
+                        className="text-sm sm:text-base font-medium hover:text-primary transition-colors underline-effect"
                       >
                         github.com/barmoshe
                       </a>
@@ -144,26 +144,26 @@ export default function Contact() {
             transition={{ duration: 0.5, delay: 0.4 }}
           >
             <Card className="border-border/50 hover-card-effect">
-              <CardContent className="p-6">
-                <h3 className="text-2xl font-semibold mb-6 font-poppins">
+              <CardContent className="p-4 sm:p-6">
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 font-poppins">
                   Send a Message
                 </h3>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name" className="text-sm font-medium">
+                <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <div className="space-y-1 sm:space-y-2">
+                      <Label htmlFor="name" className="text-xs sm:text-sm font-medium">
                         Name
                       </Label>
                       <Input
                         id="name"
                         placeholder="Your name"
                         required
-                        className="transition-all duration-300 focus:border-primary/50"
+                        className="text-sm sm:text-base transition-all duration-300 focus:border-primary/50"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-sm font-medium">
+                    <div className="space-y-1 sm:space-y-2">
+                      <Label htmlFor="email" className="text-xs sm:text-sm font-medium">
                         Email
                       </Label>
                       <Input
@@ -171,25 +171,25 @@ export default function Contact() {
                         type="email"
                         placeholder="Your email"
                         required
-                        className="transition-all duration-300 focus:border-primary/50"
+                        className="text-sm sm:text-base transition-all duration-300 focus:border-primary/50"
                       />
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="subject" className="text-sm font-medium">
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="subject" className="text-xs sm:text-sm font-medium">
                       Subject
                     </Label>
                     <Input
                       id="subject"
                       placeholder="Subject"
                       required
-                      className="transition-all duration-300 focus:border-primary/50"
+                      className="text-sm sm:text-base transition-all duration-300 focus:border-primary/50"
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="message" className="text-sm font-medium">
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="message" className="text-xs sm:text-sm font-medium">
                       Message
                     </Label>
                     <Textarea
@@ -197,7 +197,7 @@ export default function Contact() {
                       placeholder="Your message"
                       rows={5}
                       required
-                      className="resize-none transition-all duration-300 focus:border-primary/50"
+                      className="text-sm sm:text-base resize-none transition-all duration-300 focus:border-primary/50"
                     />
                   </div>
 

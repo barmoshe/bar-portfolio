@@ -115,7 +115,7 @@ export default function Navbar() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-all duration-300 relative
+                  className={`block px-4 py-3 rounded-md text-base font-medium transition-all duration-300 relative
                     ${
                       isActive
                         ? "text-primary bg-primary/5"
