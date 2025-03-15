@@ -35,14 +35,14 @@ export default function ProjectCard({
       transition={{ duration: 0.5, delay: index * 0.1 }}
     >
       <Card className="h-full project-card overflow-hidden border-border/50 hover:border-primary/20">
-        <div className="relative h-48 overflow-hidden emoji-container">
+        <div className="relative h-40 sm:h-48 overflow-hidden emoji-container">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5"></div>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,hsl(var(--primary)/0.2),transparent_70%)]"></div>
           <div className="emoji-display">
             {categoryEmojis[project.category] || categoryEmojis.default}
           </div>
           {/* Category badge */}
-          <div className="absolute top-3 right-3">
+          <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
             <Badge
               variant="outline"
               className="bg-background/80 backdrop-blur-sm border-primary/20 text-xs capitalize"
@@ -51,16 +51,16 @@ export default function ProjectCard({
             </Badge>
           </div>
         </div>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-xl font-bold line-clamp-1">
+        <CardHeader className="pb-1 sm:pb-2 px-3 sm:px-4 pt-3 sm:pt-4">
+          <CardTitle className="text-lg sm:text-xl font-bold line-clamp-1">
             {project.title}
           </CardTitle>
-          <CardDescription className="line-clamp-2 text-muted-foreground/80">
+          <CardDescription className="line-clamp-2 text-muted-foreground/80 text-sm">
             {project.description}
           </CardDescription>
         </CardHeader>
-        <CardContent className="pb-2">
-          <div className="flex flex-wrap gap-2 mt-2">
+        <CardContent className="pb-1 sm:pb-2 px-3 sm:px-4">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-1 sm:mt-2">
             {project.tags.slice(0, 3).map((tag) => (
               <Badge
                 key={tag}
@@ -77,28 +77,28 @@ export default function ProjectCard({
             )}
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between pt-2">
+        <CardFooter className="flex justify-between pt-1 sm:pt-2 px-3 sm:px-4 pb-3 sm:pb-4">
           {project.github && (
             <Button
               asChild
               variant="outline"
               size="sm"
-              className="rounded-full text-xs"
+              className="rounded-full text-xs h-8 sm:h-9"
             >
               <a
                 href={project.github}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Github className="mr-1 h-3.5 w-3.5" />
+                <Github className="mr-1 h-3 sm:h-3.5 w-3 sm:w-3.5" />
                 Code
               </a>
             </Button>
           )}
           {project.demo && (
-            <Button asChild size="sm" className="rounded-full text-xs">
+            <Button asChild size="sm" className="rounded-full text-xs h-8 sm:h-9">
               <a href={project.demo} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="mr-1 h-3.5 w-3.5" />
+                <ExternalLink className="mr-1 h-3 sm:h-3.5 w-3 sm:w-3.5" />
                 Demo
               </a>
             </Button>

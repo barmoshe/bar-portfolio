@@ -46,18 +46,18 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen w-full flex items-center justify-center py-16 md:py-20 overflow-hidden"
+      className="relative min-h-screen w-full flex items-center justify-center py-10 md:py-16 lg:py-20 overflow-hidden"
     >
       {/* Background Component */}
       <HeroBackground />
 
-      <motion.div className="hero-container pt-10 md:pt-16" style={{ opacity }}>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center">
+      <motion.div className="hero-container pt-6 md:pt-10 lg:pt-16 px-4 md:px-6 w-full" style={{ opacity }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex flex-col space-y-8 mx-auto lg:mx-0 max-w-xl"
+            className="flex flex-col space-y-6 md:space-y-8 mx-auto lg:mx-0 max-w-xl text-center lg:text-left"
           >
             <div>
               {/* Status Badge */}
@@ -65,7 +65,7 @@ export default function Hero() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="mb-6"
+                className="mb-4 md:mb-6 flex justify-center lg:justify-start"
               >
                 <StatusBadge text="Available for hire" />
               </motion.div>
@@ -81,7 +81,7 @@ export default function Hero() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.7, delay: 0.8 }}
-                className="flex flex-col sm:flex-row sm:items-center text-xl text-muted-foreground max-w-lg mb-4"
+                className="flex flex-col sm:flex-row sm:items-center text-base md:text-xl text-muted-foreground max-w-lg mb-4 justify-center lg:justify-start"
               >
                 <span className="mr-2 mb-1 sm:mb-0">I specialize in</span>
                 {isClient && <Typewriter texts={typingTexts} />}
@@ -96,6 +96,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 1.2 }}
+              className="flex flex-col sm:flex-row sm:items-center justify-center lg:justify-start gap-3 sm:gap-4"
             >
               <ActionButtons
                 primaryHref="#contact"
@@ -110,13 +111,18 @@ export default function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.7, delay: 1.4 }}
+              className="flex justify-center lg:justify-start"
             >
               <SocialLinks />
             </motion.div>
           </motion.div>
 
           {/* Profile Image */}
-          {isClient && <ProfileImage imageSrc="/bar.jpg" altText="Bar Moshe" />}
+          {isClient && 
+            <div className="flex justify-center lg:justify-start">
+              <ProfileImage imageSrc="/bar.jpg" altText="Bar Moshe" />
+            </div>
+          }
         </div>
 
         {/* Scroll Indicator */}

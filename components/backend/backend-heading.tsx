@@ -5,14 +5,19 @@ import { Server } from "lucide-react";
 
 interface BackendHeadingProps {
   title: string;
-  subtitle?: string;
+  subtitle?: React.ReactNode;
   apiEndpoint?: string;
   inView: boolean;
 }
 
 export default function BackendHeading({
-  title = "Backend API Playground",
-  subtitle = "Where API magic meets your fingertips. Tinker with JSON and watch the fun unfold!",
+  title = "Get Ready to Play with My MongoDB Backend API!",
+  subtitle = (
+    <>
+      Dive into this fun demo of my backend API powered by MongoDB!<br />
+      Let's explore how easy it is to juggle and tweak your data like a pro.
+    </>
+  ),
   apiEndpoint = "/api/data",
   inView,
 }: BackendHeadingProps) {
