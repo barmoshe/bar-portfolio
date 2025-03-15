@@ -1,0 +1,301 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root,
+  [data-theme="blue"] {
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 221.2 83.2% 53.3%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+  }
+
+  [data-theme="purple"] {
+    --background: 250 40% 98%;
+    --foreground: 250 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 250 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 250 84% 4.9%;
+    --primary: 250 83.2% 53.3%;
+    --primary-foreground: 250 40% 98%;
+    --secondary: 250 40% 96.1%;
+    --secondary-foreground: 250 47.4% 11.2%;
+    --muted: 250 40% 96.1%;
+    --muted-foreground: 250 16.3% 46.9%;
+    --accent: 250 83.2% 53.3%;
+    --accent-foreground: 250 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 250 31.8% 91.4%;
+    --input: 250 31.8% 91.4%;
+    --ring: 250 83.2% 53.3%;
+  }
+
+  [data-theme="green"] {
+    --background: 150 40% 98%;
+    --foreground: 150 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 150 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 150 84% 4.9%;
+    --primary: 150 83.2% 43.3%;
+    --primary-foreground: 150 40% 98%;
+    --secondary: 150 40% 96.1%;
+    --secondary-foreground: 150 47.4% 11.2%;
+    --muted: 150 40% 96.1%;
+    --muted-foreground: 150 16.3% 46.9%;
+    --accent: 150 83.2% 43.3%;
+    --accent-foreground: 150 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 150 31.8% 91.4%;
+    --input: 150 31.8% 91.4%;
+    --ring: 150 83.2% 43.3%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    scroll-behavior: smooth;
+  }
+  ::selection {
+    @apply bg-primary/20 text-primary;
+  }
+}
+
+/* Custom padding for hero section */
+@media (min-width: 768px) {
+  #home .md\:px-6 {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+/* Custom hero container class */
+.hero-container {
+  @apply container mx-auto px-4 relative z-10;
+}
+
+@media (min-width: 768px) {
+  .hero-container {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+.animate-in {
+  animation: animateIn 0.3s ease-in-out;
+}
+
+@keyframes animateIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section-heading {
+  @apply text-3xl md:text-4xl font-bold mb-6 font-poppins relative inline-block;
+}
+
+.section-heading::after {
+  content: "";
+  @apply absolute bottom-[-8px] left-0 w-1/2 h-1 bg-primary rounded-full transition-all duration-300;
+}
+
+.section-heading:hover::after {
+  @apply w-full;
+}
+
+.project-card {
+  @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border border-border/50;
+}
+
+.timeline-item {
+  @apply relative pl-8 pb-8 border-l border-muted-foreground/30 last:border-0;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 0;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 9999px;
+  background-color: hsl(var(--primary));
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.timeline-item:hover::before {
+  transform: scale(1.2);
+  box-shadow: 0 0 12px hsl(var(--primary));
+}
+
+.skill-tag {
+  @apply px-3 py-1 rounded-full text-sm font-medium bg-secondary text-secondary-foreground transition-all hover:bg-primary hover:text-primary-foreground hover:scale-105;
+}
+
+.theme-selector {
+  @apply fixed bottom-6 right-6 z-50 bg-card/80 backdrop-blur-sm shadow-lg rounded-full p-2 flex gap-2 border border-border/50;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.theme-selector:hover {
+  transform: translateY(-5px);
+}
+
+.theme-option {
+  @apply w-10 h-10 rounded-full cursor-pointer transition-all duration-300 border-2 border-transparent;
+}
+
+.theme-option:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+.theme-option.active {
+  @apply border-foreground;
+}
+
+.theme-blue {
+  background: linear-gradient(
+    135deg,
+    hsl(221.2, 83.2%, 53.3%),
+    hsl(210, 40%, 96.1%)
+  );
+}
+
+.theme-purple {
+  background: linear-gradient(
+    135deg,
+    hsl(250, 83.2%, 53.3%),
+    hsl(250, 40%, 96.1%)
+  );
+}
+
+.theme-green {
+  background: linear-gradient(
+    135deg,
+    hsl(150, 83.2%, 43.3%),
+    hsl(150, 40%, 96.1%)
+  );
+}
+
+/* Emoji display styles */
+.emoji-container {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.emoji-display {
+  font-size: 5.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  transition: all 0.5s ease;
+}
+
+.project-card:hover .emoji-display {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Link hover effects */
+a {
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+a.underline-effect {
+  position: relative;
+}
+
+a.underline-effect::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: hsl(var(--primary));
+  transition: width 0.3s ease;
+}
+
+a.underline-effect:hover::after {
+  width: 100%;
+}
+
+/* Button hover effects */
+button,
+.button {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover,
+.button:hover {
+  transform: translateY(-2px);
+}
+
+button:active,
+.button:active {
+  transform: translateY(0);
+}
+
+/* Card hover effects */
+.hover-card-effect {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-card-effect:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Scroll animations */
+.scroll-fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.scroll-fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Input focus effects */
+input:focus,
+textarea:focus {
+  box-shadow: 0 0 0 2px hsl(var(--background)),
+    0 0 0 4px hsl(var(--primary) / 0.3);
+}

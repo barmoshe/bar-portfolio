@@ -1,0 +1,21 @@
+{
+  "user": {
+    "name": "Bar Moshe!",
+    "role": "Software Developer & Cloud Engineer",
+    "skills": [
+      "Backend",
+      "DevOps",
+      "Cloud",
+      "TypeScript",
+      "Node.js",
+      "React"
+    ]
+  },
+  "projects": [
+    {
+      "id": 122,
+      "name": "Portfolio Site",
+      "status": "Completed"
+    }
+  ]
+}
