@@ -51,7 +51,7 @@ export default function Hero() {
       {/* Background Component */}
       <HeroBackground />
 
-      <motion.div className="hero-container pt-6 md:pt-10 lg:pt-16 px-4 md:px-6 w-full" style={{ opacity }}>
+      <motion.div className="container-full w-full" style={{ opacity }}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

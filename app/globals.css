@@ -356,3 +356,24 @@ textarea:focus {
     padding-right: env(safe-area-inset-right);
   }
 }
+
+/* Full width container for sections */
+.container-full {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-full {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Adjust the default container to be more consistent */
+.container {
+  max-width: 1400px !important;
+}

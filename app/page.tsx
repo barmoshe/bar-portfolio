@@ -9,7 +9,7 @@ import Backend from "@/components/backend";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col w-full">
       <Hero />
       <About />
       <Projects />
