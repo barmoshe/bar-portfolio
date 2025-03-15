@@ -317,3 +317,42 @@ textarea:focus {
   box-shadow: 0 0 0 2px hsl(var(--background)),
     0 0 0 4px hsl(var(--primary) / 0.3);
 }
+
+/* Add responsive viewport improvements */
+@media (max-width: 640px) {
+  html, body {
+    font-size: 14px;
+  }
+  
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Improved spacing for mobile */
+@media (max-width: 768px) {
+  section {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
+
+/* Add responsive touch improvements */
+@media (max-width: 640px) {
+  button, 
+  a[role="button"],
+  .interactive-element {
+    min-height: 2.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+}
+
+/* Optimize for notched phones */
+@media (max-width: 640px) {
+  .safe-area-inset {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
