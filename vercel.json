@@ -25,7 +25,7 @@
   "builds": [
     {
       "src": "package.json",
-      "use": "@vercel/node",
+      "use": "@vercel/next",
       "config": {
         "installCommand": "pnpm install --no-frozen-lockfile"
       }
