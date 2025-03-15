@@ -1,8 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCollection } from "@/lib/mongodb";
+import { ObjectId } from "mongodb";
+
+// Define our data structure
+interface UserData {
+  name: string;
+  role: string;
+  skills: string[];
+}
+
+interface Project {
+  id: number;
+  name: string;
+  status: string;
+}
+
+interface PortfolioData {
+  user: UserData;
+  projects: Project[];
+}
 
 // Default data structure
-const defaultData = {
+const defaultData: PortfolioData = {
   user: {
     name: "Bar Moshe",
     role: "Software Developer & DevOps Enthusiast",
@@ -17,22 +36,29 @@ export async function GET() {
     // Get the portfolio data collection
     const collection = await getCollection('portfolioData');
     
-    // Find the data document (we'll use a simple approach with a single document)
-    let data = await collection.findOne({ _id: 'main-data' });
+    // Use a string identifier that's consistent
+    const dataId = 'main-data';
+    
+    // Find the data document
+    let data = await collection.findOne({ identifier: dataId });
     
     // If no data exists yet, initialize with default data
     if (!data) {
       await collection.insertOne({ 
-        _id: 'main-data',
+        identifier: dataId,
         ...defaultData
       });
-      data = await collection.findOne({ _id: 'main-data' });
+      data = await collection.findOne({ identifier: dataId });
     }
     
     // Remove MongoDB specific fields from the response
-    const { _id, ...cleanData } = data || defaultData;
+    if (data) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { _id, identifier, ...cleanData } = data;
+      return NextResponse.json(cleanData);
+    }
     
-    return NextResponse.json(cleanData);
+    return NextResponse.json(defaultData);
   } catch (error) {
     console.error("Error in GET handler:", error);
     return NextResponse.json(
@@ -55,10 +81,13 @@ export async function POST(request: NextRequest) {
     // Get the portfolio data collection
     const collection = await getCollection('portfolioData');
     
+    // Use a string identifier that's consistent
+    const dataId = 'main-data';
+    
     // Update the existing document or create if it doesn't exist
     const result = await collection.updateOne(
-      { _id: 'main-data' },
-      { $set: data },
+      { identifier: dataId },
+      { $set: { ...data, identifier: dataId } },
       { upsert: true }
     );
 
