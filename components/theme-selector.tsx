@@ -3,67 +3,39 @@
 import { useTheme } from "@/contexts/theme-context"
 import { motion } from "framer-motion"
 import { Palette } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 export function ThemeSelector() {
   const { theme, setTheme } = useTheme()
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleOpen = () => setIsOpen(!isOpen)
-  
-  // Close the theme selector when clicking outside
-  useEffect(() => {
-    if (!isOpen) return
-    
-    const handleClickOutside = () => setIsOpen(false)
-    
-    document.addEventListener('click', handleClickOutside)
-    return () => document.removeEventListener('click', handleClickOutside)
-  }, [isOpen])
 
   return (
-    <div className="theme-selector fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40">
-      <motion.button
-        onClick={(e) => {
-          e.stopPropagation()
-          toggleOpen()
-        }}
-        className="w-10 h-10 rounded-full flex items-center justify-center bg-primary text-primary-foreground shadow-lg"
+    <div className="theme-selector">
+      <button
+        onClick={toggleOpen}
+        className="w-10 h-10 rounded-full flex items-center justify-center bg-primary text-primary-foreground"
         aria-label="Toggle theme selector"
-        whileTap={{ scale: 0.95 }}
       >
-        <Palette size={18} />
-      </motion.button>
+        <Palette size={20} />
+      </button>
 
       {isOpen && (
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          className="absolute bottom-12 right-0 flex flex-col sm:flex-row gap-2 p-2 bg-background rounded-lg shadow-lg border border-border/50"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex gap-2">
           <button
-            onClick={() => {
-              setTheme("blue")
-              setIsOpen(false)
-            }}
-            className={`theme-option theme-blue w-8 h-8 rounded-full ${theme === "blue" ? "ring-2 ring-primary ring-offset-2" : ""}`}
+            onClick={() => setTheme("blue")}
+            className={`theme-option theme-blue ${theme === "blue" ? "active" : ""}`}
             aria-label="Blue theme"
           />
           <button
-            onClick={() => {
-              setTheme("purple")
-              setIsOpen(false)
-            }}
-            className={`theme-option theme-purple w-8 h-8 rounded-full ${theme === "purple" ? "ring-2 ring-primary ring-offset-2" : ""}`}
+            onClick={() => setTheme("purple")}
+            className={`theme-option theme-purple ${theme === "purple" ? "active" : ""}`}
             aria-label="Purple theme"
           />
           <button
-            onClick={() => {
-              setTheme("green")
-              setIsOpen(false)
-            }}
-            className={`theme-option theme-green w-8 h-8 rounded-full ${theme === "green" ? "ring-2 ring-primary ring-offset-2" : ""}`}
+            onClick={() => setTheme("green")}
+            className={`theme-option theme-green ${theme === "green" ? "active" : ""}`}
             aria-label="Green theme"
           />
         </motion.div>

@@ -23,13 +23,6 @@ export const metadata: Metadata = {
   description:
     "Portfolio of Bar Moshe - Software Developer and DevOps Enthusiast skilled in building scalable applications and cloud solutions.",
   generator: "v0.dev",
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-    viewportFit: 'cover',
-  },
 };
 
 export default function RootLayout({
@@ -38,8 +31,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body className={`${inter.variable} ${poppins.variable} font-sans overflow-x-hidden`}>
+    <html lang="en">
+      <body className={`${inter.variable} ${poppins.variable} font-sans`}>
         <ThemeProvider defaultTheme="blue">
           <div className="flex min-h-screen flex-col">
             <Navbar />

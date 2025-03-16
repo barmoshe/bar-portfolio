@@ -63,12 +63,12 @@ export default function ContactForm({
       transition={{ duration: 0.5, delay: 0.4 }}
     >
       <Card className="border-border/50 hover-card-effect">
-        <CardContent className="p-4 sm:p-5 md:p-6">
-          <h3 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 font-poppins">{title}</h3>
+        <CardContent className="p-6">
+          <h3 className="text-2xl font-semibold mb-6 font-poppins">{title}</h3>
 
-          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-              <div className="space-y-1.5 sm:space-y-2">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
                 <Label htmlFor="name" className="text-sm font-medium">
                   Name
                 </Label>
@@ -77,10 +77,10 @@ export default function ContactForm({
                   name="name"
                   placeholder="Your name"
                   required
-                  className="transition-all duration-300 focus:border-primary/50 h-9 sm:h-10"
+                  className="transition-all duration-300 focus:border-primary/50"
                 />
               </div>
-              <div className="space-y-1.5 sm:space-y-2">
+              <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium">
                   Email
                 </Label>
@@ -90,12 +90,12 @@ export default function ContactForm({
                   type="email"
                   placeholder="Your email"
                   required
-                  className="transition-all duration-300 focus:border-primary/50 h-9 sm:h-10"
+                  className="transition-all duration-300 focus:border-primary/50"
                 />
               </div>
             </div>
 
-            <div className="space-y-1.5 sm:space-y-2">
+            <div className="space-y-2">
               <Label htmlFor="subject" className="text-sm font-medium">
                 Subject
               </Label>
@@ -104,11 +104,11 @@ export default function ContactForm({
                 name="subject"
                 placeholder="Subject"
                 required
-                className="transition-all duration-300 focus:border-primary/50 h-9 sm:h-10"
+                className="transition-all duration-300 focus:border-primary/50"
               />
             </div>
 
-            <div className="space-y-1.5 sm:space-y-2">
+            <div className="space-y-2">
               <Label htmlFor="message" className="text-sm font-medium">
                 Message
               </Label>
@@ -116,15 +116,15 @@ export default function ContactForm({
                 id="message"
                 name="message"
                 placeholder="Your message"
-                rows={4}
+                rows={5}
                 required
-                className="resize-none transition-all duration-300 focus:border-primary/50 min-h-[100px] sm:min-h-[120px]"
+                className="resize-none transition-all duration-300 focus:border-primary/50"
               />
             </div>
 
             <Button
               type="submit"
-              className="w-full rounded-full transition-all duration-300 h-10 sm:h-11 mt-2"
+              className="w-full rounded-full transition-all duration-300"
               disabled={isSubmitting}
             >
               {isSubmitting ? (

@@ -15,7 +15,7 @@ export default function About() {
 
   return (
     <section id="about" ref={ref} className="py-20 bg-secondary/30">
-      <div className="container-full">
+      <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
