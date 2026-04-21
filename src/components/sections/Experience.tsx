@@ -126,14 +126,16 @@ export default function Experience() {
       mm.add(MOBILE_QUERY, () => {
         cards.forEach((el, i) => {
           const target = targetRotations[i] ?? 0;
-          gsap.set(el, { opacity: 0, y: 24, rotate: target, scale: 0.97 });
+          const startRotate = target + (i % 2 === 0 ? -4 : 4);
+          gsap.set(el, { opacity: 0, y: 50, rotate: startRotate, scale: 0.92 });
           gsap.to(el, {
             opacity: 1,
             y: 0,
+            rotate: target,
             scale: 1,
-            duration: 0.55,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 90%' },
+            duration: 0.75,
+            ease: 'back.out(1.3)',
+            scrollTrigger: { trigger: el, start: 'top 92%' },
           });
         });
       });

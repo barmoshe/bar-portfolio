@@ -100,26 +100,34 @@ export default function Repos({ onOpen }: Props) {
       });
 
       mm.add(MOBILE_QUERY, () => {
-        cards.forEach((el) => {
+        cards.forEach((el, i) => {
           const num = el.querySelector<HTMLElement>('.num');
-          gsap.set(el, { opacity: 0, y: 24, scale: 0.98 });
-          if (num) gsap.set(num, { opacity: 0, scale: 0.6, rotate: 8 });
+          const xFrom = i % 2 === 0 ? -24 : 24;
+          gsap.set(el, { opacity: 0, x: xFrom, y: 50, scale: 0.92 });
+          if (num) gsap.set(num, { opacity: 0, scale: 0.4, rotate: -90 });
 
           const tl = gsap.timeline({
-            scrollTrigger: { trigger: el, start: 'top 90%' },
+            scrollTrigger: { trigger: el, start: 'top 92%' },
           });
           tl.to(el, {
             opacity: 1,
+            x: 0,
             y: 0,
             scale: 1,
-            duration: 0.55,
-            ease: 'power3.out',
+            duration: 0.7,
+            ease: 'back.out(1.4)',
           });
           if (num) {
             tl.to(
               num,
-              { opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(2.2)' },
-              '-=0.25',
+              {
+                opacity: 1,
+                scale: 1,
+                rotate: 8,
+                duration: 0.55,
+                ease: 'back.out(2.5)',
+              },
+              '-=0.4',
             );
           }
         });

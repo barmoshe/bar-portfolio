@@ -270,14 +270,17 @@ export default function Notes() {
       });
 
       mm.add(MOBILE_QUERY, () => {
-        cards.forEach((el) => {
-          gsap.set(el, { opacity: 0, y: 24 });
+        cards.forEach((el, i) => {
+          const xFrom = i % 2 === 0 ? -28 : 28;
+          gsap.set(el, { opacity: 0, x: xFrom, y: 45, scale: 0.92 });
           gsap.to(el, {
             opacity: 1,
+            x: 0,
             y: 0,
-            duration: 0.55,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 90%' },
+            scale: 1,
+            duration: 0.75,
+            ease: 'back.out(1.3)',
+            scrollTrigger: { trigger: el, start: 'top 92%' },
           });
         });
       });

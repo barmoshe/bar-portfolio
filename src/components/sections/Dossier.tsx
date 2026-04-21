@@ -46,13 +46,15 @@ export default function Dossier() {
 
       mm.add(MOBILE_QUERY, () => {
         if (!card) return;
-        gsap.set(card, { y: 24, opacity: 0 });
+        gsap.set(card, { y: 60, opacity: 0, scale: 0.92, rotate: -3 });
         gsap.to(card, {
           y: 0,
           opacity: 1,
-          duration: 0.8,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: root, start: 'top 85%' },
+          scale: 1,
+          rotate: -1.5,
+          duration: 0.85,
+          ease: 'back.out(1.4)',
+          scrollTrigger: { trigger: root, start: 'top 95%' },
         });
       });
 

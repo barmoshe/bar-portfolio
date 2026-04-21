@@ -151,7 +151,15 @@ const DESKTOP_SCATTER = [
   { x: -90, y: 70, r: -16 },
   { x: 160, y: 80, r: 20 },
 ];
-const MOBILE_RISE = { x: 0, y: 28, r: 0 };
+// Tighter scatter for mobile - alternating left/right for visible motion.
+const MOBILE_SCATTER = [
+  { x: -32, y: 50, r: -6 },
+  { x: 32, y: 55, r: 6 },
+  { x: -28, y: 60, r: -5 },
+  { x: 30, y: 50, r: 5 },
+  { x: -34, y: 55, r: -4 },
+  { x: 28, y: 60, r: 4 },
+];
 
 export default function Letter() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -230,25 +238,19 @@ export default function Letter() {
       });
 
       mm.add(MOBILE_QUERY, () => {
-        cards.forEach((el) => {
-          gsap.set(el, {
-            opacity: 0,
-            x: MOBILE_RISE.x,
-            y: MOBILE_RISE.y,
-            rotate: MOBILE_RISE.r,
-            scale: 0.96,
+        cards.forEach((el, i) => {
+          const s = MOBILE_SCATTER[i % MOBILE_SCATTER.length]!;
+          gsap.set(el, { opacity: 0, x: s.x, y: s.y, rotate: s.r, scale: 0.88 });
+          gsap.to(el, {
+            opacity: 1,
+            x: 0,
+            y: 0,
+            rotate: parseFloat(CARDS[i]?.rotate ?? '0deg'),
+            scale: 1,
+            duration: 0.75,
+            ease: 'back.out(1.4)',
+            scrollTrigger: { trigger: el, start: 'top 92%' },
           });
-        });
-        gsap.to(cards, {
-          opacity: 1,
-          x: 0,
-          y: 0,
-          rotate: (i) => parseFloat(CARDS[i]?.rotate ?? '0deg'),
-          scale: 1,
-          duration: 0.7,
-          stagger: 0.07,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: grid, start: 'top 88%' },
         });
       });
 

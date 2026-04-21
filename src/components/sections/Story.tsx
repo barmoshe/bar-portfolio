@@ -114,26 +114,28 @@ export default function Story() {
       });
 
       mm.add(MOBILE_QUERY, () => {
-        cols.forEach((col) => {
-          gsap.set(col, { opacity: 0, y: 18 });
+        cols.forEach((col, i) => {
+          const xFrom = i % 2 === 0 ? -24 : 24;
+          gsap.set(col, { opacity: 0, x: xFrom, y: 30 });
           gsap.to(col, {
             opacity: 1,
+            x: 0,
             y: 0,
-            duration: 0.55,
+            duration: 0.7,
             ease: 'power3.out',
-            scrollTrigger: { trigger: col, start: 'top 88%' },
+            scrollTrigger: { trigger: col, start: 'top 92%' },
           });
 
           const items = col.querySelectorAll<HTMLElement>('li');
           if (!items.length) return;
-          gsap.set(items, { opacity: 0, y: 10 });
+          gsap.set(items, { opacity: 0, x: xFrom * 0.5 });
           gsap.to(items, {
             opacity: 1,
-            y: 0,
-            duration: 0.45,
-            stagger: 0.07,
+            x: 0,
+            duration: 0.5,
+            stagger: 0.08,
             ease: 'power2.out',
-            scrollTrigger: { trigger: col, start: 'top 85%' },
+            scrollTrigger: { trigger: col, start: 'top 90%' },
           });
         });
       });
