@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { gsap } from '../lib/gsap';
 
 export type ThemePref = 'auto' | 'light' | 'dark';
 
@@ -35,22 +36,65 @@ function apply(pref: ThemePref, systemDark: boolean): void {
   document.documentElement.dataset.themePref = pref;
 }
 
+// Drive the full-screen .ink-wipe overlay as a single GSAP timeline. The disk
+// blooms from the toggle button, fully covers the page, then fades - the theme
+// class flip is folded into the same timeline so it happens while the page is
+// hidden under the wash. Reduced-motion short-circuits to an instant flip.
+function runInkWipe(originX: number, originY: number, flipTheme: () => void): void {
+  const wipe = document.querySelector<HTMLElement>('.ink-wipe');
+  const mq = matchMedia('(prefers-reduced-motion: reduce)');
+  if (!wipe || mq.matches) {
+    flipTheme();
+    return;
+  }
+
+  const x = `${originX}px`;
+  const y = `${originY}px`;
+  const tl = gsap.timeline();
+  tl.set(wipe, {
+    display: 'block',
+    opacity: 1,
+    clipPath: `circle(0% at ${x} ${y})`,
+  })
+    .to(wipe, {
+      clipPath: `circle(150% at ${x} ${y})`,
+      duration: 0.55,
+      ease: 'power3.inOut',
+    })
+    .call(flipTheme, [], '>-0.05')
+    .to(wipe, { opacity: 0, duration: 0.3 }, '>')
+    .set(wipe, { display: 'none', clearProps: 'clipPath,opacity' });
+}
+
 export function useTheme() {
   const [pref, setPref] = useState<ThemePref>(() => read());
+  const firstRunRef = useRef(true);
 
   useEffect(() => {
     const mq = matchMedia('(prefers-color-scheme: dark)');
-    apply(pref, mq.matches);
+    // Skip the initial apply - the pre-paint script in index.html already set
+    // the class before React mounted. Applying again would be a no-op but also
+    // risks fighting the wipe's own onStart flip.
+    if (firstRunRef.current) {
+      firstRunRef.current = false;
+      document.documentElement.dataset.themePref = pref;
+    } else {
+      apply(pref, mq.matches);
+    }
     if (pref !== 'auto') return;
     const onChange = () => apply('auto', mq.matches);
     mq.addEventListener('change', onChange);
     return () => mq.removeEventListener('change', onChange);
   }, [pref]);
 
-  const cycle = useCallback(() => {
+  const cycle = useCallback((origin?: { x: number; y: number }) => {
     setPref((cur) => {
       const next: ThemePref = cur === 'auto' ? 'light' : cur === 'light' ? 'dark' : 'auto';
       write(next);
+      if (origin) {
+        const systemDark = matchMedia('(prefers-color-scheme: dark)').matches;
+        runInkWipe(origin.x, origin.y, () => apply(next, systemDark));
+      }
       return next;
     });
   }, []);

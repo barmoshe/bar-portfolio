@@ -99,16 +99,47 @@ export default function Boot({ onGone }: Props) {
       onGone();
       return;
     }
+
+    // Choose the ink-burst origin from the Enter button if we have it, so the
+    // wash blooms out of whatever the user just clicked; fall back to centre.
+    const btn = root.querySelector<HTMLElement>('.enter');
+    const rootRect = root.getBoundingClientRect();
+    let xPct = 50;
+    let yPct = 50;
+    if (btn) {
+      const r = btn.getBoundingClientRect();
+      xPct = ((r.left + r.width / 2 - rootRect.left) / rootRect.width) * 100;
+      yPct = ((r.top + r.height / 2 - rootRect.top) / rootRect.height) * 100;
+    }
+
+    const feDisp = document.querySelector<SVGFEDisplacementMapElement>(
+      'feDisplacementMap[data-ink-bleed="boot"]',
+    );
+
     const mm = gsap.matchMedia();
     mm.add(FULL_MOTION_QUERY, () => {
-      gsap.to(root, {
-        opacity: 0,
-        y: -24,
-        scale: 0.98,
-        duration: 0.55,
-        ease: 'power2.inOut',
-        onComplete: onGone,
+      gsap.set(root, {
+        '--ink-r': '0%',
+        '--ink-x': `${xPct}%`,
+        '--ink-y': `${yPct}%`,
       });
+      root.classList.add('ink-exit');
+      if (feDisp) gsap.set(feDisp, { attr: { scale: 0 } });
+
+      const tl = gsap.timeline({ onComplete: onGone });
+      tl.to(root, {
+        '--ink-r': '140%',
+        duration: 0.9,
+        ease: 'power2.inOut',
+      });
+      if (feDisp) {
+        tl.to(
+          feDisp,
+          { attr: { scale: 40 }, duration: 0.9, ease: 'power2.in' },
+          '<',
+        );
+      }
+      tl.to(root, { opacity: 0, duration: 0.2 }, 0.7);
     });
     mm.add('(prefers-reduced-motion: reduce)', () => {
       gsap.to(root, { opacity: 0, duration: 0.15, onComplete: onGone });
@@ -138,6 +169,7 @@ export default function Boot({ onGone }: Props) {
           id="enter"
           type="button"
           aria-label="Enter portfolio"
+          data-magnet
           onClick={dismiss}
         >
           Enter the portfolio

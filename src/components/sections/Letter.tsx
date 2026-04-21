@@ -8,6 +8,7 @@ import {
   DESKTOP_QUERY,
   FULL_MOTION_QUERY,
 } from '../../lib/gsap';
+import { attachInkBleed } from '../../lib/inkBleed';
 
 type Card = {
   href: string;
@@ -178,6 +179,7 @@ export default function Letter() {
       const mm = gsap.matchMedia();
       mm.add(FULL_MOTION_QUERY, () => {
         let split: SplitText | null = null;
+        let cleanupBleed: (() => void) | null = null;
 
         if (headline) {
           split = new SplitText(headline, { type: 'chars,words' });
@@ -191,6 +193,7 @@ export default function Letter() {
             ease: 'back.out(1.8)',
             scrollTrigger: { trigger: headline, start: 'top 80%' },
           });
+          cleanupBleed = attachInkBleed(headline, 'letter');
         }
 
         if (dek) {
@@ -216,6 +219,7 @@ export default function Letter() {
 
         return () => {
           split?.revert();
+          cleanupBleed?.();
         };
       });
 

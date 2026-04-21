@@ -7,6 +7,7 @@ import {
   DESKTOP_QUERY,
   FULL_MOTION_QUERY,
 } from '../../lib/gsap';
+import { attachInkBleed } from '../../lib/inkBleed';
 
 const card = (rotate: string): CSSProperties => ({
   background: 'var(--paper)',
@@ -60,6 +61,7 @@ export default function Experience() {
       const mm = gsap.matchMedia();
       mm.add(FULL_MOTION_QUERY, () => {
         let split: SplitText | null = null;
+        let cleanupBleed: (() => void) | null = null;
 
         if (stamp) {
           gsap.set(stamp, { opacity: 0, rotate: 10, scale: 0.8 });
@@ -84,6 +86,7 @@ export default function Experience() {
             ease: 'power4.out',
             scrollTrigger: { trigger: headline, start: 'top 80%' },
           });
+          cleanupBleed = attachInkBleed(headline, 'experience');
         }
 
         if (dek) {
@@ -98,6 +101,7 @@ export default function Experience() {
 
         return () => {
           split?.revert();
+          cleanupBleed?.();
         };
       });
 

@@ -150,8 +150,8 @@
   a:hover{background:var(--yellow)}
   :focus-visible{outline:3px solid var(--green);outline-offset:2px}
 
-  .grain{position:fixed;inset:0;pointer-events:none;z-index:40;opacity:.4;mix-blend-mode:multiply;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.15  0 0 0 0 0.1  0 0 0 0.35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+  .grain{position:fixed;inset:0;pointer-events:none;z-index:40;opacity:.4;mix-blend-mode:multiply}
+  .grain svg{position:absolute;inset:0;width:100%;height:100%;display:block}
   .crease{display:none}
 
   .boot{position:fixed;inset:0;z-index:100;background:var(--paper);display:grid;place-items:center;
@@ -384,6 +384,100 @@
   .lb-body a{color:var(--green)}
   .lb-close{position:absolute;top:-16px;right:-16px;background:var(--green);color:var(--paper);width:40px;height:40px;border-radius:50%;font-family:var(--display);font-size:22px;box-shadow:3px 3px 0 var(--ink)}
   .lb-tags{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ink-soft);margin-top:10px;line-height:1.6}
+
+  /* ─── Ink motif ─────────────────────────────────────────────────────
+     Static skeletons only - every transform / opacity / filter-attr is
+     animated from GSAP (see components/InkCursor, InkDefs, hooks/useTheme,
+     components/Boot, TabBar, Lightbox, sections/Story).                     */
+
+  /* Shared: any element tagged data-magnet gives the InkCursor a pull target */
+  [data-magnet]{cursor:pointer}
+
+  /* Custom cursor overlay */
+  .ink-cursor{position:fixed;inset:0;pointer-events:none;z-index:90;opacity:0}
+  .ink-cursor svg{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
+  .ink-cursor-blob{fill:var(--ink);opacity:.55}
+  .ink-cursor-nib{fill:var(--ink)}
+  .ink-cursor-splash{fill:none;stroke:var(--ink);stroke-width:1.5;opacity:0}
+  html.dark .ink-cursor-blob{fill:var(--green);opacity:.5}
+  html.dark .ink-cursor-nib{fill:var(--green)}
+  html.dark .ink-cursor-splash{stroke:var(--green)}
+  html.ink-cursor-on,
+  html.ink-cursor-on body,
+  html.ink-cursor-on a,
+  html.ink-cursor-on button,
+  html.ink-cursor-on [role="button"],
+  html.ink-cursor-on [data-magnet]{cursor:none}
+
+  /* Full-screen overlay used by the theme toggle for the circular ink-wipe.
+     Background stays INK regardless of theme so the wash is always visible. */
+  .ink-wipe{position:fixed;inset:0;z-index:95;pointer-events:none;opacity:0;
+    background:var(--ink);display:none;clip-path:circle(0% at 50% 50%)}
+
+  /* Trail blot spawned behind the TabBar pill when active section changes */
+  .ink-drop{position:absolute;top:0;height:6px;background:var(--green);
+    border-radius:6px;pointer-events:none;transform:translateY(-2px);
+    filter:blur(.5px);opacity:0}
+
+  /* Paper-peel accent on hoverable cards. The pseudo is the visible peel; the
+     parent's own transform is untouched. Animated entirely through the
+     --peel-* custom props which each hover source tweens with GSAP, OR via
+     the fallback CSS on :hover where GSAP isn't wired (plain .clip article). */
+  .ink-peelable{--peel:0}
+  .ink-peelable::before{content:"";position:absolute;top:0;right:0;
+    width:clamp(24px,14%,48px);height:clamp(24px,14%,48px);
+    background:linear-gradient(225deg, var(--green) 0%, var(--green) 40%, transparent 70%);
+    clip-path:polygon(100% 0,0 0,100% 100%);
+    transform:translate(calc(var(--peel) * 6px),calc(var(--peel) * -6px)) rotate(calc(var(--peel) * -4deg));
+    transform-origin:100% 0;
+    opacity:calc(var(--peel) * .9);
+    pointer-events:none;
+    transition:transform .25s ease, opacity .25s ease;
+    z-index:4}
+  .ink-peelable::after{content:"";position:absolute;top:0;right:0;
+    width:clamp(24px,14%,48px);height:clamp(24px,14%,48px);
+    background:var(--paper);
+    clip-path:polygon(100% 0,0 0,100% 100%);
+    transform:translate(calc(var(--peel) * 4px),calc(var(--peel) * -4px));
+    opacity:calc(var(--peel) * 1);
+    box-shadow:-1px 1px 3px oklch(0 0 0 / .2);
+    pointer-events:none;
+    transition:transform .25s ease, opacity .25s ease;
+    z-index:5}
+  .clip article{position:relative}
+  .clip article.ink-peelable:hover{--peel:1}
+  html.dark .ink-peelable::after{background:oklch(0.26 0.02 260)}
+
+  /* Boot ink-mask exit: GSAP drives --ink-r and --ink-x/y from 0 → 140 */
+  .boot{--ink-r:0%;--ink-x:50%;--ink-y:50%}
+  .boot.ink-exit{
+    mask-image:radial-gradient(circle at var(--ink-x) var(--ink-y),
+      transparent 0%,
+      transparent calc(var(--ink-r) - 3%),
+      black calc(var(--ink-r) + 1%));
+    -webkit-mask-image:radial-gradient(circle at var(--ink-x) var(--ink-y),
+      transparent 0%,
+      transparent calc(var(--ink-r) - 3%),
+      black calc(var(--ink-r) + 1%));
+    transition:none}
+
+  /* Lightbox spotlight: GSAP writes --spot-x/y from pointermove + tweens --spot-size */
+  .lb-art{--spot-x:50%;--spot-y:50%;--spot-size:0px}
+  .lb-art::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+    background:radial-gradient(var(--spot-size) circle at var(--spot-x) var(--spot-y),
+      oklch(1 0 0 / .16),
+      oklch(1 0 0 / .06) 40%,
+      transparent 70%);
+    mix-blend-mode:screen}
+
+  /* Scroll-scrubbed handwriting timeline (Story section) */
+  .ink-timeline{position:absolute;left:12px;top:0;bottom:0;width:24px;pointer-events:none;z-index:0}
+  .ink-timeline svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+  .ink-timeline path{fill:none;stroke:var(--green);stroke-width:2;stroke-linecap:round;
+    stroke-linejoin:round}
+  .ink-timeline circle{fill:var(--green)}
+  @media (max-width:820px){.ink-timeline{left:4px;width:18px}}
+  @media (max-width:640px){.ink-timeline{display:none}}
 
   .shake{animation:shake .18s linear}
   @keyframes shake{

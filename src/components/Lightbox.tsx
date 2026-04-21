@@ -77,8 +77,26 @@ export default function Lightbox({ project, idx, sourceRect, onClose }: Props) {
       const close = panel.querySelector<HTMLElement>('.lb-close');
       const bodyKids = body ? Array.from(body.children) as HTMLElement[] : [];
 
+      let detachSpot: (() => void) | null = null;
       if (art) {
         gsap.fromTo(art, { opacity: 0 }, { opacity: 1, duration: 0.4, delay: 0.15 });
+
+        // Pointer-tracked spotlight on the art panel. quickSetters write the CSS
+        // custom props directly, no tween allocation per pointermove (rule 10).
+        const setX = gsap.quickSetter(art, '--spot-x', 'px');
+        const setY = gsap.quickSetter(art, '--spot-y', 'px');
+        const onPointer = (ev: PointerEvent) => {
+          const r = art.getBoundingClientRect();
+          setX(ev.clientX - r.left);
+          setY(ev.clientY - r.top);
+        };
+        art.addEventListener('pointermove', onPointer, { passive: true });
+        gsap.fromTo(
+          art,
+          { '--spot-size': '0px' },
+          { '--spot-size': '600px', duration: 0.55, ease: 'power3.out', delay: 0.2 },
+        );
+        detachSpot = () => art.removeEventListener('pointermove', onPointer);
       }
       if (bodyKids.length) {
         gsap.fromTo(
@@ -94,6 +112,10 @@ export default function Lightbox({ project, idx, sourceRect, onClose }: Props) {
           { opacity: 1, rotate: 0, scale: 1, duration: 0.4, ease: 'back.out(2)', delay: 0.3 },
         );
       }
+
+      return () => {
+        detachSpot?.();
+      };
     });
 
     return () => {
@@ -179,6 +201,7 @@ export default function Lightbox({ project, idx, sourceRect, onClose }: Props) {
           className="lb-close"
           id="lbClose"
           aria-label="Close"
+          data-magnet
           ref={closeBtnRef}
           onClick={onClose}
         >

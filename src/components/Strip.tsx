@@ -4,7 +4,7 @@ import { gsap, ScrollTrigger, useGSAP, FULL_MOTION_QUERY } from '../lib/gsap';
 type Props = {
   themeGlyph: string;
   themeLabel: string;
-  onThemeCycle: () => void;
+  onThemeCycle: (origin?: { x: number; y: number }) => void;
   onSkip: () => void;
   skipRemembered: boolean;
 };
@@ -65,7 +65,11 @@ export default function Strip({
         type="button"
         title={themeLabel}
         aria-label={themeLabel}
-        onClick={onThemeCycle}
+        data-magnet
+        onClick={(e) => {
+          const r = e.currentTarget.getBoundingClientRect();
+          onThemeCycle({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
+        }}
       >
         {themeGlyph}
       </button>

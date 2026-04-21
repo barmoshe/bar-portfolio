@@ -7,6 +7,7 @@ import {
   DESKTOP_QUERY,
   FULL_MOTION_QUERY,
 } from '../../lib/gsap';
+import { attachInkBleed } from '../../lib/inkBleed';
 
 const trackCard = (rotate: string): CSSProperties => ({
   position: 'relative',
@@ -69,6 +70,7 @@ export default function Music() {
       const mm = gsap.matchMedia();
       mm.add(FULL_MOTION_QUERY, () => {
         let split: SplitText | null = null;
+        let cleanupBleed: (() => void) | null = null;
 
         if (stamp) {
           gsap.set(stamp, { opacity: 0, rotate: 10, scale: 0.8 });
@@ -94,6 +96,7 @@ export default function Music() {
             ease: 'back.out(1.6)',
             scrollTrigger: { trigger: headline, start: 'top 80%' },
           });
+          cleanupBleed = attachInkBleed(headline, 'music');
         }
 
         if (dek) {
@@ -121,6 +124,7 @@ export default function Music() {
 
         return () => {
           split?.revert();
+          cleanupBleed?.();
         };
       });
 

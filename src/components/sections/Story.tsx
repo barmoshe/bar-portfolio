@@ -7,6 +7,8 @@ import {
   MOBILE_QUERY,
   DESKTOP_QUERY,
 } from '../../lib/gsap';
+import { attachInkBleed } from '../../lib/inkBleed';
+import InkTimeline from '../InkTimeline';
 
 export default function Story() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -26,6 +28,7 @@ export default function Story() {
       const mm = gsap.matchMedia();
       mm.add(FULL_MOTION_QUERY, () => {
         let split: SplitText | null = null;
+        let cleanupBleed: (() => void) | null = null;
 
         if (stamp) {
           gsap.set(stamp, { opacity: 0, rotate: 12, scale: 0.8 });
@@ -50,6 +53,7 @@ export default function Story() {
             ease: 'power4.out',
             scrollTrigger: { trigger: headline, start: 'top 80%' },
           });
+          cleanupBleed = attachInkBleed(headline, 'story');
         }
 
         if (dek) {
@@ -86,6 +90,7 @@ export default function Story() {
 
         return () => {
           split?.revert();
+          cleanupBleed?.();
         };
       });
 
@@ -147,6 +152,7 @@ export default function Story() {
 
   return (
     <article className="page" id="story" ref={rootRef}>
+      <InkTimeline triggerRef={rootRef} />
       <div className="folio">
         <b>02</b> // PATH
       </div>

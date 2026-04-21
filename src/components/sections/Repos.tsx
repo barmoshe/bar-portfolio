@@ -8,6 +8,7 @@ import {
   DESKTOP_QUERY,
   FULL_MOTION_QUERY,
 } from '../../lib/gsap';
+import { attachInkBleed } from '../../lib/inkBleed';
 
 type Props = { onOpen: (idx: number) => void };
 
@@ -29,6 +30,7 @@ export default function Repos({ onOpen }: Props) {
       const mm = gsap.matchMedia();
       mm.add(FULL_MOTION_QUERY, () => {
         let split: SplitText | null = null;
+        let cleanupBleed: (() => void) | null = null;
 
         if (stamp) {
           gsap.set(stamp, { opacity: 0, rotate: 10, scale: 0.8 });
@@ -53,6 +55,7 @@ export default function Repos({ onOpen }: Props) {
             ease: 'power4.out',
             scrollTrigger: { trigger: headline, start: 'top 80%' },
           });
+          cleanupBleed = attachInkBleed(headline, 'repos');
         }
 
         if (cta) {
@@ -67,6 +70,7 @@ export default function Repos({ onOpen }: Props) {
 
         return () => {
           split?.revert();
+          cleanupBleed?.();
         };
       });
 
@@ -151,8 +155,10 @@ export default function Repos({ onOpen }: Props) {
         {projects.map((p, i) => (
           <article
             key={p.name}
+            className="ink-peelable"
             data-idx={i}
             data-flip-id={`repo-${i}`}
+            data-magnet
             tabIndex={0}
             role="button"
             aria-label={p.name}

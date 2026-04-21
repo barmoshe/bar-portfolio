@@ -9,6 +9,7 @@ import {
   DESKTOP_QUERY,
   FULL_MOTION_QUERY,
 } from '../../lib/gsap';
+import { attachInkBleed } from '../../lib/inkBleed';
 
 export default function Dossier() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -93,6 +94,7 @@ export default function Dossier() {
           });
         }
 
+        let cleanupBleed: (() => void) | null = null;
         if (bioH1) {
           split = new SplitText(bioH1, { type: 'words,chars' });
           gsap.set(split.words, { opacity: 0, yPercent: 60, rotate: -4 });
@@ -105,6 +107,7 @@ export default function Dossier() {
             ease: 'back.out(1.6)',
             scrollTrigger: { trigger: bioH1, start: 'top 80%' },
           });
+          cleanupBleed = attachInkBleed(bioH1, 'dossier');
         }
 
         if (paras.length) {
@@ -122,6 +125,7 @@ export default function Dossier() {
 
         return () => {
           split?.revert();
+          cleanupBleed?.();
         };
       });
 

@@ -128,16 +128,31 @@ export default function HeroSlides() {
         const yTo = gsap.quickTo(root, '--tilt-y', { duration: 0.5, ease: 'power3.out' });
         gsap.set(root, { '--tilt-x': 0, '--tilt-y': 0 });
 
+        // Counter-parallax on the caption card: inverted sign, 0.2× magnitude.
+        // Reads the current caption node each move since the node re-keys on
+        // slide change, so quickTo is rebuilt per-move rather than cached.
+        const cap = captionRef.current;
+        const capX = cap
+          ? gsap.quickTo(cap, 'x', { duration: 0.6, ease: 'power3.out' })
+          : null;
+        const capY = cap
+          ? gsap.quickTo(cap, 'y', { duration: 0.6, ease: 'power3.out' })
+          : null;
+
         const onMove = (e: MouseEvent) => {
           const r = root.getBoundingClientRect();
           const nx = ((e.clientX - r.left) / r.width - 0.5) * 2;
           const ny = ((e.clientY - r.top) / r.height - 0.5) * 2;
           xTo(nx * 6);
           yTo(ny * 6);
+          capX?.(-nx * 1.2);
+          capY?.(-ny * 1.2);
         };
         const onLeave = () => {
           xTo(0);
           yTo(0);
+          capX?.(0);
+          capY?.(0);
         };
         root.addEventListener('mousemove', onMove);
         root.addEventListener('mouseleave', onLeave);

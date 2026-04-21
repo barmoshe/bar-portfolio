@@ -45,6 +45,7 @@ export default function HoverCard({
     y: (v: number) => void;
     shadowX: (v: number) => void;
     shadowY: (v: number) => void;
+    peel: (v: number) => void;
   } | null>(null);
 
   const restRotate = parseRotate(rest.transform as string);
@@ -64,8 +65,9 @@ export default function HoverCard({
           y: gsap.quickTo(el, 'y', { duration: 0.35, ease: 'power3.out' }),
           shadowX: gsap.quickTo(el, '--sh-x', { duration: 0.35, ease: 'power3.out' }),
           shadowY: gsap.quickTo(el, '--sh-y', { duration: 0.35, ease: 'power3.out' }),
+          peel: gsap.quickTo(el, '--peel', { duration: 0.4, ease: 'back.out(2)' }),
         };
-        gsap.set(el, { rotate: restRotate });
+        gsap.set(el, { rotate: restRotate, '--peel': 0 });
         if (restShadow) {
           gsap.set(el, {
             '--sh-x': `${restShadow.x}px`,
@@ -83,6 +85,7 @@ export default function HoverCard({
     if (!q) return;
     q.rotate(hoverRotate);
     q.y(hoverY);
+    q.peel(1);
     if (hoverShadow) {
       q.shadowX(hoverShadow.x);
       q.shadowY(hoverShadow.y);
@@ -93,6 +96,7 @@ export default function HoverCard({
     if (!q) return;
     q.rotate(restRotate);
     q.y(0);
+    q.peel(0);
     if (restShadow) {
       q.shadowX(restShadow.x);
       q.shadowY(restShadow.y);
@@ -117,6 +121,8 @@ export default function HoverCard({
       href={href}
       target={target}
       rel={rel}
+      className="ink-peelable"
+      data-magnet
       style={style}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
