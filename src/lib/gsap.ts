@@ -13,3 +13,8 @@ export { gsap, ScrollTrigger, SplitText, Flip, useGSAP };
 
 export const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 export const FULL_MOTION_QUERY = '(prefers-reduced-motion: no-preference)';
+// Mobile breakpoint matches the one in styles.css (.tabbar @media max-width:820px).
+export const MOBILE_QUERY =
+  '(prefers-reduced-motion: no-preference) and (max-width: 820px)';
+export const DESKTOP_QUERY =
+  '(prefers-reduced-motion: no-preference) and (min-width: 821px)';

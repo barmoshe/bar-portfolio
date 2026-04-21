@@ -1,6 +1,13 @@
 import { useRef } from 'react';
 import { iconFor, projects, shortDesc } from '../../data/portfolio';
-import { gsap, SplitText, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
+import {
+  gsap,
+  SplitText,
+  useGSAP,
+  MOBILE_QUERY,
+  DESKTOP_QUERY,
+  FULL_MOTION_QUERY,
+} from '../../lib/gsap';
 
 type Props = { onOpen: (idx: number) => void };
 
@@ -48,6 +55,22 @@ export default function Repos({ onOpen }: Props) {
           });
         }
 
+        if (cta) {
+          gsap.set(cta, { opacity: 0, y: 24 });
+          gsap.to(cta, {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            scrollTrigger: { trigger: cta, start: 'top 88%' },
+          });
+        }
+
+        return () => {
+          split?.revert();
+        };
+      });
+
+      mm.add(DESKTOP_QUERY, () => {
         if (cards.length) {
           gsap.set(cards, { opacity: 0, y: 36, scale: 0.96 });
           gsap.to(cards, {
@@ -74,20 +97,32 @@ export default function Repos({ onOpen }: Props) {
             scrollTrigger: { trigger: grid, start: 'top 80%' },
           });
         }
+      });
 
-        if (cta) {
-          gsap.set(cta, { opacity: 0, y: 24 });
-          gsap.to(cta, {
+      mm.add(MOBILE_QUERY, () => {
+        cards.forEach((el) => {
+          const num = el.querySelector<HTMLElement>('.num');
+          gsap.set(el, { opacity: 0, y: 24, scale: 0.98 });
+          if (num) gsap.set(num, { opacity: 0, scale: 0.6, rotate: 8 });
+
+          const tl = gsap.timeline({
+            scrollTrigger: { trigger: el, start: 'top 90%' },
+          });
+          tl.to(el, {
             opacity: 1,
             y: 0,
-            duration: 0.7,
-            scrollTrigger: { trigger: cta, start: 'top 88%' },
+            scale: 1,
+            duration: 0.55,
+            ease: 'power3.out',
           });
-        }
-
-        return () => {
-          split?.revert();
-        };
+          if (num) {
+            tl.to(
+              num,
+              { opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(2.2)' },
+              '-=0.25',
+            );
+          }
+        });
       });
 
       return () => mm.revert();

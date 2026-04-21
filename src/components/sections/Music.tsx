@@ -1,5 +1,12 @@
 import { useRef, type CSSProperties } from 'react';
-import { gsap, SplitText, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
+import {
+  gsap,
+  SplitText,
+  useGSAP,
+  MOBILE_QUERY,
+  DESKTOP_QUERY,
+  FULL_MOTION_QUERY,
+} from '../../lib/gsap';
 
 const trackCard = (rotate: string): CSSProperties => ({
   position: 'relative',
@@ -99,21 +106,6 @@ export default function Music() {
           });
         }
 
-        cards.forEach((el, i) => {
-          const target = targetRotations[i] ?? 0;
-          gsap.set(el, { opacity: 0, y: 40, rotate: target - 6, scale: 0.95 });
-          gsap.to(el, {
-            opacity: 1,
-            y: 0,
-            rotate: target,
-            scale: 1,
-            duration: 0.85,
-            ease: 'back.out(1.5)',
-            delay: i * 0.1,
-            scrollTrigger: { trigger: el, start: 'top 85%' },
-          });
-        });
-
         foots.forEach((el, i) => {
           gsap.set(el, { opacity: 0, scale: 0.4, y: 10 });
           gsap.to(el, {
@@ -130,6 +122,38 @@ export default function Music() {
         return () => {
           split?.revert();
         };
+      });
+
+      mm.add(DESKTOP_QUERY, () => {
+        cards.forEach((el, i) => {
+          const target = targetRotations[i] ?? 0;
+          gsap.set(el, { opacity: 0, y: 40, rotate: target - 6, scale: 0.95 });
+          gsap.to(el, {
+            opacity: 1,
+            y: 0,
+            rotate: target,
+            scale: 1,
+            duration: 0.85,
+            ease: 'back.out(1.5)',
+            delay: i * 0.1,
+            scrollTrigger: { trigger: el, start: 'top 85%' },
+          });
+        });
+      });
+
+      mm.add(MOBILE_QUERY, () => {
+        cards.forEach((el, i) => {
+          const target = targetRotations[i] ?? 0;
+          gsap.set(el, { opacity: 0, y: 24, rotate: target, scale: 0.97 });
+          gsap.to(el, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.55,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 90%' },
+          });
+        });
       });
 
       return () => mm.revert();

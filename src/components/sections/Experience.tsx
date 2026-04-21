@@ -1,5 +1,12 @@
 import { useRef, type CSSProperties } from 'react';
-import { gsap, SplitText, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
+import {
+  gsap,
+  SplitText,
+  useGSAP,
+  MOBILE_QUERY,
+  DESKTOP_QUERY,
+  FULL_MOTION_QUERY,
+} from '../../lib/gsap';
 
 const card = (rotate: string): CSSProperties => ({
   background: 'var(--paper)',
@@ -89,6 +96,12 @@ export default function Experience() {
           });
         }
 
+        return () => {
+          split?.revert();
+        };
+      });
+
+      mm.add(DESKTOP_QUERY, () => {
         cards.forEach((el, i) => {
           const target = targetRotations[i] ?? 0;
           gsap.set(el, {
@@ -108,10 +121,21 @@ export default function Experience() {
             scrollTrigger: { trigger: el, start: 'top 82%' },
           });
         });
+      });
 
-        return () => {
-          split?.revert();
-        };
+      mm.add(MOBILE_QUERY, () => {
+        cards.forEach((el, i) => {
+          const target = targetRotations[i] ?? 0;
+          gsap.set(el, { opacity: 0, y: 24, rotate: target, scale: 0.97 });
+          gsap.to(el, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.55,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 90%' },
+          });
+        });
       });
 
       return () => mm.revert();

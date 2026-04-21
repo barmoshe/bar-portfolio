@@ -1,6 +1,13 @@
 import { useRef, type CSSProperties } from 'react';
 import HoverCard from '../HoverCard';
-import { gsap, SplitText, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
+import {
+  gsap,
+  SplitText,
+  useGSAP,
+  MOBILE_QUERY,
+  DESKTOP_QUERY,
+  FULL_MOTION_QUERY,
+} from '../../lib/gsap';
 
 type Card = {
   href: string;
@@ -134,8 +141,9 @@ const valueStyle: CSSProperties = {
   color: 'var(--ink)',
 };
 
-// Fan-in scatter offsets per card (indexed).
-const SCATTER = [
+// Fan-in scatter offsets per card (indexed). Desktop uses wide scatter;
+// mobile stacks vertically so we use a tighter, bottom-biased rise.
+const DESKTOP_SCATTER = [
   { x: -120, y: -40, r: -20 },
   { x: 140, y: -50, r: 24 },
   { x: -160, y: 30, r: -14 },
@@ -143,6 +151,7 @@ const SCATTER = [
   { x: -90, y: 70, r: -16 },
   { x: 160, y: 80, r: 20 },
 ];
+const MOBILE_RISE = { x: 0, y: 28, r: 0 };
 
 export default function Letter() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -187,25 +196,6 @@ export default function Letter() {
           });
         }
 
-        cards.forEach((el, i) => {
-          const s = SCATTER[i % SCATTER.length]!;
-          gsap.set(el, { opacity: 0, x: s.x, y: s.y, rotate: s.r, scale: 0.85 });
-        });
-        gsap.to(cards, {
-          opacity: 1,
-          x: 0,
-          y: 0,
-          rotate: (i) => {
-            const rawRotate = CARDS[i]?.rotate ?? '0deg';
-            return parseFloat(rawRotate);
-          },
-          scale: 1,
-          duration: 1,
-          stagger: 0.08,
-          ease: 'power4.out',
-          scrollTrigger: { trigger: grid, start: 'top 80%' },
-        });
-
         if (footer) {
           gsap.set(footer, { opacity: 0, y: 16 });
           gsap.to(footer, {
@@ -219,6 +209,47 @@ export default function Letter() {
         return () => {
           split?.revert();
         };
+      });
+
+      mm.add(DESKTOP_QUERY, () => {
+        cards.forEach((el, i) => {
+          const s = DESKTOP_SCATTER[i % DESKTOP_SCATTER.length]!;
+          gsap.set(el, { opacity: 0, x: s.x, y: s.y, rotate: s.r, scale: 0.85 });
+        });
+        gsap.to(cards, {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          rotate: (i) => parseFloat(CARDS[i]?.rotate ?? '0deg'),
+          scale: 1,
+          duration: 1,
+          stagger: 0.08,
+          ease: 'power4.out',
+          scrollTrigger: { trigger: grid, start: 'top 80%' },
+        });
+      });
+
+      mm.add(MOBILE_QUERY, () => {
+        cards.forEach((el) => {
+          gsap.set(el, {
+            opacity: 0,
+            x: MOBILE_RISE.x,
+            y: MOBILE_RISE.y,
+            rotate: MOBILE_RISE.r,
+            scale: 0.96,
+          });
+        });
+        gsap.to(cards, {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          rotate: (i) => parseFloat(CARDS[i]?.rotate ?? '0deg'),
+          scale: 1,
+          duration: 0.7,
+          stagger: 0.07,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: grid, start: 'top 88%' },
+        });
       });
 
       return () => mm.revert();

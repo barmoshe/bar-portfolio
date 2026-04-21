@@ -1,6 +1,13 @@
 import { useRef, type CSSProperties, type ReactNode } from 'react';
 import HoverCard from '../HoverCard';
-import { gsap, SplitText, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
+import {
+  gsap,
+  SplitText,
+  useGSAP,
+  MOBILE_QUERY,
+  DESKTOP_QUERY,
+  FULL_MOTION_QUERY,
+} from '../../lib/gsap';
 
 type Entry = {
   href: string;
@@ -244,21 +251,35 @@ export default function Notes() {
           });
         }
 
-        if (cards.length) {
-          gsap.set(cards, { opacity: 0, y: 36 });
-          gsap.to(cards, {
-            opacity: 1,
-            y: 0,
-            duration: 0.75,
-            stagger: { each: 0.09, from: 'start' },
-            ease: 'power3.out',
-            scrollTrigger: { trigger: grid, start: 'top 80%' },
-          });
-        }
-
         return () => {
           split?.revert();
         };
+      });
+
+      mm.add(DESKTOP_QUERY, () => {
+        if (!cards.length) return;
+        gsap.set(cards, { opacity: 0, y: 36 });
+        gsap.to(cards, {
+          opacity: 1,
+          y: 0,
+          duration: 0.75,
+          stagger: { each: 0.09, from: 'start' },
+          ease: 'power3.out',
+          scrollTrigger: { trigger: grid, start: 'top 80%' },
+        });
+      });
+
+      mm.add(MOBILE_QUERY, () => {
+        cards.forEach((el) => {
+          gsap.set(el, { opacity: 0, y: 24 });
+          gsap.to(el, {
+            opacity: 1,
+            y: 0,
+            duration: 0.55,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 90%' },
+          });
+        });
       });
 
       return () => mm.revert();

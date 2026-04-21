@@ -1,6 +1,14 @@
 import { useRef } from 'react';
 import HeroSlides from '../HeroSlides';
-import { gsap, ScrollTrigger, SplitText, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
+import {
+  gsap,
+  ScrollTrigger,
+  SplitText,
+  useGSAP,
+  MOBILE_QUERY,
+  DESKTOP_QUERY,
+  FULL_MOTION_QUERY,
+} from '../../lib/gsap';
 
 export default function Dossier() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -17,25 +25,39 @@ export default function Dossier() {
       const idMeta = root.querySelectorAll<HTMLElement>('.id-meta > *');
 
       const mm = gsap.matchMedia();
+
+      mm.add(DESKTOP_QUERY, () => {
+        if (!card) return;
+        gsap.set(card, { xPercent: -30, y: 18, rotate: -10, opacity: 0 });
+        gsap.to(card, {
+          xPercent: 0,
+          y: 0,
+          rotate: -1.5,
+          opacity: 1,
+          duration: 1.1,
+          ease: 'power4.out',
+          scrollTrigger: {
+            trigger: root,
+            start: 'top 70%',
+            toggleActions: 'play none none none',
+          },
+        });
+      });
+
+      mm.add(MOBILE_QUERY, () => {
+        if (!card) return;
+        gsap.set(card, { y: 24, opacity: 0 });
+        gsap.to(card, {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: root, start: 'top 85%' },
+        });
+      });
+
       mm.add(FULL_MOTION_QUERY, () => {
         let split: SplitText | null = null;
-
-        if (card) {
-          gsap.set(card, { xPercent: -30, y: 18, rotate: -10, opacity: 0 });
-          gsap.to(card, {
-            xPercent: 0,
-            y: 0,
-            rotate: -1.5,
-            opacity: 1,
-            duration: 1.1,
-            ease: 'power4.out',
-            scrollTrigger: {
-              trigger: root,
-              start: 'top 70%',
-              toggleActions: 'play none none none',
-            },
-          });
-        }
 
         if (tape) {
           gsap.set(tape, { scaleX: 0, transformOrigin: 'left center', opacity: 0 });
