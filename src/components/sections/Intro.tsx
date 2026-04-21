@@ -189,9 +189,15 @@ export default function Intro() {
         </p>
 
         <p className="toolline">
-          <b>WORKING ON</b>
-          Full-stack product work · AI-assisted tooling · small things that make bigger
-          things possible.
+          <span className="prompt">&gt;&nbsp;now</span>
+          <span className="args">
+            full-stack product work
+            <span className="sep">·</span>
+            AI-assisted tooling
+            <span className="sep">·</span>
+            small things that make bigger things possible
+          </span>
+          <span className="caret" aria-hidden="true" />
         </p>
       </div>
     </article>
