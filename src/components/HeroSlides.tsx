@@ -25,6 +25,9 @@ const SLIDES: Slide[] = [
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
 
+const INITIAL_HOLD_MS = 3000;
+const BOOT_COMPLETE_EVENT = 'bar:boot-complete';
+
 const shuffleRest = (list: Slide[]): Slide[] => {
   const [first, ...rest] = list;
   for (let i = rest.length - 1; i > 0; i--) {
@@ -57,6 +60,7 @@ export default function HeroSlides() {
   const timerRef = useRef<number | null>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const firstAdvanceDoneRef = useRef(false);
 
   const stop = () => {
     if (timerRef.current !== null) {
@@ -187,14 +191,45 @@ export default function HeroSlides() {
   };
 
   useEffect(() => {
-    schedule();
+    let initialTimer: number | null = null;
+
+    const startInitialHold = () => {
+      if (firstAdvanceDoneRef.current) return;
+      if (initialTimer !== null) return;
+      initialTimer = window.setTimeout(() => {
+        initialTimer = null;
+        firstAdvanceDoneRef.current = true;
+        if (!pausedRef.current) advance();
+      }, INITIAL_HOLD_MS);
+    };
+
+    const alreadyBooted =
+      (window as unknown as { __barBooted?: boolean }).__barBooted === true;
+    if (alreadyBooted) {
+      startInitialHold();
+    } else {
+      window.addEventListener(BOOT_COMPLETE_EVENT, startInitialHold, { once: true });
+    }
+
     const onVis = () => {
-      if (document.hidden) stop();
-      else schedule();
+      if (document.hidden) {
+        stop();
+        if (initialTimer !== null) {
+          clearTimeout(initialTimer);
+          initialTimer = null;
+        }
+      } else if (firstAdvanceDoneRef.current) {
+        schedule();
+      } else if ((window as unknown as { __barBooted?: boolean }).__barBooted) {
+        startInitialHold();
+      }
     };
     document.addEventListener('visibilitychange', onVis);
+
     return () => {
+      window.removeEventListener(BOOT_COMPLETE_EVENT, startInitialHold);
       document.removeEventListener('visibilitychange', onVis);
+      if (initialTimer !== null) clearTimeout(initialTimer);
       stop();
       tlRef.current?.kill();
       tlRef.current = null;
@@ -208,7 +243,7 @@ export default function HeroSlides() {
   };
   const onMouseLeave = () => {
     pausedRef.current = false;
-    schedule();
+    if (firstAdvanceDoneRef.current) schedule();
   };
 
   const base = import.meta.env.BASE_URL;

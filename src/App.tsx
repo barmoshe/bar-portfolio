@@ -19,6 +19,7 @@ import { useLightbox } from './hooks/useLightbox';
 import { useFolioScrub } from './hooks/useFolioScrub';
 
 const SKIP_KEY = 'bm:skip';
+const BOOT_COMPLETE_EVENT = 'bar:boot-complete';
 
 function readSkip(): boolean {
   try {
@@ -67,6 +68,12 @@ export default function App() {
     return () => document.removeEventListener('keydown', onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
+
+  useEffect(() => {
+    if (showBoot) return;
+    (window as unknown as { __barBooted?: boolean }).__barBooted = true;
+    window.dispatchEvent(new Event(BOOT_COMPLETE_EVENT));
+  }, [showBoot]);
 
   const onSkip = () => {
     writeSkip();
