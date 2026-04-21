@@ -23,7 +23,7 @@ export default function Boot({ onGone }: Props) {
       if (!root) return;
       const mm = gsap.matchMedia();
       mm.add(FULL_MOTION_QUERY, () => {
-        const mast = root.querySelector<HTMLElement>('.mast');
+        const mast = root.querySelector<HTMLElement>('.mast-main');
         const version = root.querySelector<HTMLElement>('.version-tag');
         const tag = root.querySelector<HTMLElement>('.mast-tag');
         const sub = root.querySelector<HTMLElement>('.sub');
@@ -34,14 +34,7 @@ export default function Boot({ onGone }: Props) {
         const tl = gsap.timeline();
 
         if (mast) {
-          // Split only the first text node of .mast (the "BAR MOSHE" text),
-          // keeping .mast-tag intact as its own animated item.
-          split = new SplitText(mast, {
-            type: 'chars,words',
-            charsClass: 'bmchar',
-            // Don't split deeply into .mast-tag — it's handled separately.
-            ignore: '.mast-tag',
-          });
+          split = new SplitText(mast, { type: 'chars', charsClass: 'bmchar' });
           gsap.set(split.chars, { opacity: 0, yPercent: 40, rotate: -8 });
           tl.to(split.chars, {
             opacity: 1,
@@ -134,7 +127,7 @@ export default function Boot({ onGone }: Props) {
       <div className="cover">
         <span className="version-tag">v2.0.0</span>
         <h1 className="mast">
-          BAR MOSHE
+          <span className="mast-main">BAR MOSHE</span>
           <span className="mast-tag">
             it's only one <em>prompt</em> away.
           </span>
