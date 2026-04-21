@@ -166,8 +166,8 @@
   .version-mark path{stroke:var(--ink-soft);stroke-width:1;fill:var(--ink-soft);stroke-linejoin:round;vector-effect:non-scaling-stroke}
   .mast{font-family:var(--display);font-weight:700;line-height:.95;margin:0;font-size:clamp(2.4rem, 10vw, 7rem);letter-spacing:-.03em}
   .bmchar{display:inline-block}
-  .mast-phrase{display:block;margin:18px auto 0;font-family:var(--display);font-style:normal;font-weight:500;font-size:clamp(1.2rem,2.9vw,1.85rem);line-height:1.1;color:var(--ink);letter-spacing:-.015em;text-align:center;white-space:nowrap}
-  .mast-phrase em{font-style:italic;color:var(--green);font-weight:700}
+  .mast-phrase{display:block;margin:22px auto 0;font-family:var(--mono);font-style:normal;font-weight:500;font-size:clamp(1.5rem,3.6vw,2.4rem);line-height:1.1;color:var(--ink);letter-spacing:-.01em;text-align:center;white-space:nowrap}
+  .mast-phrase em{font-style:normal;color:var(--green);font-weight:700}
   .sub{font-family:var(--mono);font-size:clamp(.82rem, 1.4vw, .95rem);margin:26px 0 0;color:var(--ink-soft);max-width:48ch;letter-spacing:.15em;text-transform:uppercase;margin-left:auto;margin-right:auto}
   .bullets{display:none}
   .enter{display:inline-flex;align-items:center;gap:12px;margin-top:44px;font-family:var(--display);font-weight:700;font-size:1.3rem;color:var(--paper);background:var(--ink);padding:16px 32px;border:0;cursor:pointer;box-shadow:6px 6px 0 var(--green);text-decoration:none;letter-spacing:-.01em}
@@ -507,7 +507,7 @@
 
     /* Headline sizing for small viewports */
     .mast{font-size:clamp(2.2rem,11vw,3.4rem)}
-    .mast-phrase{font-size:clamp(1rem,4.1vw,1.35rem)}
+    .mast-phrase{font-size:clamp(1.15rem,4.8vw,1.65rem)}
     .headline{font-size:clamp(1.9rem,8.5vw,2.6rem)}
     .dek{font-size:1rem}
     .bio h1{font-size:clamp(2rem,8vw,2.8rem)}
