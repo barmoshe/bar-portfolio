@@ -17,7 +17,11 @@
       "Bash(git push *)",
       "Bash(git config *)",
       "Bash(gh api *)",
-      "Bash(python3 -c \"import json,sys;d=json.load\\(sys.stdin\\);print\\('status:',d.get\\('status'\\)\\);print\\('error:',d.get\\('error'\\)\\);print\\('commit:',d.get\\('commit'\\)[:7] if d.get\\('commit'\\) else None\\)\")"
+      "Bash(python3 -c \"import json,sys;d=json.load\\(sys.stdin\\);print\\('status:',d.get\\('status'\\)\\);print\\('error:',d.get\\('error'\\)\\);print\\('commit:',d.get\\('commit'\\)[:7] if d.get\\('commit'\\) else None\\)\")",
+      "Bash(curl -s -o /dev/null -w \"site: %{http_code}\\\\n\" https://barmoshe.github.io/bar-portfolio/)",
+      "Bash(curl -s -o /dev/null -w \"portrait: %{http_code}\\\\n\" https://barmoshe.github.io/bar-portfolio/portraits/img0.png)",
+      "Bash(sed -n '21,593p' index.html)",
+      "Bash(sed -n '1008,1261p' index.html)"
     ]
   }
 }
