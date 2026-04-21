@@ -12,6 +12,8 @@ const SLIDES: Slide[] = [
   { src: 'portraits/img2.png', alt: 'Bar Moshe - photo', caption: 'photo' },
   { src: 'portraits/img3.png', alt: 'Bar Moshe - cubist', caption: 'cubist · study' },
   { src: 'portraits/img4.png', alt: 'Bar Moshe - 3d', caption: '3d · render' },
+  { src: 'portraits/img5.png', alt: 'Bar Moshe - ink watercolor', caption: 'ink · watercolor' },
+  { src: 'portraits/img6.png', alt: 'Bar Moshe - cyberpunk', caption: 'cyberpunk · halftone' },
 ];
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
@@ -51,7 +53,7 @@ export default function HeroSlides() {
     timerRef.current = window.setTimeout(() => {
       timerRef.current = null;
       advance();
-    }, rand(3000, 10000));
+    }, rand(2000, 7000));
   };
 
   useEffect(() => {
