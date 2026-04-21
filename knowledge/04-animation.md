@@ -51,7 +51,7 @@ Lives in `src/styles.css`, under the `/* Slideshow */` block. Each `.slide[data-
 
 ### The `#ink-crumple` SVG filter
 
-Defined in `src/components/InkDefs.tsx` alongside `#ink-blob` and the `#ink-bleed-*` family. Single shared instance — safe because `advance()` serializes transitions. If you ever overlap HeroSlides transitions (don't), each would need its own filter.
+Defined in `src/components/InkDefs.tsx` alongside the `#ink-bleed-*` family. Single shared instance — safe because `advance()` serializes transitions. If you ever overlap HeroSlides transitions (don't), each would need its own filter.
 
 ### Auto-advance
 

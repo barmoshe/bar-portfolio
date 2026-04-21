@@ -10,7 +10,7 @@ export default function TabBar() {
 
   return (
     <nav className="tabbar" aria-label="Mobile sections">
-      <a href="#dossier" data-target="dossier" aria-label="About" data-magnet {...isCurrent('dossier')}>
+      <a href="#dossier" data-target="dossier" aria-label="About" {...isCurrent('dossier')}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="8" r="4" />
           <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" />
@@ -21,7 +21,6 @@ export default function TabBar() {
         href="#experience"
         data-target="experience"
         aria-label="Work"
-        data-magnet
         {...isCurrent('experience')}
       >
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -30,20 +29,20 @@ export default function TabBar() {
         </svg>
         <span>Work</span>
       </a>
-      <a href="#repos" data-target="repos" aria-label="Open Source" data-magnet {...isCurrent('repos')}>
+      <a href="#repos" data-target="repos" aria-label="Open Source" {...isCurrent('repos')}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M8 18l-6-6 6-6" />
           <path d="M16 6l6 6-6 6" />
         </svg>
         <span>Repos</span>
       </a>
-      <a href="#notes" data-target="notes" aria-label="Writing" data-magnet {...isCurrent('notes')}>
+      <a href="#notes" data-target="notes" aria-label="Writing" {...isCurrent('notes')}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M4 5h16M4 10h16M4 15h10M4 20h8" />
         </svg>
         <span>Notes</span>
       </a>
-      <a href="#letter" data-target="letter" aria-label="Contact" data-magnet {...isCurrent('letter')}>
+      <a href="#letter" data-target="letter" aria-label="Contact" {...isCurrent('letter')}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M3 7l9 6 9-6" />
           <rect x="3" y="5" width="18" height="14" rx="2" />

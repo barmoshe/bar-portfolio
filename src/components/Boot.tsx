@@ -421,7 +421,6 @@ export default function Boot({ onGone }: Props) {
           id="enter"
           type="button"
           aria-label="Enter portfolio"
-          data-magnet
           onClick={dismiss}
         >
           Enter the portfolio

@@ -309,8 +309,8 @@
      inline custom props that define its mask; GSAP tweens those props and
      clears them on completion. */
   .mug .slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-    opacity:0;z-index:1;
-    will-change:opacity,mask-image,filter}
+    opacity:0;z-index:1}
+  .mug.is-transitioning .slide{will-change:opacity,mask-image,filter}
   .mug .slide.is-active{opacity:1;z-index:2}
 
   /* bloom: radial ink-blot reveal from a slightly off-center point. */
@@ -359,8 +359,8 @@
 
   .mug .slide-caption{position:absolute;left:10px;bottom:10px;z-index:4;
     font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
-    color:oklch(0.98 0 0 / .92);background:oklch(0 0 0 / .45);padding:4px 8px;
-    backdrop-filter:blur(4px);border:1px solid oklch(1 0 0 / .2);
+    color:oklch(0.98 0 0 / .92);background:oklch(0 0 0 / .62);padding:4px 8px;
+    border:1px solid oklch(1 0 0 / .2);
     transition:opacity .5s ease, transform .5s ease;opacity:.9}
   .mug .slide-dots{position:absolute;right:10px;bottom:10px;z-index:4;display:flex;gap:6px}
   .mug .slide-dots button{width:8px;height:8px;border-radius:50%;border:1px solid oklch(1 0 0 / .7);
@@ -475,27 +475,8 @@
 
   /* ─── Ink motif ─────────────────────────────────────────────────────
      Static skeletons only - every transform / opacity / filter-attr is
-     animated from GSAP (see components/InkCursor, InkDefs, hooks/useTheme,
+     animated from GSAP (see components/InkDefs, hooks/useTheme,
      components/Boot, TabBar, Lightbox, sections/Story).                     */
-
-  /* Shared: any element tagged data-magnet gives the InkCursor a pull target */
-  [data-magnet]{cursor:pointer}
-
-  /* Custom cursor overlay */
-  .ink-cursor{position:fixed;inset:0;pointer-events:none;z-index:90;opacity:0}
-  .ink-cursor svg{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
-  .ink-cursor-blob{fill:var(--ink);opacity:.55}
-  .ink-cursor-nib{fill:var(--ink)}
-  .ink-cursor-splash{fill:none;stroke:var(--ink);stroke-width:1.5;opacity:0}
-  html.dark .ink-cursor-blob{fill:var(--green);opacity:.5}
-  html.dark .ink-cursor-nib{fill:var(--green)}
-  html.dark .ink-cursor-splash{stroke:var(--green)}
-  html.ink-cursor-on,
-  html.ink-cursor-on body,
-  html.ink-cursor-on a,
-  html.ink-cursor-on button,
-  html.ink-cursor-on [role="button"],
-  html.ink-cursor-on [data-magnet]{cursor:none}
 
   /* Full-screen overlay used by the theme toggle for the circular ink-wipe.
      Background stays INK regardless of theme so the wash is always visible. */

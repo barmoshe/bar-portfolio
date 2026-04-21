@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { gsap, useGSAP, FULL_MOTION_QUERY } from '../lib/gsap';
+import { gsap, FULL_MOTION_QUERY } from '../lib/gsap';
 
 type Slide = { src: string; alt: string; caption: string };
 
@@ -132,6 +132,11 @@ export default function HeroSlides() {
       'feDisplacementMap[data-ink-crumple]',
     );
 
+    // Promote .slide layers only while a transition is running. CSS scopes
+    // `will-change` to `.mug.is-transitioning .slide` so idle hero doesn't
+    // burn GPU memory on four always-composited layers.
+    root.classList.add('is-transitioning');
+
     const tl = gsap.timeline({
       defaults: { ease: 'power3.out' },
       onComplete: () => {
@@ -141,6 +146,7 @@ export default function HeroSlides() {
         resetSlide(outEl);
         resetSlide(inEl);
         if (feCrumple) gsap.set(feCrumple, { attr: { scale: 0 } });
+        root.classList.remove('is-transitioning');
         tlRef.current = null;
         schedule();
       },
@@ -196,40 +202,6 @@ export default function HeroSlides() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Subtle mouse parallax on the portrait stack — unchanged.
-  useGSAP(
-    () => {
-      const root = rootRef.current;
-      if (!root) return;
-      const mm = gsap.matchMedia();
-      mm.add(`${FULL_MOTION_QUERY} and (hover: hover)`, () => {
-        const xTo = gsap.quickTo(root, '--tilt-x', { duration: 0.5, ease: 'power3.out' });
-        const yTo = gsap.quickTo(root, '--tilt-y', { duration: 0.5, ease: 'power3.out' });
-        gsap.set(root, { '--tilt-x': 0, '--tilt-y': 0 });
-
-        const onMove = (e: MouseEvent) => {
-          const r = root.getBoundingClientRect();
-          const nx = ((e.clientX - r.left) / r.width - 0.5) * 2;
-          const ny = ((e.clientY - r.top) / r.height - 0.5) * 2;
-          xTo(nx * 6);
-          yTo(ny * 6);
-        };
-        const onLeave = () => {
-          xTo(0);
-          yTo(0);
-        };
-        root.addEventListener('mousemove', onMove);
-        root.addEventListener('mouseleave', onLeave);
-        return () => {
-          root.removeEventListener('mousemove', onMove);
-          root.removeEventListener('mouseleave', onLeave);
-        };
-      });
-      return () => mm.revert();
-    },
-    { scope: rootRef },
-  );
-
   const onMouseEnter = () => {
     pausedRef.current = true;
     stop();
@@ -249,10 +221,6 @@ export default function HeroSlides() {
       aria-label="Bar Moshe - portrait variations"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      style={{
-        transform:
-          'translate3d(calc(var(--tilt-x, 0) * 1px), calc(var(--tilt-y, 0) * 1px), 0)',
-      }}
     >
       {slides.map((s, i) => {
         const isActive = i === idx;

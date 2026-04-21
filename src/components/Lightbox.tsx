@@ -201,7 +201,6 @@ export default function Lightbox({ project, idx, sourceRect, onClose }: Props) {
           className="lb-close"
           id="lbClose"
           aria-label="Close"
-          data-magnet
           ref={closeBtnRef}
           onClick={onClose}
         >

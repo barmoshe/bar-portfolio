@@ -158,7 +158,6 @@ export default function Repos({ onOpen }: Props) {
             className="ink-peelable"
             data-idx={i}
             data-flip-id={`repo-${i}`}
-            data-magnet
             tabIndex={0}
             role="button"
             aria-label={p.name}

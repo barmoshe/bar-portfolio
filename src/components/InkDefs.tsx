@@ -1,8 +1,6 @@
 // Shared SVG <defs> mounted once at the root.
 //
-// Two filter families live here:
-//   #ink-blob                       goo filter used by the InkCursor so the
-//                                   trailing dots merge into one liquid shape.
+// Filter family:
 //   #ink-bleed-<id> (×N)            turbulence + displacement filters used by
 //                                   section headings, the boot screen, and the
 //                                   handwriting timeline. The feDisplacementMap
@@ -61,22 +59,6 @@ export default function InkDefs() {
             yChannelSelector="G"
             data-ink-crumple="true"
           />
-        </filter>
-
-        {/* Goo filter: merges overlapping shapes (cursor blob + nib + splash) */}
-        <filter id="ink-blob" colorInterpolationFilters="sRGB">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
-          <feColorMatrix
-            in="blur"
-            mode="matrix"
-            values="
-              1 0 0 0 0
-              0 1 0 0 0
-              0 0 1 0 0
-              0 0 0 22 -11"
-            result="goo"
-          />
-          <feBlend in="SourceGraphic" in2="goo" />
         </filter>
 
         {/* One ink-bleed filter per target. Each gets its own seed so the

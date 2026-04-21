@@ -6,7 +6,6 @@ import Strip from './components/Strip';
 import TabBar from './components/TabBar';
 import Lightbox from './components/Lightbox';
 import InkDefs from './components/InkDefs';
-import InkCursor from './components/InkCursor';
 import Dossier from './components/sections/Dossier';
 import Story from './components/sections/Story';
 import Experience from './components/sections/Experience';
@@ -106,7 +105,6 @@ export default function App() {
         onClose={close}
       />
       <div className="ink-wipe" aria-hidden="true" />
-      <InkCursor />
     </>
   );
 }

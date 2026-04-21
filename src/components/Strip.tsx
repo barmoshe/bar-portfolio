@@ -65,7 +65,6 @@ export default function Strip({
         type="button"
         title={themeLabel}
         aria-label={themeLabel}
-        data-magnet
         onClick={(e) => {
           const r = e.currentTarget.getBoundingClientRect();
           onThemeCycle({ x: r.left + r.width / 2, y: r.top + r.height / 2 });

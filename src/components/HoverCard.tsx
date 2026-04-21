@@ -122,7 +122,6 @@ export default function HoverCard({
       target={target}
       rel={rel}
       className="ink-peelable"
-      data-magnet
       style={style}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}

@@ -20,7 +20,6 @@
 <TabBar />                // Mobile bottom nav (hidden > 820px)
 <Lightbox />              // Fullscreen project modal, portaled into root
 <div class="ink-wipe" />  // Theme transition overlay (imperative, driven by useTheme)
-<InkCursor />             // Custom mouse follower (desktop only)
 ```
 
 **`InkDefs` must render before anything else** — it defines the SVG filters that `useInk` / `attachInkBleed` / certain sections reference by id. If you reorder, all filter-based effects go blank.
@@ -39,7 +38,6 @@
 | `Lightbox.tsx` | Fullscreen project modal. Animates from `sourceRect` card position. Keyed by `openIdx`. | GSAP |
 | `HoverCard.tsx` | Interactive card primitive. Used by `Repos`. | — |
 | `CodeArt.tsx` | Ascii/code-glyph display for project cards. Uses `iconFor` from `data/portfolio.ts`. | — |
-| `InkCursor.tsx` | Custom cursor follower. Desktop only (hover check). | — |
 | `InkTimeline.tsx` | GSAP-driven timeline component. Used by `Experience` and `Story`. | GSAP |
 | `Reveal.tsx` | IntersectionObserver-triggered reveal wrapper. Fade + slight Y translate. | IO |
 
