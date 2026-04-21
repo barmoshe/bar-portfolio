@@ -98,6 +98,59 @@
   html.dark .clip article .num{color:var(--band)}
   html.dark .letter .send,html.dark .enter{color:var(--band-fg)}
 
+  /* ── Dark mode: raise inline-styled "paper" cards to a surface color so they
+     don't vanish into the body. Inline styles win on specificity, so !important. ── */
+  html.dark #story > div[style*="var(--paper)"],
+  html.dark #experience > div > div[style*="var(--paper)"],
+  html.dark #notes a[style*="background:var(--paper)"],
+  html.dark #music > div > div[style*="background:var(--paper)"],
+  html.dark #letter a[style*="background:var(--paper)"]{
+    background:oklch(0.24 0.02 260) !important;
+    border-color:oklch(0.42 0.02 260) !important}
+
+  /* Dark mode: inline dark-accent surfaces (originally bg:var(--ink)) must stay
+     dark in dark mode, not flip to light. Map to --band/--band-fg. */
+  html.dark #repos .gh-cta,
+  html.dark #notes a[style*="background:var(--ink)"],
+  html.dark #music > div > div[style*="background:var(--ink)"]{
+    background:var(--band) !important;
+    border-color:var(--band) !important;
+    color:var(--band-fg) !important}
+  html.dark #repos .gh-cta p,
+  html.dark #notes a[style*="background:var(--ink)"] h3,
+  html.dark #notes a[style*="background:var(--ink)"] p,
+  html.dark #music > div > div[style*="background:var(--ink)"] h3,
+  html.dark #music > div > div[style*="background:var(--ink)"] p{
+    color:var(--band-fg) !important}
+  /* Nested CTA button inside the dark-accent gh-cta bar */
+  html.dark #repos .gh-cta a{
+    background:var(--band-fg) !important;
+    color:var(--band) !important;
+    box-shadow:4px 4px 0 var(--blue) !important}
+
+  /* Folio "b" accent and "How I work" callout text should use light ink in dark mode — var(--ink) handles it, but inline color:var(--ink) on dark surfaces is correct. */
+
+  /* Soften heavy offset shadows in dark mode (inline styles use var(--ink) which
+     flips bright in dark, producing harsh white outlines). Map to subtle dark shadow. */
+  html.dark #story > div[style*="var(--paper)"],
+  html.dark #experience > div > div[style*="var(--paper)"],
+  html.dark #notes a,
+  html.dark #music > div > div,
+  html.dark #letter a,
+  html.dark #repos .gh-cta,
+  html.dark .id-card,
+  html.dark .letter,
+  html.dark .lb-panel{
+    box-shadow: 6px 8px 0 oklch(0 0 0 / .55) !important;
+  }
+  /* Preserve accent-colored shadows (contact cards, featured dispatch) since those are the design intent */
+  html.dark #letter a[style*="var(--red)"]    {box-shadow: 6px 8px 0 var(--red) !important}
+  html.dark #letter a[style*="var(--green)"]  {box-shadow: 6px 8px 0 var(--green) !important}
+  html.dark #letter a[style*="var(--blue)"]   {box-shadow: 6px 8px 0 var(--blue) !important}
+  html.dark #letter a[style*="var(--magenta)"]{box-shadow: 6px 8px 0 var(--magenta) !important}
+  html.dark #notes a[style*="5px 6px 0 var(--blue)"]{box-shadow: 6px 8px 0 var(--blue) !important}
+  html.dark #music > div > div[style*="var(--blue)"]{box-shadow: 6px 8px 0 var(--blue) !important}
+
   /* Theme toggle button */
   .theme-btn{font-family:var(--mono);font-size:14px;letter-spacing:.1em;line-height:1;display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px}
   *,*::before,*::after{box-sizing:border-box}
