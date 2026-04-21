@@ -189,13 +189,15 @@ export default function Dossier() {
             fontFamily: 'var(--display)',
             fontSize: 'clamp(1.15rem,1.8vw,1.35rem)',
             lineHeight: 1.3,
-            fontWeight: 700,
             color: 'var(--ink)',
             letterSpacing: '-0.005em',
           }}
         >
           It's the habit of starting and the belief that{' '}
-          <em>&ldquo;everything is only one prompt away&rdquo;</em>.
+          <em style={{ fontWeight: 700 }}>
+            &ldquo;everything is only one prompt away&rdquo;
+          </em>
+          .
         </p>
 
         <p className="toolline">
