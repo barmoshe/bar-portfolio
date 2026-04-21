@@ -121,6 +121,20 @@ export default function Dossier() {
           });
         }
 
+        const marker = root.querySelector<HTMLElement>('.marker');
+        if (marker) {
+          gsap.fromTo(
+            marker,
+            { '--marker-p': 0 },
+            {
+              '--marker-p': 1,
+              duration: 0.95,
+              ease: 'power2.out',
+              scrollTrigger: { trigger: marker, start: 'top 85%' },
+            },
+          );
+        }
+
         ScrollTrigger.refresh();
 
         return () => {
@@ -195,7 +209,7 @@ export default function Dossier() {
           }}
         >
           It's the habit of starting and the belief that{' '}
-          <em>&ldquo;everything is only one prompt away&rdquo;</em>.
+          <em className="marker">&ldquo;everything is only one prompt away&rdquo;</em>.
         </p>
 
         <p className="toolline">
