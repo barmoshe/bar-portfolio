@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useSectionObserver } from '../hooks/useSectionObserver';
-import { gsap, FULL_MOTION_QUERY } from '../lib/gsap';
+import { gsap, REDUCED_MOTION_QUERY } from '../lib/gsap';
 
 const SECTIONS = ['dossier', 'experience', 'repos', 'notes', 'letter'] as const;
 
@@ -31,34 +31,43 @@ export default function TabBar() {
     const prev = prevRectRef.current;
     prevRectRef.current = { x, w };
 
-    const mm = gsap.matchMedia();
-    mm.add(FULL_MOTION_QUERY, () => {
-      gsap.to(pill, {
-        x,
-        width: w,
-        opacity: 1,
-        duration: 0.55,
-        ease: 'power4.out',
-      });
-
-      if (prev && (prev.x !== x || prev.w !== w)) {
-        const drop = document.createElement('span');
-        drop.className = 'ink-drop';
-        drop.style.left = `${prev.x + prev.w / 2 - 3}px`;
-        nav.appendChild(drop);
-        gsap
-          .timeline({ onComplete: () => drop.remove() })
-          .fromTo(
-            drop,
-            { scale: 0.4, opacity: 0.85 },
-            { scale: 1.6, opacity: 0, duration: 0.55, ease: 'power2.out' },
-          );
-      }
-    });
-    mm.add('(prefers-reduced-motion: reduce)', () => {
+    const reduced = window.matchMedia(REDUCED_MOTION_QUERY).matches;
+    if (reduced) {
       gsap.set(pill, { x, width: w, opacity: 1 });
+      return;
+    }
+
+    const pillTween = gsap.to(pill, {
+      x,
+      width: w,
+      opacity: 1,
+      duration: 0.55,
+      ease: 'power4.out',
+      overwrite: 'auto',
     });
-    return () => mm.revert();
+
+    let drop: HTMLSpanElement | null = null;
+    let dropTl: gsap.core.Timeline | null = null;
+    if (prev && (prev.x !== x || prev.w !== w)) {
+      drop = document.createElement('span');
+      drop.className = 'ink-drop';
+      drop.style.left = `${prev.x + prev.w / 2 - 3}px`;
+      nav.appendChild(drop);
+      const dropEl = drop;
+      dropTl = gsap
+        .timeline({ onComplete: () => dropEl.remove() })
+        .fromTo(
+          dropEl,
+          { scale: 0.4, opacity: 0.85 },
+          { scale: 1.6, opacity: 0, duration: 0.55, ease: 'power2.out' },
+        );
+    }
+
+    return () => {
+      pillTween.kill();
+      dropTl?.kill();
+      drop?.remove();
+    };
   }, [activeId]);
 
   return (
