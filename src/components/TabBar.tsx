@@ -13,50 +13,38 @@ export default function TabBar() {
     activeId === id ? { 'aria-current': 'true' as const } : {};
 
   // Scroll-synced pill: x/width are interpolated between adjacent tabs based on
-  // how far the next section's top has crossed the viewport anchor line. The
-  // IntersectionObserver above still drives `aria-current` for a11y.
+  // how far the next section's top has crossed the viewport anchor line.
+  // Driven by gsap.ticker so it works even when iOS Safari throttles scroll
+  // events during momentum / rubber-band scrolling. IntersectionObserver still
+  // drives `aria-current` for a11y.
   useEffect(() => {
     const nav = navRef.current;
     const pill = pillRef.current;
     if (!nav || !pill) return;
 
-    const getTargets = () => {
+    const tick = () => {
       const sections = SECTIONS.map((id) => document.getElementById(id));
       const tabs = SECTIONS.map((id) =>
         nav.querySelector<HTMLElement>(`a[data-target="${id}"]`),
       );
-      if (sections.some((s) => !s) || tabs.some((t) => !t)) return null;
-      return {
-        sections: sections as HTMLElement[],
-        tabs: tabs as HTMLElement[],
-      };
-    };
-
-    let raf = 0;
-    let pending = false;
-
-    const update = () => {
-      pending = false;
-      const targets = getTargets();
-      if (!targets) return;
-      const { sections, tabs } = targets;
+      if (sections.some((s) => !s) || tabs.some((t) => !t)) return;
+      const secs = sections as HTMLElement[];
+      const tabEls = tabs as HTMLElement[];
 
       const anchor = window.innerHeight * 0.45;
-      const tops = sections.map((el) => el.getBoundingClientRect().top);
+      const tops = secs.map((el) => el.getBoundingClientRect().top);
+      const last = tops.length - 1;
 
       let i = 0;
       let progress = 0;
-      if (tops[0] !== undefined && tops[0] >= anchor) {
+      if ((tops[0] as number) >= anchor) {
         i = 0;
         progress = 0;
-      } else if (
-        tops[tops.length - 1] !== undefined &&
-        (tops[tops.length - 1] as number) <= anchor
-      ) {
-        i = tops.length - 1;
+      } else if ((tops[last] as number) <= anchor) {
+        i = last;
         progress = 0;
       } else {
-        for (let k = 0; k < tops.length - 1; k++) {
+        for (let k = 0; k < last; k++) {
           const a = tops[k] as number;
           const b = tops[k + 1] as number;
           if (a <= anchor && b > anchor) {
@@ -67,8 +55,8 @@ export default function TabBar() {
         }
       }
 
-      const tabA = tabs[i]!;
-      const tabB = tabs[Math.min(i + 1, tabs.length - 1)]!;
+      const tabA = tabEls[i]!;
+      const tabB = tabEls[Math.min(i + 1, last)]!;
       const navRect = nav.getBoundingClientRect();
       const rA = tabA.getBoundingClientRect();
       const rB = tabB.getBoundingClientRect();
@@ -80,20 +68,9 @@ export default function TabBar() {
       gsap.set(pill, { x, width: w, opacity: 1 });
     };
 
-    const schedule = () => {
-      if (pending) return;
-      pending = true;
-      raf = requestAnimationFrame(update);
-    };
-
-    schedule();
-    window.addEventListener('scroll', schedule, { passive: true });
-    window.addEventListener('resize', schedule);
-
+    gsap.ticker.add(tick);
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener('scroll', schedule);
-      window.removeEventListener('resize', schedule);
+      gsap.ticker.remove(tick);
     };
   }, []);
 
