@@ -36,6 +36,33 @@ export default function InkDefs() {
       style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}
     >
       <defs>
+        {/* Crumple filter: HeroSlides uses this during the "crumple" fx.
+            Only one slide animates it at a time (advance() serializes), so a
+            single shared instance is safe. */}
+        <filter
+          id="ink-crumple"
+          x="-20%"
+          y="-20%"
+          width="140%"
+          height="140%"
+        >
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.015 0.022"
+            numOctaves="1"
+            seed="11"
+            result="turb"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="turb"
+            scale="0"
+            xChannelSelector="R"
+            yChannelSelector="G"
+            data-ink-crumple="true"
+          />
+        </filter>
+
         {/* Goo filter: merges overlapping shapes (cursor blob + nib + splash) */}
         <filter id="ink-blob" colorInterpolationFilters="sRGB">
           <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />

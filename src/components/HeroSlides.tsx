@@ -1,9 +1,13 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap, useGSAP, FULL_MOTION_QUERY } from '../lib/gsap';
 
 type Slide = { src: string; alt: string; caption: string };
 
-const FX = ['fade', 'iris', 'wipe', 'skew', 'blinds'] as const;
+// Four ink-native transitions, cycled round-robin. Each is implemented as a
+// GSAP timeline that tweens either CSS mask stops (bloom/brush/tear) or an
+// SVG feDisplacementMap scale (crumple). The old reflow → rAF → flip dance
+// is gone: GSAP owns frame scheduling, so there's no CSS-transition hazard.
+const FX = ['bloom', 'brush', 'tear', 'crumple'] as const;
 type Fx = (typeof FX)[number];
 
 const SLIDES: Slide[] = [
@@ -30,14 +34,27 @@ const shuffleRest = (list: Slide[]): Slide[] => {
   return [first!, ...rest];
 };
 
+// Clear any inline state a previous fx may have left on a slide element.
+const resetSlide = (el: HTMLElement) => {
+  el.style.removeProperty('--bloom-x');
+  el.style.removeProperty('--bloom-y');
+  el.style.removeProperty('--bloom-r');
+  el.style.removeProperty('--wipe-p');
+  el.style.removeProperty('--tear-p');
+  el.style.removeProperty('filter');
+  el.style.removeProperty('z-index');
+  el.style.removeProperty('opacity');
+  delete el.dataset.fx;
+};
+
 export default function HeroSlides() {
   const [slides] = useState<Slide[]>(() => shuffleRest(SLIDES));
   const [idx, setIdx] = useState(0);
-  const [enteringFrom, setEnteringFrom] = useState<number | null>(null);
-  const [fxByIdx, setFxByIdx] = useState<Record<number, Fx>>({ 0: 'fade' });
+  const idxRef = useRef(0);
   const fxCounter = useRef(0);
   const pausedRef = useRef(false);
   const timerRef = useRef<number | null>(null);
+  const tlRef = useRef<gsap.core.Timeline | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   const stop = () => {
@@ -45,17 +62,6 @@ export default function HeroSlides() {
       clearTimeout(timerRef.current);
       timerRef.current = null;
     }
-  };
-
-  const advance = () => {
-    setIdx((cur) => {
-      const next = (cur + 1) % slides.length;
-      const fx = FX[fxCounter.current % FX.length]!;
-      fxCounter.current += 1;
-      setFxByIdx((prev) => ({ ...prev, [next]: fx }));
-      setEnteringFrom(cur);
-      return next;
-    });
   };
 
   const schedule = () => {
@@ -68,6 +74,99 @@ export default function HeroSlides() {
     }, rand(1500, maxMs));
   };
 
+  const advance = () => {
+    const root = rootRef.current;
+    if (!root) return;
+    if (tlRef.current?.isActive()) return;
+
+    const els = Array.from(root.querySelectorAll<HTMLImageElement>('.slide'));
+    if (!els.length) return;
+
+    const prev = idxRef.current;
+    const next = (prev + 1) % slides.length;
+    const fx = FX[fxCounter.current % FX.length]!;
+    fxCounter.current += 1;
+
+    const outEl = els[prev]!;
+    const inEl = els[next]!;
+    const motionOk = window.matchMedia(FULL_MOTION_QUERY).matches;
+
+    // Stack incoming slide above outgoing, both fully opaque. The mask/filter
+    // on the incoming element is what hides it initially; the timeline then
+    // tweens the mask/filter until the full image is revealed.
+    gsap.set(outEl, { zIndex: 2, opacity: 1 });
+    gsap.set(inEl, { zIndex: 3, opacity: 1 });
+
+    idxRef.current = next;
+    setIdx(next);
+
+    if (!motionOk) {
+      // Reduced-motion: instant swap, no mask, no filter.
+      gsap.set(inEl, { opacity: 1, zIndex: 2, clearProps: 'z-index' });
+      gsap.set(outEl, { opacity: 0, zIndex: 1, clearProps: 'z-index' });
+      schedule();
+      return;
+    }
+
+    // Seed the fx-specific starting state.
+    inEl.dataset.fx = fx;
+    if (fx === 'bloom') {
+      inEl.style.setProperty('--bloom-x', `${rand(32, 68)}%`);
+      inEl.style.setProperty('--bloom-y', `${rand(32, 68)}%`);
+    }
+
+    const feCrumple = document.querySelector<SVGFEDisplacementMapElement>(
+      'feDisplacementMap[data-ink-crumple]',
+    );
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power3.out' },
+      onComplete: () => {
+        // Hand the slide off to CSS: outEl is no longer .is-active (React
+        // already re-rendered), so clearing inline styles lets it fall back
+        // to opacity:0. inEl keeps .is-active, so CSS holds opacity:1.
+        resetSlide(outEl);
+        resetSlide(inEl);
+        if (feCrumple) gsap.set(feCrumple, { attr: { scale: 0 } });
+        tlRef.current = null;
+        schedule();
+      },
+    });
+    tlRef.current = tl;
+
+    if (fx === 'bloom') {
+      // Radial ink-blot opens from an off-center point.
+      tl.fromTo(
+        inEl,
+        { '--bloom-r': '0%' },
+        { '--bloom-r': '170%', duration: 1.05, ease: 'power2.out' },
+      );
+    } else if (fx === 'brush') {
+      // Diagonal brush-stroke wipe with a soft trailing edge.
+      tl.fromTo(
+        inEl,
+        { '--wipe-p': '-8%' },
+        { '--wipe-p': '110%', duration: 0.9, ease: 'power2.inOut' },
+      );
+    } else if (fx === 'tear') {
+      // Paper-tear sweep top-to-bottom. Short duration, firmer easing.
+      tl.fromTo(
+        inEl,
+        { '--tear-p': '-4%' },
+        { '--tear-p': '108%', duration: 0.8, ease: 'power3.inOut' },
+      );
+    } else if (fx === 'crumple') {
+      // Turbulent ink dissolve: displacement scale 40 → 0 while opacity 0 → 1.
+      inEl.style.filter = 'url(#ink-crumple)';
+      gsap.set(inEl, { opacity: 0 });
+      if (feCrumple) {
+        gsap.set(feCrumple, { attr: { scale: 40 } });
+        tl.to(feCrumple, { attr: { scale: 0 }, duration: 1.05, ease: 'power3.out' }, 0);
+      }
+      tl.to(inEl, { opacity: 1, duration: 0.75, ease: 'power2.out' }, 0);
+    }
+  };
+
   useEffect(() => {
     schedule();
     const onVis = () => {
@@ -78,44 +177,13 @@ export default function HeroSlides() {
     return () => {
       document.removeEventListener('visibilitychange', onVis);
       stop();
+      tlRef.current?.kill();
+      tlRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /**
-   * Fragile fx cycle — do not "simplify".
-   *
-   * Three critical steps, every one required:
-   *   1. `void el.offsetHeight`  — forces a synchronous reflow so `.is-enter`
-   *      styles land before step 3 flips to `.is-active`. Skip this and the
-   *      browser coalesces both class changes in a single recompute; no
-   *      transition plays.
-   *   2. `requestAnimationFrame` — defers step 3 to the next paint. Skip this
-   *      and we're still in the same frame as the state commit; same result.
-   *   3. `setEnteringFrom(null)` — removes `.is-enter`, sets `.is-active` on
-   *      the new slide. CSS transitions from enter → active state now play.
-   *
-   * Alternatives that have been tried and break at least one of the five fx:
-   *   - plain setState in the event handler
-   *   - Promise.resolve().then(...)
-   *   - setTimeout(..., 0)
-   *   - React.useTransition
-   *
-   * See `knowledge/04-animation.md` and `knowledge/99-caveats.md`.
-   */
-  useLayoutEffect(() => {
-    if (enteringFrom === null) return;
-    const el = rootRef.current?.querySelectorAll<HTMLElement>('.slide')[idx];
-    if (el) void el.offsetHeight;
-    const raf = requestAnimationFrame(() => {
-      setEnteringFrom(null);
-      schedule();
-    });
-    return () => cancelAnimationFrame(raf);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enteringFrom, idx]);
-
-  // Subtle mouse parallax on the portrait stack.
+  // Subtle mouse parallax on the portrait stack — unchanged.
   useGSAP(
     () => {
       const root = rootRef.current;
@@ -174,21 +242,20 @@ export default function HeroSlides() {
       }}
     >
       {slides.map((s, i) => {
-        const isActive = enteringFrom !== null ? i === enteringFrom : i === idx;
-        const isEnter = enteringFrom !== null && i === idx;
-        const cls = `slide${isActive ? ' is-active' : ''}${isEnter ? ' is-enter' : ''}`;
-        const fx = fxByIdx[i];
+        const isActive = i === idx;
         return (
           <img
             key={s.src}
-            className={cls}
+            className={`slide${isActive ? ' is-active' : ''}`}
             src={`${base}${s.src}`}
             alt={s.alt}
             data-caption={s.caption}
-            {...(fx && (isActive || isEnter) ? { 'data-fx': fx } : {})}
           />
         );
       })}
     </div>
   );
 }
+
+// Keep Fx exported in case a future surface (e.g. a manual fx picker) needs it.
+export type { Fx };

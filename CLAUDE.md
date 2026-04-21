@@ -23,7 +23,7 @@ Slash commands: `/new-project`, `/theme-preview`, `/deploy-check`, `/typecheck` 
 ## Things that must not be broken
 
 1. **Pre-paint theme script** — inline in `index.html` `<head>`. Do not externalize, defer, or move into React.
-2. **`HeroSlides` fx cycle** — the `.is-enter` → forced reflow (`void el.offsetHeight`) → `requestAnimationFrame` → `.is-active` sequence in `src/components/HeroSlides.tsx` is what drives all five clip-path transitions.
+2. **`HeroSlides` fx cycle** — four ink-native transitions (`bloom`, `brush`, `tear`, `crumple`) are GSAP-driven from `src/components/HeroSlides.tsx`. One timeline at a time (advance is serialized). `resetSlide()` must clear every fx-specific inline style on completion or the next cycle starts from stale state. See `knowledge/04-animation.md`.
 3. **`base: '/bar-portfolio/'`** in `vite.config.ts` — if the repo is renamed, update this in lockstep.
 4. **`public/.nojekyll`** — must land in `dist/`. Keeps GitHub Pages' Jekyll from stripping underscore folders.
 

@@ -14,14 +14,16 @@ File: `index.html`. The `(function(){…})()` IIFE inside `<head>` that reads `l
 
 Keep it verbatim in `<head>`. If you need to add to the logic, extend the IIFE in place.
 
-### 2. `HeroSlides` fx cycle — reflow + RAF + flip
+### 2. `HeroSlides` fx cycle — GSAP-owned, one timeline at a time
 
-File: `src/components/HeroSlides.tsx`, the `useLayoutEffect([enteringFrom, idx])` block. See `04-animation.md`. **Do not** replace with:
+File: `src/components/HeroSlides.tsx`. See `04-animation.md`.
 
-- `setTimeout(… , 0)` — frame timing is inconsistent, breaks in Safari.
-- `Promise.resolve().then(…)` — runs in the same frame as the state update.
-- `React.useTransition` — batches with the original state update.
-- Removal of `void el.offsetHeight` — without the forced reflow, the browser coalesces `.is-enter` and `.is-active` into a single style recomputation, no transition plays.
+The old reflow → rAF → `.is-enter` → `.is-active` dance is gone — GSAP owns frame scheduling now, which made the dance unnecessary. The current invariants are:
+
+- `advance()` early-returns if the previous timeline is still active. Don't let two transitions overlap; the shared `#ink-crumple` filter assumes serial execution.
+- The incoming slide's inline styles (mask custom props, `filter`, `opacity`, `z-index`) must be cleared in `onComplete` via `resetSlide()`. Otherwise React's class-based resting state (`.is-active` ↔ `opacity: 1`) is overridden by stale inline values.
+- `setIdx(next)` must happen *before* GSAP starts tweening. React re-renders flip `.is-active` synchronously; GSAP's inline styles outrank CSS during the transition window.
+- `resetSlide()` must list every fx-specific custom prop. Forget one and the next cycle starts from a stale state.
 
 ### 3. `base: '/bar-portfolio/'` in `vite.config.ts`
 
