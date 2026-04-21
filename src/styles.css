@@ -421,11 +421,6 @@
   .ink-wipe{position:fixed;inset:0;z-index:95;pointer-events:none;opacity:0;
     background:var(--ink);display:none;clip-path:circle(0% at 50% 50%)}
 
-  /* Trail blot spawned behind the TabBar pill when active section changes */
-  .ink-drop{position:absolute;top:0;height:4px;width:4px;background:var(--paper);
-    border-radius:999px;pointer-events:none;transform:translateY(-1px);
-    filter:blur(.5px);opacity:0}
-
   /* Paper-peel accent on hoverable cards. The pseudo is the visible peel; the
      parent's own transform is untouched. Animated entirely through the
      --peel-* custom props which each hover source tweens with GSAP, OR via

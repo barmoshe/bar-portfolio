@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useSectionObserver } from '../hooks/useSectionObserver';
-import { gsap, REDUCED_MOTION_QUERY } from '../lib/gsap';
+import { gsap } from '../lib/gsap';
 
 const SECTIONS = ['dossier', 'experience', 'repos', 'notes', 'letter'] as const;
 
@@ -8,67 +8,94 @@ export default function TabBar() {
   const activeId = useSectionObserver(SECTIONS);
   const navRef = useRef<HTMLElement | null>(null);
   const pillRef = useRef<HTMLSpanElement | null>(null);
-  const prevRectRef = useRef<{ x: number; w: number } | null>(null);
 
   const isCurrent = (id: string) =>
     activeId === id ? { 'aria-current': 'true' as const } : {};
 
+  // Scroll-synced pill: x/width are interpolated between adjacent tabs based on
+  // how far the next section's top has crossed the viewport anchor line. The
+  // IntersectionObserver above still drives `aria-current` for a11y.
   useEffect(() => {
     const nav = navRef.current;
     const pill = pillRef.current;
     if (!nav || !pill) return;
-    const active = nav.querySelector<HTMLElement>(`a[data-target="${activeId}"]`);
-    if (!active) {
-      gsap.to(pill, { opacity: 0, duration: 0.2 });
-      return;
-    }
-    const navRect = nav.getBoundingClientRect();
-    const aRect = active.getBoundingClientRect();
-    const x = aRect.left - navRect.left;
-    const w = aRect.width;
 
-    // Spawn an ink drop at the previous pill position so the handoff feels wet.
-    const prev = prevRectRef.current;
-    prevRectRef.current = { x, w };
+    const getTargets = () => {
+      const sections = SECTIONS.map((id) => document.getElementById(id));
+      const tabs = SECTIONS.map((id) =>
+        nav.querySelector<HTMLElement>(`a[data-target="${id}"]`),
+      );
+      if (sections.some((s) => !s) || tabs.some((t) => !t)) return null;
+      return {
+        sections: sections as HTMLElement[],
+        tabs: tabs as HTMLElement[],
+      };
+    };
 
-    const reduced = window.matchMedia(REDUCED_MOTION_QUERY).matches;
-    if (reduced) {
+    let raf = 0;
+    let pending = false;
+
+    const update = () => {
+      pending = false;
+      const targets = getTargets();
+      if (!targets) return;
+      const { sections, tabs } = targets;
+
+      const anchor = window.innerHeight * 0.45;
+      const tops = sections.map((el) => el.getBoundingClientRect().top);
+
+      let i = 0;
+      let progress = 0;
+      if (tops[0] !== undefined && tops[0] >= anchor) {
+        i = 0;
+        progress = 0;
+      } else if (
+        tops[tops.length - 1] !== undefined &&
+        (tops[tops.length - 1] as number) <= anchor
+      ) {
+        i = tops.length - 1;
+        progress = 0;
+      } else {
+        for (let k = 0; k < tops.length - 1; k++) {
+          const a = tops[k] as number;
+          const b = tops[k + 1] as number;
+          if (a <= anchor && b > anchor) {
+            i = k;
+            progress = b === a ? 0 : (anchor - a) / (b - a);
+            break;
+          }
+        }
+      }
+
+      const tabA = tabs[i]!;
+      const tabB = tabs[Math.min(i + 1, tabs.length - 1)]!;
+      const navRect = nav.getBoundingClientRect();
+      const rA = tabA.getBoundingClientRect();
+      const rB = tabB.getBoundingClientRect();
+      const xA = rA.left - navRect.left;
+      const xB = rB.left - navRect.left;
+      const x = xA + (xB - xA) * progress;
+      const w = rA.width + (rB.width - rA.width) * progress;
+
       gsap.set(pill, { x, width: w, opacity: 1 });
-      return;
-    }
+    };
 
-    const pillTween = gsap.to(pill, {
-      x,
-      width: w,
-      opacity: 1,
-      duration: 0.55,
-      ease: 'power4.out',
-      overwrite: 'auto',
-    });
+    const schedule = () => {
+      if (pending) return;
+      pending = true;
+      raf = requestAnimationFrame(update);
+    };
 
-    let drop: HTMLSpanElement | null = null;
-    let dropTl: gsap.core.Timeline | null = null;
-    if (prev && (prev.x !== x || prev.w !== w)) {
-      drop = document.createElement('span');
-      drop.className = 'ink-drop';
-      drop.style.left = `${prev.x + prev.w / 2 - 3}px`;
-      nav.appendChild(drop);
-      const dropEl = drop;
-      dropTl = gsap
-        .timeline({ onComplete: () => dropEl.remove() })
-        .fromTo(
-          dropEl,
-          { scale: 0.4, opacity: 0.85 },
-          { scale: 1.6, opacity: 0, duration: 0.55, ease: 'power2.out' },
-        );
-    }
+    schedule();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
 
     return () => {
-      pillTween.kill();
-      dropTl?.kill();
-      drop?.remove();
+      cancelAnimationFrame(raf);
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
     };
-  }, [activeId]);
+  }, []);
 
   return (
     <nav className="tabbar" aria-label="Mobile sections" ref={navRef}>
