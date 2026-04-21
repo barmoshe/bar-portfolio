@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp /Users/barmoshe/claude-creative-stack/artifacts/html/barmoshe-portfolio.html /Users/barmoshe/bar-portfolio/index.html)",
+      "Bash(cp /Users/barmoshe/Downloads/img0.png /Users/barmoshe/Downloads/img1.png /Users/barmoshe/Downloads/img2.png /Users/barmoshe/Downloads/img3.png /Users/barmoshe/Downloads/img4.png /Users/barmoshe/bar-portfolio/portraits/)",
+      "Bash(python3 -m http.server 8765)",
+      "Bash(curl -s -o /dev/null -w \"index: %{http_code}\\\\n\" http://localhost:8765/)",
+      "Bash(curl -s -o /dev/null -w \"img0: %{http_code}\\\\n\" http://localhost:8765/portraits/img0.png)",
+      "Bash(curl -s -o /dev/null -w \"img4: %{http_code}\\\\n\" http://localhost:8765/portraits/img4.png)",
+      "Bash(lsof -ti:8765)",
+      "Bash(xargs kill *)",
+      "Bash(gh auth *)",
+      "Bash(git add *)",
+      "Bash(git rm *)",
+      "Bash(git reset *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git config *)",
+      "Bash(gh api *)",
+      "Bash(python3 -c \"import json,sys;d=json.load\\(sys.stdin\\);print\\('status:',d.get\\('status'\\)\\);print\\('error:',d.get\\('error'\\)\\);print\\('commit:',d.get\\('commit'\\)[:7] if d.get\\('commit'\\) else None\\)\")"
+    ]
+  }
+}
