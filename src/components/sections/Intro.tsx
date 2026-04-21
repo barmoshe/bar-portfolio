@@ -24,39 +24,72 @@ export default function Intro() {
       const paras = root.querySelectorAll<HTMLElement>('.bio p, .bio .drop');
       const tape = root.querySelector<HTMLElement>('.id-card .tape');
       const idMeta = root.querySelectorAll<HTMLElement>('.id-meta > *');
+      const credoCard = root.querySelector<HTMLElement>('.credo-card');
+      const credoTape = root.querySelector<HTMLElement>('.credo-card .tape');
 
       const mm = gsap.matchMedia();
 
       mm.add(DESKTOP_QUERY, () => {
-        if (!card) return;
-        gsap.set(card, { xPercent: -30, y: 18, rotate: -10, opacity: 0 });
-        gsap.to(card, {
-          xPercent: 0,
-          y: 0,
-          rotate: -1.5,
-          opacity: 1,
-          duration: 1.1,
-          ease: 'power4.out',
-          scrollTrigger: {
-            trigger: root,
-            start: 'top 70%',
-            toggleActions: 'play none none none',
-          },
-        });
+        if (card) {
+          gsap.set(card, { xPercent: -30, y: 18, rotate: -10, opacity: 0 });
+          gsap.to(card, {
+            xPercent: 0,
+            y: 0,
+            rotate: -1.5,
+            opacity: 1,
+            duration: 1.1,
+            ease: 'power4.out',
+            scrollTrigger: {
+              trigger: root,
+              start: 'top 70%',
+              toggleActions: 'play none none none',
+            },
+          });
+        }
+
+        if (credoCard) {
+          gsap.set(credoCard, { y: 40, rotate: -8, opacity: 0 });
+          gsap.to(credoCard, {
+            y: 0,
+            rotate: -1.5,
+            opacity: 1,
+            duration: 0.9,
+            ease: 'power4.out',
+            scrollTrigger: {
+              trigger: credoCard,
+              start: 'top 85%',
+              toggleActions: 'play none none none',
+            },
+          });
+        }
       });
 
       mm.add(MOBILE_QUERY, () => {
-        if (!card) return;
-        gsap.set(card, { y: 60, opacity: 0, scale: 0.92, rotate: -3 });
-        gsap.to(card, {
-          y: 0,
-          opacity: 1,
-          scale: 1,
-          rotate: -1.5,
-          duration: 0.85,
-          ease: 'back.out(1.4)',
-          scrollTrigger: { trigger: root, start: 'top 95%' },
-        });
+        if (card) {
+          gsap.set(card, { y: 60, opacity: 0, scale: 0.92, rotate: -3 });
+          gsap.to(card, {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            rotate: -1.5,
+            duration: 0.85,
+            ease: 'back.out(1.4)',
+            scrollTrigger: { trigger: root, start: 'top 95%' },
+          });
+        }
+
+        if (credoCard) {
+          gsap.set(credoCard, { y: 40, scale: 0.92, rotate: -4, opacity: 0 });
+          gsap.to(credoCard, {
+            y: 0,
+            scale: 1,
+            rotate: -1,
+            opacity: 1,
+            duration: 0.75,
+            ease: 'back.out(1.4)',
+            scrollTrigger: { trigger: credoCard, start: 'top 92%' },
+          });
+        }
       });
 
       mm.add(FULL_MOTION_QUERY, () => {
@@ -70,6 +103,17 @@ export default function Intro() {
             duration: 0.5,
             ease: 'power2.out',
             scrollTrigger: { trigger: root, start: 'top 60%' },
+          });
+        }
+
+        if (credoTape) {
+          gsap.set(credoTape, { scaleX: 0, transformOrigin: 'left center', opacity: 0 });
+          gsap.to(credoTape, {
+            scaleX: 1,
+            opacity: 1,
+            duration: 0.5,
+            ease: 'power2.out',
+            scrollTrigger: { trigger: credoCard ?? root, start: 'top 78%' },
           });
         }
 
@@ -184,9 +228,14 @@ export default function Intro() {
         </p>
 
         <p>
-          It's the habit of starting and the belief that &ldquo;everything is only one
-          prompt away&rdquo;.
+          It comes down to a habit of starting &mdash; and one belief I carry into every
+          project:
         </p>
+
+        <aside className="credo-card" aria-label="credo">
+          <span className="tape" aria-hidden="true" />
+          <blockquote>&ldquo;everything is only one prompt away&rdquo;</blockquote>
+        </aside>
 
         <p className="toolline">
           <span className="prompt">&gt;&nbsp;now</span>
