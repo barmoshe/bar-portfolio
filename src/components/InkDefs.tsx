@@ -66,7 +66,7 @@ export default function InkDefs() {
             <feTurbulence
               type="fractalNoise"
               baseFrequency="0.02 0.05"
-              numOctaves="2"
+              numOctaves="1"
               seed={i + 1}
               result="turb"
             />

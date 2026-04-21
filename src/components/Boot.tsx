@@ -187,6 +187,9 @@ export default function Boot({ onGone }: Props) {
         }
 
         // Beat 9 — ambient masthead breathing (post-entrance).
+        // Use filter:brightness (compositor) instead of letterSpacing (layout)
+        // so the infinite yoyo doesn't reflow the masthead every frame.
+        let onVis: (() => void) | null = null;
         if (mast) {
           const breathTl = gsap.timeline({
             repeat: -1,
@@ -194,7 +197,7 @@ export default function Boot({ onGone }: Props) {
             paused: true,
           });
           breathTl.to(mast, {
-            letterSpacing: '-0.025em',
+            filter: 'brightness(1.06)',
             duration: 5,
             ease: 'sine.inOut',
           });
@@ -206,9 +209,15 @@ export default function Boot({ onGone }: Props) {
             undefined,
             '>',
           );
+          onVis = () => {
+            if (document.hidden) breathTl.pause();
+            else if (breathTl.totalProgress() > 0) breathTl.play();
+          };
+          document.addEventListener('visibilitychange', onVis);
         }
 
         return () => {
+          if (onVis) document.removeEventListener('visibilitychange', onVis);
           mastSplit?.revert();
           breathRef.current?.kill();
           breathRef.current = null;

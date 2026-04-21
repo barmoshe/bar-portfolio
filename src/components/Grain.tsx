@@ -3,8 +3,9 @@ import { gsap, useGSAP, FULL_MOTION_QUERY } from '../lib/gsap';
 
 // Breathing grain overlay. The .grain wrapper lives fixed over the page;
 // inside, an inline SVG applies a fractalNoise filter to a rectangle and GSAP
-// loops the baseFrequency between two values over 8s so the paper texture
-// feels like it's still drying. Reduced-motion freezes the texture.
+// loops the baseFrequency between two values so the paper texture feels like
+// it's still drying. SVG filters are CPU-bound, so the loop is deliberately
+// slow and pauses while the tab is hidden. Reduced-motion freezes it entirely.
 export default function Grain() {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const feTurbRef = useRef<SVGFETurbulenceElement | null>(null);
@@ -17,14 +18,23 @@ export default function Grain() {
       mm.add(FULL_MOTION_QUERY, () => {
         // Delay the infinite yoyo so the Boot entrance can run a one-shot
         // grain "wash" (baseFrequency 1.4 → 0.9) without fighting this loop.
-        gsap.to(fe, {
+        const tween = gsap.to(fe, {
           attr: { baseFrequency: '0.92 0.92' },
-          duration: 8,
+          duration: 16,
           ease: 'sine.inOut',
           yoyo: true,
           repeat: -1,
           delay: 1.1,
         });
+        const onVis = () => {
+          if (document.hidden) tween.pause();
+          else tween.play();
+        };
+        document.addEventListener('visibilitychange', onVis);
+        return () => {
+          document.removeEventListener('visibilitychange', onVis);
+          tween.kill();
+        };
       });
       return () => mm.revert();
     },
