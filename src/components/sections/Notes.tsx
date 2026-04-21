@@ -142,7 +142,6 @@ function restStyle(e: Entry): CSSProperties {
   if (e.featured) {
     return {
       ...base,
-      borderLeft: `6px solid ${e.shadowColor}`,
       boxShadow: `6px 7px 0 ${e.shadowColor}`,
     };
   }
