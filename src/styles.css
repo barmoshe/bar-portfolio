@@ -482,7 +482,7 @@
   [data-magnet]{cursor:pointer}
 
   /* Custom cursor overlay */
-  .ink-cursor{position:fixed;inset:0;pointer-events:none;z-index:90;opacity:0}
+  .ink-cursor{position:fixed;inset:0;pointer-events:none;z-index:110;opacity:0}
   .ink-cursor svg{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
   .ink-cursor-blob{fill:var(--ink);opacity:.55}
   .ink-cursor-nib{fill:var(--ink)}
