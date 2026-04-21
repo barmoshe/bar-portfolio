@@ -500,29 +500,37 @@
     /* Hide caption/dots - no room */
     #dossier .mug .slide-caption,#dossier .mug .slide-dots{display:none}
 
-    /* id-meta: rebuild as colored chips wrapping, sits AFTER bio */
+    /* id-meta: label+value as 2-column grid so pairs never split across lines */
     #dossier .id-meta{
-      display:flex;flex-wrap:wrap;gap:8px;
+      display:grid;grid-template-columns:auto 1fr;gap:8px 10px;
       border-top:1px dashed var(--ink-soft);padding-top:14px;margin-top:18px;
-      grid-template-columns:none;font-size:11px;letter-spacing:.08em}
+      font-size:12px;letter-spacing:0;align-items:center}
     #dossier .id-meta b{
+      justify-self:start;align-self:center;
       background:var(--blue);color:var(--paper);
       padding:3px 8px;font-family:var(--mono);font-weight:700;
-      letter-spacing:.15em;text-transform:uppercase;font-size:10px}
+      letter-spacing:.15em;text-transform:uppercase;font-size:10px;
+      line-height:1.4;white-space:nowrap}
     #dossier .id-meta span{
-      align-self:center;color:var(--ink);font-family:var(--mono);
-      letter-spacing:0;text-transform:none}
+      color:var(--ink);font-family:var(--mono);
+      letter-spacing:0;text-transform:none;
+      overflow-wrap:anywhere;min-width:0}
     #dossier .id-meta b,#dossier .id-meta span{margin:0}
-    /* Each b+span forms a chip pair - use a wrapper-ish pattern via sibling gap */
-    #dossier .id-meta > b + span{margin-right:10px}
 
-    /* Bio: byline becomes a mono tag, h1 slightly tighter */
+    /* Bio: byline is a full sentence, not a chip — keep it as a small italic
+       lead-in so it doesn't wrap into an oversized dark block. */
     #dossier .bio .byline{
-      display:inline-block;background:var(--ink);color:var(--paper);
-      padding:6px 10px;font-size:11px;letter-spacing:.1em;
-      text-transform:uppercase;margin-bottom:12px}
-    #dossier .bio .byline::before{content:""}
+      display:block;background:transparent;color:var(--ink-soft);
+      padding:0;font-family:var(--serif);font-style:italic;
+      font-size:.95rem;letter-spacing:0;text-transform:none;
+      line-height:1.4;margin-bottom:12px}
+    #dossier .bio .byline::before{content:"// ";color:var(--blue);font-family:var(--mono);font-style:normal}
     #dossier .bio h1{margin-top:0;line-height:1.02}
+
+    /* Toolline: stack the "WORKING ON" label above the sentence so it doesn't
+       collide mid-line on narrow screens */
+    .toolline{font-size:.98rem;line-height:1.55}
+    .toolline b{display:block;margin:0 0 4px 0}
 
     .drop p{font-size:1rem;line-height:1.65}
 
