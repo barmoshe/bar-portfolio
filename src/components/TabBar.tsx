@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { useSectionObserver } from '../hooks/useSectionObserver';
-import { gsap } from '../lib/gsap';
 
 const SECTIONS = ['dossier', 'experience', 'repos', 'notes', 'letter'] as const;
 
@@ -12,37 +11,43 @@ export default function TabBar() {
   const isCurrent = (id: string) =>
     activeId === id ? { 'aria-current': 'true' as const } : {};
 
-  // Scroll-synced pill: x/width are interpolated between adjacent tabs based on
-  // how far the next section's top has crossed the viewport anchor line.
-  // Driven by gsap.ticker so it works even when iOS Safari throttles scroll
-  // events during momentum / rubber-band scrolling. IntersectionObserver still
-  // drives `aria-current` for a11y.
+  // Scroll-synced pill driven by a self-scheduling rAF loop. Position/size are
+  // written directly to pill.style so there is no chance of a GSAP tween or
+  // matchMedia cleanup interfering. IntersectionObserver still drives
+  // `aria-current` for a11y.
   useEffect(() => {
     const nav = navRef.current;
     const pill = pillRef.current;
     if (!nav || !pill) return;
 
+    let rafId = 0;
+    let alive = true;
+
     const tick = () => {
-      const sections = SECTIONS.map((id) => document.getElementById(id));
-      const tabs = SECTIONS.map((id) =>
-        nav.querySelector<HTMLElement>(`a[data-target="${id}"]`),
-      );
-      if (sections.some((s) => !s) || tabs.some((t) => !t)) return;
-      const secs = sections as HTMLElement[];
-      const tabEls = tabs as HTMLElement[];
+      if (!alive) return;
+      const sections: HTMLElement[] = [];
+      const tabs: HTMLElement[] = [];
+      for (const id of SECTIONS) {
+        const s = document.getElementById(id);
+        const t = nav.querySelector<HTMLElement>(`a[data-target="${id}"]`);
+        if (!s || !t) {
+          rafId = requestAnimationFrame(tick);
+          return;
+        }
+        sections.push(s);
+        tabs.push(t);
+      }
 
       const anchor = window.innerHeight * 0.45;
-      const tops = secs.map((el) => el.getBoundingClientRect().top);
+      const tops = sections.map((el) => el.getBoundingClientRect().top);
       const last = tops.length - 1;
 
       let i = 0;
       let progress = 0;
       if ((tops[0] as number) >= anchor) {
         i = 0;
-        progress = 0;
       } else if ((tops[last] as number) <= anchor) {
         i = last;
-        progress = 0;
       } else {
         for (let k = 0; k < last; k++) {
           const a = tops[k] as number;
@@ -55,8 +60,8 @@ export default function TabBar() {
         }
       }
 
-      const tabA = tabEls[i]!;
-      const tabB = tabEls[Math.min(i + 1, last)]!;
+      const tabA = tabs[i]!;
+      const tabB = tabs[Math.min(i + 1, last)]!;
       const navRect = nav.getBoundingClientRect();
       const rA = tabA.getBoundingClientRect();
       const rB = tabB.getBoundingClientRect();
@@ -65,12 +70,17 @@ export default function TabBar() {
       const x = xA + (xB - xA) * progress;
       const w = rA.width + (rB.width - rA.width) * progress;
 
-      gsap.set(pill, { x, width: w, opacity: 1 });
+      pill.style.transform = `translate3d(${x}px,0,0)`;
+      pill.style.width = `${w}px`;
+      pill.style.opacity = '1';
+
+      rafId = requestAnimationFrame(tick);
     };
 
-    gsap.ticker.add(tick);
+    rafId = requestAnimationFrame(tick);
     return () => {
-      gsap.ticker.remove(tick);
+      alive = false;
+      cancelAnimationFrame(rafId);
     };
   }, []);
 
