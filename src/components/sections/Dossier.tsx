@@ -147,7 +147,7 @@ export default function Dossier() {
           <b>NAME</b>
           <span>Bar Moshe</span>
           <b>ROLE</b>
-          <span>Software Engineer</span>
+          <span>Build things</span>
           <b>FOCUS</b>
           <span>Full-Stack · AI-native · Builder</span>
           <b>REACH</b>
