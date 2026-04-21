@@ -25,7 +25,7 @@ const SLIDES: Slide[] = [
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
 
-const INITIAL_HOLD_MS = 3000;
+const INITIAL_HOLD_MS = 4000;
 const BOOT_COMPLETE_EVENT = 'bar:boot-complete';
 
 const shuffleRest = (list: Slide[]): Slide[] => {
