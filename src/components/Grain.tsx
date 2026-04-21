@@ -42,10 +42,10 @@ export default function Grain() {
           <feColorMatrix
             type="matrix"
             values="
-              0 0 0 0 0
-              0 0 0 0 0
-              0 0 0 0 0
-              0 0 0 0.9 0"
+              0 0 0 0 0.2
+              0 0 0 0 0.15
+              0 0 0 0 0.1
+              0 0 0 0.35 0"
           />
         </filter>
         <rect width="100%" height="100%" filter="url(#grain-filter)" />
