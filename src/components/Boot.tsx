@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useBootDismiss } from '../hooks/useBootDismiss';
 import { useAssetPreload } from '../hooks/useAssetPreload';
 import { gsap, useGSAP, SplitText, FULL_MOTION_QUERY } from '../lib/gsap';
 
@@ -29,8 +28,6 @@ export default function Boot({ onGone }: Props) {
     setLeaving(true);
   };
 
-  useBootDismiss(!leaving, dismiss);
-
   // Entrance choreography.
   useGSAP(
     () => {
@@ -53,7 +50,6 @@ export default function Boot({ onGone }: Props) {
         const em = quoteText?.querySelector<HTMLElement>('em') ?? null;
         const sub = root.querySelector<HTMLElement>('.sub');
         const btn = root.querySelector<HTMLElement>('.enter');
-        const hint = root.querySelector<HTMLElement>('.enter-hint');
         const fill = root.querySelector<HTMLElement>('.enter-progress-fill');
         const fe = document.querySelector<SVGFETurbulenceElement>(
           'feTurbulence[data-grain="wash"]',
@@ -238,16 +234,6 @@ export default function Boot({ onGone }: Props) {
           );
         }
 
-        // Beat 7 — hint.
-        if (hint) {
-          gsap.set(hint, { opacity: 0 });
-          tl.to(
-            hint,
-            { opacity: 1, duration: 0.4, ease: 'power2.out' },
-            1.65,
-          );
-        }
-
         // Beat 8 (parallel) — grain wash: coarser → settled.
         if (fe) {
           tl.fromTo(
@@ -332,7 +318,7 @@ export default function Boot({ onGone }: Props) {
       mm.add('(prefers-reduced-motion: reduce)', () => {
         gsap.set(
           root.querySelectorAll(
-            '.mast, .mast-main, .version-tag, .mast-quote, .mast-quote-open, .mast-quote-text, .mast-quote-close, .mast-quote-attr, .sub, .enter, .enter-hint',
+            '.mast, .mast-main, .version-tag, .mast-quote, .mast-quote-open, .mast-quote-text, .mast-quote-close, .mast-quote-attr, .sub, .enter',
           ),
           { clearProps: 'all' },
         );
@@ -499,7 +485,6 @@ export default function Boot({ onGone }: Props) {
         >
           Enter the portfolio
         </button>
-        <div className="enter-hint">press any key · or click anywhere</div>
         <div
           className="enter-progress"
           aria-hidden="true"
