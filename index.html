@@ -481,14 +481,15 @@
     #dossier .bio{order:1}
     #dossier .id-card{order:2;
       background:transparent !important;border:0 !important;
-      box-shadow:none !important;padding:0 !important;margin-top:6px}
+      box-shadow:none !important;padding:0 !important;margin-top:6px;
+      display:flex;flex-direction:column;align-items:center;text-align:center}
     #dossier .id-card .tape{display:none}
 
     /* Mug: 96px circle, left-aligned block above chips */
     #dossier .mug{
       width:96px;height:96px;aspect-ratio:1/1;border-radius:50%;
       border:2px solid var(--ink);overflow:hidden;
-      margin:0 0 14px 0;
+      margin:0 auto 14px auto;
       box-shadow:4px 4px 0 var(--blue);
       background:linear-gradient(135deg, oklch(0.45 0.16 250), oklch(0.6 0.18 200))}
     #dossier .mug::after{display:none}
@@ -504,7 +505,8 @@
        [LABEL | value] with visible cell dividers */
     #dossier .id-meta{
       display:grid;grid-template-columns:minmax(68px,auto) 1fr;gap:0;
-      margin-top:18px;padding-top:0;font-size:12px;letter-spacing:0;
+      margin:18px auto 0;width:100%;max-width:420px;text-align:left;
+      padding-top:0;font-size:12px;letter-spacing:0;
       border:1.5px solid var(--ink);background:var(--paper)}
     #dossier .id-meta b{
       display:flex;align-items:center;
