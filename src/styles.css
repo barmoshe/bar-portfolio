@@ -614,15 +614,15 @@
       text-align:center !important}
     #dossier .id-card .tape{display:none}
 
-    /* Mug: 96px circle, left-aligned block above chips */
+    /* Mug: larger, softened rectangle above chips */
     #dossier .mug{
-      width:96px;height:96px;aspect-ratio:1/1;border-radius:50%;
+      width:min(220px,60vw);height:auto;aspect-ratio:4/5;border-radius:14px;
       border:2px solid var(--ink);overflow:hidden;
       margin:0 auto 14px auto !important;align-self:center !important;
       box-shadow:4px 4px 0 var(--green);
       background:linear-gradient(135deg, oklch(0.45 0.16 250), oklch(0.6 0.18 200))}
     #dossier .mug::after{display:none}
-    #dossier .mug .slide{border-radius:50%;filter:blur(6px) saturate(.8)}
+    #dossier .mug .slide{border-radius:14px;filter:blur(6px) saturate(.8)}
     #dossier .mug .slide.is-active{filter:blur(0) saturate(1)}
     /* Kill all the fancy per-fx clip-paths on the tiny avatar - they break at 88px */
     #dossier .mug .slide[data-fx]{clip-path:none !important;transform:none !important}

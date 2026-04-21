@@ -36,8 +36,6 @@ export default function HeroSlides() {
   const pausedRef = useRef(false);
   const timerRef = useRef<number | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const captionRef = useRef<HTMLSpanElement | null>(null);
-  const dotsRef = useRef<HTMLDivElement | null>(null);
 
   const stop = () => {
     if (timerRef.current !== null) {
@@ -114,43 +112,6 @@ export default function HeroSlides() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enteringFrom, idx]);
 
-  // Caption flip + dot pop on slide change.
-  useGSAP(
-    () => {
-      const cap = captionRef.current;
-      if (!cap) return;
-      const mm = gsap.matchMedia();
-      mm.add(FULL_MOTION_QUERY, () => {
-        gsap.fromTo(
-          cap,
-          { yPercent: 120, opacity: 0, rotate: -3 },
-          { yPercent: 0, opacity: 1, rotate: 0, duration: 0.55, ease: 'back.out(2)' },
-        );
-      });
-      return () => mm.revert();
-    },
-    { dependencies: [idx], scope: rootRef },
-  );
-
-  useGSAP(
-    () => {
-      const dots = dotsRef.current;
-      if (!dots) return;
-      const active = dots.querySelector<HTMLElement>(`[data-i="${idx}"]`);
-      if (!active) return;
-      const mm = gsap.matchMedia();
-      mm.add(FULL_MOTION_QUERY, () => {
-        gsap.fromTo(
-          active,
-          { scale: 0.6 },
-          { scale: 1.35, duration: 0.4, ease: 'back.out(2.5)' },
-        );
-      });
-      return () => mm.revert();
-    },
-    { dependencies: [idx], scope: rootRef },
-  );
-
   // Subtle mouse parallax on the portrait stack.
   useGSAP(
     () => {
@@ -162,31 +123,16 @@ export default function HeroSlides() {
         const yTo = gsap.quickTo(root, '--tilt-y', { duration: 0.5, ease: 'power3.out' });
         gsap.set(root, { '--tilt-x': 0, '--tilt-y': 0 });
 
-        // Counter-parallax on the caption card: inverted sign, 0.2× magnitude.
-        // Reads the current caption node each move since the node re-keys on
-        // slide change, so quickTo is rebuilt per-move rather than cached.
-        const cap = captionRef.current;
-        const capX = cap
-          ? gsap.quickTo(cap, 'x', { duration: 0.6, ease: 'power3.out' })
-          : null;
-        const capY = cap
-          ? gsap.quickTo(cap, 'y', { duration: 0.6, ease: 'power3.out' })
-          : null;
-
         const onMove = (e: MouseEvent) => {
           const r = root.getBoundingClientRect();
           const nx = ((e.clientX - r.left) / r.width - 0.5) * 2;
           const ny = ((e.clientY - r.top) / r.height - 0.5) * 2;
           xTo(nx * 6);
           yTo(ny * 6);
-          capX?.(-nx * 1.2);
-          capY?.(-ny * 1.2);
         };
         const onLeave = () => {
           xTo(0);
           yTo(0);
-          capX?.(0);
-          capY?.(0);
         };
         root.addEventListener('mousemove', onMove);
         root.addEventListener('mouseleave', onLeave);
@@ -210,7 +156,6 @@ export default function HeroSlides() {
   };
 
   const base = import.meta.env.BASE_URL;
-  const currentCaption = slides[idx]?.caption ?? '';
 
   return (
     <div
@@ -241,20 +186,6 @@ export default function HeroSlides() {
           />
         );
       })}
-      <span className="slide-caption" key={currentCaption} ref={captionRef}>
-        {currentCaption}
-      </span>
-      <div className="slide-dots" ref={dotsRef} aria-hidden="true">
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            data-i={i}
-            aria-current={i === idx ? 'true' : undefined}
-            tabIndex={-1}
-          />
-        ))}
-      </div>
     </div>
   );
 }

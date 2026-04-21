@@ -26,7 +26,10 @@
       "Bash(gh run view:*)",
       "Bash(curl -s -o /dev/null -w * http://localhost:5173/*)",
       "Bash(curl -s -o /dev/null -w * http://localhost:4173/*)",
-      "Bash(curl -s -o /dev/null -w * https://barmoshe.github.io/bar-portfolio/*)"
+      "Bash(curl -s -o /dev/null -w * https://barmoshe.github.io/bar-portfolio/*)",
+      "Bash(cp /Users/barmoshe/Downloads/img5.png /Users/barmoshe/bar-portfolio/public/portraits/img5.png)",
+      "Bash(cp /Users/barmoshe/Downloads/img6.png /Users/barmoshe/bar-portfolio/public/portraits/img6.png)",
+      "Bash(awk -F: '$2>=590 && $2<=650')"
     ]
   }
 }
