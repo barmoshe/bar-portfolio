@@ -156,7 +156,7 @@ function openLB(idx){
   const extrasList = $("#lbExtrasList");
   if (p.extras && p.extras.length){
     extrasList.innerHTML = p.extras.map(x =>
-      `<li><a href="${x.url}" target="_blank" rel="noopener" style="color:var(--blue)">${x.label}</a></li>`
+      `<li><a href="${x.url}" target="_blank" rel="noopener" style="color:var(--green)">${x.label}</a></li>`
     ).join("");
     extrasBox.style.display = "block";
   } else {
