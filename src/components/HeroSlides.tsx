@@ -52,6 +52,7 @@ export default function HeroSlides() {
   const [idx, setIdx] = useState(0);
   const idxRef = useRef(0);
   const fxCounter = useRef(0);
+  const naturalIdxRef = useRef(0);
   const pausedRef = useRef(false);
   const timerRef = useRef<number | null>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
@@ -63,6 +64,8 @@ export default function HeroSlides() {
       timerRef.current = null;
     }
   };
+
+  const img0Idx = slides.findIndex((s) => s.src === 'portraits/img0.png');
 
   const schedule = () => {
     if (pausedRef.current) return;
@@ -83,7 +86,17 @@ export default function HeroSlides() {
     if (!els.length) return;
 
     const prev = idxRef.current;
-    const next = (prev + 1) % slides.length;
+    // Every 5th transition forces img0 back in; other transitions advance
+    // `naturalIdxRef` around the rest of the shuffle, skipping img0 so the
+    // forced resurface stays meaningful.
+    const changeNum = fxCounter.current + 1;
+    const forceImg0 = img0Idx >= 0 && changeNum % 5 === 0;
+    if (!forceImg0) {
+      let np = (naturalIdxRef.current + 1) % slides.length;
+      if (np === img0Idx) np = (np + 1) % slides.length;
+      naturalIdxRef.current = np;
+    }
+    const next = forceImg0 ? img0Idx : naturalIdxRef.current;
     const fx = FX[fxCounter.current % FX.length]!;
     fxCounter.current += 1;
 
