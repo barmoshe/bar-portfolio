@@ -14,6 +14,7 @@
     --blue:     oklch(0.45 0.16 250);
     --yellow:   oklch(0.86 0.17 90);
     --magenta:  oklch(0.62 0.22 340);
+    --purple:   oklch(0.46 0.22 295);
     --cyan:     oklch(0.80 0.14 200);
     --shadow:   oklch(0.2 0.04 40 / .22);
     --serif: "Iowan Old Style", "Georgia", ui-serif, serif;
@@ -41,6 +42,7 @@
     --blue:     oklch(0.78 0.13 240);
     --yellow:   oklch(0.86 0.15 90);
     --magenta:  oklch(0.78 0.17 340);
+    --purple:   oklch(0.75 0.17 295);
     --cyan:     oklch(0.85 0.12 200);
     --shadow:   oklch(0 0 0 / .55);
     /* Back-compat aliases for existing --band consumers */
@@ -153,7 +155,7 @@
   html.dark #letter a[style*="var(--magenta)"]{box-shadow: 6px 8px 0 var(--magenta) !important}
   html.dark #letter a[style*="var(--yellow)"] {box-shadow: 6px 8px 0 var(--yellow) !important}
   html.dark #letter a[style*="var(--blue)"]   {box-shadow: 6px 8px 0 var(--blue) !important}
-  html.dark #letter a[style*="var(--ink)"]    {box-shadow: 6px 8px 0 #8957e5 !important}
+  html.dark #letter a[style*="var(--purple)"] {box-shadow: 6px 8px 0 var(--purple) !important}
   html.dark #notes a[style*="5px 6px 0 var(--green)"]{box-shadow: 6px 8px 0 var(--green) !important}
   html.dark #music > div > div[style*="var(--green)"]{box-shadow: 6px 8px 0 var(--green) !important}
 
@@ -576,6 +578,7 @@
     #letter > div > a[style*="var(--magenta)"]{box-shadow:4px 5px 0 var(--magenta)!important}
     #letter > div > a[style*="var(--yellow)"] {box-shadow:4px 5px 0 var(--yellow) !important}
     #letter > div > a[style*="var(--blue)"]   {box-shadow:4px 5px 0 var(--blue)   !important}
+    #letter > div > a[style*="var(--purple)"] {box-shadow:4px 5px 0 var(--purple) !important}
 
     /* Featured (green) dispatch card shadow */
     #notes > div > a[style*="var(--green)"]{box-shadow:4px 5px 0 var(--green) !important}

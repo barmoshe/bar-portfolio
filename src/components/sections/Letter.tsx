@@ -85,7 +85,7 @@ const CARDS: Card[] = [
     target: '_blank',
     rel: 'noopener',
     rotate: '1deg',
-    shadowColor: 'var(--ink)',
+    shadowColor: 'var(--purple)',
     kickerColor: 'var(--ink-soft)',
     kickerLeft: '// github',
     kickerRight: 'code',
