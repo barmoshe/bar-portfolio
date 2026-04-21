@@ -1,4 +1,5 @@
-import type { CSSProperties } from 'react';
+import { useRef, type CSSProperties } from 'react';
+import { gsap, SplitText, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
 
 const trackCard = (rotate: string): CSSProperties => ({
   position: 'relative',
@@ -45,8 +46,99 @@ const foot = (rotate: string): CSSProperties => ({
 });
 
 export default function Music() {
+  const rootRef = useRef<HTMLElement | null>(null);
+
+  useGSAP(
+    () => {
+      const root = rootRef.current;
+      if (!root) return;
+      const stamp = root.querySelector<HTMLElement>('.stamp');
+      const headline = root.querySelector<HTMLElement>('.headline');
+      const dek = root.querySelector<HTMLElement>('.dek');
+      const cards = root.querySelectorAll<HTMLElement>('[data-music-card]');
+      const foots = root.querySelectorAll<HTMLElement>('[data-music-foot]');
+      const targetRotations = [-1, 1.2, -0.6];
+
+      const mm = gsap.matchMedia();
+      mm.add(FULL_MOTION_QUERY, () => {
+        let split: SplitText | null = null;
+
+        if (stamp) {
+          gsap.set(stamp, { opacity: 0, rotate: 10, scale: 0.8 });
+          gsap.to(stamp, {
+            opacity: 1,
+            rotate: -3,
+            scale: 1,
+            duration: 0.6,
+            ease: 'back.out(2)',
+            scrollTrigger: { trigger: root, start: 'top 75%' },
+          });
+        }
+
+        if (headline) {
+          split = new SplitText(headline, { type: 'words' });
+          gsap.set(split.words, { opacity: 0, yPercent: 80, rotate: -3 });
+          gsap.to(split.words, {
+            opacity: 1,
+            yPercent: 0,
+            rotate: 0,
+            duration: 0.7,
+            stagger: 0.06,
+            ease: 'back.out(1.6)',
+            scrollTrigger: { trigger: headline, start: 'top 80%' },
+          });
+        }
+
+        if (dek) {
+          gsap.set(dek, { opacity: 0, y: 14 });
+          gsap.to(dek, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            scrollTrigger: { trigger: dek, start: 'top 85%' },
+          });
+        }
+
+        cards.forEach((el, i) => {
+          const target = targetRotations[i] ?? 0;
+          gsap.set(el, { opacity: 0, y: 40, rotate: target - 6, scale: 0.95 });
+          gsap.to(el, {
+            opacity: 1,
+            y: 0,
+            rotate: target,
+            scale: 1,
+            duration: 0.85,
+            ease: 'back.out(1.5)',
+            delay: i * 0.1,
+            scrollTrigger: { trigger: el, start: 'top 85%' },
+          });
+        });
+
+        foots.forEach((el, i) => {
+          gsap.set(el, { opacity: 0, scale: 0.4, y: 10 });
+          gsap.to(el, {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.6,
+            ease: 'back.out(2.5)',
+            delay: 0.3 + i * 0.1,
+            scrollTrigger: { trigger: el, start: 'top 90%' },
+          });
+        });
+
+        return () => {
+          split?.revert();
+        };
+      });
+
+      return () => mm.revert();
+    },
+    { scope: rootRef },
+  );
+
   return (
-    <article className="page" id="music">
+    <article className="page" id="music" ref={rootRef}>
       <div className="folio">
         <b>05</b> // OFF-KEYBOARD
       </div>
@@ -68,7 +160,7 @@ export default function Music() {
           alignItems: 'stretch',
         }}
       >
-        <div style={trackCard('-1deg')}>
+        <div data-music-card style={trackCard('-1deg')}>
           <div>
             <p style={kicker}>Track 01 · //TODO</p>
             <h3 style={title}>Coming soon.</h3>
@@ -76,19 +168,20 @@ export default function Music() {
               Placeholder for an Ableton track. Embed, waveform, or short clip will go here.
             </p>
           </div>
-          <p style={foot('-2deg')}>▶ soon.</p>
+          <p data-music-foot style={foot('-2deg')}>▶ soon.</p>
         </div>
 
-        <div style={trackCard('1.2deg')}>
+        <div data-music-card style={trackCard('1.2deg')}>
           <div>
             <p style={kicker}>Track 02 · //TODO</p>
             <h3 style={title}>Also soon.</h3>
             <p style={desc}>Another slot for a track or MIDI GPT-generated loop.</p>
           </div>
-          <p style={foot('2deg')}>♪ ♪ ♪</p>
+          <p data-music-foot style={foot('2deg')}>♪ ♪ ♪</p>
         </div>
 
         <div
+          data-music-card
           style={{
             ...trackCard('-.6deg'),
             background: 'var(--ink)',
@@ -107,7 +200,7 @@ export default function Music() {
               on software.
             </p>
           </div>
-          <p style={foot('-2deg')}>// todo: story.</p>
+          <p data-music-foot style={foot('-2deg')}>// todo: story.</p>
         </div>
       </div>
 

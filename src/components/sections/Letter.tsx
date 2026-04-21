@@ -1,5 +1,6 @@
-import type { CSSProperties } from 'react';
+import { useRef, type CSSProperties } from 'react';
 import HoverCard from '../HoverCard';
+import { gsap, SplitText, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
 
 type Card = {
   href: string;
@@ -133,9 +134,100 @@ const valueStyle: CSSProperties = {
   color: 'var(--ink)',
 };
 
+// Fan-in scatter offsets per card (indexed).
+const SCATTER = [
+  { x: -120, y: -40, r: -20 },
+  { x: 140, y: -50, r: 24 },
+  { x: -160, y: 30, r: -14 },
+  { x: 130, y: 40, r: 22 },
+  { x: -90, y: 70, r: -16 },
+  { x: 160, y: 80, r: 20 },
+];
+
 export default function Letter() {
+  const rootRef = useRef<HTMLElement | null>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
+
+  useGSAP(
+    () => {
+      const root = rootRef.current;
+      const grid = gridRef.current;
+      if (!root || !grid) return;
+      const headline = root.querySelector<HTMLElement>('.headline');
+      const dek = root.querySelector<HTMLElement>('.dek');
+      const footer = root.querySelector<HTMLElement>('.letter-footer');
+      const cards = Array.from(grid.children) as HTMLElement[];
+
+      const mm = gsap.matchMedia();
+      mm.add(FULL_MOTION_QUERY, () => {
+        let split: SplitText | null = null;
+
+        if (headline) {
+          split = new SplitText(headline, { type: 'chars,words' });
+          gsap.set(split.chars, { opacity: 0, yPercent: 80, rotate: -6 });
+          gsap.to(split.chars, {
+            opacity: 1,
+            yPercent: 0,
+            rotate: 0,
+            duration: 0.7,
+            stagger: 0.04,
+            ease: 'back.out(1.8)',
+            scrollTrigger: { trigger: headline, start: 'top 80%' },
+          });
+        }
+
+        if (dek) {
+          gsap.set(dek, { opacity: 0, y: 12 });
+          gsap.to(dek, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            delay: 0.2,
+            scrollTrigger: { trigger: dek, start: 'top 85%' },
+          });
+        }
+
+        cards.forEach((el, i) => {
+          const s = SCATTER[i % SCATTER.length]!;
+          gsap.set(el, { opacity: 0, x: s.x, y: s.y, rotate: s.r, scale: 0.85 });
+        });
+        gsap.to(cards, {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          rotate: (i) => {
+            const rawRotate = CARDS[i]?.rotate ?? '0deg';
+            return parseFloat(rawRotate);
+          },
+          scale: 1,
+          duration: 1,
+          stagger: 0.08,
+          ease: 'power4.out',
+          scrollTrigger: { trigger: grid, start: 'top 80%' },
+        });
+
+        if (footer) {
+          gsap.set(footer, { opacity: 0, y: 16 });
+          gsap.to(footer, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            scrollTrigger: { trigger: footer, start: 'top 90%' },
+          });
+        }
+
+        return () => {
+          split?.revert();
+        };
+      });
+
+      return () => mm.revert();
+    },
+    { scope: rootRef },
+  );
+
   return (
-    <article className="page" id="letter">
+    <article className="page" id="letter" ref={rootRef}>
       <div className="folio">
         <b>07</b> // PING
       </div>
@@ -150,6 +242,7 @@ export default function Letter() {
       </p>
 
       <div
+        ref={gridRef}
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))',
@@ -181,6 +274,7 @@ export default function Letter() {
       </div>
 
       <p
+        className="letter-footer"
         style={{
           margin: '36px auto 0',
           maxWidth: 560,

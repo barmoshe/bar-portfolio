@@ -1,4 +1,5 @@
-import type { CSSProperties } from 'react';
+import { useRef, type CSSProperties } from 'react';
+import { gsap, SplitText, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
 
 const card = (rotate: string): CSSProperties => ({
   background: 'var(--paper)',
@@ -37,8 +38,89 @@ const role: CSSProperties = {
 const body: CSSProperties = { margin: '10px 0 0', color: 'var(--ink-soft)' };
 
 export default function Experience() {
+  const rootRef = useRef<HTMLElement | null>(null);
+
+  useGSAP(
+    () => {
+      const root = rootRef.current;
+      if (!root) return;
+      const stamp = root.querySelector<HTMLElement>('.stamp');
+      const headline = root.querySelector<HTMLElement>('.headline');
+      const dek = root.querySelector<HTMLElement>('.dek');
+      const cards = root.querySelectorAll<HTMLElement>('[data-xp-card]');
+      const targetRotations = [-0.8, 0.9, -0.4];
+
+      const mm = gsap.matchMedia();
+      mm.add(FULL_MOTION_QUERY, () => {
+        let split: SplitText | null = null;
+
+        if (stamp) {
+          gsap.set(stamp, { opacity: 0, rotate: 10, scale: 0.8 });
+          gsap.to(stamp, {
+            opacity: 1,
+            rotate: -3,
+            scale: 1,
+            duration: 0.6,
+            ease: 'back.out(2)',
+            scrollTrigger: { trigger: root, start: 'top 75%' },
+          });
+        }
+
+        if (headline) {
+          split = new SplitText(headline, { type: 'chars,words' });
+          gsap.set(split.chars, { opacity: 0, yPercent: 50 });
+          gsap.to(split.chars, {
+            opacity: 1,
+            yPercent: 0,
+            duration: 0.6,
+            stagger: 0.03,
+            ease: 'power4.out',
+            scrollTrigger: { trigger: headline, start: 'top 80%' },
+          });
+        }
+
+        if (dek) {
+          gsap.set(dek, { opacity: 0, y: 12 });
+          gsap.to(dek, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            scrollTrigger: { trigger: dek, start: 'top 85%' },
+          });
+        }
+
+        cards.forEach((el, i) => {
+          const target = targetRotations[i] ?? 0;
+          gsap.set(el, {
+            opacity: 0,
+            y: 40,
+            rotate: target + (i % 2 === 0 ? -8 : 8),
+            scale: 0.94,
+          });
+          gsap.to(el, {
+            opacity: 1,
+            y: 0,
+            rotate: target,
+            scale: 1,
+            duration: 0.9,
+            ease: 'back.out(1.4)',
+            delay: i * 0.08,
+            scrollTrigger: { trigger: el, start: 'top 82%' },
+          });
+        });
+
+        return () => {
+          split?.revert();
+        };
+      });
+
+      return () => mm.revert();
+    },
+    { scope: rootRef },
+  );
+
   return (
-    <article className="page" id="experience">
+    <article className="page" id="experience" ref={rootRef}>
       <div className="folio">
         <b>03</b> // DEPLOYMENTS
       </div>
@@ -49,7 +131,7 @@ export default function Experience() {
       </p>
 
       <div style={{ marginTop: 40, display: 'grid', gap: 32 }}>
-        <div style={card('-.8deg')}>
+        <div data-xp-card style={card('-.8deg')}>
           <div style={row}>
             <h3 style={h3}>
               Joomsy{' '}
@@ -80,7 +162,7 @@ export default function Experience() {
           </p>
         </div>
 
-        <div style={card('.9deg')}>
+        <div data-xp-card style={card('.9deg')}>
           <div style={row}>
             <h3 style={h3}>Wochit</h3>
             <span style={date}>Nov 2021 – Present (4+ years)</span>
@@ -94,7 +176,7 @@ export default function Experience() {
           </p>
         </div>
 
-        <div style={card('-.4deg')}>
+        <div data-xp-card style={card('-.4deg')}>
           <div style={row}>
             <h3 style={h3}>Self-directed work</h3>
             <span style={date}>Ongoing</span>

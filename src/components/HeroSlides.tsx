@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { gsap, useGSAP, FULL_MOTION_QUERY } from '../lib/gsap';
 
 type Slide = { src: string; alt: string; caption: string };
 
@@ -16,9 +17,6 @@ const SLIDES: Slide[] = [
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
 
 export default function HeroSlides() {
-  // idx = the slide that should be active once the transition settles.
-  // enteringFrom = the previously-active slide during the transition (it keeps
-  // `is-active` so both slides are stacked visually until the next frame).
   const [idx, setIdx] = useState(0);
   const [enteringFrom, setEnteringFrom] = useState<number | null>(null);
   const [fxByIdx, setFxByIdx] = useState<Record<number, Fx>>({ 0: 'fade' });
@@ -26,6 +24,8 @@ export default function HeroSlides() {
   const pausedRef = useRef(false);
   const timerRef = useRef<number | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const captionRef = useRef<HTMLSpanElement | null>(null);
+  const dotsRef = useRef<HTMLDivElement | null>(null);
 
   const stop = () => {
     if (timerRef.current !== null) {
@@ -68,8 +68,6 @@ export default function HeroSlides() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Enter transition: force reflow with is-enter committed, then flip to is-active
-  // on the next frame by clearing enteringFrom.
   useLayoutEffect(() => {
     if (enteringFrom === null) return;
     const el = rootRef.current?.querySelectorAll<HTMLElement>('.slide')[idx];
@@ -82,6 +80,77 @@ export default function HeroSlides() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enteringFrom, idx]);
 
+  // Caption flip + dot pop on slide change.
+  useGSAP(
+    () => {
+      const cap = captionRef.current;
+      if (!cap) return;
+      const mm = gsap.matchMedia();
+      mm.add(FULL_MOTION_QUERY, () => {
+        gsap.fromTo(
+          cap,
+          { yPercent: 120, opacity: 0, rotate: -3 },
+          { yPercent: 0, opacity: 1, rotate: 0, duration: 0.55, ease: 'back.out(2)' },
+        );
+      });
+      return () => mm.revert();
+    },
+    { dependencies: [idx], scope: rootRef },
+  );
+
+  useGSAP(
+    () => {
+      const dots = dotsRef.current;
+      if (!dots) return;
+      const active = dots.querySelector<HTMLElement>(`[data-i="${idx}"]`);
+      if (!active) return;
+      const mm = gsap.matchMedia();
+      mm.add(FULL_MOTION_QUERY, () => {
+        gsap.fromTo(
+          active,
+          { scale: 0.6 },
+          { scale: 1.35, duration: 0.4, ease: 'back.out(2.5)' },
+        );
+      });
+      return () => mm.revert();
+    },
+    { dependencies: [idx], scope: rootRef },
+  );
+
+  // Subtle mouse parallax on the portrait stack.
+  useGSAP(
+    () => {
+      const root = rootRef.current;
+      if (!root) return;
+      const mm = gsap.matchMedia();
+      mm.add(`${FULL_MOTION_QUERY} and (hover: hover)`, () => {
+        const xTo = gsap.quickTo(root, '--tilt-x', { duration: 0.5, ease: 'power3.out' });
+        const yTo = gsap.quickTo(root, '--tilt-y', { duration: 0.5, ease: 'power3.out' });
+        gsap.set(root, { '--tilt-x': 0, '--tilt-y': 0 });
+
+        const onMove = (e: MouseEvent) => {
+          const r = root.getBoundingClientRect();
+          const nx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+          const ny = ((e.clientY - r.top) / r.height - 0.5) * 2;
+          xTo(nx * 6);
+          yTo(ny * 6);
+        };
+        const onLeave = () => {
+          xTo(0);
+          yTo(0);
+        };
+        root.addEventListener('mousemove', onMove);
+        root.addEventListener('mouseleave', onLeave);
+        return () => {
+          root.removeEventListener('mousemove', onMove);
+          root.removeEventListener('mouseleave', onLeave);
+        };
+      });
+      return () => mm.revert();
+    },
+    { scope: rootRef },
+  );
+
   const onMouseEnter = () => {
     pausedRef.current = true;
     stop();
@@ -92,6 +161,7 @@ export default function HeroSlides() {
   };
 
   const base = import.meta.env.BASE_URL;
+  const currentCaption = SLIDES[idx]?.caption ?? '';
 
   return (
     <div
@@ -101,6 +171,10 @@ export default function HeroSlides() {
       aria-label="Bar Moshe - portrait variations"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      style={{
+        transform:
+          'translate3d(calc(var(--tilt-x, 0) * 1px), calc(var(--tilt-y, 0) * 1px), 0)',
+      }}
     >
       {SLIDES.map((s, i) => {
         const isActive = enteringFrom !== null ? i === enteringFrom : i === idx;
@@ -118,6 +192,20 @@ export default function HeroSlides() {
           />
         );
       })}
+      <span className="slide-caption" key={currentCaption} ref={captionRef}>
+        {currentCaption}
+      </span>
+      <div className="slide-dots" ref={dotsRef} aria-hidden="true">
+        {SLIDES.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            data-i={i}
+            aria-current={i === idx ? 'true' : undefined}
+            tabIndex={-1}
+          />
+        ))}
+      </div>
     </div>
   );
 }

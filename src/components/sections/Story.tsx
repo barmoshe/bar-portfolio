@@ -1,6 +1,116 @@
+import { useRef } from 'react';
+import { gsap, SplitText, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
+
 export default function Story() {
+  const rootRef = useRef<HTMLElement | null>(null);
+
+  useGSAP(
+    () => {
+      const root = rootRef.current;
+      if (!root) return;
+      const stamp = root.querySelector<HTMLElement>('.stamp');
+      const headline = root.querySelector<HTMLElement>('.headline');
+      const dek = root.querySelector<HTMLElement>('.dek');
+      const rule = root.querySelector<HTMLElement>('.rule');
+      const cols = root.querySelectorAll<HTMLElement>('.cols > div');
+      const pullquote = root.querySelector<HTMLElement>('.cols + div');
+      const listItems = root.querySelectorAll<HTMLElement>('.cols li');
+
+      const mm = gsap.matchMedia();
+      mm.add(FULL_MOTION_QUERY, () => {
+        let split: SplitText | null = null;
+
+        if (stamp) {
+          gsap.set(stamp, { opacity: 0, rotate: 12, scale: 0.8 });
+          gsap.to(stamp, {
+            opacity: 1,
+            rotate: -3,
+            scale: 1,
+            duration: 0.6,
+            ease: 'back.out(2)',
+            scrollTrigger: { trigger: root, start: 'top 75%' },
+          });
+        }
+
+        if (headline) {
+          split = new SplitText(headline, { type: 'words,chars' });
+          gsap.set(split.words, { opacity: 0, yPercent: 100 });
+          gsap.to(split.words, {
+            opacity: 1,
+            yPercent: 0,
+            duration: 0.8,
+            stagger: 0.04,
+            ease: 'power4.out',
+            scrollTrigger: { trigger: headline, start: 'top 80%' },
+          });
+        }
+
+        if (dek) {
+          gsap.set(dek, { opacity: 0, y: 14 });
+          gsap.to(dek, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            scrollTrigger: { trigger: dek, start: 'top 85%' },
+          });
+        }
+
+        if (rule) {
+          gsap.set(rule, { scaleX: 0, transformOrigin: 'left center' });
+          gsap.to(rule, {
+            scaleX: 1,
+            duration: 0.9,
+            ease: 'power3.inOut',
+            scrollTrigger: { trigger: rule, start: 'top 85%' },
+          });
+        }
+
+        if (cols.length) {
+          gsap.set(cols, { opacity: 0, y: 20 });
+          gsap.to(cols, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.12,
+            scrollTrigger: { trigger: cols[0] ?? root, start: 'top 80%' },
+          });
+        }
+
+        if (listItems.length) {
+          gsap.set(listItems, { opacity: 0, x: -14 });
+          gsap.to(listItems, {
+            opacity: 1,
+            x: 0,
+            duration: 0.5,
+            stagger: 0.06,
+            scrollTrigger: { trigger: listItems[0] ?? root, start: 'top 80%' },
+          });
+        }
+
+        if (pullquote) {
+          gsap.set(pullquote, { opacity: 0, y: 22, rotate: 4 });
+          gsap.to(pullquote, {
+            opacity: 1,
+            y: 0,
+            rotate: 1.2,
+            duration: 0.8,
+            ease: 'back.out(1.6)',
+            scrollTrigger: { trigger: pullquote, start: 'top 85%' },
+          });
+        }
+
+        return () => {
+          split?.revert();
+        };
+      });
+
+      return () => mm.revert();
+    },
+    { scope: rootRef },
+  );
+
   return (
-    <article className="page" id="story">
+    <article className="page" id="story" ref={rootRef}>
       <div className="folio">
         <b>02</b> // PATH
       </div>

@@ -207,7 +207,9 @@
       transition:opacity .15s ease, color .15s ease, background .15s ease;
       border-top:2px solid transparent}
     .tabbar a:hover,.tabbar a:focus-visible{background:transparent;opacity:1;color:var(--green);outline:none}
-    .tabbar a[aria-current="true"]{opacity:1;color:var(--green);border-top-color:var(--green)}
+    .tabbar a[aria-current="true"]{opacity:1;color:var(--green);border-top-color:transparent}
+    .tabbar-pill{position:absolute;top:0;left:0;height:2px;width:0;background:var(--green);
+      opacity:0;transform:translateX(0);pointer-events:none;z-index:2;box-shadow:0 0 8px var(--green)}
     .tabbar svg{width:20px;height:20px;display:block;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
     /* Reserve space so fixed bar doesn't cover content */
     body{padding-bottom:calc(56px + env(safe-area-inset-bottom))}

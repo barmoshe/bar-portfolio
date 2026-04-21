@@ -1,10 +1,102 @@
+import { useRef } from 'react';
 import { iconFor, projects, shortDesc } from '../../data/portfolio';
+import { gsap, SplitText, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
 
 type Props = { onOpen: (idx: number) => void };
 
 export default function Repos({ onOpen }: Props) {
+  const rootRef = useRef<HTMLElement | null>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
+
+  useGSAP(
+    () => {
+      const root = rootRef.current;
+      const grid = gridRef.current;
+      if (!root || !grid) return;
+      const stamp = root.querySelector<HTMLElement>('.stamp');
+      const headline = root.querySelector<HTMLElement>('.headline');
+      const cards = Array.from(grid.children) as HTMLElement[];
+      const nums = grid.querySelectorAll<HTMLElement>('.num');
+      const cta = root.querySelector<HTMLElement>('.gh-cta');
+
+      const mm = gsap.matchMedia();
+      mm.add(FULL_MOTION_QUERY, () => {
+        let split: SplitText | null = null;
+
+        if (stamp) {
+          gsap.set(stamp, { opacity: 0, rotate: 10, scale: 0.8 });
+          gsap.to(stamp, {
+            opacity: 1,
+            rotate: -3,
+            scale: 1,
+            duration: 0.6,
+            ease: 'back.out(2)',
+            scrollTrigger: { trigger: root, start: 'top 75%' },
+          });
+        }
+
+        if (headline) {
+          split = new SplitText(headline, { type: 'words' });
+          gsap.set(split.words, { opacity: 0, yPercent: 60 });
+          gsap.to(split.words, {
+            opacity: 1,
+            yPercent: 0,
+            duration: 0.7,
+            stagger: 0.05,
+            ease: 'power4.out',
+            scrollTrigger: { trigger: headline, start: 'top 80%' },
+          });
+        }
+
+        if (cards.length) {
+          gsap.set(cards, { opacity: 0, y: 36, scale: 0.96 });
+          gsap.to(cards, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: grid, start: 'top 80%' },
+          });
+        }
+
+        if (nums.length) {
+          gsap.set(nums, { opacity: 0, rotate: -180, scale: 0 });
+          gsap.to(nums, {
+            opacity: 1,
+            rotate: 8,
+            scale: 1,
+            duration: 0.7,
+            stagger: 0.1,
+            ease: 'back.out(2.5)',
+            delay: 0.3,
+            scrollTrigger: { trigger: grid, start: 'top 80%' },
+          });
+        }
+
+        if (cta) {
+          gsap.set(cta, { opacity: 0, y: 24 });
+          gsap.to(cta, {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            scrollTrigger: { trigger: cta, start: 'top 88%' },
+          });
+        }
+
+        return () => {
+          split?.revert();
+        };
+      });
+
+      return () => mm.revert();
+    },
+    { scope: rootRef },
+  );
+
   return (
-    <article className="page" id="repos">
+    <article className="page" id="repos" ref={rootRef}>
       <div className="folio">
         <b>04</b> // REPOS
       </div>
@@ -12,11 +104,12 @@ export default function Repos({ onOpen }: Props) {
       <h2 className="headline">
         A few of the <em>many things</em> I've built.
       </h2>
-      <div className="clip" id="proj-grid" style={{ marginTop: 28 }}>
+      <div className="clip" id="proj-grid" ref={gridRef} style={{ marginTop: 28 }}>
         {projects.map((p, i) => (
           <article
             key={p.name}
             data-idx={i}
+            data-flip-id={`repo-${i}`}
             tabIndex={0}
             role="button"
             aria-label={p.name}

@@ -1,8 +1,113 @@
+import { useRef } from 'react';
 import HeroSlides from '../HeroSlides';
+import { gsap, ScrollTrigger, SplitText, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
 
 export default function Dossier() {
+  const rootRef = useRef<HTMLElement | null>(null);
+
+  useGSAP(
+    () => {
+      const root = rootRef.current;
+      if (!root) return;
+      const card = root.querySelector<HTMLElement>('.id-card');
+      const bioH1 = root.querySelector<HTMLElement>('.bio h1');
+      const byline = root.querySelector<HTMLElement>('.bio .byline');
+      const paras = root.querySelectorAll<HTMLElement>('.bio p, .bio .drop');
+      const tape = root.querySelector<HTMLElement>('.id-card .tape');
+      const idMeta = root.querySelectorAll<HTMLElement>('.id-meta > *');
+
+      const mm = gsap.matchMedia();
+      mm.add(FULL_MOTION_QUERY, () => {
+        let split: SplitText | null = null;
+
+        if (card) {
+          gsap.set(card, { xPercent: -30, y: 18, rotate: -10, opacity: 0 });
+          gsap.to(card, {
+            xPercent: 0,
+            y: 0,
+            rotate: -1.5,
+            opacity: 1,
+            duration: 1.1,
+            ease: 'power4.out',
+            scrollTrigger: {
+              trigger: root,
+              start: 'top 70%',
+              toggleActions: 'play none none none',
+            },
+          });
+        }
+
+        if (tape) {
+          gsap.set(tape, { scaleX: 0, transformOrigin: 'left center', opacity: 0 });
+          gsap.to(tape, {
+            scaleX: 1,
+            opacity: 1,
+            duration: 0.5,
+            ease: 'power2.out',
+            scrollTrigger: { trigger: root, start: 'top 60%' },
+          });
+        }
+
+        if (idMeta.length) {
+          gsap.set(idMeta, { opacity: 0, y: 10 });
+          gsap.to(idMeta, {
+            opacity: 1,
+            y: 0,
+            duration: 0.45,
+            stagger: 0.05,
+            scrollTrigger: { trigger: card ?? root, start: 'top 65%' },
+          });
+        }
+
+        if (byline) {
+          gsap.set(byline, { opacity: 0, x: -12 });
+          gsap.to(byline, {
+            opacity: 1,
+            x: 0,
+            duration: 0.6,
+            scrollTrigger: { trigger: root, start: 'top 70%' },
+          });
+        }
+
+        if (bioH1) {
+          split = new SplitText(bioH1, { type: 'words,chars' });
+          gsap.set(split.words, { opacity: 0, yPercent: 60, rotate: -4 });
+          gsap.to(split.words, {
+            opacity: 1,
+            yPercent: 0,
+            rotate: 0,
+            duration: 0.8,
+            stagger: 0.06,
+            ease: 'back.out(1.6)',
+            scrollTrigger: { trigger: bioH1, start: 'top 80%' },
+          });
+        }
+
+        if (paras.length) {
+          gsap.set(paras, { opacity: 0, y: 16 });
+          gsap.to(paras, {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            stagger: 0.08,
+            scrollTrigger: { trigger: root, start: 'top 55%' },
+          });
+        }
+
+        ScrollTrigger.refresh();
+
+        return () => {
+          split?.revert();
+        };
+      });
+
+      return () => mm.revert();
+    },
+    { scope: rootRef },
+  );
+
   return (
-    <article className="page" id="dossier">
+    <article className="page" id="dossier" ref={rootRef}>
       <div className="folio">
         <b>01</b> // WHOAMI
       </div>

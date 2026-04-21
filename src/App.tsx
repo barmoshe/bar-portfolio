@@ -15,6 +15,7 @@ import Letter from './components/sections/Letter';
 import { projects } from './data/portfolio';
 import { useTheme } from './hooks/useTheme';
 import { useLightbox } from './hooks/useLightbox';
+import { useFolioScrub } from './hooks/useFolioScrub';
 
 const SKIP_KEY = 'bm:skip';
 
@@ -38,7 +39,18 @@ export default function App() {
   const [showBoot, setShowBoot] = useState(() => !readSkip());
   const [skipRemembered, setSkipRemembered] = useState(() => readSkip());
   const { cycle, glyph, label } = useTheme();
-  const { openIdx, open, close } = useLightbox();
+  const { openIdx, sourceRect, open, close } = useLightbox();
+  useFolioScrub();
+
+  const openFromCard = (idx: number) => {
+    const card = document.querySelector<HTMLElement>(`.clip article[data-idx="${idx}"]`);
+    if (card) {
+      const r = card.getBoundingClientRect();
+      open(idx, { left: r.left, top: r.top, width: r.width, height: r.height });
+    } else {
+      open(idx);
+    }
+  };
 
   // Keyboard shortcut: open lightbox on Enter/Space when a project card is focused.
   useEffect(() => {
@@ -47,11 +59,12 @@ export default function App() {
       const t = (document.activeElement as HTMLElement | null)?.closest('.clip article');
       if (t instanceof HTMLElement && t.dataset['idx']) {
         e.preventDefault();
-        open(Number(t.dataset['idx']));
+        openFromCard(Number(t.dataset['idx']));
       }
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const onSkip = () => {
@@ -77,13 +90,18 @@ export default function App() {
         <Dossier />
         <Story />
         <Experience />
-        <Repos onOpen={open} />
+        <Repos onOpen={openFromCard} />
         <Music />
         <Notes />
         <Letter />
       </main>
       <TabBar />
-      <Lightbox project={openProject} idx={openIdx} onClose={close} />
+      <Lightbox
+        project={openProject}
+        idx={openIdx}
+        sourceRect={sourceRect}
+        onClose={close}
+      />
     </>
   );
 }

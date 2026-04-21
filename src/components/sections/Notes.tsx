@@ -1,5 +1,6 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { useRef, type CSSProperties, type ReactNode } from 'react';
 import HoverCard from '../HoverCard';
+import { gsap, SplitText, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
 
 type Entry = {
   href: string;
@@ -190,8 +191,83 @@ const hashtagsStyle = (featured: boolean): CSSProperties => ({
 });
 
 export default function Notes() {
+  const rootRef = useRef<HTMLElement | null>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
+
+  useGSAP(
+    () => {
+      const root = rootRef.current;
+      const grid = gridRef.current;
+      if (!root || !grid) return;
+      const stamp = root.querySelector<HTMLElement>('.stamp');
+      const headline = root.querySelector<HTMLElement>('.headline');
+      const dek = root.querySelector<HTMLElement>('.dek');
+      const cards = Array.from(grid.children) as HTMLElement[];
+
+      const mm = gsap.matchMedia();
+      mm.add(FULL_MOTION_QUERY, () => {
+        let split: SplitText | null = null;
+
+        if (stamp) {
+          gsap.set(stamp, { opacity: 0, rotate: 10, scale: 0.8 });
+          gsap.to(stamp, {
+            opacity: 1,
+            rotate: -3,
+            scale: 1,
+            duration: 0.6,
+            ease: 'back.out(2)',
+            scrollTrigger: { trigger: root, start: 'top 75%' },
+          });
+        }
+
+        if (headline) {
+          split = new SplitText(headline, { type: 'words' });
+          gsap.set(split.words, { opacity: 0, yPercent: 70, rotate: -3 });
+          gsap.to(split.words, {
+            opacity: 1,
+            yPercent: 0,
+            rotate: 0,
+            duration: 0.7,
+            stagger: 0.05,
+            ease: 'back.out(1.6)',
+            scrollTrigger: { trigger: headline, start: 'top 80%' },
+          });
+        }
+
+        if (dek) {
+          gsap.set(dek, { opacity: 0, y: 14 });
+          gsap.to(dek, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            scrollTrigger: { trigger: dek, start: 'top 85%' },
+          });
+        }
+
+        if (cards.length) {
+          gsap.set(cards, { opacity: 0, y: 36 });
+          gsap.to(cards, {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            stagger: { each: 0.09, from: 'start' },
+            ease: 'power3.out',
+            scrollTrigger: { trigger: grid, start: 'top 80%' },
+          });
+        }
+
+        return () => {
+          split?.revert();
+        };
+      });
+
+      return () => mm.revert();
+    },
+    { scope: rootRef },
+  );
+
   return (
-    <article className="page" id="notes">
+    <article className="page" id="notes" ref={rootRef}>
       <div className="folio">
         <b>06</b> // DISPATCHES
       </div>
@@ -205,6 +281,7 @@ export default function Notes() {
       </p>
 
       <div
+        ref={gridRef}
         style={{
           marginTop: 40,
           display: 'grid',

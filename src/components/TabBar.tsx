@@ -1,14 +1,50 @@
+import { useEffect, useRef } from 'react';
 import { useSectionObserver } from '../hooks/useSectionObserver';
+import { gsap, FULL_MOTION_QUERY } from '../lib/gsap';
 
 const SECTIONS = ['dossier', 'experience', 'repos', 'notes', 'letter'] as const;
 
 export default function TabBar() {
   const activeId = useSectionObserver(SECTIONS);
+  const navRef = useRef<HTMLElement | null>(null);
+  const pillRef = useRef<HTMLSpanElement | null>(null);
+
   const isCurrent = (id: string) =>
     activeId === id ? { 'aria-current': 'true' as const } : {};
 
+  useEffect(() => {
+    const nav = navRef.current;
+    const pill = pillRef.current;
+    if (!nav || !pill) return;
+    const active = nav.querySelector<HTMLElement>(`a[data-target="${activeId}"]`);
+    if (!active) {
+      gsap.to(pill, { opacity: 0, duration: 0.2 });
+      return;
+    }
+    const navRect = nav.getBoundingClientRect();
+    const aRect = active.getBoundingClientRect();
+    const x = aRect.left - navRect.left;
+    const w = aRect.width;
+
+    const mm = gsap.matchMedia();
+    mm.add(FULL_MOTION_QUERY, () => {
+      gsap.to(pill, {
+        x,
+        width: w,
+        opacity: 1,
+        duration: 0.55,
+        ease: 'power4.out',
+      });
+    });
+    mm.add('(prefers-reduced-motion: reduce)', () => {
+      gsap.set(pill, { x, width: w, opacity: 1 });
+    });
+    return () => mm.revert();
+  }, [activeId]);
+
   return (
-    <nav className="tabbar" aria-label="Mobile sections">
+    <nav className="tabbar" aria-label="Mobile sections" ref={navRef}>
+      <span className="tabbar-pill" aria-hidden="true" ref={pillRef} />
       <a href="#dossier" data-target="dossier" aria-label="About" {...isCurrent('dossier')}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="8" r="4" />
