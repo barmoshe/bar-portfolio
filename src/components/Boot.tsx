@@ -398,7 +398,7 @@ export default function Boot({ onGone }: Props) {
             <path d="M4 11 L8 1 L10 1 L6 11 Z" />
             <path d="M13 11 L17 1 L19 1 L15 11 Z" />
           </svg>
-          v2.0.0
+          v1.0.1
         </span>
         <h1 className="mast">
           <span className="mast-main">BAR MOSHE</span>

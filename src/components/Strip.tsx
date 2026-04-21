@@ -50,7 +50,7 @@ export default function Strip({
 
   return (
     <nav className="strip" aria-label="Primary" ref={ref}>
-      <span className="mark">bm@v2.0.0</span>
+      <span className="mark">bm@v1.0.1</span>
       <a className="key" href="#dossier">About</a>
       <a className="key" href="#story">Story</a>
       <a href="#experience">Work</a>
