@@ -1,8 +1,14 @@
   :root{
     --paper:    oklch(0.93 0.02 85);
     --paper-2:  oklch(0.88 0.03 80);
+    --surface-1: var(--paper);
+    --surface-2: oklch(0.96 0.02 85);
+    --surface-strong: oklch(0.18 0.03 40);
+    --surface-strong-fg: var(--paper);
     --ink:      oklch(0.18 0.03 40);
     --ink-soft: oklch(0.34 0.04 40);
+    --ink-faint: oklch(0.48 0.03 40);
+    --border:   oklch(0 0 0 / .2);
     --red:      oklch(0.58 0.22 25);
     --green:    oklch(0.44 0.14 150);
     --blue:     oklch(0.45 0.16 250);
@@ -17,19 +23,29 @@
   }
   /* ── Dark theme (applied via html.dark, set by pre-paint script) ── */
   html.dark{
-    --paper:    oklch(0.20 0.015 260);
-    --paper-2:  oklch(0.15 0.015 260);
-    --ink:      oklch(0.94 0.015 85);
-    --ink-soft: oklch(0.74 0.025 85);
-    --red:      oklch(0.72 0.20 25);
-    --green:    oklch(0.88 0.30 142);
-    --blue:     oklch(0.78 0.14 240);
-    --yellow:   oklch(0.88 0.17 90);
-    --magenta:  oklch(0.78 0.20 340);
-    --cyan:     oklch(0.85 0.14 200);
+    /* Surfaces — rising lightness = rising elevation (Material-style tonal) */
+    --paper:             oklch(0.17 0.012 260);
+    --paper-2:           oklch(0.14 0.012 260);
+    --surface-1:         oklch(0.22 0.015 260);
+    --surface-2:         oklch(0.27 0.018 260);
+    --surface-strong:    oklch(0.10 0.015 260);
+    --surface-strong-fg: oklch(0.96 0.008 260);
+    /* Text — cool-hue family matches surfaces, no perceptual vibration */
+    --ink:       oklch(0.96 0.008 260);
+    --ink-soft:  oklch(0.78 0.015 260);
+    --ink-faint: oklch(0.60 0.012 260);
+    --border:    oklch(1 0 0 / .14);
+    /* Accents — chroma pulled back to avoid glow on very dark surfaces */
+    --red:      oklch(0.72 0.17 25);
+    --green:    oklch(0.80 0.17 150);
+    --blue:     oklch(0.78 0.13 240);
+    --yellow:   oklch(0.86 0.15 90);
+    --magenta:  oklch(0.78 0.17 340);
+    --cyan:     oklch(0.85 0.12 200);
     --shadow:   oklch(0 0 0 / .55);
-    --band:     oklch(0.08 0.02 260);
-    --band-fg:  oklch(0.94 0.015 85);
+    /* Back-compat aliases for existing --band consumers */
+    --band:     var(--surface-strong);
+    --band-fg:  var(--surface-strong-fg);
   }
   html.dark body{background-image:
     radial-gradient(oklch(0.55 0.03 70 / .14) 1px, transparent 1px),
@@ -39,44 +55,51 @@
   html.dark .crease{background:oklch(1 0 0 / .08);box-shadow:0 -1px 2px oklch(0 0 0 / .5)}
   html.dark ::selection{background:var(--green);color:var(--band)}
 
-  html.dark .page + .page{border-top-color:oklch(1 0 0 / .16)}
+  html.dark .page + .page{border-top-color:var(--border)}
 
   /* Dark-accent band (strip) - deeper than paper, light text */
-  html.dark .strip{background:var(--band);color:var(--band-fg);border-bottom-color:oklch(1 0 0 / .08)}
-  html.dark .strip a{color:var(--band-fg)}
+  html.dark .strip{background:var(--surface-strong);color:var(--surface-strong-fg);border-bottom-color:oklch(1 0 0 / .08)}
+  html.dark .strip a{color:var(--surface-strong-fg)}
   html.dark .strip a:hover{background:transparent;color:var(--green)}
-  html.dark .strip .toggle{color:var(--band-fg)}
+  html.dark .strip .toggle{color:var(--surface-strong-fg)}
   html.dark .strip .toggle:hover{background:transparent;color:var(--green)}
   html.dark .strip .mark{color:var(--green)}
 
   /* CTAs - keep dark button, green offset */
-  html.dark .enter{background:var(--band);color:var(--band-fg);box-shadow:6px 6px 0 var(--green)}
-  html.dark .enter:hover{background:var(--green);color:var(--band);box-shadow:8px 8px 0 var(--band-fg)}
+  html.dark .enter{background:var(--surface-strong);color:var(--surface-strong-fg);box-shadow:6px 6px 0 var(--green)}
+  html.dark .enter:hover{background:var(--green);color:var(--surface-strong);box-shadow:8px 8px 0 var(--surface-strong-fg)}
   html.dark .enter:active{box-shadow:2px 2px 0 var(--green)}
 
   /* Letter form */
   html.dark .letter input,html.dark .letter textarea{color:var(--ink)}
   html.dark .letter input{background-image:repeating-linear-gradient(0deg, transparent 0 28px, oklch(1 0 0 / .10) 28px 29px)}
   html.dark .letter textarea{background-image:repeating-linear-gradient(0deg, transparent 0 28px, oklch(1 0 0 / .14) 28px 29px)}
-  html.dark .letter .send{background:var(--band);color:var(--band-fg);box-shadow:6px 6px 0 var(--green)}
-  html.dark .letter .send:hover{background:var(--green);color:var(--band);box-shadow:6px 6px 0 var(--band-fg)}
+  html.dark .letter .send{background:var(--surface-strong);color:var(--surface-strong-fg);box-shadow:6px 6px 0 var(--green)}
+  html.dark .letter .send:hover{background:var(--green);color:var(--surface-strong);box-shadow:6px 6px 0 var(--surface-strong-fg)}
 
-  /* Cards / surfaces */
-  html.dark .skill{background:oklch(0.26 0.02 260)}
-  html.dark .clip article{background:oklch(0.24 0.02 260)}
-  html.dark .clip article .head{background:oklch(0.18 0.02 260)}
-  html.dark .clip article .t{color:var(--paper)}
-  html.dark .clip article .go{border-top-color:oklch(0.4 0.02 260)}
-  html.dark .id-card{background:oklch(0.24 0.02 260)}
-  html.dark .letter{background:oklch(0.24 0.02 260)}
-  html.dark .lb-panel{background:oklch(0.24 0.02 260)}
+  /* Cards / surfaces — rely on tokenized surface scale */
+  html.dark .skill{background:var(--surface-2)}
+  html.dark .clip article{background:var(--surface-1)}
+  html.dark .clip article .head{background:var(--paper)}
+  html.dark .clip article .t{color:var(--ink)}
+  html.dark .clip article .d{color:var(--ink-soft)}
+  html.dark .clip article .lang{color:var(--ink-soft)}
+  html.dark .clip article .go{color:var(--green);border-top-color:var(--border)}
+  html.dark .id-card{background:var(--surface-1)}
+  html.dark .letter{background:var(--surface-1)}
+  html.dark .letter label{color:var(--ink-soft)}
+  html.dark .lb-panel{background:var(--surface-1)}
+  html.dark .lb-body p{color:var(--ink-soft)}
+  html.dark .lb-tags{color:var(--ink-soft)}
+  html.dark .cols p,html.dark .cols li{color:var(--ink-soft)}
+  html.dark .cols li strong{color:var(--ink)}
 
   /* Misc */
-  html.dark .lb-close{color:var(--band)}
+  html.dark .lb-close{color:var(--surface-strong)}
   html.dark .rule{background:var(--ink-soft)}
   html.dark .rule::after{background:var(--ink-soft)}
-  html.dark .clip article .num{color:var(--band)}
-  html.dark .letter .send,html.dark .enter{color:var(--band-fg)}
+  html.dark .clip article .num{color:var(--surface-strong)}
+  html.dark .letter .send,html.dark .enter{color:var(--surface-strong-fg)}
 
   /* ── Dark mode: raise inline-styled "paper" cards to a surface color so they
      don't vanish into the body. Inline styles win on specificity, so !important. ── */
@@ -85,27 +108,27 @@
   html.dark #notes a[style*="background:var(--paper)"],
   html.dark #music > div > div[style*="background:var(--paper)"],
   html.dark #letter a[style*="background:var(--paper)"]{
-    background:oklch(0.24 0.02 260) !important;
-    border-color:oklch(0.42 0.02 260) !important}
+    background:var(--surface-1) !important;
+    border-color:var(--ink-faint) !important}
 
   /* Dark mode: inline dark-accent surfaces (originally bg:var(--ink)) must stay
-     dark in dark mode, not flip to light. Map to --band/--band-fg. */
+     dark in dark mode, not flip to light. Map to --surface-strong. */
   html.dark #repos .gh-cta,
   html.dark #notes a[style*="background:var(--ink)"],
   html.dark #music > div > div[style*="background:var(--ink)"]{
-    background:var(--band) !important;
-    border-color:var(--band) !important;
-    color:var(--band-fg) !important}
+    background:var(--surface-strong) !important;
+    border-color:var(--surface-strong) !important;
+    color:var(--surface-strong-fg) !important}
   html.dark #repos .gh-cta p,
   html.dark #notes a[style*="background:var(--ink)"] h3,
   html.dark #notes a[style*="background:var(--ink)"] p,
   html.dark #music > div > div[style*="background:var(--ink)"] h3,
   html.dark #music > div > div[style*="background:var(--ink)"] p{
-    color:var(--band-fg) !important}
+    color:var(--surface-strong-fg) !important}
   /* Nested CTA button inside the dark-accent gh-cta bar */
   html.dark #repos .gh-cta a{
-    background:var(--band-fg) !important;
-    color:var(--band) !important;
+    background:var(--surface-strong-fg) !important;
+    color:var(--surface-strong) !important;
     box-shadow:4px 4px 0 var(--green) !important}
 
   /* Folio "b" accent and "How I work" callout text should use light ink in dark mode — var(--ink) handles it, but inline color:var(--ink) on dark surfaces is correct. */
@@ -222,8 +245,8 @@
     /* Reserve space so fixed bar doesn't cover content */
     body{padding-bottom:calc(56px + env(safe-area-inset-bottom))}
   }
-  html.dark .tabbar{background:var(--band,oklch(0.08 0.02 260));color:var(--band-fg,oklch(0.94 0.015 85))}
-  html.dark .tabbar a{color:var(--band-fg,oklch(0.94 0.015 85))}
+  html.dark .tabbar{background:var(--surface-strong);color:var(--surface-strong-fg)}
+  html.dark .tabbar a{color:var(--surface-strong-fg)}
 
   /* Anchor scroll offsets under the sticky strip */
   :target{scroll-margin-top:56px}
@@ -449,7 +472,7 @@
     z-index:5}
   .clip article{position:relative}
   .clip article.ink-peelable:hover{--peel:1}
-  html.dark .ink-peelable::after{background:oklch(0.26 0.02 260)}
+  html.dark .ink-peelable::after{background:var(--surface-2)}
 
   /* Boot ink-mask exit: GSAP drives --ink-r and --ink-x/y from 0 → 140 */
   .boot{--ink-r:0%;--ink-x:50%;--ink-y:50%}
