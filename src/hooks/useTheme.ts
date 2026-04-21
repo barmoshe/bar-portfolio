@@ -1,6 +1,16 @@
+/**
+ * Theme state + ink-wipe GSAP timeline.
+ *
+ * Three cooperating layers make theming work; this hook is layer 2 of 3.
+ * Layer 1 is the inline pre-paint script in `index.html` (FOUC prevention).
+ * Layer 3 is the `.ink-wipe` div in `App.tsx`, mutated imperatively here.
+ *
+ * Full walkthrough: `knowledge/03-theming.md`.
+ */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { gsap } from '../lib/gsap';
 
+/** `'auto'` follows OS; `'light'` and `'dark'` pin explicitly. */
 export type ThemePref = 'auto' | 'light' | 'dark';
 
 const KEY = 'bm:theme';

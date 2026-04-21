@@ -1,3 +1,19 @@
+/* ======================================================================
+ * bar-portfolio · styles.css
+ *
+ * Reading order (search for the ── banners to jump):
+ *   1. Tokens                   — :root oklch tokens, typography, spacing
+ *   2. Dark overrides           — html.dark { … } surfaces/ink/accents + scoped overrides
+ *   3. Base + layout            — body, page, section scaffolding
+ *   4. Components               — strip, tabbar, hero mug/slides, dots, lightbox, letter
+ *   5. Sections                 — dossier, story, experience, repos, music, notes, letter
+ *   6. Ink overlays / filters   — grain, crease, ink-wipe, ink-bleed consumers
+ *   7. Responsive               — @media (max-width: 820px) mobile tabbar cutoff
+ *
+ * Edits land in `:root { … }` (light) AND `html.dark { … }` (dark) together.
+ * Tokens: `knowledge/02-design-system.md`. Invariants: `knowledge/99-caveats.md`.
+ * ====================================================================== */
+
   :root{
     --paper:    oklch(0.93 0.02 85);
     --paper-2:  oklch(0.88 0.03 80);

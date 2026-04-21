@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>bar-portfolio · design showcase (artifact)</title>
+  <style>
+    /*
+      Standalone design showcase — mirrors the tokens in src/styles.css.
+      Source of truth: /src/styles.css (:root and html.dark blocks).
+      Keep this file in sync manually when the palette changes.
+    */
+    :root {
+      --paper:    oklch(0.93 0.02 85);
+      --paper-2:  oklch(0.88 0.03 80);
+      --surface-1: var(--paper);
+      --surface-2: oklch(0.96 0.02 85);
+      --surface-strong: oklch(0.18 0.03 40);
+      --ink:      oklch(0.18 0.03 40);
+      --ink-soft: oklch(0.34 0.04 40);
+      --ink-faint: oklch(0.48 0.03 40);
+      --border:   oklch(0 0 0 / .2);
+      --red:      oklch(0.58 0.22 25);
+      --green:    oklch(0.44 0.14 150);
+      --blue:     oklch(0.45 0.16 250);
+      --yellow:   oklch(0.86 0.17 90);
+      --magenta:  oklch(0.62 0.22 340);
+      --purple:   oklch(0.46 0.22 295);
+      --cyan:     oklch(0.80 0.14 200);
+      --shadow:   oklch(0.2 0.04 40 / .22);
+      --serif: "Iowan Old Style", "Georgia", ui-serif, serif;
+      --display: "Bodoni 72", "Didot", "Playfair Display", ui-serif, serif;
+      --mono: ui-monospace, "Courier New", "JetBrains Mono", monospace;
+      --hand: "Marker Felt", "Bradley Hand", "Comic Sans MS", cursive;
+    }
+    html.dark {
+      --paper: oklch(0.17 0.012 260);
+      --paper-2: oklch(0.14 0.012 260);
+      --surface-1: oklch(0.22 0.015 260);
+      --surface-2: oklch(0.27 0.018 260);
+      --surface-strong: oklch(0.10 0.015 260);
+      --ink: oklch(0.96 0.008 260);
+      --ink-soft: oklch(0.78 0.015 260);
+      --ink-faint: oklch(0.60 0.012 260);
+      --border: oklch(1 0 0 / .14);
+      --red: oklch(0.72 0.17 25);
+      --green: oklch(0.80 0.17 150);
+      --blue: oklch(0.78 0.13 240);
+      --yellow: oklch(0.86 0.15 90);
+      --magenta: oklch(0.78 0.17 340);
+      --purple: oklch(0.75 0.17 295);
+      --cyan: oklch(0.85 0.12 200);
+      --shadow: oklch(0 0 0 / .55);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--serif); padding: 40px 24px 80px; }
+    header { max-width: 1200px; margin: 0 auto 24px; }
+    h1 { font-family: var(--display); font-size: 40px; margin: 0; }
+    p.lede { margin: 8px 0 0; color: var(--ink-soft); max-width: 720px; }
+    .toggle { font-family: var(--mono); font-size: 12px; padding: 6px 12px; background: var(--ink); color: var(--paper); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; }
+    .cols { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); max-width: 1200px; margin: 24px auto; }
+    .card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+    .card h3 { margin: 0 0 12px; font-family: var(--display); }
+    .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+    .swatch { padding: 12px; border-radius: 8px; border: 1px solid var(--border); min-height: 72px; display: flex; flex-direction: column; justify-content: space-between; font-family: var(--mono); font-size: 11px; line-height: 1.3; }
+    .swatch strong { font-weight: 600; }
+    .specimen { margin-bottom: 16px; }
+    .specimen .label { font-family: var(--mono); font-size: 11px; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
+    .specimen .pangram { line-height: 1.15; }
+    code { font-family: var(--mono); font-size: 12px; }
+    a { color: var(--blue); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>bar-portfolio · design showcase (artifact)</h1>
+    <p class="lede">
+      Self-contained HTML preview of the design tokens. Token values mirror <code>src/styles.css</code>. For the live, always-in-sync version, open <a href="./#showcase">/#showcase</a>.
+    </p>
+    <p style="margin-top: 12px;">
+      <button class="toggle" id="toggleTheme" type="button">Toggle dark</button>
+      &nbsp;<a href="./">← back to portfolio</a>
+    </p>
+  </header>
+
+  <div class="cols">
+    <div class="card">
+      <h3>Surfaces</h3>
+      <div class="swatch-grid" id="surfaces"></div>
+    </div>
+    <div class="card">
+      <h3>Ink</h3>
+      <div class="swatch-grid" id="ink"></div>
+    </div>
+    <div class="card">
+      <h3>Accents</h3>
+      <div class="swatch-grid" id="accents"></div>
+    </div>
+    <div class="card">
+      <h3>Type</h3>
+      <div class="specimen"><div class="label">--display</div><div class="pangram" style="font-family: var(--display); font-size: 32px;">Sphinx of black quartz, judge my vow.</div></div>
+      <div class="specimen"><div class="label">--serif</div><div class="pangram" style="font-family: var(--serif); font-size: 18px;">Sphinx of black quartz, judge my vow.</div></div>
+      <div class="specimen"><div class="label">--mono</div><div class="pangram" style="font-family: var(--mono); font-size: 14px;">Sphinx of black quartz, judge my vow.</div></div>
+      <div class="specimen"><div class="label">--hand</div><div class="pangram" style="font-family: var(--hand); font-size: 20px;">Sphinx of black quartz, judge my vow.</div></div>
+    </div>
+  </div>
+
+  <script>
+    const BUCKETS = {
+      surfaces: ['paper', 'paper-2', 'surface-1', 'surface-2', 'surface-strong'],
+      ink: ['ink', 'ink-soft', 'ink-faint', 'border'],
+      accents: ['red', 'green', 'blue', 'yellow', 'magenta', 'purple', 'cyan'],
+    };
+    function render() {
+      const cs = getComputedStyle(document.documentElement);
+      for (const [id, tokens] of Object.entries(BUCKETS)) {
+        const host = document.getElementById(id);
+        host.innerHTML = '';
+        for (const t of tokens) {
+          const div = document.createElement('div');
+          div.className = 'swatch';
+          div.style.background = 'var(--' + t + ')';
+          div.style.color = ['ink','ink-soft','ink-faint','border'].includes(t) ? 'var(--paper)' : 'var(--ink)';
+          div.innerHTML = '<strong>--' + t + '</strong><span>' + (cs.getPropertyValue('--' + t).trim() || '—') + '</span>';
+          host.appendChild(div);
+        }
+      }
+    }
+    document.getElementById('toggleTheme').addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      render();
+    });
+    // Respect OS preference on first paint.
+    if (matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
+    }
+    render();
+  </script>
+</body>
+</html>

@@ -68,6 +68,27 @@ export default function HeroSlides() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /**
+   * Fragile fx cycle — do not "simplify".
+   *
+   * Three critical steps, every one required:
+   *   1. `void el.offsetHeight`  — forces a synchronous reflow so `.is-enter`
+   *      styles land before step 3 flips to `.is-active`. Skip this and the
+   *      browser coalesces both class changes in a single recompute; no
+   *      transition plays.
+   *   2. `requestAnimationFrame` — defers step 3 to the next paint. Skip this
+   *      and we're still in the same frame as the state commit; same result.
+   *   3. `setEnteringFrom(null)` — removes `.is-enter`, sets `.is-active` on
+   *      the new slide. CSS transitions from enter → active state now play.
+   *
+   * Alternatives that have been tried and break at least one of the five fx:
+   *   - plain setState in the event handler
+   *   - Promise.resolve().then(...)
+   *   - setTimeout(..., 0)
+   *   - React.useTransition
+   *
+   * See `knowledge/04-animation.md` and `knowledge/99-caveats.md`.
+   */
   useLayoutEffect(() => {
     if (enteringFrom === null) return;
     const el = rootRef.current?.querySelectorAll<HTMLElement>('.slide')[idx];

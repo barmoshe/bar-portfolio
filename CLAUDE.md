@@ -1,50 +1,54 @@
-# Repo notes
+# CLAUDE.md — bar-portfolio routing
 
-## Stack
+You are assisting inside the `bar-portfolio` repo — a React 19 + Vite 6 + TypeScript portfolio site, deployed to GitHub Pages at https://barmoshe.github.io/bar-portfolio/ via GitHub Actions.
 
-React 19 + Vite 6 + TypeScript, statically deployed to GitHub Pages.
+## Routing (open these first when relevant)
 
-- `index.html` — Vite entry at repo root. Keeps an inline pre-paint theme script in
-  `<head>` — **must stay inline** to avoid a flash of light theme on dark-mode loads.
-- `src/main.tsx` — React root; imports `styles.css` once.
-- `src/styles.css` — the original hand-tuned stylesheet (oklch tokens, 5-effect slideshow
-  animations, container queries, light/dark themes). Not migrated to Tailwind on purpose.
-- `src/App.tsx` — top-level layout (grain, crease, boot, strip, main sections, tabbar, lightbox).
-- `src/components/` — all React components; sections under `src/components/sections/`.
-- `src/hooks/` — `useTheme`, `useBootDismiss`, `useSectionObserver`, `useLightbox`.
-- `src/data/portfolio.ts` — projects + contact data, `iconFor`, `shortDesc` helpers.
-- `public/portraits/` — portrait PNGs, copied verbatim into `dist/` by Vite.
-- `public/.nojekyll` — keeps GitHub Pages' Jekyll processor from stripping folders.
+- Stack, build, deploy, Vite base path, GitHub Actions  →  `knowledge/01-stack.md`
+- Design tokens, oklch, typography, spacing             →  `knowledge/02-design-system.md`
+- Theme toggle, pre-paint script, ink-wipe GSAP timeline →  `knowledge/03-theming.md`
+- HeroSlides fx cycle, GSAP, inkBleed, reduced-motion   →  `knowledge/04-animation.md`
+- Component map, section ids, ink overlays              →  `knowledge/05-components.md`
+- Projects + contact data, types, helpers               →  `knowledge/06-data.md`
+- Invariants, gotchas, "do not break"                    →  `knowledge/99-caveats.md`
+- Add a project                                          →  `recipes/add-project.md` (+ `prompts/add-project.md`)
+- Customize colors / new palette                         →  `recipes/customize-theme.md` (+ `prompts/customize-colors.md`)
+- Edit a section                                         →  `recipes/edit-section.md` (+ `prompts/add-section-block.md`)
+- Deploy / verify live                                   →  `recipes/deploy.md`
+- Design critique                                        →  `prompts/design-critique.md`
+- Skill bundle that routes intents                       →  `skills/portfolio-curator/SKILL.md`
+
+Slash commands: `/new-project`, `/theme-preview`, `/deploy-check`, `/typecheck` — see `.claude/commands/`.
+
+## Things that must not be broken
+
+1. **Pre-paint theme script** — inline in `index.html` `<head>`. Do not externalize, defer, or move into React.
+2. **`HeroSlides` fx cycle** — the `.is-enter` → forced reflow (`void el.offsetHeight`) → `requestAnimationFrame` → `.is-active` sequence in `src/components/HeroSlides.tsx` is what drives all five clip-path transitions.
+3. **`base: '/bar-portfolio/'`** in `vite.config.ts` — if the repo is renamed, update this in lockstep.
+4. **`public/.nojekyll`** — must land in `dist/`. Keeps GitHub Pages' Jekyll from stripping underscore folders.
+
+Full rationale and anti-patterns: `knowledge/99-caveats.md`.
+
+## Defaults
+
+- Colors: `oklch()` only. New tokens land in `:root` **and** `html.dark` together. Body-text pairs must clear WCAG AA (≥ 4.5:1).
+- Motion: prefer `transform` / `opacity` / `filter`. Respect `prefers-reduced-motion` via `gsap.matchMedia` + `FULL_MOTION_QUERY` from `src/lib/gsap.ts`.
+- Styling: CSS custom properties in `src/styles.css`. Tailwind is intentionally rejected — see `knowledge/01-stack.md`.
+- No new runtime deps for cosmetic changes. Current deps: `react`, `react-dom`, `gsap`, `@gsap/react`.
+- Routing: single page + hash links (`#dossier`, `#story`, …). Do not add React Router.
 
 ## Scripts
 
 ```
 npm install        # once
-npm run dev        # vite dev server on :5173
+npm run dev        # http://localhost:5173
 npm run build      # tsc -b && vite build → dist/
-npm run preview    # serve dist/ at :4173/bar-portfolio/
+npm run preview    # http://localhost:4173/bar-portfolio/
 npm run typecheck  # tsc -b --noEmit
 ```
 
-## Vite config
-
-`base: '/bar-portfolio/'` in `vite.config.ts` is required so asset URLs resolve under
-the GitHub Pages project path (`https://barmoshe.github.io/bar-portfolio/`). Portrait
-paths use `import.meta.env.BASE_URL` so they pick up the base automatically.
+Design showcase: `http://localhost:5173/#showcase` (live tokens) · `http://localhost:5173/showcase.html` (standalone artifact).
 
 ## Branching
 
-`main` is the deploy branch — push to `main` triggers the GitHub Actions workflow
-(`.github/workflows/deploy.yml`) which runs `npm run build` and publishes `dist/` to
-GitHub Pages. Feature branches are fine; merge to `main` to ship.
-
-One-time setup: in GitHub Settings → Pages, set the source to **GitHub Actions**.
-
-## Things that must not be broken
-
-1. **Pre-paint theme script** — do not move out of `<head>` in `index.html`.
-2. **`HeroSlides` fx cycle** — the `.is-enter` → reflow → `.is-active` sequence in
-   `src/components/HeroSlides.tsx` is what drives the five clip-path transitions; a naive
-   state flip breaks all of them.
-3. **`base` in `vite.config.ts`** — changing the repo name means updating this.
-4. **`public/.nojekyll`** — must land in `dist/`.
+`main` is the deploy branch. `.github/workflows/deploy.yml` publishes on push. Feature branches are fine; merge to `main` to ship. One-time setup: **Settings → Pages → Source → GitHub Actions**.
