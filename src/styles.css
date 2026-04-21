@@ -382,22 +382,20 @@
   .bio > p{font-family:var(--serif);font-size:1rem;line-height:1.7;margin:18px 0 0;max-width:60ch;color:var(--ink-soft)}
 
   /* Credo: handwritten margin note marked up like an editor's pass —
-     ink body, yellow highlighter swipe, magenta italic pull-phrase. */
+     ink body, thick yellow highlighter, red-pen italic pull-phrase. */
   .bio .credo{margin:22px 0 0;font-family:var(--hand);font-style:normal;font-weight:400;
-    font-size:clamp(1rem,1.15vw,1.15rem);line-height:1.5;color:var(--ink);
+    font-size:clamp(1.2rem,1.5vw,1.4rem);line-height:1.55;color:var(--ink);
     max-width:60ch;letter-spacing:0}
   .bio .credo .mark{
-    background-image:linear-gradient(to top,
-      oklch(0.86 0.17 90 / .55) 0 .7em,
-      transparent .7em);
-    background-repeat:no-repeat;background-position:0 88%;
-    padding:0 .1em;color:var(--ink)}
+    background-color:oklch(0.86 0.17 90 / .7);
+    padding:.18em .2em;margin:0 -.05em;
+    color:var(--ink);
+    -webkit-box-decoration-break:clone;box-decoration-break:clone;
+    border-radius:1px}
   html.dark .bio .credo .mark{
-    background-image:linear-gradient(to top,
-      oklch(0.86 0.15 90 / .32) 0 .7em,
-      transparent .7em)}
+    background-color:oklch(0.86 0.15 90 / .42)}
   .bio .credo em{font-family:var(--display);font-style:italic;font-weight:700;
-    color:var(--magenta);letter-spacing:-.005em;
+    color:var(--red);letter-spacing:-.005em;
     white-space:nowrap;display:inline-block}
 
   /* Desktop: nested 2-col grid inside .bio, credo lives in the right gutter */
