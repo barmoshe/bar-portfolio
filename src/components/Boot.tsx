@@ -42,12 +42,8 @@ export default function Boot({ onGone }: Props) {
           : [];
         const version = root.querySelector<HTMLElement>('.version-tag');
         const mast = root.querySelector<HTMLElement>('.mast-main');
-        const quote = root.querySelector<HTMLElement>('.mast-quote');
-        const quoteOpen = root.querySelector<HTMLElement>('.mast-quote-open');
-        const quoteText = root.querySelector<HTMLElement>('.mast-quote-text');
-        const quoteClose = root.querySelector<HTMLElement>('.mast-quote-close');
-        const attribution = root.querySelector<HTMLElement>('.mast-quote-attr');
-        const em = quoteText?.querySelector<HTMLElement>('em') ?? null;
+        const phrase = root.querySelector<HTMLElement>('.mast-phrase');
+        const em = phrase?.querySelector<HTMLElement>('em') ?? null;
         const sub = root.querySelector<HTMLElement>('.sub');
         const btn = root.querySelector<HTMLElement>('.enter');
         const fill = root.querySelector<HTMLElement>('.enter-progress-fill');
@@ -62,7 +58,6 @@ export default function Boot({ onGone }: Props) {
         }
 
         let mastSplit: SplitText | null = null;
-        let tagSplit: SplitText | null = null;
 
         const tl = gsap.timeline();
         tlRef.current = tl;
@@ -125,41 +120,13 @@ export default function Boot({ onGone }: Props) {
           );
         }
 
-        // Beat 4 — pull-quote reveal + "prompt" highlight.
-        if (quote) gsap.set(quote, { opacity: 1 });
-        if (quoteOpen) {
-          gsap.set(quoteOpen, {
-            opacity: 0,
-            scale: 0.6,
-            rotate: -10,
-            transformOrigin: 'bottom right',
-          });
+        // Beat 4 — catchphrase reveal + "prompt" highlight.
+        if (phrase) {
+          gsap.set(phrase, { opacity: 0, y: 10 });
           tl.to(
-            quoteOpen,
-            {
-              opacity: 1,
-              scale: 1,
-              rotate: 0,
-              duration: 0.45,
-              ease: 'back.out(2.2)',
-            },
-            0.9,
-          );
-        }
-
-        if (quoteText) {
-          tagSplit = new SplitText(quoteText, { type: 'words' });
-          gsap.set(tagSplit.words, { opacity: 0, yPercent: 60 });
-          tl.to(
-            tagSplit.words,
-            {
-              opacity: 1,
-              yPercent: 0,
-              duration: 0.55,
-              stagger: 0.05,
-              ease: 'back.out(1.8)',
-            },
-            0.98,
+            phrase,
+            { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' },
+            0.95,
           );
         }
 
@@ -169,35 +136,6 @@ export default function Boot({ onGone }: Props) {
             em,
             { color: 'var(--green)', duration: 0.3, ease: 'none' },
             '>-0.15',
-          );
-        }
-
-        if (quoteClose) {
-          gsap.set(quoteClose, {
-            opacity: 0,
-            scale: 0.6,
-            rotate: 10,
-            transformOrigin: 'top left',
-          });
-          tl.to(
-            quoteClose,
-            {
-              opacity: 1,
-              scale: 1,
-              rotate: 0,
-              duration: 0.45,
-              ease: 'back.out(2.2)',
-            },
-            '>-0.1',
-          );
-        }
-
-        if (attribution) {
-          gsap.set(attribution, { opacity: 0, x: 18 });
-          tl.to(
-            attribution,
-            { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out' },
-            '>-0.25',
           );
         }
 
@@ -272,7 +210,6 @@ export default function Boot({ onGone }: Props) {
 
         return () => {
           mastSplit?.revert();
-          tagSplit?.revert();
           breathRef.current?.kill();
           breathRef.current = null;
           tlRef.current = null;
@@ -318,7 +255,7 @@ export default function Boot({ onGone }: Props) {
       mm.add('(prefers-reduced-motion: reduce)', () => {
         gsap.set(
           root.querySelectorAll(
-            '.mast, .mast-main, .version-tag, .mast-quote, .mast-quote-open, .mast-quote-text, .mast-quote-close, .mast-quote-attr, .sub, .enter',
+            '.mast, .mast-main, .version-tag, .mast-quote, .mast-quote-rule, .mast-quote-text, .mast-quote-attr, .sub, .enter',
           ),
           { clearProps: 'all' },
         );
@@ -466,14 +403,9 @@ export default function Boot({ onGone }: Props) {
         <h1 className="mast">
           <span className="mast-main">BAR MOSHE</span>
         </h1>
-        <blockquote className="mast-quote">
-          <span className="mast-quote-open" aria-hidden="true">“</span>
-          <span className="mast-quote-text">
-            it's only one <em>prompt</em> away.
-          </span>
-          <span className="mast-quote-close" aria-hidden="true">”</span>
-          <cite className="mast-quote-attr">— Bar Moshe</cite>
-        </blockquote>
+        <p className="mast-phrase">
+          it's only one <em>prompt</em> away.
+        </p>
         <p className="sub">Full-Stack · AI · Builder</p>
         <button
           className="enter pulse"
