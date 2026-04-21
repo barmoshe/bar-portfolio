@@ -18,7 +18,17 @@ const SLIDES: Slide[] = [
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
 
+const shuffleRest = (list: Slide[]): Slide[] => {
+  const [first, ...rest] = list;
+  for (let i = rest.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [rest[i], rest[j]] = [rest[j]!, rest[i]!];
+  }
+  return [first!, ...rest];
+};
+
 export default function HeroSlides() {
+  const [slides] = useState<Slide[]>(() => shuffleRest(SLIDES));
   const [idx, setIdx] = useState(0);
   const [enteringFrom, setEnteringFrom] = useState<number | null>(null);
   const [fxByIdx, setFxByIdx] = useState<Record<number, Fx>>({ 0: 'fade' });
@@ -38,7 +48,7 @@ export default function HeroSlides() {
 
   const advance = () => {
     setIdx((cur) => {
-      const next = (cur + 1) % SLIDES.length;
+      const next = (cur + 1) % slides.length;
       const fx = FX[fxCounter.current % FX.length]!;
       fxCounter.current += 1;
       setFxByIdx((prev) => ({ ...prev, [next]: fx }));
@@ -200,7 +210,7 @@ export default function HeroSlides() {
   };
 
   const base = import.meta.env.BASE_URL;
-  const currentCaption = SLIDES[idx]?.caption ?? '';
+  const currentCaption = slides[idx]?.caption ?? '';
 
   return (
     <div
@@ -215,7 +225,7 @@ export default function HeroSlides() {
           'translate3d(calc(var(--tilt-x, 0) * 1px), calc(var(--tilt-y, 0) * 1px), 0)',
       }}
     >
-      {SLIDES.map((s, i) => {
+      {slides.map((s, i) => {
         const isActive = enteringFrom !== null ? i === enteringFrom : i === idx;
         const isEnter = enteringFrom !== null && i === idx;
         const cls = `slide${isActive ? ' is-active' : ''}${isEnter ? ' is-enter' : ''}`;
@@ -235,7 +245,7 @@ export default function HeroSlides() {
         {currentCaption}
       </span>
       <div className="slide-dots" ref={dotsRef} aria-hidden="true">
-        {SLIDES.map((_, i) => (
+        {slides.map((_, i) => (
           <button
             key={i}
             type="button"
