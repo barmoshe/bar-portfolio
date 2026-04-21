@@ -183,21 +183,9 @@ export default function Dossier() {
           through-line isn't a stack or a title.
         </p>
 
-        <p
-          style={{
-            margin: '20px 0 0',
-            fontFamily: 'var(--display)',
-            fontSize: 'clamp(1.15rem,1.8vw,1.35rem)',
-            lineHeight: 1.3,
-            color: 'var(--ink)',
-            letterSpacing: '-0.005em',
-          }}
-        >
+        <p className="credo">
           It's the habit of starting and the belief that{' '}
-          <em style={{ fontWeight: 700 }}>
-            &ldquo;everything is only one prompt away&rdquo;
-          </em>
-          .
+          <em>&ldquo;everything is only one prompt away&rdquo;</em>.
         </p>
 
         <p className="toolline">
