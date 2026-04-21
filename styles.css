@@ -128,6 +128,7 @@
   html.dark #letter a[style*="var(--green)"]  {box-shadow: 6px 8px 0 var(--green) !important}
   html.dark #letter a[style*="var(--blue)"]   {box-shadow: 6px 8px 0 var(--blue) !important}
   html.dark #letter a[style*="var(--magenta)"]{box-shadow: 6px 8px 0 var(--magenta) !important}
+  html.dark #letter a[style*="var(--yellow)"] {box-shadow: 6px 8px 0 var(--yellow) !important}
   html.dark #notes a[style*="5px 6px 0 var(--blue)"]{box-shadow: 6px 8px 0 var(--blue) !important}
   html.dark #music > div > div[style*="var(--blue)"]{box-shadow: 6px 8px 0 var(--blue) !important}
 
@@ -449,6 +450,7 @@
     #letter > div > a[style*="var(--green)"]  {box-shadow:4px 5px 0 var(--green)  !important}
     #letter > div > a[style*="var(--blue)"]   {box-shadow:4px 5px 0 var(--blue)   !important}
     #letter > div > a[style*="var(--magenta)"]{box-shadow:4px 5px 0 var(--magenta)!important}
+    #letter > div > a[style*="var(--yellow)"] {box-shadow:4px 5px 0 var(--yellow) !important}
 
     /* Featured (blue) dispatch card shadow */
     #notes > div > a[style*="var(--blue)"]{box-shadow:4px 5px 0 var(--blue) !important}
