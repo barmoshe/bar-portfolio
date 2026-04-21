@@ -1,6 +1,6 @@
 import { useSectionObserver } from '../hooks/useSectionObserver';
 
-const SECTIONS = ['dossier', 'experience', 'repos', 'music', 'notes', 'letter'] as const;
+const SECTIONS = ['dossier', 'experience', 'repos', 'notes', 'letter'] as const;
 
 export default function TabBar() {
   const activeId = useSectionObserver(SECTIONS);
@@ -36,14 +36,6 @@ export default function TabBar() {
           <path d="M16 6l6 6-6 6" />
         </svg>
         <span>Repos</span>
-      </a>
-      <a href="#music" data-target="music" aria-label="Music" data-magnet {...isCurrent('music')}>
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M3 12c2-3 4-3 6 0s4 3 6 0 4-3 6 0" />
-          <circle cx="6" cy="17" r="2" />
-          <path d="M8 17V7l10-2v9" />
-        </svg>
-        <span>Music</span>
       </a>
       <a href="#notes" data-target="notes" aria-label="Writing" data-magnet {...isCurrent('notes')}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
