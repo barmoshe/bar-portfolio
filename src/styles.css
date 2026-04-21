@@ -33,7 +33,6 @@
     --purple:   oklch(0.46 0.22 295);
     --cyan:     oklch(0.80 0.14 200);
     --shadow:   oklch(0.2 0.04 40 / .22);
-    --marker-fill: oklch(0.89 0.22 92 / .62);
     --serif: "Iowan Old Style", "Georgia", ui-serif, serif;
     --display: "Bodoni 72", "Didot", "Playfair Display", ui-serif, serif;
     --mono: ui-monospace, "Courier New", "JetBrains Mono", monospace;
@@ -62,7 +61,6 @@
     --purple:   oklch(0.75 0.17 295);
     --cyan:     oklch(0.85 0.12 200);
     --shadow:   oklch(0 0 0 / .55);
-    --marker-fill: oklch(0.82 0.17 92 / .32);
     /* Back-compat aliases for existing --band consumers */
     --band:     var(--surface-strong);
     --band-fg:  var(--surface-strong-fg);
@@ -378,30 +376,6 @@
   .bio .byline::before{content:"// ";color:var(--green)}
   .bio h1{font-family:var(--display);font-weight:700;line-height:1;font-size:clamp(2.4rem,6vw,4.4rem);margin:10px 0 0;letter-spacing:-.02em}
   .bio h1 em{font-style:italic;color:var(--green)}
-
-  /* Highlighter marker — gradient background sized by --marker-p (0→1).
-     GSAP tweens --marker-p on scroll so it sweeps in left-to-right.
-     box-decoration-break:clone keeps the stripe clean across line wraps. */
-  .marker{
-    display:inline;
-    padding:.04em .22em;
-    margin:0 -.1em;
-    color:var(--ink);
-    background-image:linear-gradient(103deg,
-      oklch(0 0 0 / 0) 0.6%,
-      var(--marker-fill) 2.4%,
-      var(--marker-fill) 96%,
-      oklch(0 0 0 / 0) 99.4%);
-    background-repeat:no-repeat;
-    background-size:calc(var(--marker-p, 1) * 100%) 78%;
-    background-position:0 88%;
-    border-radius:3px;
-    -webkit-box-decoration-break:clone;
-    box-decoration-break:clone;
-  }
-  @media (prefers-reduced-motion: reduce){
-    .marker{background-size:100% 78%}
-  }
   .drop p{font-family:var(--serif);font-size:1.05rem;line-height:1.7;margin:22px 0 0;max-width:62ch;text-align:left;hyphens:none}
   .drop p::first-letter{font-size:inherit;color:inherit;float:none;padding:0;font-weight:inherit;font-family:inherit}
 
