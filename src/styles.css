@@ -381,25 +381,38 @@
   .drop p::first-letter{font-size:inherit;color:inherit;float:none;padding:0;font-weight:inherit;font-family:inherit}
   .bio > p{font-family:var(--serif);font-size:1rem;line-height:1.7;margin:18px 0 0;max-width:60ch;color:var(--ink-soft)}
 
-  /* Credo: handwritten margin note — placed in the .bio grid gutter on desktop,
-     flows inline on mobile. See @media (min-width:821px) rule below for layout. */
+  /* Credo: handwritten margin note marked up like an editor's pass —
+     ink body, yellow highlighter swipe, magenta italic pull-phrase. */
   .bio .credo{margin:22px 0 0;font-family:var(--hand);font-style:normal;font-weight:400;
-    font-size:clamp(1rem,1.15vw,1.15rem);line-height:1.4;color:var(--green);
+    font-size:clamp(1rem,1.15vw,1.15rem);line-height:1.5;color:var(--ink);
     max-width:60ch;letter-spacing:0}
-  .bio .credo em{font-family:var(--display);font-style:italic;font-weight:700;color:var(--green)}
+  .bio .credo .mark{
+    background-image:linear-gradient(to top,
+      oklch(0.86 0.17 90 / .55) 0 .7em,
+      transparent .7em);
+    background-repeat:no-repeat;background-position:0 88%;
+    padding:0 .1em;color:var(--ink)}
+  html.dark .bio .credo .mark{
+    background-image:linear-gradient(to top,
+      oklch(0.86 0.15 90 / .32) 0 .7em,
+      transparent .7em)}
+  .bio .credo em{font-family:var(--display);font-style:italic;font-weight:700;
+    color:var(--magenta);letter-spacing:-.005em;
+    white-space:nowrap;display:inline-block}
 
   /* Desktop: nested 2-col grid inside .bio, credo lives in the right gutter */
   @media (min-width:821px){
     .bio{display:grid;
-      grid-template-columns:minmax(0,1fr) clamp(170px,18vw,230px);
+      grid-template-columns:minmax(0,1fr) clamp(240px,24vw,320px);
       column-gap:clamp(24px,3vw,40px);
       align-items:start}
     .bio > *{grid-column:1}
     .bio .credo{grid-column:2;grid-row:3 / span 4;align-self:start;
       position:sticky;top:clamp(70px,10vh,110px);
-      max-width:22ch;margin:0;padding:4px 0 4px 10px;
+      max-width:none;margin:0;padding:4px 0 4px 10px;
       border-left:1px dashed var(--ink-faint);
-      transform:rotate(-1.5deg);transform-origin:left center}
+      transform:rotate(-1.5deg);transform-origin:left center;
+      font-size:clamp(.92rem,1vw,1.02rem)}
   }
 
   .skills{margin-top:32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px}
@@ -719,6 +732,8 @@
       line-height:1.4;margin-bottom:12px}
     #intro .bio .byline::before{content:"// ";color:var(--green);font-family:var(--mono);font-style:normal}
     #intro .bio h1{margin-top:0;line-height:1.02}
+    /* Mobile: let the credo quote wrap so it doesn't overflow the viewport */
+    .bio .credo em{white-space:normal;display:inline}
 
     /* Toolline: keep mono prompt scale on mobile; allow args to wrap */
     .toolline{font-size:12.5px;line-height:1.7}
