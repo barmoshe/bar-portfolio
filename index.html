@@ -500,23 +500,33 @@
     /* Hide caption/dots - no room */
     #dossier .mug .slide-caption,#dossier .mug .slide-dots{display:none}
 
-    /* id-meta: label+value as 2-column grid so pairs never split across lines */
+    /* id-meta: render as a bordered table-style grid — each row is
+       [LABEL | value] with visible cell dividers */
     #dossier .id-meta{
-      display:grid;grid-template-columns:auto 1fr;gap:8px 10px;
-      border-top:1px dashed var(--ink-soft);padding-top:14px;margin-top:18px;
-      font-size:12px;letter-spacing:0;align-items:center}
+      display:grid;grid-template-columns:minmax(68px,auto) 1fr;gap:0;
+      margin-top:18px;padding-top:0;font-size:12px;letter-spacing:0;
+      border:1.5px solid var(--ink);background:var(--paper)}
     #dossier .id-meta b{
-      justify-self:start;align-self:center;
+      display:flex;align-items:center;
       background:var(--blue);color:var(--paper);
-      padding:3px 8px;font-family:var(--mono);font-weight:700;
-      letter-spacing:.15em;text-transform:uppercase;font-size:10px;
-      line-height:1.4;white-space:nowrap}
+      padding:8px 10px;font-family:var(--mono);font-weight:700;
+      letter-spacing:.14em;text-transform:uppercase;font-size:10px;
+      line-height:1.3;white-space:nowrap;
+      border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
     #dossier .id-meta span{
+      display:flex;align-items:center;
       color:var(--ink);font-family:var(--mono);
       letter-spacing:0;text-transform:none;
+      padding:8px 10px;border-bottom:1.5px solid var(--ink);
       overflow-wrap:anywhere;word-break:break-word;min-width:0}
     #dossier .id-meta span a{overflow-wrap:anywhere;word-break:break-all}
+    /* Kill the last row's bottom border to avoid double-line at table edge */
+    #dossier .id-meta > b:nth-last-of-type(1),
+    #dossier .id-meta > span:nth-last-of-type(1){border-bottom:0}
     #dossier .id-meta b,#dossier .id-meta span{margin:0}
+    html.dark #dossier .id-meta{background:oklch(0.24 0.02 260);border-color:var(--ink-soft)}
+    html.dark #dossier .id-meta b{border-color:var(--ink-soft)}
+    html.dark #dossier .id-meta span{border-color:var(--ink-soft)}
 
     /* Bio: byline is a full sentence, not a chip — keep it as a small italic
        lead-in so it doesn't wrap into an oversized dark block. */
