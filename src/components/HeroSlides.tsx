@@ -50,10 +50,11 @@ export default function HeroSlides() {
   const schedule = () => {
     if (pausedRef.current) return;
     if (timerRef.current !== null) return;
+    const maxMs = Math.min(4000 + fxCounter.current * 250, 7000);
     timerRef.current = window.setTimeout(() => {
       timerRef.current = null;
       advance();
-    }, rand(2000, 7000));
+    }, rand(2000, maxMs));
   };
 
   useEffect(() => {
