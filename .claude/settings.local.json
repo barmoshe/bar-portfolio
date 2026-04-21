@@ -21,7 +21,10 @@
       "Bash(curl -s -o /dev/null -w \"site: %{http_code}\\\\n\" https://barmoshe.github.io/bar-portfolio/)",
       "Bash(curl -s -o /dev/null -w \"portrait: %{http_code}\\\\n\" https://barmoshe.github.io/bar-portfolio/portraits/img0.png)",
       "Bash(sed -n '21,593p' index.html)",
-      "Bash(sed -n '1008,1261p' index.html)"
+      "Bash(sed -n '1008,1261p' index.html)",
+      "Bash(awk 'NR==1{print; next} NR>=20 && NR<=594{if\\(NR==20\\) print \"<link rel=\\\\\"stylesheet\\\\\" href=\\\\\"styles.css\\\\\">\"; next} NR>=1007 && NR<=1262{if\\(NR==1007\\) print \"<script src=\\\\\"script.js\\\\\" defer></script>\"; next} {print}' index.html)",
+      "Bash(git check-ignore *)",
+      "Bash(git status *)"
     ]
   }
 }
