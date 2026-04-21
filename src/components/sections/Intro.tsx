@@ -183,9 +183,9 @@ export default function Intro() {
           through-line isn't a stack or a title.
         </p>
 
-        <p className="credo">
-          It's the <span className="mark">habit of starting</span> and the belief that{' '}
-          <em>&ldquo;everything is only one prompt away&rdquo;</em>.
+        <p>
+          It's the habit of starting and the belief that &ldquo;everything is only one
+          prompt away&rdquo;.
         </p>
 
         <p className="toolline">
