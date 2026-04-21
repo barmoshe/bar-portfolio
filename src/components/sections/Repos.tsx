@@ -24,7 +24,6 @@ export default function Repos({ onOpen }: Props) {
       const stamp = root.querySelector<HTMLElement>('.stamp');
       const headline = root.querySelector<HTMLElement>('.headline');
       const cards = Array.from(grid.children) as HTMLElement[];
-      const nums = grid.querySelectorAll<HTMLElement>('.num');
       const cta = root.querySelector<HTMLElement>('.gh-cta');
 
       const mm = gsap.matchMedia();
@@ -87,53 +86,22 @@ export default function Repos({ onOpen }: Props) {
             scrollTrigger: { trigger: grid, start: 'top 80%' },
           });
         }
-
-        if (nums.length) {
-          gsap.set(nums, { opacity: 0, rotate: -180, scale: 0 });
-          gsap.to(nums, {
-            opacity: 1,
-            rotate: 8,
-            scale: 1,
-            duration: 0.7,
-            stagger: 0.1,
-            ease: 'back.out(2.5)',
-            delay: 0.3,
-            scrollTrigger: { trigger: grid, start: 'top 80%' },
-          });
-        }
       });
 
       mm.add(MOBILE_QUERY, () => {
         cards.forEach((el, i) => {
-          const num = el.querySelector<HTMLElement>('.num');
           const xFrom = i % 2 === 0 ? -24 : 24;
           gsap.set(el, { opacity: 0, x: xFrom, y: 50, scale: 0.92 });
-          if (num) gsap.set(num, { opacity: 0, scale: 0.4, rotate: -90 });
 
-          const tl = gsap.timeline({
-            scrollTrigger: { trigger: el, start: 'top 92%' },
-          });
-          tl.to(el, {
+          gsap.to(el, {
             opacity: 1,
             x: 0,
             y: 0,
             scale: 1,
             duration: 0.7,
             ease: 'back.out(1.4)',
+            scrollTrigger: { trigger: el, start: 'top 92%' },
           });
-          if (num) {
-            tl.to(
-              num,
-              {
-                opacity: 1,
-                scale: 1,
-                rotate: 8,
-                duration: 0.55,
-                ease: 'back.out(2.5)',
-              },
-              '-=0.4',
-            );
-          }
         });
       });
 
@@ -163,9 +131,6 @@ export default function Repos({ onOpen }: Props) {
             aria-label={p.name}
             onClick={() => onOpen(i)}
           >
-            <span className="num" aria-hidden="true">
-              {String(i + 1).padStart(2, '0')}
-            </span>
             <header className="head">
               <span className="dots" aria-hidden="true">
                 <i />
