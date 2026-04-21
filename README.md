@@ -100,7 +100,7 @@ bar-portfolio/
 │   └── components/
 │       ├── HeroSlides.tsx      fragile 5-fx cycle — see knowledge/04
 │       ├── Lightbox, Strip, TabBar, Boot, Grain, Crease, …
-│       ├── sections/           Dossier, Story, Experience, Repos, Music, Notes, Letter
+│       ├── sections/           Intro, Story, Experience, Repos, Music, Notes, Letter
 │       └── showcase/           #showcase route (ColorGrid, TypeSpecimen, FxPlayground)
 ├── public/
 │   ├── .nojekyll               keeps Pages from eating folders

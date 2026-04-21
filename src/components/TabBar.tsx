@@ -1,6 +1,6 @@
 import { useSectionObserver } from '../hooks/useSectionObserver';
 
-const SECTIONS = ['dossier', 'experience', 'repos', 'notes', 'letter'] as const;
+const SECTIONS = ['intro', 'experience', 'repos', 'notes', 'letter'] as const;
 
 export default function TabBar() {
   const activeId = useSectionObserver(SECTIONS);
@@ -10,7 +10,7 @@ export default function TabBar() {
 
   return (
     <nav className="tabbar" aria-label="Mobile sections">
-      <a href="#dossier" data-target="dossier" aria-label="About" {...isCurrent('dossier')}>
+      <a href="#intro" data-target="intro" aria-label="About" {...isCurrent('intro')}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="8" r="4" />
           <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" />

@@ -56,7 +56,7 @@ export const projects: Project[] = [
   },
 ];
 
-/** Contact surface — consumed by `Letter.tsx` (copy-to-clipboard + mailto) and Dossier/Letter links. */
+/** Contact surface — consumed by `Letter.tsx` (copy-to-clipboard + mailto) and Intro/Letter links. */
 export const contact = {
   email: '1barmoshe1@gmail.com',
   github: 'https://github.com/barmoshe',

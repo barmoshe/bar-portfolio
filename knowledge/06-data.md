@@ -82,7 +82,7 @@ For a guided creation flow, use `../prompts/add-project.md` and `../recipes/add-
 
 ## Editing contact
 
-Same file, `contact` object. The email is consumed by `Letter.tsx` (copy-to-clipboard + `mailto:` form action). Phone is displayed on the Letter section. GitHub and LinkedIn are linked from Dossier and Letter.
+Same file, `contact` object. The email is consumed by `Letter.tsx` (copy-to-clipboard + `mailto:` form action). Phone is displayed on the Letter section. GitHub and LinkedIn are linked from Intro and Letter.
 
 ## What is NOT in `portfolio.ts`
 

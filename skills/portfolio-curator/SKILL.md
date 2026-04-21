@@ -25,7 +25,7 @@ Full rationale: `knowledge/99-caveats.md`.
 |---|---|
 | "add a project", "new repo entry", "put this on the portfolio" | `recipes/add-project.md` → `prompts/add-project.md` |
 | "change the colors", "new palette", "make it warmer/cooler" | `recipes/customize-theme.md` → `prompts/customize-colors.md` |
-| "edit the dossier/story/experience/…", "add a paragraph to <section>" | `recipes/edit-section.md` → `prompts/add-section-block.md` |
+| "edit the intro/story/experience/…", "add a paragraph to <section>" | `recipes/edit-section.md` → `prompts/add-section-block.md` |
 | "deploy", "push live", "ship it" | `recipes/deploy.md` |
 | "critique the design", "something looks off" | `prompts/design-critique.md` |
 

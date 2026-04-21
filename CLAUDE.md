@@ -35,7 +35,7 @@ Full rationale and anti-patterns: `knowledge/99-caveats.md`.
 - Motion: prefer `transform` / `opacity` / `filter`. Respect `prefers-reduced-motion` via `gsap.matchMedia` + `FULL_MOTION_QUERY` from `src/lib/gsap.ts`.
 - Styling: CSS custom properties in `src/styles.css`. Tailwind is intentionally rejected — see `knowledge/01-stack.md`.
 - No new runtime deps for cosmetic changes. Current deps: `react`, `react-dom`, `gsap`, `@gsap/react`.
-- Routing: single page + hash links (`#dossier`, `#story`, …). Do not add React Router.
+- Routing: single page + hash links (`#intro`, `#story`, …). Do not add React Router.
 
 ## Scripts
 

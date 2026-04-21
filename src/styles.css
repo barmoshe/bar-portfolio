@@ -6,7 +6,7 @@
  *   2. Dark overrides           — html.dark { … } surfaces/ink/accents + scoped overrides
  *   3. Base + layout            — body, page, section scaffolding
  *   4. Components               — strip, tabbar, hero mug/slides, dots, lightbox, letter
- *   5. Sections                 — dossier, story, experience, repos, music, notes, letter
+ *   5. Sections                 — intro, story, experience, repos, music, notes, letter
  *   6. Ink overlays / filters   — grain, crease, ink-wipe, ink-bleed consumers
  *   7. Responsive               — @media (max-width: 820px) mobile tabbar cutoff
  *
@@ -284,8 +284,8 @@
   .marker{display:inline-block;font-family:var(--hand);color:var(--green);transform:rotate(-2deg)}
   .stamp{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--green);border:2px solid var(--green);padding:4px 10px;transform:rotate(-3deg)}
 
-  #dossier{display:grid;grid-template-columns:minmax(220px, 320px) 1fr;gap:52px;align-items:start}
-  @media (max-width:820px){#dossier{grid-template-columns:1fr;gap:28px}}
+  #intro{display:grid;grid-template-columns:minmax(220px, 320px) 1fr;gap:52px;align-items:start}
+  @media (max-width:820px){#intro{grid-template-columns:1fr;gap:28px}}
   @media (max-width:480px){.id-card{transform:none;margin-top:0}}
   .id-card{position:relative;background:var(--paper);
     border:1.5px solid var(--ink);padding:16px;
@@ -626,76 +626,76 @@
     /* Featured (green) dispatch card shadow */
     #notes > div > a[style*="var(--green)"]{box-shadow:4px 5px 0 var(--green) !important}
 
-    /* ─── Hero (01 · Dossier) — MOBILE REDESIGN ───
+    /* ─── Hero (01 · Intro) — MOBILE REDESIGN ───
        Desktop: 2-col with big portrait card left, bio right.
        Mobile:  bio leads. Portrait becomes an 88px circular cycling avatar
        sitting inline above a byline chip. id-meta becomes colored chips. */
-    #dossier{grid-template-columns:1fr;gap:18px;display:flex;flex-direction:column}
-    #dossier .bio{order:1}
-    #dossier .id-card{order:2;
+    #intro{grid-template-columns:1fr;gap:18px;display:flex;flex-direction:column}
+    #intro .bio{order:1}
+    #intro .id-card{order:2;
       background:transparent !important;border:0 !important;
       box-shadow:none !important;padding:0 !important;margin:6px 0 0 !important;
       width:100% !important;
       display:flex !important;flex-direction:column !important;
       align-items:center !important;justify-content:center !important;
       text-align:center !important}
-    #dossier .id-card .tape{display:none}
+    #intro .id-card .tape{display:none}
 
     /* Mug: larger, softened rectangle above chips */
-    #dossier .mug{
+    #intro .mug{
       width:min(220px,60vw);height:auto;aspect-ratio:4/5;border-radius:14px;
       border:2px solid var(--ink);overflow:hidden;
       margin:0 auto 14px auto !important;align-self:center !important;
       box-shadow:4px 4px 0 var(--green);
       background:linear-gradient(135deg, oklch(0.45 0.16 250), oklch(0.6 0.18 200))}
-    #dossier .mug::after{display:none}
-    #dossier .mug .slide{border-radius:14px;filter:blur(6px) saturate(.8)}
-    #dossier .mug .slide.is-active{filter:blur(0) saturate(1)}
+    #intro .mug::after{display:none}
+    #intro .mug .slide{border-radius:14px;filter:blur(6px) saturate(.8)}
+    #intro .mug .slide.is-active{filter:blur(0) saturate(1)}
     /* Kill all the fancy per-fx clip-paths on the tiny avatar - they break at 88px */
-    #dossier .mug .slide[data-fx]{clip-path:none !important;transform:none !important}
-    #dossier .mug .slide.is-active[data-fx]{clip-path:none !important;transform:none !important}
+    #intro .mug .slide[data-fx]{clip-path:none !important;transform:none !important}
+    #intro .mug .slide.is-active[data-fx]{clip-path:none !important;transform:none !important}
     /* Hide caption/dots - no room */
-    #dossier .mug .slide-caption,#dossier .mug .slide-dots{display:none}
+    #intro .mug .slide-caption,#intro .mug .slide-dots{display:none}
 
     /* id-meta: render as a bordered table-style grid — each row is
        [LABEL | value] with visible cell dividers */
-    #dossier .id-meta{
+    #intro .id-meta{
       display:grid;grid-template-columns:minmax(68px,auto) 1fr;gap:0;
       margin:18px auto 0 !important;width:100% !important;max-width:420px;
       align-self:center !important;text-align:left;
       padding-top:0;font-size:12px;letter-spacing:0;
       border:1.5px solid var(--ink);background:var(--paper)}
-    #dossier .id-meta b{
+    #intro .id-meta b{
       display:flex;align-items:center;
       background:var(--green);color:var(--paper);
       padding:8px 10px;font-family:var(--mono);font-weight:700;
       letter-spacing:.14em;text-transform:uppercase;font-size:10px;
       line-height:1.3;white-space:nowrap;
       border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
-    #dossier .id-meta span{
+    #intro .id-meta span{
       display:flex;align-items:center;
       color:var(--ink);font-family:var(--mono);
       letter-spacing:0;text-transform:none;
       padding:8px 10px;border-bottom:1.5px solid var(--ink);
       overflow-wrap:anywhere;word-break:break-word;min-width:0}
-    #dossier .id-meta span a{overflow-wrap:anywhere;word-break:break-all}
+    #intro .id-meta span a{overflow-wrap:anywhere;word-break:break-all}
     /* Kill the last row's bottom border to avoid double-line at table edge */
-    #dossier .id-meta > b:nth-last-of-type(1),
-    #dossier .id-meta > span:nth-last-of-type(1){border-bottom:0}
-    #dossier .id-meta b,#dossier .id-meta span{margin:0}
-    html.dark #dossier .id-meta{background:oklch(0.24 0.02 260);border-color:var(--ink-soft)}
-    html.dark #dossier .id-meta b{border-color:var(--ink-soft)}
-    html.dark #dossier .id-meta span{border-color:var(--ink-soft)}
+    #intro .id-meta > b:nth-last-of-type(1),
+    #intro .id-meta > span:nth-last-of-type(1){border-bottom:0}
+    #intro .id-meta b,#intro .id-meta span{margin:0}
+    html.dark #intro .id-meta{background:oklch(0.24 0.02 260);border-color:var(--ink-soft)}
+    html.dark #intro .id-meta b{border-color:var(--ink-soft)}
+    html.dark #intro .id-meta span{border-color:var(--ink-soft)}
 
     /* Bio: byline is a full sentence, not a chip — keep it as a small italic
        lead-in so it doesn't wrap into an oversized dark block. */
-    #dossier .bio .byline{
+    #intro .bio .byline{
       display:block;background:transparent;color:var(--ink-soft);
       padding:0;font-family:var(--serif);font-style:italic;
       font-size:.95rem;letter-spacing:0;text-transform:none;
       line-height:1.4;margin-bottom:12px}
-    #dossier .bio .byline::before{content:"// ";color:var(--green);font-family:var(--mono);font-style:normal}
-    #dossier .bio h1{margin-top:0;line-height:1.02}
+    #intro .bio .byline::before{content:"// ";color:var(--green);font-family:var(--mono);font-style:normal}
+    #intro .bio h1{margin-top:0;line-height:1.02}
 
     /* Toolline trim for mobile (base rule already stacks the label chip) */
     .toolline{font-size:.98rem}

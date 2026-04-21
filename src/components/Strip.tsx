@@ -51,7 +51,7 @@ export default function Strip({
   return (
     <nav className="strip" aria-label="Primary" ref={ref}>
       <span className="mark">bm@v1.3.7</span>
-      <a className="key" href="#dossier">About</a>
+      <a className="key" href="#intro">About</a>
       <a className="key" href="#story">Story</a>
       <a href="#experience">Work</a>
       <a href="#repos">Open Source</a>

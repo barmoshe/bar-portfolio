@@ -42,7 +42,7 @@ Two preview surfaces:
 - **`http://localhost:5173/#showcase`** — the React showcase reads tokens via `getComputedStyle`, so it updates the moment the CSS hot-reloads. Light and dark samples render side-by-side for direct comparison.
 - **`http://localhost:5173/showcase.html`** — the standalone artifact. If you edited it in parallel, confirm it mirrors `styles.css` values; otherwise it will look stale. A comment at the top of `showcase.html` flags the sync requirement.
 
-Walk every section (`#dossier`, `#story`, `#experience`, `#repos`, `#music`, `#notes`, `#letter`) in both light and dark modes. Look for:
+Walk every section (`#intro`, `#story`, `#experience`, `#repos`, `#music`, `#notes`, `#letter`) in both light and dark modes. Look for:
 
 - Body text legibility on `--paper`, `--paper-2`, `--surface-1/2`.
 - Accent-on-surface pairings (red, blue, etc. on any `--surface-*`).

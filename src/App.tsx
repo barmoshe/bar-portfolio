@@ -6,7 +6,7 @@ import Strip from './components/Strip';
 import TabBar from './components/TabBar';
 import Lightbox from './components/Lightbox';
 import InkDefs from './components/InkDefs';
-import Dossier from './components/sections/Dossier';
+import Intro from './components/sections/Intro';
 import Story from './components/sections/Story';
 import Experience from './components/sections/Experience';
 import Repos from './components/sections/Repos';
@@ -96,7 +96,7 @@ export default function App() {
         skipRemembered={skipRemembered}
       />
       <main>
-        <Dossier />
+        <Intro />
         <Story />
         <Experience />
         <Repos onOpen={openFromCard} />

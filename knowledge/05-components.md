@@ -9,7 +9,7 @@
 <Boot ? />                // Full-screen onboarding (dismissible, hidden after skip)
 <Strip />                 // Sticky top nav: theme toggle, skip button, section links
 <main>
-  <Dossier />             // id="dossier"   — hero / intro / portrait slideshow
+  <Intro />             // id="intro"   — hero / intro / portrait slideshow
   <Story />               // id="story"     — narrative + timeline
   <Experience />          // id="experience"— work history cards
   <Repos onOpen={…} />    // id="repos"     — project grid (opens Lightbox on click)
@@ -47,7 +47,7 @@ One component per section id. The section id is set on the **outermost element**
 
 | File | id | Role | Primitives used |
 |---|---|---|---|
-| `Dossier.tsx` | `dossier` | Hero intro with `HeroSlides`, identity card, quick facts. | `HeroSlides`, `Reveal` |
+| `Intro.tsx` | `intro` | Hero intro with `HeroSlides`, identity card, quick facts. | `HeroSlides`, `Reveal` |
 | `Story.tsx` | `story` | Education + narrative timeline. | `InkTimeline`, `Reveal` |
 | `Experience.tsx` | `experience` | Work history cards (Joomsy, Wochit). | `InkTimeline`, `Reveal` |
 | `Repos.tsx` | `repos` | Project grid. Cards open `Lightbox` via `onOpen(idx)`. Reads `projects` from `data/portfolio.ts`. | `HoverCard`, `CodeArt` |

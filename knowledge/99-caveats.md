@@ -80,7 +80,7 @@ See `01-stack.md`. If you think you need Tailwind, re-read that section first. T
 
 ### Don't add React Router
 
-The site is single-page with anchor links (`#dossier`, `#story`, …). Adding a router would require reworking:
+The site is single-page with anchor links (`#intro`, `#story`, …). Adding a router would require reworking:
 
 - Section id ↔ anchor link bindings in `Strip` and `TabBar`.
 - `useSectionObserver` (which watches scroll position).

@@ -10,7 +10,7 @@
 //                                   rule 11 in the plan).
 
 const BLEED_IDS = [
-  'dossier',
+  'intro',
   'story',
   'experience',
   'repos',

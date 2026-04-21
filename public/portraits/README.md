@@ -1,6 +1,6 @@
 # portraits/
 
-Source images for the `HeroSlides` portrait slideshow on the `#dossier` section.
+Source images for the `HeroSlides` portrait slideshow on the `#intro` section.
 
 ## Contents
 

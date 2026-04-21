@@ -12,7 +12,7 @@ Map from section id to file:
 
 | id | file |
 |---|---|
-| `dossier` | `src/components/sections/Dossier.tsx` |
+| `intro` | `src/components/sections/Intro.tsx` |
 | `story` | `src/components/sections/Story.tsx` |
 | `experience` | `src/components/sections/Experience.tsx` |
 | `repos` | `src/components/sections/Repos.tsx` |

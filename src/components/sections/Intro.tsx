@@ -11,7 +11,7 @@ import {
 } from '../../lib/gsap';
 import { attachInkBleed } from '../../lib/inkBleed';
 
-export default function Dossier() {
+export default function Intro() {
   const rootRef = useRef<HTMLElement | null>(null);
 
   useGSAP(
@@ -107,7 +107,7 @@ export default function Dossier() {
             ease: 'back.out(1.6)',
             scrollTrigger: { trigger: bioH1, start: 'top 80%' },
           });
-          cleanupBleed = attachInkBleed(bioH1, 'dossier');
+          cleanupBleed = attachInkBleed(bioH1, 'intro');
         }
 
         if (paras.length) {
@@ -135,7 +135,7 @@ export default function Dossier() {
   );
 
   return (
-    <article className="page" id="dossier" ref={rootRef}>
+    <article className="page" id="intro" ref={rootRef}>
       <div className="folio">
         <b>01</b> // WHOAMI
       </div>
