@@ -361,6 +361,158 @@
     .id-card,.letter,.skill,.pull,.clip article{transform:none !important}
     .enter.pulse{animation:none !important}
   }
+
+  /* ───── Mobile redesign (≤640px) ─────
+     Strategy: kill card rotations (they overflow and look crooked on narrow
+     screens), shrink shadow offsets, force grids to single-column, and stack
+     flex rows. Inline styles on cards use transform/rotate; override with
+     !important. Applies across hero, experience, music, dispatches, contact. */
+  @media (max-width:640px){
+    /* Tighter page gutters */
+    .page{padding:44px 16px}
+
+    /* Headline sizing for small viewports */
+    .mast{font-size:clamp(2.2rem,11vw,3.4rem)}
+    .mast-tag{font-size:clamp(1rem,3.6vw,1.3rem)}
+    .headline{font-size:clamp(1.9rem,8.5vw,2.6rem)}
+    .dek{font-size:1rem}
+    .bio h1{font-size:clamp(2rem,8vw,2.8rem)}
+
+    /* Kill all card rotations to stop visual chaos + overflow */
+    .id-card,
+    .letter,
+    .lb-panel,
+    .skill,
+    .pull,
+    #experience .page > div > div,
+    #experience > div > div,
+    #music > div > div,
+    #notes > div > a,
+    #letter > div > a,
+    #story div[style*="rotate"],
+    [style*="rotate"]{transform:none !important}
+
+    /* Shrink heavy box-shadows so rotated->flat cards still feel grounded */
+    .id-card{box-shadow:4px 5px 0 var(--ink) !important;margin-top:0}
+    .clip article{box-shadow:3px 4px 0 var(--ink)}
+    .letter{box-shadow:6px 8px 0 var(--ink)}
+    .lb-panel{box-shadow:6px 8px 0 var(--ink) !important}
+
+    /* Force heavy grids to single column for readability */
+    .clip,
+    #music > div[style*="grid-template-columns"],
+    #notes > div[style*="grid-template-columns"],
+    #letter > div[style*="grid-template-columns"],
+    #experience > div[style*="grid"]{grid-template-columns:1fr !important}
+
+    /* Shrink experience/music/notes/contact card padding */
+    #experience > div > div,
+    #music > div > div,
+    #notes > div > a,
+    #letter > div > a{padding:18px !important;box-shadow:4px 5px 0 var(--ink) !important}
+
+    /* Colored-shadow contact cards - preserve accent color but trim offset */
+    #letter > div > a[style*="var(--red)"]    {box-shadow:4px 5px 0 var(--red)    !important}
+    #letter > div > a[style*="var(--green)"]  {box-shadow:4px 5px 0 var(--green)  !important}
+    #letter > div > a[style*="var(--blue)"]   {box-shadow:4px 5px 0 var(--blue)   !important}
+    #letter > div > a[style*="var(--magenta)"]{box-shadow:4px 5px 0 var(--magenta)!important}
+
+    /* Featured (blue) dispatch card shadow */
+    #notes > div > a[style*="var(--blue)"]{box-shadow:4px 5px 0 var(--blue) !important}
+
+    /* ─── Hero (01 · Dossier) — MOBILE REDESIGN ───
+       Desktop: 2-col with big portrait card left, bio right.
+       Mobile:  bio leads. Portrait becomes an 88px circular cycling avatar
+       sitting inline above a byline chip. id-meta becomes colored chips. */
+    #dossier{grid-template-columns:1fr;gap:18px;display:flex;flex-direction:column}
+    #dossier .bio{order:1}
+    #dossier .id-card{order:2;
+      background:transparent !important;border:0 !important;
+      box-shadow:none !important;padding:0 !important;margin-top:6px}
+    #dossier .id-card .tape{display:none}
+
+    /* Mug: 96px circle, left-aligned block above chips */
+    #dossier .mug{
+      width:96px;height:96px;aspect-ratio:1/1;border-radius:50%;
+      border:2px solid var(--ink);overflow:hidden;
+      margin:0 0 14px 0;
+      box-shadow:4px 4px 0 var(--blue);
+      background:linear-gradient(135deg, oklch(0.45 0.16 250), oklch(0.6 0.18 200))}
+    #dossier .mug::after{display:none}
+    #dossier .mug .slide{border-radius:50%;filter:blur(6px) saturate(.8)}
+    #dossier .mug .slide.is-active{filter:blur(0) saturate(1)}
+    /* Kill all the fancy per-fx clip-paths on the tiny avatar - they break at 88px */
+    #dossier .mug .slide[data-fx]{clip-path:none !important;transform:none !important}
+    #dossier .mug .slide.is-active[data-fx]{clip-path:none !important;transform:none !important}
+    /* Hide caption/dots - no room */
+    #dossier .mug .slide-caption,#dossier .mug .slide-dots{display:none}
+
+    /* id-meta: rebuild as colored chips wrapping, sits AFTER bio */
+    #dossier .id-meta{
+      display:flex;flex-wrap:wrap;gap:8px;
+      border-top:1px dashed var(--ink-soft);padding-top:14px;margin-top:18px;
+      grid-template-columns:none;font-size:11px;letter-spacing:.08em}
+    #dossier .id-meta b{
+      background:var(--blue);color:var(--paper);
+      padding:3px 8px;font-family:var(--mono);font-weight:700;
+      letter-spacing:.15em;text-transform:uppercase;font-size:10px}
+    #dossier .id-meta span{
+      align-self:center;color:var(--ink);font-family:var(--mono);
+      letter-spacing:0;text-transform:none}
+    #dossier .id-meta b,#dossier .id-meta span{margin:0}
+    /* Each b+span forms a chip pair - use a wrapper-ish pattern via sibling gap */
+    #dossier .id-meta > b + span{margin-right:10px}
+
+    /* Bio: byline becomes a mono tag, h1 slightly tighter */
+    #dossier .bio .byline{
+      display:inline-block;background:var(--ink);color:var(--paper);
+      padding:6px 10px;font-size:11px;letter-spacing:.1em;
+      text-transform:uppercase;margin-bottom:12px}
+    #dossier .bio .byline::before{content:""}
+    #dossier .bio h1{margin-top:0;line-height:1.02}
+
+    .drop p{font-size:1rem;line-height:1.65}
+
+    /* Skills become a single column on very narrow */
+    .skills{grid-template-columns:1fr}
+
+    /* GH CTA stacks vertically and stretches the button */
+    .gh-cta{flex-direction:column;align-items:stretch !important;gap:14px !important;padding:18px !important}
+    .gh-cta a{text-align:center;display:block}
+
+    /* Cols on Story page */
+    .cols{grid-template-columns:1fr;gap:20px}
+
+    /* Experience date/role rows stack cleanly */
+    #experience > div > div > div:first-child{flex-direction:column;align-items:flex-start !important}
+
+    /* Letter stamp corner doesn't fit on tiny */
+    .letter .stamp-corner{display:none}
+
+    /* Pull quote size */
+    .pull{font-size:1.2rem;padding-left:12px;border-left-width:4px}
+
+    /* Strip mark shrinks */
+    .strip{gap:12px;padding:0 12px}
+    .strip .mark{font-size:11px;letter-spacing:0}
+
+    /* Cover button/text */
+    .enter{padding:14px 24px;font-size:1.15rem}
+    .sub{letter-spacing:.1em;font-size:.78rem}
+
+    /* Folio marker moves so it doesn't collide with content */
+    .folio{top:10px;right:14px;font-size:10px}
+  }
+
+  /* Extra-small phones */
+  @media (max-width:380px){
+    .mast{font-size:2rem}
+    .headline{font-size:1.7rem}
+    .bio h1{font-size:1.9rem}
+    .page{padding:36px 14px}
+    .tabbar a{font-size:9px;padding:6px 2px}
+    .tabbar svg{width:18px;height:18px}
+  }
 </style>
 </head>
 <body>
