@@ -1,5 +1,12 @@
 import { useRef } from 'react';
-import { gsap, SplitText, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
+import {
+  gsap,
+  SplitText,
+  useGSAP,
+  FULL_MOTION_QUERY,
+  MOBILE_QUERY,
+  DESKTOP_QUERY,
+} from '../../lib/gsap';
 
 export default function Story() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -65,6 +72,24 @@ export default function Story() {
           });
         }
 
+        if (pullquote) {
+          gsap.set(pullquote, { opacity: 0, y: 22, rotate: 4 });
+          gsap.to(pullquote, {
+            opacity: 1,
+            y: 0,
+            rotate: 1.2,
+            duration: 0.8,
+            ease: 'back.out(1.6)',
+            scrollTrigger: { trigger: pullquote, start: 'top 85%' },
+          });
+        }
+
+        return () => {
+          split?.revert();
+        };
+      });
+
+      mm.add(DESKTOP_QUERY, () => {
         if (cols.length) {
           gsap.set(cols, { opacity: 0, y: 20 });
           gsap.to(cols, {
@@ -86,22 +111,31 @@ export default function Story() {
             scrollTrigger: { trigger: listItems[0] ?? root, start: 'top 80%' },
           });
         }
+      });
 
-        if (pullquote) {
-          gsap.set(pullquote, { opacity: 0, y: 22, rotate: 4 });
-          gsap.to(pullquote, {
+      mm.add(MOBILE_QUERY, () => {
+        cols.forEach((col) => {
+          gsap.set(col, { opacity: 0, y: 18 });
+          gsap.to(col, {
             opacity: 1,
             y: 0,
-            rotate: 1.2,
-            duration: 0.8,
-            ease: 'back.out(1.6)',
-            scrollTrigger: { trigger: pullquote, start: 'top 85%' },
+            duration: 0.55,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: col, start: 'top 88%' },
           });
-        }
 
-        return () => {
-          split?.revert();
-        };
+          const items = col.querySelectorAll<HTMLElement>('li');
+          if (!items.length) return;
+          gsap.set(items, { opacity: 0, y: 10 });
+          gsap.to(items, {
+            opacity: 1,
+            y: 0,
+            duration: 0.45,
+            stagger: 0.07,
+            ease: 'power2.out',
+            scrollTrigger: { trigger: col, start: 'top 85%' },
+          });
+        });
       });
 
       return () => mm.revert();
