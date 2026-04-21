@@ -218,8 +218,6 @@
     .tabbar a:focus-visible{outline:1px solid oklch(1 0 0 / .35);outline-offset:-6px;border-radius:8px}
     .tabbar a[aria-current="true"]{opacity:1;color:var(--paper);background:transparent}
     .tabbar a[aria-current="true"] svg{transform:translateY(-1px) scale(1.06)}
-    .tabbar-pill{position:absolute;top:0;left:0;height:2px;width:0;background:var(--paper);
-      opacity:0;transform:translateX(0);pointer-events:none;z-index:2;border-radius:0 0 2px 2px}
     .tabbar svg{width:20px;height:20px;display:block;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
     /* Reserve space so fixed bar doesn't cover content */
     body{padding-bottom:calc(56px + env(safe-area-inset-bottom))}
