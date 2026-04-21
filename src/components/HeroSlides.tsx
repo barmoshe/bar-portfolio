@@ -14,6 +14,7 @@ const SLIDES: Slide[] = [
   { src: 'portraits/img4.png', alt: 'Bar Moshe - 3d', caption: '3d · render' },
   { src: 'portraits/img5.png', alt: 'Bar Moshe - ink watercolor', caption: 'ink · watercolor' },
   { src: 'portraits/img6.png', alt: 'Bar Moshe - cyberpunk', caption: 'cyberpunk · halftone' },
+  { src: 'portraits/img7.png', alt: 'Bar Moshe - cartoon', caption: 'cartoon · ubisoft' },
 ];
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
