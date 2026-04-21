@@ -15,12 +15,15 @@ export default function Grain() {
       if (!fe) return;
       const mm = gsap.matchMedia();
       mm.add(FULL_MOTION_QUERY, () => {
+        // Delay the infinite yoyo so the Boot entrance can run a one-shot
+        // grain "wash" (baseFrequency 1.4 → 0.9) without fighting this loop.
         gsap.to(fe, {
           attr: { baseFrequency: '0.92 0.92' },
           duration: 8,
           ease: 'sine.inOut',
           yoyo: true,
           repeat: -1,
+          delay: 1.1,
         });
       });
       return () => mm.revert();
@@ -34,6 +37,7 @@ export default function Grain() {
         <filter id="grain-filter">
           <feTurbulence
             ref={feTurbRef}
+            data-grain="wash"
             type="fractalNoise"
             baseFrequency="0.9 0.9"
             numOctaves="2"

@@ -1,13 +1,28 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useBootDismiss } from '../hooks/useBootDismiss';
+import { useAssetPreload } from '../hooks/useAssetPreload';
 import { gsap, useGSAP, SplitText, FULL_MOTION_QUERY } from '../lib/gsap';
 
 type Props = { onGone: () => void };
+
+// Portrait paths mirror HeroSlides.tsx so the browser cache is warm by the
+// time the portfolio mounts behind the boot exit.
+const PORTRAIT_NAMES = ['img0', 'img1', 'img2', 'img3', 'img4'];
 
 export default function Boot({ onGone }: Props) {
   const [leaving, setLeaving] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
+  const breathRef = useRef<gsap.core.Timeline | null>(null);
+  const progressSetterRef = useRef<((v: number) => void) | null>(null);
+  const progressVisibleRef = useRef(false);
+
+  const base = import.meta.env.BASE_URL;
+  const assets = useMemo(
+    () => PORTRAIT_NAMES.map((n) => `${base}portraits/${n}.png`),
+    [base],
+  );
+  const { loaded, total, done } = useAssetPreload(assets);
 
   const dismiss = () => {
     if (leaving) return;
@@ -22,74 +37,361 @@ export default function Boot({ onGone }: Props) {
       const root = rootRef.current;
       if (!root) return;
       const mm = gsap.matchMedia();
+
       mm.add(FULL_MOTION_QUERY, () => {
-        const mast = root.querySelector<HTMLElement>('.mast-main');
+        const versionMark = root.querySelector<SVGSVGElement>('.version-mark');
+        const markPaths = versionMark
+          ? Array.from(versionMark.querySelectorAll<SVGPathElement>('path'))
+          : [];
         const version = root.querySelector<HTMLElement>('.version-tag');
-        const tag = root.querySelector<HTMLElement>('.mast-tag');
+        const mast = root.querySelector<HTMLElement>('.mast-main');
+        const quote = root.querySelector<HTMLElement>('.mast-quote');
+        const quoteOpen = root.querySelector<HTMLElement>('.mast-quote-open');
+        const quoteText = root.querySelector<HTMLElement>('.mast-quote-text');
+        const quoteClose = root.querySelector<HTMLElement>('.mast-quote-close');
+        const attribution = root.querySelector<HTMLElement>('.mast-quote-attr');
+        const em = quoteText?.querySelector<HTMLElement>('em') ?? null;
         const sub = root.querySelector<HTMLElement>('.sub');
         const btn = root.querySelector<HTMLElement>('.enter');
         const hint = root.querySelector<HTMLElement>('.enter-hint');
+        const fill = root.querySelector<HTMLElement>('.enter-progress-fill');
+        const fe = document.querySelector<SVGFETurbulenceElement>(
+          'feTurbulence[data-grain="wash"]',
+        );
 
-        let split: SplitText | null = null;
+        if (fill) {
+          progressSetterRef.current = gsap.quickSetter(fill, 'scaleX') as (
+            v: number,
+          ) => void;
+        }
+
+        let mastSplit: SplitText | null = null;
+        let tagSplit: SplitText | null = null;
+
         const tl = gsap.timeline();
-
-        if (mast) {
-          split = new SplitText(mast, { type: 'chars', charsClass: 'bmchar' });
-          gsap.set(split.chars, { opacity: 0, yPercent: 40, rotate: -8 });
-          tl.to(split.chars, {
-            opacity: 1,
-            yPercent: 0,
-            rotate: 0,
-            duration: 0.7,
-            stagger: 0.045,
-            ease: 'back.out(1.6)',
-          });
-        }
-
-        if (version) {
-          gsap.set(version, { opacity: 0, y: -6 });
-          tl.to(version, { opacity: 1, y: 0, duration: 0.4 }, 0.05);
-        }
-
-        if (tag) {
-          gsap.set(tag, { opacity: 0, x: 18 });
-          tl.to(tag, { opacity: 1, x: 0, duration: 0.55 }, '-=0.3');
-        }
-
-        if (sub) {
-          gsap.set(sub, { opacity: 0, y: 8 });
-          tl.to(sub, { opacity: 1, y: 0, duration: 0.45 }, '-=0.25');
-        }
-
-        if (btn) {
-          gsap.set(btn, { opacity: 0, scale: 0.9 });
-          tl.to(btn, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(2)' }, '-=0.2');
-        }
-
-        if (hint) {
-          gsap.set(hint, { opacity: 0 });
-          tl.to(hint, { opacity: 1, duration: 0.5 }, '-=0.2');
-        }
-
         tlRef.current = tl;
 
+        // Beat 1 — "//" stroke-to-fill accent.
+        if (markPaths.length) {
+          markPaths.forEach((p) => {
+            const len = p.getTotalLength();
+            gsap.set(p, {
+              strokeDasharray: len,
+              strokeDashoffset: len,
+              fillOpacity: 0,
+            });
+          });
+          tl.to(
+            markPaths,
+            {
+              strokeDashoffset: 0,
+              duration: 0.45,
+              ease: 'power2.out',
+              stagger: 0.08,
+            },
+            0,
+          );
+          tl.to(
+            markPaths,
+            { fillOpacity: 1, duration: 0.25, ease: 'power2.out' },
+            '>-0.1',
+          );
+        }
+
+        // Beat 2 — version text slide.
+        if (version) {
+          gsap.set(version, { opacity: 0, x: -8 });
+          tl.to(
+            version,
+            { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out' },
+            0.05,
+          );
+        }
+
+        // Beat 3 — masthead letterpress clip-sweep.
+        if (mast) {
+          mastSplit = new SplitText(mast, { type: 'chars', charsClass: 'bmchar' });
+          gsap.set(mastSplit.chars, {
+            clipPath: 'inset(0 0 100% 0)',
+            yPercent: 18,
+            opacity: 1,
+          });
+          tl.to(
+            mastSplit.chars,
+            {
+              clipPath: 'inset(0% 0% 0% 0%)',
+              yPercent: 0,
+              duration: 0.85,
+              stagger: 0.04,
+              ease: 'expo.out',
+            },
+            0.25,
+          );
+        }
+
+        // Beat 4 — pull-quote reveal + "prompt" highlight.
+        if (quote) gsap.set(quote, { opacity: 1 });
+        if (quoteOpen) {
+          gsap.set(quoteOpen, {
+            opacity: 0,
+            scale: 0.6,
+            rotate: -10,
+            transformOrigin: 'bottom right',
+          });
+          tl.to(
+            quoteOpen,
+            {
+              opacity: 1,
+              scale: 1,
+              rotate: 0,
+              duration: 0.45,
+              ease: 'back.out(2.2)',
+            },
+            0.9,
+          );
+        }
+
+        if (quoteText) {
+          tagSplit = new SplitText(quoteText, { type: 'words' });
+          gsap.set(tagSplit.words, { opacity: 0, yPercent: 60 });
+          tl.to(
+            tagSplit.words,
+            {
+              opacity: 1,
+              yPercent: 0,
+              duration: 0.55,
+              stagger: 0.05,
+              ease: 'back.out(1.8)',
+            },
+            0.98,
+          );
+        }
+
+        if (em) {
+          gsap.set(em, { color: 'var(--ink-soft)' });
+          tl.to(
+            em,
+            { color: 'var(--green)', duration: 0.3, ease: 'none' },
+            '>-0.15',
+          );
+        }
+
+        if (quoteClose) {
+          gsap.set(quoteClose, {
+            opacity: 0,
+            scale: 0.6,
+            rotate: 10,
+            transformOrigin: 'top left',
+          });
+          tl.to(
+            quoteClose,
+            {
+              opacity: 1,
+              scale: 1,
+              rotate: 0,
+              duration: 0.45,
+              ease: 'back.out(2.2)',
+            },
+            '>-0.1',
+          );
+        }
+
+        if (attribution) {
+          gsap.set(attribution, { opacity: 0, x: 18 });
+          tl.to(
+            attribution,
+            { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out' },
+            '>-0.25',
+          );
+        }
+
+        // Beat 5 — sub typewriter scaleX.
+        if (sub) {
+          gsap.set(sub, {
+            transformOrigin: 'left center',
+            scaleX: 0,
+            opacity: 1,
+          });
+          tl.to(sub, { scaleX: 1, duration: 0.4, ease: 'power2.out' }, 1.15);
+        }
+
+        // Beat 6 — Enter button pen-down settle, then pulse restart.
+        if (btn) {
+          btn.classList.remove('pulse');
+          gsap.set(btn, { opacity: 0, y: 16, rotate: -1.5, scale: 0.94 });
+          tl.to(
+            btn,
+            {
+              opacity: 1,
+              y: 0,
+              rotate: 0,
+              scale: 1,
+              duration: 0.5,
+              ease: 'back.out(2.2)',
+              onComplete: () => {
+                btn.classList.remove('pulse');
+                void btn.offsetWidth;
+                btn.classList.add('pulse');
+              },
+            },
+            1.4,
+          );
+        }
+
+        // Beat 7 — hint.
+        if (hint) {
+          gsap.set(hint, { opacity: 0 });
+          tl.to(
+            hint,
+            { opacity: 1, duration: 0.4, ease: 'power2.out' },
+            1.65,
+          );
+        }
+
+        // Beat 8 (parallel) — grain wash: coarser → settled.
+        if (fe) {
+          tl.fromTo(
+            fe,
+            { attr: { baseFrequency: '1.4 1.4' } },
+            {
+              attr: { baseFrequency: '0.9 0.9' },
+              duration: 1.0,
+              ease: 'power2.out',
+            },
+            0,
+          );
+        }
+
+        // Beat 9 — ambient masthead breathing (post-entrance).
+        if (mast) {
+          const breathTl = gsap.timeline({
+            repeat: -1,
+            yoyo: true,
+            paused: true,
+          });
+          breathTl.to(mast, {
+            letterSpacing: '-0.025em',
+            duration: 5,
+            ease: 'sine.inOut',
+          });
+          breathRef.current = breathTl;
+          tl.call(
+            () => {
+              breathTl.play();
+            },
+            undefined,
+            '>',
+          );
+        }
+
         return () => {
-          split?.revert();
+          mastSplit?.revert();
+          tagSplit?.revert();
+          breathRef.current?.kill();
+          breathRef.current = null;
+          tlRef.current = null;
+          progressSetterRef.current = null;
         };
       });
 
-      // Reduced motion: make sure everything is visible
+      // Pointer drift on masthead — hover-capable + motion-OK only.
+      mm.add(
+        `${FULL_MOTION_QUERY} and (hover: hover)`,
+        () => {
+          const mast = root.querySelector<HTMLElement>('.mast-main');
+          if (!mast) return;
+          const xTo = gsap.quickTo(mast, 'x', {
+            duration: 0.6,
+            ease: 'power3.out',
+          });
+          const yTo = gsap.quickTo(mast, 'y', {
+            duration: 0.6,
+            ease: 'power3.out',
+          });
+          const onMove = (e: PointerEvent) => {
+            const r = root.getBoundingClientRect();
+            const nx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+            const ny = ((e.clientY - r.top) / r.height - 0.5) * 2;
+            xTo(nx * 3);
+            yTo(ny * 3);
+          };
+          const onLeave = () => {
+            xTo(0);
+            yTo(0);
+          };
+          root.addEventListener('pointermove', onMove, { passive: true });
+          root.addEventListener('pointerleave', onLeave);
+          return () => {
+            root.removeEventListener('pointermove', onMove);
+            root.removeEventListener('pointerleave', onLeave);
+          };
+        },
+      );
+
+      // Reduced motion: make sure everything is visible, quote included.
       mm.add('(prefers-reduced-motion: reduce)', () => {
         gsap.set(
-          root.querySelectorAll('.mast, .version-tag, .mast-tag, .sub, .enter, .enter-hint'),
+          root.querySelectorAll(
+            '.mast, .mast-main, .version-tag, .mast-quote, .mast-quote-open, .mast-quote-text, .mast-quote-close, .mast-quote-attr, .sub, .enter, .enter-hint',
+          ),
           { clearProps: 'all' },
         );
+        const paths = root.querySelectorAll<SVGPathElement>('.version-mark path');
+        gsap.set(paths, { clearProps: 'all', fillOpacity: 1 });
       });
 
       return () => mm.revert();
     },
     { scope: rootRef },
   );
+
+  // Loading bar: reveal after 700ms only if preload is still in-flight.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const progressBar = root.querySelector<HTMLElement>('.enter-progress');
+    if (!progressBar) return;
+
+    const prefersReduced = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
+
+    const id = window.setTimeout(() => {
+      if (done || leaving) return;
+      progressVisibleRef.current = true;
+      if (prefersReduced) {
+        gsap.set(progressBar, { opacity: 1 });
+      } else {
+        gsap.to(progressBar, {
+          opacity: 1,
+          duration: 0.3,
+          ease: 'power2.out',
+        });
+      }
+    }, 700);
+
+    return () => window.clearTimeout(id);
+  }, [done, leaving]);
+
+  // Advance the fill bar as preload progresses, hide on completion.
+  useEffect(() => {
+    const setter = progressSetterRef.current;
+    const progress = total > 0 ? loaded / total : 1;
+    if (setter) setter(progress);
+
+    if (done && progressVisibleRef.current) {
+      const root = rootRef.current;
+      const bar = root?.querySelector<HTMLElement>('.enter-progress');
+      if (bar) {
+        gsap.to(bar, {
+          opacity: 0,
+          duration: 0.25,
+          ease: 'power2.out',
+          delay: 0.15,
+        });
+      }
+    }
+  }, [loaded, total, done]);
 
   // Exit on dismiss, then call onGone.
   useEffect(() => {
@@ -99,6 +401,13 @@ export default function Boot({ onGone }: Props) {
       onGone();
       return;
     }
+
+    // Kill any in-flight entrance so the exit wash starts from the current
+    // visible state instead of racing against half-finished tweens.
+    tlRef.current?.kill();
+    breathRef.current?.kill();
+    tlRef.current = null;
+    breathRef.current = null;
 
     // Choose the ink-burst origin from the Enter button if we have it, so the
     // wash blooms out of whatever the user just clicked; fall back to centre.
@@ -156,13 +465,29 @@ export default function Boot({ onGone }: Props) {
       ref={rootRef}
     >
       <div className="cover">
-        <span className="version-tag">v2.0.0</span>
+        <span className="version-tag">
+          <svg
+            className="version-mark"
+            viewBox="0 0 22 12"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M4 11 L8 1 L10 1 L6 11 Z" />
+            <path d="M13 11 L17 1 L19 1 L15 11 Z" />
+          </svg>
+          v2.0.0
+        </span>
         <h1 className="mast">
           <span className="mast-main">BAR MOSHE</span>
-          <span className="mast-tag">
+        </h1>
+        <blockquote className="mast-quote">
+          <span className="mast-quote-open" aria-hidden="true">“</span>
+          <span className="mast-quote-text">
             it's only one <em>prompt</em> away.
           </span>
-        </h1>
+          <span className="mast-quote-close" aria-hidden="true">”</span>
+          <cite className="mast-quote-attr">— Bar Moshe</cite>
+        </blockquote>
         <p className="sub">Full-Stack · AI · Builder</p>
         <button
           className="enter pulse"
@@ -175,6 +500,13 @@ export default function Boot({ onGone }: Props) {
           Enter the portfolio
         </button>
         <div className="enter-hint">press any key · or click anywhere</div>
+        <div
+          className="enter-progress"
+          aria-hidden="true"
+          aria-label={`Loading assets ${loaded} of ${total}`}
+        >
+          <span className="enter-progress-fill" />
+        </div>
       </div>
     </div>
   );
