@@ -90,11 +90,11 @@ export default function HeroSlides() {
     if (!els.length) return;
 
     const prev = idxRef.current;
-    // Every 5th transition forces img0 back in; other transitions advance
+    // Every 8th transition forces img0 back in; other transitions advance
     // `naturalIdxRef` around the rest of the shuffle, skipping img0 so the
     // forced resurface stays meaningful.
     const changeNum = fxCounter.current + 1;
-    const forceImg0 = img0Idx >= 0 && changeNum % 5 === 0;
+    const forceImg0 = img0Idx >= 0 && changeNum % 8 === 0;
     if (!forceImg0) {
       let np = (naturalIdxRef.current + 1) % slides.length;
       if (np === img0Idx) np = (np + 1) % slides.length;
