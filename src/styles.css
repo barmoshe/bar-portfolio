@@ -732,8 +732,6 @@
       line-height:1.4;margin-bottom:12px}
     #intro .bio .byline::before{content:"// ";color:var(--green);font-family:var(--mono);font-style:normal}
     #intro .bio h1{margin-top:0;line-height:1.02}
-    /* Mobile: let the credo quote wrap so it doesn't overflow the viewport */
-    .bio .credo em{white-space:normal;display:inline}
 
     /* Toolline: keep mono prompt scale on mobile; allow args to wrap */
     .toolline{font-size:12.5px;line-height:1.7}
