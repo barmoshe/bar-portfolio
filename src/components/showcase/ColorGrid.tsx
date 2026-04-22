@@ -5,7 +5,7 @@ type Resolved = { token: ColorToken; value: string };
 
 /**
  * Reads every color token off the live `<html>` element via `getComputedStyle`,
- * so the grid always mirrors whatever is in `src/styles.css` — no duplication.
+ * so the grid always mirrors whatever is in `src/styles.css` - no duplication.
  *
  * `mode` renders the grid inside a scoped wrapper that either adds or removes
  * the `dark` class for side-by-side light/dark comparison without flipping the
@@ -15,7 +15,7 @@ function readTokens(root: HTMLElement, tokens: readonly ColorToken[]): Resolved[
   const cs = getComputedStyle(root);
   return tokens.map((token) => ({
     token,
-    value: cs.getPropertyValue(`--${token}`).trim() || '—',
+    value: cs.getPropertyValue(`--${token}`).trim() || '-',
   }));
 }
 

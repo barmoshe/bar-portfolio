@@ -27,6 +27,6 @@ Fast feedback loop for TypeScript errors.
 
 ## Notes
 
-- The script is `tsc -b` under the hood — it does incremental builds. If a previous build is stale, `rm -rf node_modules/.tmp` and rerun resolves weird cache errors.
+- The script is `tsc -b` under the hood - it does incremental builds. If a previous build is stale, `rm -rf node_modules/.tmp` and rerun resolves weird cache errors.
 - Errors in `src/data/portfolio.ts` usually mean a new project entry is missing a required field or has an extra unknown one.
-- Errors in `src/components/HeroSlides.tsx` warrant extra caution — see `knowledge/04-animation.md` before refactoring the fx cycle to silence an error.
+- Errors in `src/components/HeroSlides.tsx` warrant extra caution - see `knowledge/04-animation.md` before refactoring the fx cycle to silence an error.

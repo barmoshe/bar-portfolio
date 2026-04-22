@@ -4,10 +4,10 @@ XML-tagged scaffolds for generative tasks. Each file is a template: fill the `{{
 
 ## Tag legend
 
-- `<instructions>` — the role and the goal, stated plainly. Claude reads this first.
-- `<brief>` — the user-supplied inputs (mood, project details, section target). This is where you fill the placeholders.
-- `<constraints>` — hard rules. Contrast floors, type contracts, token names, reduced-motion requirements, no-new-deps.
-- `<output_format>` — the exact shape of the answer (drop-in CSS block, TS object literal, JSX snippet, markdown critique).
+- `<instructions>` - the role and the goal, stated plainly. Claude reads this first.
+- `<brief>` - the user-supplied inputs (mood, project details, section target). This is where you fill the placeholders.
+- `<constraints>` - hard rules. Contrast floors, type contracts, token names, reduced-motion requirements, no-new-deps.
+- `<output_format>` - the exact shape of the answer (drop-in CSS block, TS object literal, JSX snippet, markdown critique).
 
 Keep the tags in this order when you write new scaffolds. Claude cues off the sequence.
 
@@ -24,7 +24,7 @@ Keep the tags in this order when you write new scaffolds. Claude cues off the se
 
 1. Start with the smallest version that could work. Prompts grow by accumulation; trim aggressively.
 2. Name placeholders by meaning, not position (`{{HUE_FAMILY}}`, not `{{INPUT_1}}`).
-3. Put token names, file paths, and type shapes in `<constraints>` directly — don't make Claude re-derive them from `knowledge/`.
+3. Put token names, file paths, and type shapes in `<constraints>` directly - don't make Claude re-derive them from `knowledge/`.
 4. `<output_format>` should specify where the output gets pasted. Recipes do the same; the pair should agree.
 
 ## Background

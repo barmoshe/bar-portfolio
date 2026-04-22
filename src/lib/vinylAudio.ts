@@ -1,8 +1,8 @@
 /**
- * vinylAudio.ts — zero-dependency Web Audio API SFX for the Music section.
+ * vinylAudio.ts - zero-dependency Web Audio API SFX for the Music section.
  *
  * All sounds are procedural (no .mp3 / .wav assets, no Tone.js). A single
- * AudioContext is lazily created on first user gesture — browsers block
+ * AudioContext is lazily created on first user gesture - browsers block
  * audio that wasn't kicked off by a click / keypress (see
  * https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Autoplay), and
  * we honor that by gating everything through `unlock()` which must be
@@ -35,7 +35,7 @@ function ensure(): boolean {
     master.connect(ctx.destination);
   }
   if (ctx.state === 'suspended') {
-    // Fire and forget — resume() returns a promise but we don't await it
+    // Fire and forget - resume() returns a promise but we don't await it
     // inside a click handler because doing so drops the "user gesture"
     // context on some browsers.
     void ctx.resume();
@@ -57,7 +57,7 @@ export function isEnabled(): boolean {
   return enabled;
 }
 
-/** Short low-frequency thud + noise burst — the "needle hits vinyl" sound. */
+/** Short low-frequency thud + noise burst - the "needle hits vinyl" sound. */
 export function playNeedleDrop(): void {
   if (!enabled || !ensure() || !ctx || !master) return;
   const now = ctx.currentTime;
@@ -93,7 +93,7 @@ export function playNeedleDrop(): void {
   click.start(now);
 }
 
-/** Muffled wood/plastic knock — the "vinyl flipped" sound. */
+/** Muffled wood/plastic knock - the "vinyl flipped" sound. */
 export function playFlip(): void {
   if (!enabled || !ensure() || !ctx || !master) return;
   const now = ctx.currentTime;
@@ -113,7 +113,7 @@ export function playFlip(): void {
   osc.stop(now + 0.2);
 }
 
-/** Tiny sine ping — the "horn waveform tick" used between crackle loops. */
+/** Tiny sine ping - the "horn waveform tick" used between crackle loops. */
 export function playPop(): void {
   if (!enabled || !ensure() || !ctx || !master) return;
   const now = ctx.currentTime;
@@ -133,7 +133,7 @@ export function playPop(): void {
 /**
  * Looping vinyl crackle: pink-ish noise passed through a mid peaking EQ so
  * the hiss sits low (around 1.5 kHz) and doesn't mask other SFX. The loop
- * buffer is 2 s — long enough to feel organic, short enough that startup
+ * buffer is 2 s - long enough to feel organic, short enough that startup
  * is instant. Called when the rig flips to data-playing="true".
  */
 export function startCrackle(): void {
@@ -203,7 +203,7 @@ export function stopCrackle(): void {
 }
 
 function makeNoiseBuffer(seconds: number): AudioBuffer {
-  // ensure() runs before callers — ctx is non-null here.
+  // ensure() runs before callers - ctx is non-null here.
   const c = ctx as AudioContext;
   const buf = c.createBuffer(1, Math.floor(c.sampleRate * seconds), c.sampleRate);
   const d = buf.getChannelData(0);

@@ -33,4 +33,4 @@ Walks the `recipes/add-project.md` flow with the user.
 
 - Do not rename or reshape `Project` / `ProjectExtra` types.
 - Do not add runtime deps.
-- Do not touch styles for "just this one card" — use existing HoverCard / CodeArt primitives.
+- Do not touch styles for "just this one card" - use existing HoverCard / CodeArt primitives.

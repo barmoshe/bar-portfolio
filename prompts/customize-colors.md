@@ -22,13 +22,13 @@ Dark-mode intent (same family desaturated / complementary shift / custom): {{DAR
    - Accents: `--red`, `--green`, `--blue`, `--yellow`, `--magenta`, `--purple`, `--cyan`
    - Shadow: `--shadow`
 4. Contrast: body text (`--ink` on `--paper`, `--ink` on `--surface-1`, `--ink` on `--surface-2`) must be ≥ 4.5:1. Soft text (`--ink-soft` on `--paper`) must be ≥ 4.5:1 if used for body, ≥ 3:1 if used for captions only. Accent-on-surface pairs used for links or buttons must be ≥ 4.5:1.
-5. Dark mode: reduce chroma ~25–35% vs light for accents. Lift lightness for ink tokens (they become paper-like); drop lightness for paper tokens (they become ink-like). Don't mechanically invert — calibrate each token.
-6. Ink-wipe compatibility: the transition uses a circle clip-path over the theme — no token should be pure #000 or pure white. Keep `--ink` lightness ≥ 0.18 in light mode and ≤ 0.92 in dark mode.
+5. Dark mode: reduce chroma ~25–35% vs light for accents. Lift lightness for ink tokens (they become paper-like); drop lightness for paper tokens (they become ink-like). Don't mechanically invert - calibrate each token.
+6. Ink-wipe compatibility: the transition uses a circle clip-path over the theme - no token should be pure #000 or pure white. Keep `--ink` lightness ≥ 0.18 in light mode and ≤ 0.92 in dark mode.
 7. No Tailwind, no hex fallbacks, no `@theme` or other config files. Output is raw CSS variables.
 </constraints>
 
 <output_format>
-## Light mode — paste into `:root { … }` in `src/styles.css`
+## Light mode - paste into `:root { … }` in `src/styles.css`
 
 ```css
 --paper: oklch(…);
@@ -50,7 +50,7 @@ Dark-mode intent (same family desaturated / complementary shift / custom): {{DAR
 --shadow: oklch(…);
 ```
 
-## Dark mode — paste into `html.dark { … }` in `src/styles.css`
+## Dark mode - paste into `html.dark { … }` in `src/styles.css`
 
 ```css
 (same variable list with dark-mode values)
@@ -68,5 +68,5 @@ Dark-mode intent (same family desaturated / complementary shift / custom): {{DAR
 
 ## Notes
 
-Brief prose — 3–5 sentences — on the mood decision, the dark-mode calibration, and any pair that sits near an AA floor and should be used sparingly.
+Brief prose - 3–5 sentences - on the mood decision, the dark-mode calibration, and any pair that sits near an AA floor and should be used sparingly.
 </output_format>

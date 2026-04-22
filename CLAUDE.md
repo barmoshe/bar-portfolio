@@ -1,6 +1,6 @@
-# CLAUDE.md — bar-portfolio routing
+# CLAUDE.md - bar-portfolio routing
 
-You are assisting inside the `bar-portfolio` repo — a React 19 + Vite 6 + TypeScript portfolio site, deployed to GitHub Pages at https://barmoshe.github.io/bar-portfolio/ via GitHub Actions.
+You are assisting inside the `bar-portfolio` repo - a React 19 + Vite 6 + TypeScript portfolio site, deployed to GitHub Pages at https://barmoshe.github.io/bar-portfolio/ via GitHub Actions.
 
 ## Routing (open these first when relevant)
 
@@ -18,14 +18,14 @@ You are assisting inside the `bar-portfolio` repo — a React 19 + Vite 6 + Type
 - Design critique                                        →  `prompts/design-critique.md`
 - Skill bundle that routes intents                       →  `skills/portfolio-curator/SKILL.md`
 
-Slash commands: `/new-project`, `/theme-preview`, `/deploy-check`, `/typecheck` — see `.claude/commands/`.
+Slash commands: `/new-project`, `/theme-preview`, `/deploy-check`, `/typecheck` - see `.claude/commands/`.
 
 ## Things that must not be broken
 
-1. **Pre-paint theme script** — inline in `index.html` `<head>`. Do not externalize, defer, or move into React.
-2. **`HeroSlides` fx cycle** — four ink-native transitions (`bloom`, `brush`, `tear`, `crumple`) are GSAP-driven from `src/components/HeroSlides.tsx`. One timeline at a time (advance is serialized). `resetSlide()` must clear every fx-specific inline style on completion or the next cycle starts from stale state. See `knowledge/04-animation.md`.
-3. **`base: '/bar-portfolio/'`** in `vite.config.ts` — if the repo is renamed, update this in lockstep.
-4. **`public/.nojekyll`** — must land in `dist/`. Keeps GitHub Pages' Jekyll from stripping underscore folders.
+1. **Pre-paint theme script** - inline in `index.html` `<head>`. Do not externalize, defer, or move into React.
+2. **`HeroSlides` fx cycle** - four ink-native transitions (`bloom`, `brush`, `tear`, `crumple`) are GSAP-driven from `src/components/HeroSlides.tsx`. One timeline at a time (advance is serialized). `resetSlide()` must clear every fx-specific inline style on completion or the next cycle starts from stale state. See `knowledge/04-animation.md`.
+3. **`base: '/bar-portfolio/'`** in `vite.config.ts` - if the repo is renamed, update this in lockstep.
+4. **`public/.nojekyll`** - must land in `dist/`. Keeps GitHub Pages' Jekyll from stripping underscore folders.
 
 Full rationale and anti-patterns: `knowledge/99-caveats.md`.
 
@@ -33,7 +33,7 @@ Full rationale and anti-patterns: `knowledge/99-caveats.md`.
 
 - Colors: `oklch()` only. New tokens land in `:root` **and** `html.dark` together. Body-text pairs must clear WCAG AA (≥ 4.5:1).
 - Motion: prefer `transform` / `opacity` / `filter`. Respect `prefers-reduced-motion` via `gsap.matchMedia` + `FULL_MOTION_QUERY` from `src/lib/gsap.ts`.
-- Styling: CSS custom properties in `src/styles.css`. Tailwind is intentionally rejected — see `knowledge/01-stack.md`.
+- Styling: CSS custom properties in `src/styles.css`. Tailwind is intentionally rejected - see `knowledge/01-stack.md`.
 - No new runtime deps for cosmetic changes. Current deps: `react`, `react-dom`, `gsap`, `@gsap/react`.
 - Routing: single page + hash links (`#intro`, `#story`, …). Do not add React Router.
 

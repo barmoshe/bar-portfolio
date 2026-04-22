@@ -3,7 +3,7 @@ import TypeSpecimen from './TypeSpecimen';
 import FxPlayground from './FxPlayground';
 
 /**
- * Design showcase — mounted when `window.location.hash === '#showcase'`.
+ * Design showcase - mounted when `window.location.hash === '#showcase'`.
  * Renders color tokens (live, via getComputedStyle), type specimens, and an
  * isolated fx playground. See `knowledge/02-design-system.md`.
  */

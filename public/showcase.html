@@ -6,7 +6,7 @@
   <title>bar-portfolio · design showcase (artifact)</title>
   <style>
     /*
-      Standalone design showcase — mirrors the tokens in src/styles.css.
+      Standalone design showcase - mirrors the tokens in src/styles.css.
       Source of truth: /src/styles.css (:root and html.dark blocks).
       Keep this file in sync manually when the palette changes.
     */
@@ -121,7 +121,7 @@
           div.className = 'swatch';
           div.style.background = 'var(--' + t + ')';
           div.style.color = ['ink','ink-soft','ink-faint','border'].includes(t) ? 'var(--paper)' : 'var(--ink)';
-          div.innerHTML = '<strong>--' + t + '</strong><span>' + (cs.getPropertyValue('--' + t).trim() || '—') + '</span>';
+          div.innerHTML = '<strong>--' + t + '</strong><span>' + (cs.getPropertyValue('--' + t).trim() || '-') + '</span>';
           host.appendChild(div);
         }
       }

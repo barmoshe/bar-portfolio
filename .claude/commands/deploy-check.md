@@ -42,7 +42,7 @@ End-to-end deploy verification. Wraps `recipes/deploy.md`.
    curl -s -o /dev/null -w "root: %{http_code}\n" https://barmoshe.github.io/bar-portfolio/
    curl -s -o /dev/null -w "showcase.html: %{http_code}\n" https://barmoshe.github.io/bar-portfolio/showcase.html
    ```
-   Expect `200` for both. A transient `404` in the first 30–60 seconds after green is CDN propagation — retry once.
+   Expect `200` for both. A transient `404` in the first 30–60 seconds after green is CDN propagation - retry once.
 
 ## Failure modes
 

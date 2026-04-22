@@ -1,4 +1,4 @@
-# 02 — Design system
+# 02 - Design system
 
 All tokens are CSS custom properties defined in `src/styles.css`. No JS color values. No hex or hsl.
 
@@ -6,11 +6,11 @@ All tokens are CSS custom properties defined in `src/styles.css`. No JS color va
 
 The code doesn't enforce naming conventions, but the tokens naturally fall into three tiers:
 
-1. **Primitive** — raw oklch values on literal color names (`--red`, `--green`, `--blue`, `--yellow`, `--magenta`, `--purple`, `--cyan`). These rarely change.
-2. **Semantic** — role-based aliases (`--paper`, `--paper-2`, `--ink`, `--ink-soft`, `--ink-faint`, `--border`, `--shadow`, `--surface-1..3`, `--surface-strong`, `--surface-strong-fg`). Most component CSS consumes these.
-3. **Component** — per-component overrides, defined inline in section styles (e.g. `.letter .send`, `.strip .toggle`). Prefer semantic tokens; only introduce component-level overrides when the role genuinely differs.
+1. **Primitive** - raw oklch values on literal color names (`--red`, `--green`, `--blue`, `--yellow`, `--magenta`, `--purple`, `--cyan`). These rarely change.
+2. **Semantic** - role-based aliases (`--paper`, `--paper-2`, `--ink`, `--ink-soft`, `--ink-faint`, `--border`, `--shadow`, `--surface-1..3`, `--surface-strong`, `--surface-strong-fg`). Most component CSS consumes these.
+3. **Component** - per-component overrides, defined inline in section styles (e.g. `.letter .send`, `.strip .toggle`). Prefer semantic tokens; only introduce component-level overrides when the role genuinely differs.
 
-## Color tokens (light mode — `:root`)
+## Color tokens (light mode - `:root`)
 
 | Token | Value | Role |
 |---|---|---|
@@ -27,11 +27,11 @@ The code doesn't enforce naming conventions, but the tokens naturally fall into 
 | `--shadow` | `oklch(0.2 0.04 40 / .22)` | Soft drop shadows |
 | `--red` `--green` `--blue` `--yellow` `--magenta` `--purple` `--cyan` | primitive oklch | Semantic accents (errors, CTAs, links, highlights) |
 
-## Color tokens (dark mode — `html.dark`)
+## Color tokens (dark mode - `html.dark`)
 
 Darkmode isn't a mechanical invert. The calibration rules are:
 
-- **Surfaces rise in lightness as elevation rises.** `--paper` (0.17) < `--surface-1` (0.22) < `--surface-2` (0.27). `--surface-strong` (0.10) is the *deepest* — used for the nav strip, opposite to light mode.
+- **Surfaces rise in lightness as elevation rises.** `--paper` (0.17) < `--surface-1` (0.22) < `--surface-2` (0.27). `--surface-strong` (0.10) is the *deepest* - used for the nav strip, opposite to light mode.
 - **Hue shifts to cool.** All surfaces move from warm (hue 40–85) to cool (hue 260) for that after-dark feel.
 - **Accents pull back chroma** so they don't glow on very dark surfaces (e.g. `--red` drops from `0.22` to `0.17` chroma, lightness up from `0.58` to `0.72`).
 - **Text lightness is cool-hue matched to surfaces** (hue 260) so text doesn't visually vibrate against the ground.
@@ -45,10 +45,10 @@ Darkmode isn't a mechanical invert. The calibration rules are:
 --hand:    "Marker Felt", "Bradley Hand", "Comic Sans MS", cursive;
 ```
 
-- `--display` — hero headlines, section titles. High-contrast modern serif.
-- `--serif` — body copy, timeline entries, long-form text.
-- `--mono` — meta labels, code, UI affordances, numeric data.
-- `--hand` — whimsical accents (captions on the portrait slideshow, occasional margin notes). Use sparingly.
+- `--display` - hero headlines, section titles. High-contrast modern serif.
+- `--serif` - body copy, timeline entries, long-form text.
+- `--mono` - meta labels, code, UI affordances, numeric data.
+- `--hand` - whimsical accents (captions on the portrait slideshow, occasional margin notes). Use sparingly.
 
 ## Spacing & layout conventions
 
@@ -58,7 +58,7 @@ Not token-ized yet. The stylesheet uses raw `rem`, `px`, and `clamp(...)` values
 - Body line-height: 1.55–1.7 for serif, 1.25 for display.
 - Card radius: `12px`–`18px`; no unified `--radius` token yet (future work).
 
-If introducing a new spacing or radius abstraction, add it as a primitive token in `:root` first, then consume it — don't spread magic numbers.
+If introducing a new spacing or radius abstraction, add it as a primitive token in `:root` first, then consume it - don't spread magic numbers.
 
 ## Contrast policy
 
@@ -75,4 +75,4 @@ Known tight pairings to retest when changing tokens:
 1. Check if an existing token fits. The palette is intentionally small.
 2. If you genuinely need a new hue, add it as a primitive `--<name>` in both `:root` and `html.dark` (dark-mode variant with reduced chroma).
 3. If it's a role-based addition (e.g. `--warn-surface`), add a semantic alias on top of the primitive.
-4. Don't introduce hex or hsl — stay in oklch. For a guided generation, use `prompts/customize-colors.md`.
+4. Don't introduce hex or hsl - stay in oklch. For a guided generation, use `prompts/customize-colors.md`.

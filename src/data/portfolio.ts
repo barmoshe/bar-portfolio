@@ -1,5 +1,5 @@
 /**
- * Portfolio content — projects and contact info.
+ * Portfolio content - projects and contact info.
  *
  * There is no CMS and no loader. All content is code so changes are reviewable
  * in diffs. See `knowledge/06-data.md` and `recipes/add-project.md`.
@@ -56,7 +56,7 @@ export const projects: Project[] = [
   },
 ];
 
-/** Contact surface — consumed by `Letter.tsx` (copy-to-clipboard + mailto) and Intro/Letter links. */
+/** Contact surface - consumed by `Letter.tsx` (copy-to-clipboard + mailto) and Intro/Letter links. */
 export const contact = {
   email: '1barmoshe1@gmail.com',
   github: 'https://github.com/barmoshe',

@@ -1,4 +1,4 @@
-# 00 — Knowledge index
+# 00 - Knowledge index
 
 Routing table. If you're asking about the thing on the left, open the file on the right.
 
@@ -14,8 +14,8 @@ Routing table. If you're asking about the thing on the left, open the file on th
 
 See also:
 
-- [`../recipes/`](../recipes/) — narrative end-to-end workflows (add project, customize theme, edit section, deploy).
-- [`../prompts/`](../prompts/) — copy-paste XML scaffolds for LLM-assisted edits.
-- [`../skills/portfolio-curator/SKILL.md`](../skills/portfolio-curator/SKILL.md) — skill that routes intent to the right recipe + prompt.
-- `/#showcase` on the running site — live design-system preview.
-- `public/showcase.html` — standalone (non-React) artifact version of the showcase.
+- [`../recipes/`](../recipes/) - narrative end-to-end workflows (add project, customize theme, edit section, deploy).
+- [`../prompts/`](../prompts/) - copy-paste XML scaffolds for LLM-assisted edits.
+- [`../skills/portfolio-curator/SKILL.md`](../skills/portfolio-curator/SKILL.md) - skill that routes intent to the right recipe + prompt.
+- `/#showcase` on the running site - live design-system preview.
+- `public/showcase.html` - standalone (non-React) artifact version of the showcase.

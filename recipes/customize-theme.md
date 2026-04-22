@@ -1,6 +1,6 @@
-# Recipe — Customize the theme
+# Recipe - Customize the theme
 
-You want to shift the palette — new mood, new brand, new seasonal variation. The end state: updated `:root` and `html.dark` blocks in `src/styles.css`, a live preview in `#showcase`, AA contrast verified, ink-wipe still feels right, no component changes needed.
+You want to shift the palette - new mood, new brand, new seasonal variation. The end state: updated `:root` and `html.dark` blocks in `src/styles.css`, a live preview in `#showcase`, AA contrast verified, ink-wipe still feels right, no component changes needed.
 
 ## The arc
 
@@ -10,9 +10,9 @@ The theme lives in two CSS blocks and one hook. Tokens are declared in `:root`, 
 
 Before generating colors, know:
 
-- **Hue family** — warm (paper, amber, rust), cool (slate, teal, indigo), neutral (grayscale with a subtle tint), or vivid.
-- **Contrast ambition** — do you want high-contrast editorial (sharp ink on paper) or a softer broadsheet feel?
-- **Dark-mode intent** — same family, desaturated (typical), or a complementary shift (cooler dark, warmer light)?
+- **Hue family** - warm (paper, amber, rust), cool (slate, teal, indigo), neutral (grayscale with a subtle tint), or vivid.
+- **Contrast ambition** - do you want high-contrast editorial (sharp ink on paper) or a softer broadsheet feel?
+- **Dark-mode intent** - same family, desaturated (typical), or a complementary shift (cooler dark, warmer light)?
 
 ## 2. Generate the palette
 
@@ -27,7 +27,7 @@ Output is two drop-in CSS blocks, one for `:root` and one for `html.dark`, plus 
 
 ## 3. Paste into `src/styles.css`
 
-The tokens live in the top section of `styles.css` (first ~80 lines). Replace only the color-token declarations inside `:root { … }` and `html.dark { … }`. Don't touch typography tokens (`--serif`, `--display`, `--mono`, `--hand`) unless you explicitly want to reflow type as well — that's a separate concern.
+The tokens live in the top section of `styles.css` (first ~80 lines). Replace only the color-token declarations inside `:root { … }` and `html.dark { … }`. Don't touch typography tokens (`--serif`, `--display`, `--mono`, `--hand`) unless you explicitly want to reflow type as well - that's a separate concern.
 
 Keep the variable names identical. If you added a new semantic alias in the prompt output, add it to **both** blocks so dark mode has coverage.
 
@@ -39,15 +39,15 @@ npm run dev
 
 Two preview surfaces:
 
-- **`http://localhost:5173/#showcase`** — the React showcase reads tokens via `getComputedStyle`, so it updates the moment the CSS hot-reloads. Light and dark samples render side-by-side for direct comparison.
-- **`http://localhost:5173/showcase.html`** — the standalone artifact. If you edited it in parallel, confirm it mirrors `styles.css` values; otherwise it will look stale. A comment at the top of `showcase.html` flags the sync requirement.
+- **`http://localhost:5173/#showcase`** - the React showcase reads tokens via `getComputedStyle`, so it updates the moment the CSS hot-reloads. Light and dark samples render side-by-side for direct comparison.
+- **`http://localhost:5173/showcase.html`** - the standalone artifact. If you edited it in parallel, confirm it mirrors `styles.css` values; otherwise it will look stale. A comment at the top of `showcase.html` flags the sync requirement.
 
 Walk every section (`#intro`, `#story`, `#experience`, `#repos`, `#music`, `#notes`, `#letter`) in both light and dark modes. Look for:
 
 - Body text legibility on `--paper`, `--paper-2`, `--surface-1/2`.
 - Accent-on-surface pairings (red, blue, etc. on any `--surface-*`).
 - `--border` visibility against surfaces.
-- Ink-wipe transition — the GSAP circle mask should still feel "inky" against the new palette. If the clip-path endpoint color looks wrong, the wipe itself doesn't need editing; only the target theme does.
+- Ink-wipe transition - the GSAP circle mask should still feel "inky" against the new palette. If the clip-path endpoint color looks wrong, the wipe itself doesn't need editing; only the target theme does.
 
 ## 5. Verify AA
 
@@ -62,7 +62,7 @@ See `recipes/deploy.md`.
 ---
 
 Related:
-- `knowledge/02-design-system.md` — token layers, naming, oklch rationale.
-- `knowledge/03-theming.md` — why the ink-wipe works the way it does.
-- `prompts/customize-colors.md` — the palette generator.
-- `prompts/design-critique.md` — run after pasting to self-critique the result.
+- `knowledge/02-design-system.md` - token layers, naming, oklch rationale.
+- `knowledge/03-theming.md` - why the ink-wipe works the way it does.
+- `prompts/customize-colors.md` - the palette generator.
+- `prompts/design-critique.md` - run after pasting to self-critique the result.

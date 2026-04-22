@@ -62,7 +62,7 @@ export default function Boot({ onGone }: Props) {
         const tl = gsap.timeline();
         tlRef.current = tl;
 
-        // Beat 1 — "//" stroke-to-fill accent.
+        // Beat 1 - "//" stroke-to-fill accent.
         if (markPaths.length) {
           markPaths.forEach((p) => {
             const len = p.getTotalLength();
@@ -89,7 +89,7 @@ export default function Boot({ onGone }: Props) {
           );
         }
 
-        // Beat 2 — version text slide.
+        // Beat 2 - version text slide.
         if (version) {
           gsap.set(version, { opacity: 0, x: -8 });
           tl.to(
@@ -99,7 +99,7 @@ export default function Boot({ onGone }: Props) {
           );
         }
 
-        // Beat 3 — masthead letterpress clip-sweep.
+        // Beat 3 - masthead letterpress clip-sweep.
         if (mast) {
           mastSplit = new SplitText(mast, { type: 'chars', charsClass: 'bmchar' });
           gsap.set(mastSplit.chars, {
@@ -120,7 +120,7 @@ export default function Boot({ onGone }: Props) {
           );
         }
 
-        // Beat 4 — catchphrase reveal + "prompt" highlight.
+        // Beat 4 - catchphrase reveal + "prompt" highlight.
         if (phrase) {
           gsap.set(phrase, { opacity: 0, y: 10 });
           tl.to(
@@ -139,7 +139,7 @@ export default function Boot({ onGone }: Props) {
           );
         }
 
-        // Beat 5 — sub typewriter scaleX.
+        // Beat 5 - sub typewriter scaleX.
         if (sub) {
           gsap.set(sub, {
             transformOrigin: 'left center',
@@ -149,7 +149,7 @@ export default function Boot({ onGone }: Props) {
           tl.to(sub, { scaleX: 1, duration: 0.4, ease: 'power2.out' }, 1.15);
         }
 
-        // Beat 6 — Enter button pen-down settle, then pulse restart.
+        // Beat 6 - Enter button pen-down settle, then pulse restart.
         if (btn) {
           btn.classList.remove('pulse');
           gsap.set(btn, { opacity: 0, y: 16, rotate: -1.5, scale: 0.94 });
@@ -172,7 +172,7 @@ export default function Boot({ onGone }: Props) {
           );
         }
 
-        // Beat 8 (parallel) — grain wash: coarser → settled.
+        // Beat 8 (parallel) - grain wash: coarser → settled.
         if (fe) {
           tl.fromTo(
             fe,
@@ -186,7 +186,7 @@ export default function Boot({ onGone }: Props) {
           );
         }
 
-        // Beat 9 — ambient masthead breathing (post-entrance).
+        // Beat 9 - ambient masthead breathing (post-entrance).
         // Use filter:brightness (compositor) instead of letterSpacing (layout)
         // so the infinite yoyo doesn't reflow the masthead every frame.
         let onVis: (() => void) | null = null;
@@ -226,7 +226,7 @@ export default function Boot({ onGone }: Props) {
         };
       });
 
-      // Pointer drift on masthead — hover-capable + motion-OK only.
+      // Pointer drift on masthead - hover-capable + motion-OK only.
       mm.add(
         `${FULL_MOTION_QUERY} and (hover: hover)`,
         () => {

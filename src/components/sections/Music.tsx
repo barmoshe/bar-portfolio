@@ -29,15 +29,15 @@ type Track = {
 };
 
 // Placeholder tracks. These describe the *kind* of music-tech and
-// game-audio work I get pulled into — hackathons, game jams, granular
-// experiments — but the titles, years, and credits are stand-ins until
+// game-audio work I get pulled into - hackathons, game jams, granular
+// experiments - but the titles, years, and credits are stand-ins until
 // the real inventory is wired up.
 const TRACKS: Track[] = [
   {
     n: 'A1',
     side: 'A',
     tag: 'Global Game Jam · 2026',
-    title: 'Mask Theme — adaptive score.',
+    title: 'Mask Theme - adaptive score.',
     body:
       'Unity + FMOD layered score that ducks and crests with the player state. Vertical layers, horizontal cues, one 48-hour weekend.',
     tags: '#ggj   #fmod   #unity   #adaptive',
@@ -46,7 +46,7 @@ const TRACKS: Track[] = [
     n: 'A2',
     side: 'A',
     tag: 'Global Game Jam · 2025',
-    title: 'Roots — chiptune SFX suite.',
+    title: 'Roots - chiptune SFX suite.',
     body:
       'A rack of square-wave SFX and a looping 8-bit bed for a two-button platformer. Squeezed into ~12 KB of sound payload.',
     tags: '#ggj   #chiptune   #webaudio',
@@ -55,7 +55,7 @@ const TRACKS: Track[] = [
     n: 'A3',
     side: 'A',
     tag: 'Music Hack Day · TLV',
-    title: 'Generative Bazaar — web-audio station.',
+    title: 'Generative Bazaar - web-audio station.',
     body:
       'Marketplace-themed generative composer. Scales chosen by city, drum patterns by temperature. Built on Tone.js in a single night.',
     tags: '#hackathon   #tonejs   #generative',
@@ -64,7 +64,7 @@ const TRACKS: Track[] = [
     n: 'B1',
     side: 'B',
     tag: 'Self-directed',
-    title: 'Cosmic Synth — 3D browser synthesizer.',
+    title: 'Cosmic Synth - 3D browser synthesizer.',
     body:
       'A WebGL galaxy that doubles as a performance surface. Stars are oscillators; nebulas are reverb zones. Specced via a Claude skill.',
     tags: '#webaudio   #webgl   #synth',
@@ -73,7 +73,7 @@ const TRACKS: Track[] = [
     n: 'B2',
     side: 'B',
     tag: 'Research · 2024',
-    title: 'Phrase Partner — ML melody sketchpad.',
+    title: 'Phrase Partner - ML melody sketchpad.',
     body:
       'A Magenta-backed notebook that riffs back at you. You play four bars, it extends eight, and marks what it borrowed from you.',
     tags: '#magenta   #midi   #ml',
@@ -82,7 +82,7 @@ const TRACKS: Track[] = [
     n: 'B3',
     side: 'B',
     tag: 'Patch · 2023',
-    title: 'Grainfield — SuperCollider grain cloud.',
+    title: 'Grainfield - SuperCollider grain cloud.',
     body:
       'A granular patch that samples room tone and rebuilds it as a slow harmonic field. Patched live, recorded to a single tape loop.',
     tags: '#supercollider   #granular   #drone',
@@ -126,7 +126,7 @@ export default function Music() {
   const [side, setSide] = useState<'A' | 'B'>('A');
   const visible = TRACKS.filter((t) => t.side === side);
 
-  // Audio preference — persisted across sessions. Default off because
+  // Audio preference - persisted across sessions. Default off because
   // browsers block unsolicited playback; the user has to tap the
   // toggle (or any page element if they previously opted in) to
   // actually unlock the AudioContext. See src/lib/vinylAudio.ts.
@@ -241,7 +241,7 @@ export default function Music() {
           // data-playing which both starts the disc and swings the
           // tonearm over. The whole sketch group carries a persistent
           // low-scale feTurbulence displacement for a hand-drawn pen
-          // wobble — we scrub it from a louder starting scale down to a
+          // wobble - we scrub it from a louder starting scale down to a
           // LOW resting scale (not zero: the wobble is the look).
           gsap.set(rig, { opacity: 0, y: 40, rotate: -2 });
           gsap.to(rig, {
@@ -422,14 +422,14 @@ type RigProps = {
 
 // All-stroke sketch rig. The whole `<g class="sketch-ink">` group is wrapped
 // by a feTurbulence/feDisplacementMap filter (ink-bleed-music-disc) at a
-// persistent low scale so every line reads as hand-drawn — that's the
+// persistent low scale so every line reads as hand-drawn - that's the
 // "sketch vibes" signature. Fills are kept to paper / paper-2 / one accent
 // color (the side dot). Everything else is ink linework.
 const Rig = ({ ref, side }: RigProps) => (
   <div className="rig" ref={ref} data-playing="false" data-side={side} aria-hidden="true">
     <svg viewBox="0 0 240 240" role="img" aria-label="Sketched vinyl with gramophone horn">
       <g className="sketch-ink">
-        {/* Turntable base — sketchy rounded rectangle on paper */}
+        {/* Turntable base - sketchy rounded rectangle on paper */}
         <rect x="10" y="36" width="220" height="176" rx="4" className="sk-base" />
         {/* A few ink hatch marks at the bottom corners suggest a wooden
             plinth without needing a fill. */}
@@ -442,7 +442,7 @@ const Rig = ({ ref, side }: RigProps) => (
           <path d="M 210 198 L 220 208" />
         </g>
 
-        {/* Vinyl disc — paper-tinted wax with a stroked rim and a small
+        {/* Vinyl disc - paper-tinted wax with a stroked rim and a small
             set of concentric grooves (7 rings, not 22, so the sketch
             doesn't look like a target). The disc + its grooves rotate
             together inside g.disc (CSS keyframe). */}
@@ -454,7 +454,7 @@ const Rig = ({ ref, side }: RigProps) => (
             <circle key={r} cx="108" cy="120" r={r} className="sk-groove" />
           ))}
 
-          {/* Center label — paper circle with a smaller printed circle
+          {/* Center label - paper circle with a smaller printed circle
               and an accent dot whose fill swaps with the active side. */}
           <circle cx="108" cy="120" r="28" className="sk-label" />
           <circle cx="108" cy="120" r="22" className="sk-label-inner" />
@@ -483,14 +483,14 @@ const Rig = ({ ref, side }: RigProps) => (
             </textPath>
           </text>
 
-          {/* Witness mark — a small ink dot off-center that confirms spin */}
+          {/* Witness mark - a small ink dot off-center that confirms spin */}
           <circle cx="108" cy="96" r="1.4" className="sk-witness" />
         </g>
 
-        {/* Spindle pokes through the label — static, doesn't rotate */}
+        {/* Spindle pokes through the label - static, doesn't rotate */}
         <circle cx="108" cy="120" r="1.8" className="sk-spindle" />
 
-        {/* Gramophone horn — line-art bell with interior hatch shading,
+        {/* Gramophone horn - line-art bell with interior hatch shading,
             a tilted mouth rim, and three sound-wave arcs rippling off
             the opening when data-playing="true". */}
         <g className="horn">
@@ -522,7 +522,7 @@ const Rig = ({ ref, side }: RigProps) => (
             <path d="M 224 176 L 228 170" />
             <path d="M 228 168 L 231 163" />
           </g>
-          {/* Sound waves — three nested arcs that fade and drift outward
+          {/* Sound waves - three nested arcs that fade and drift outward
               from the mouth on loop when the rig is "playing". */}
           <g className="sk-waves">
             <path d="M 240 154 Q 244 158 240 162" className="sk-wave w1" />
@@ -531,7 +531,7 @@ const Rig = ({ ref, side }: RigProps) => (
           </g>
         </g>
 
-        {/* Tonearm — line art. Pivot is top-right of the base; the arm
+        {/* Tonearm - line art. Pivot is top-right of the base; the arm
             swings from rest (~26°) to play (~2°) via the --arm-rot var
             flipped by .rig[data-playing="true"] in styles.css. */}
         <g className="tonearm">

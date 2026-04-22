@@ -1,4 +1,4 @@
-# 01 — Stack
+# 01 - Stack
 
 ## Runtime
 
@@ -6,7 +6,7 @@
 - **Vite 6** for dev server, build, and preview.
 - **TypeScript 5** with project references (`tsconfig.json` → `tsconfig.app.json` + `tsconfig.node.json`).
 - **GSAP 3** + `@gsap/react` for animations. Registered plugins: `ScrollTrigger`, `SplitText`, `Flip`, `useGSAP`. See `src/lib/gsap.ts`.
-- **No UI library, no Tailwind, no styled-components.** All styling lives in a single `src/styles.css` (~700 lines) using CSS custom properties as design tokens. This is deliberate — see `99-caveats.md`.
+- **No UI library, no Tailwind, no styled-components.** All styling lives in a single `src/styles.css` (~700 lines) using CSS custom properties as design tokens. This is deliberate - see `99-caveats.md`.
 
 ## Scripts
 
@@ -46,11 +46,11 @@ export default defineConfig({
 
 One-time setup: **Settings → Pages → Source → GitHub Actions**.
 
-`public/.nojekyll` must end up in `dist/` or GitHub Pages' Jekyll processor will strip directories beginning with `_`. Since Vite copies `public/` verbatim, this works automatically — **do not delete the file**.
+`public/.nojekyll` must end up in `dist/` or GitHub Pages' Jekyll processor will strip directories beginning with `_`. Since Vite copies `public/` verbatim, this works automatically - **do not delete the file**.
 
 ## Why no Tailwind
 
-- The stylesheet was hand-written for this site's paper/ink aesthetic (grain overlays, clip-path transitions, oklch-tuned dark mode) — utility classes would fight that more than help.
+- The stylesheet was hand-written for this site's paper/ink aesthetic (grain overlays, clip-path transitions, oklch-tuned dark mode) - utility classes would fight that more than help.
 - oklch CSS vars give us perceptually-even themes for free; Tailwind v4 would add the same mechanism but force a migration of ~700 lines of CSS.
 - Build output stays small (no utility CSS bloat; no Tailwind compile step).
 - CLAUDE.md's invariants explicitly call out "Not migrated to Tailwind on purpose" for `src/styles.css`.
@@ -68,7 +68,7 @@ src/styles.css                           Design tokens + all CSS
 src/data/portfolio.ts                    Typed project & contact data + helpers
 src/hooks/*.ts                           Stateful concerns: theme, boot, observer, lightbox, …
 src/lib/gsap.ts                          GSAP registration + motion-query constants
-src/lib/inkBleed.ts                      attachInkBleed — feDisplacementMap tween utility
+src/lib/inkBleed.ts                      attachInkBleed - feDisplacementMap tween utility
 src/components/*.tsx                     Visual primitives & overlays
 src/components/sections/*.tsx            Page-level section components (one per section id)
 src/components/showcase/*.tsx            Design-system preview, mounted on #showcase hash

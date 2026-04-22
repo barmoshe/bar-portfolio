@@ -1,10 +1,10 @@
-# Recipe — Edit a section
+# Recipe - Edit a section
 
 You want to add a paragraph, a link list, a card block, or a quote to one of the existing sections. The end state: the content renders in the right section, active-section highlighting in `TabBar` and `Strip` still works, reveal/hover animations feel consistent, reduced-motion mode still produces readable static content.
 
 ## The arc
 
-Each section is one file under `src/components/sections/` whose outermost element carries `id="<name>"`. `useSectionObserver` watches those ids to drive nav highlighting, so as long as the id stays on the outermost element, navigation keeps working for free. Inside the section, the site has a small set of primitives (`Reveal`, `HoverCard`, `InkTimeline`, `CodeArt`) — reach for those before inventing new animation code.
+Each section is one file under `src/components/sections/` whose outermost element carries `id="<name>"`. `useSectionObserver` watches those ids to drive nav highlighting, so as long as the id stays on the outermost element, navigation keeps working for free. Inside the section, the site has a small set of primitives (`Reveal`, `HoverCard`, `InkTimeline`, `CodeArt`) - reach for those before inventing new animation code.
 
 ## 1. Find the section
 
@@ -24,11 +24,11 @@ Map from section id to file:
 
 ## 2. Decide the block type
 
-- **Body text** — drop a `<p>` inside the section's main column. Wrap it in `<Reveal>` if surrounding blocks are revealed, so the scroll cadence stays consistent.
-- **Link list** — a `<ul>` with the section's usual link styling (see existing siblings). If the list is long enough that it earns a row-by-row reveal, wrap each `<li>` in `<Reveal delay={…}>`; otherwise wrap the whole `<ul>`.
-- **Card block** — reuse `<HoverCard>`. Don't build a new card primitive unless the hover interaction is genuinely different.
-- **Quote / pull** — the site has a consistent "fold" typography for quotes (serif display, a leading rule). Match whatever the nearest existing quote does.
-- **Timeline entry** — use `InkTimeline` (already used in `Story.tsx` and `Experience.tsx`). Its item shape is documented inline; the key constraint is a stable `key` per entry.
+- **Body text** - drop a `<p>` inside the section's main column. Wrap it in `<Reveal>` if surrounding blocks are revealed, so the scroll cadence stays consistent.
+- **Link list** - a `<ul>` with the section's usual link styling (see existing siblings). If the list is long enough that it earns a row-by-row reveal, wrap each `<li>` in `<Reveal delay={…}>`; otherwise wrap the whole `<ul>`.
+- **Card block** - reuse `<HoverCard>`. Don't build a new card primitive unless the hover interaction is genuinely different.
+- **Quote / pull** - the site has a consistent "fold" typography for quotes (serif display, a leading rule). Match whatever the nearest existing quote does.
+- **Timeline entry** - use `InkTimeline` (already used in `Story.tsx` and `Experience.tsx`). Its item shape is documented inline; the key constraint is a stable `key` per entry.
 
 ## 3. Preserve the section id
 
@@ -38,7 +38,7 @@ If you're splitting a section into two semantic regions, pick one to keep the id
 
 ## 4. Respect reduced motion
 
-If you add any imperative animation (rare — prefer primitives), wrap it in `gsap.matchMedia` branching on `FULL_MOTION_QUERY` as in `src/lib/gsap.ts`. `<Reveal>` and `<HoverCard>` already handle this internally, so sticking to primitives gets you reduced-motion behavior for free.
+If you add any imperative animation (rare - prefer primitives), wrap it in `gsap.matchMedia` branching on `FULL_MOTION_QUERY` as in `src/lib/gsap.ts`. `<Reveal>` and `<HoverCard>` already handle this internally, so sticking to primitives gets you reduced-motion behavior for free.
 
 Test by toggling `prefers-reduced-motion` in your OS or via devtools rendering settings.
 
@@ -65,6 +65,6 @@ Then push via `recipes/deploy.md`.
 ---
 
 Related:
-- `knowledge/05-components.md` — primitives and section map.
-- `knowledge/04-animation.md` — when an animation warrants new GSAP code.
-- `prompts/add-section-block.md` — scaffold for a one-off block.
+- `knowledge/05-components.md` - primitives and section map.
+- `knowledge/04-animation.md` - when an animation warrants new GSAP code.
+- `prompts/add-section-block.md` - scaffold for a one-off block.

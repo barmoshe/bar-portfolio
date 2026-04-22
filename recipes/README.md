@@ -7,7 +7,7 @@
 | File | When to use |
 |---|---|
 | `add-project.md` | Adding a new entry to the project grid. |
-| `customize-theme.md` | Changing the oklch palette — generating, pasting, verifying contrast. |
+| `customize-theme.md` | Changing the oklch palette - generating, pasting, verifying contrast. |
 | `edit-section.md` | Adding or restructuring content inside an existing section. |
 | `deploy.md` | Pushing to `main`, watching the GH Actions build, verifying the live site. |
 

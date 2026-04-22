@@ -1,8 +1,8 @@
-# 04 — Animation
+# 04 - Animation
 
 The site has three animation layers: **HeroSlides ink-native fx cycle**, **GSAP + ScrollTrigger orchestrations**, and **ink-bleed SVG filters**. All three must respect `prefers-reduced-motion`.
 
-## 1. HeroSlides — ink-native fx cycle
+## 1. HeroSlides - ink-native fx cycle
 
 File: `src/components/HeroSlides.tsx`.
 
@@ -38,7 +38,7 @@ inEl.dataset.fx = fx;
 //    via the .is-active class React already set via setIdx(next)
 ```
 
-Only one transition runs at a time — `advance()` early-returns if the timeline is still active.
+Only one transition runs at a time - `advance()` early-returns if the timeline is still active.
 
 ### The fx CSS
 
@@ -51,7 +51,7 @@ Lives in `src/styles.css`, under the `/* Slideshow */` block. Each `.slide[data-
 
 ### The `#ink-crumple` SVG filter
 
-Defined in `src/components/InkDefs.tsx` alongside the `#ink-bleed-*` family. Single shared instance — safe because `advance()` serializes transitions. If you ever overlap HeroSlides transitions (don't), each would need its own filter.
+Defined in `src/components/InkDefs.tsx` alongside the `#ink-bleed-*` family. Single shared instance - safe because `advance()` serializes transitions. If you ever overlap HeroSlides transitions (don't), each would need its own filter.
 
 ### Auto-advance
 
@@ -66,7 +66,7 @@ Random interval between 1.5–5s (progressively slower as `fxCounter` grows). Pa
 
 ## 2. GSAP + ScrollTrigger
 
-File: `src/lib/gsap.ts` — single module that registers plugins and re-exports.
+File: `src/lib/gsap.ts` - single module that registers plugins and re-exports.
 
 ```ts
 gsap.registerPlugin(ScrollTrigger, SplitText, Flip, useGSAP);
@@ -92,18 +92,18 @@ DESKTOP_QUERY        = '(prefers-reduced-motion: no-preference) and (min-width: 
 
 ## 3. Ink-bleed SVG filter (`src/lib/inkBleed.ts`)
 
-A section heading can scrub its own `feDisplacementMap` scale from a high value down to 0 as it scrolls into view — so letters "bleed" into the page and resolve into sharp glyphs.
+A section heading can scrub its own `feDisplacementMap` scale from a high value down to 0 as it scrolls into view - so letters "bleed" into the page and resolve into sharp glyphs.
 
 ```ts
 attachInkBleed(el, id, { from = 22, trigger?, start = 'top 80%' }): () => void
 ```
 
-- `id: InkBleedId` — a section-unique id (defined in `src/components/InkDefs.tsx`). Each section gets its own `#ink-bleed-<id>` SVG filter so concurrent tweens never touch the same `feDisplacementMap`.
-- Returns a cleanup that removes the inline `filter` style and kills the tween. **Always** call it from the matchMedia branch cleanup — otherwise reduced-motion flips leave the heading with a stale filter.
+- `id: InkBleedId` - a section-unique id (defined in `src/components/InkDefs.tsx`). Each section gets its own `#ink-bleed-<id>` SVG filter so concurrent tweens never touch the same `feDisplacementMap`.
+- Returns a cleanup that removes the inline `filter` style and kills the tween. **Always** call it from the matchMedia branch cleanup - otherwise reduced-motion flips leave the heading with a stale filter.
 
 ## 4. The ink-wipe
 
-See `03-theming.md`. Not motion per se — it's a theme-transition mask, driven by `useTheme`. Lives in `App.tsx` as `<div className="ink-wipe" />`.
+See `03-theming.md`. Not motion per se - it's a theme-transition mask, driven by `useTheme`. Lives in `App.tsx` as `<div className="ink-wipe" />`.
 
 ## Reduced-motion audit checklist
 
@@ -113,4 +113,4 @@ For any new animation:
 - ☐ Reduced-motion branch either omitted (no motion) or gives an instantaneous fallback?
 - ☐ If imperative DOM manipulation: cleaned up on component unmount?
 - ☐ ScrollTrigger instance has a stable `id`?
-- ☐ No jumping between layout-triggering properties (width/height/top/left) — transforms/opacity/filter only?
+- ☐ No jumping between layout-triggering properties (width/height/top/left) - transforms/opacity/filter only?

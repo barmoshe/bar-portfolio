@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 
 /**
- * A miniature reproduction of the `HeroSlides` fx cycle — two slides, same
+ * A miniature reproduction of the `HeroSlides` fx cycle - two slides, same
  * `.slide` / `.is-enter` / `.is-active` class contract as in styles.css. Lets
  * you trigger each of the five transitions in isolation for inspection.
  *

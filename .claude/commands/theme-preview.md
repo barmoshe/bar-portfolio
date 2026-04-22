@@ -16,7 +16,7 @@ Starts the Vite dev server and points the user at the live design showcase so th
 3. Tell the user:
    - React showcase (live tokens via `getComputedStyle`): `http://localhost:5173/#showcase`
    - Standalone artifact (mirrored tokens): `http://localhost:5173/showcase.html`
-4. Remind them: the React showcase hot-reloads on edits to `src/styles.css`; the standalone HTML does not — edit it in parallel if palette changes need to land in both.
+4. Remind them: the React showcase hot-reloads on edits to `src/styles.css`; the standalone HTML does not - edit it in parallel if palette changes need to land in both.
 
 ## Stopping
 

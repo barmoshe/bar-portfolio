@@ -1,6 +1,6 @@
 ---
 name: portfolio-curator
-description: Route editing intents for bar-portfolio — add or edit projects in src/data/portfolio.ts, tweak oklch color tokens in src/styles.css, edit section content under src/components/sections, and verify GitHub Pages deploys. Use when the user asks to update portfolio content, styling, or to ship changes to the live site.
+description: Route editing intents for bar-portfolio - add or edit projects in src/data/portfolio.ts, tweak oklch color tokens in src/styles.css, edit section content under src/components/sections, and verify GitHub Pages deploys. Use when the user asks to update portfolio content, styling, or to ship changes to the live site.
 license: MIT
 ---
 
@@ -13,7 +13,7 @@ Routing skill for the `bar-portfolio` repo (React 19 + Vite 6 + TypeScript, depl
 Matches the user's intent to one of four workflows, opens the relevant recipe + prompt, and keeps the four site invariants intact:
 
 1. Pre-paint theme script stays inline in `index.html` `<head>`.
-2. `HeroSlides` fx cycle — `.is-enter` → forced reflow → RAF → `.is-active`.
+2. `HeroSlides` fx cycle - `.is-enter` → forced reflow → RAF → `.is-active`.
 3. `base: '/bar-portfolio/'` in `vite.config.ts`.
 4. `public/.nojekyll` must land in `dist/`.
 
@@ -33,10 +33,10 @@ Full rationale: `knowledge/99-caveats.md`.
 
 For repeatable automation:
 
-- `/new-project` — runs `recipes/add-project.md` end-to-end with prompts.
-- `/theme-preview` — starts dev server, opens `http://localhost:5173/#showcase`.
-- `/deploy-check` — clean status → push → poll GH Actions → curl live URL.
-- `/typecheck` — `npm run typecheck` with error summary.
+- `/new-project` - runs `recipes/add-project.md` end-to-end with prompts.
+- `/theme-preview` - starts dev server, opens `http://localhost:5173/#showcase`.
+- `/deploy-check` - clean status → push → poll GH Actions → curl live URL.
+- `/typecheck` - `npm run typecheck` with error summary.
 
 ## Background (open only if needed)
 
@@ -54,8 +54,8 @@ For repeatable automation:
 - Prefer reusing primitives (`Reveal`, `HoverCard`, `InkTimeline`, `CodeArt`) over new animation code.
 - Never introduce Tailwind, React Router, or new runtime dependencies for cosmetic changes.
 - All color work is oklch. All motion work respects `prefers-reduced-motion` via `gsap.matchMedia` + `FULL_MOTION_QUERY` from `src/lib/gsap.ts`.
-- The `main` branch is the deploy branch — pushing is deploying.
+- The `main` branch is the deploy branch - pushing is deploying.
 
 ## When in doubt
 
-Open `knowledge/00-index.md` — it's the routing table for everything else.
+Open `knowledge/00-index.md` - it's the routing table for everything else.

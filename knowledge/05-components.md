@@ -1,43 +1,43 @@
-# 05 — Component map
+# 05 - Component map
 
 ## Render order in `App.tsx`
 
 ```
-<InkDefs />               // SVG <defs> for feDisplacementMap filters — must be first
+<InkDefs />               // SVG <defs> for feDisplacementMap filters - must be first
 <Grain />                 // Full-viewport noise overlay
 <Crease />                // Horizontal fold line
 <Boot ? />                // Full-screen onboarding (dismissible, hidden after skip)
 <Strip />                 // Sticky top nav: theme toggle, skip button, section links
 <main>
-  <Intro />             // id="intro"   — hero / intro / portrait slideshow
-  <Story />               // id="story"     — narrative + timeline
-  <Experience />          // id="experience"— work history cards
-  <Repos onOpen={…} />    // id="repos"     — project grid (opens Lightbox on click)
-  <Music />               // id="music"     — music / sound work
-  <Notes />               // id="notes"     — thoughts / writing
-  <Letter />              // id="letter"    — contact form (mailto)
+  <Intro />             // id="intro"   - hero / intro / portrait slideshow
+  <Story />               // id="story"     - narrative + timeline
+  <Experience />          // id="experience"- work history cards
+  <Repos onOpen={…} />    // id="repos"     - project grid (opens Lightbox on click)
+  <Music />               // id="music"     - music / sound work
+  <Notes />               // id="notes"     - thoughts / writing
+  <Letter />              // id="letter"    - contact form (mailto)
 </main>
 <TabBar />                // Mobile bottom nav (hidden > 820px)
 <Lightbox />              // Fullscreen project modal, portaled into root
 <div class="ink-wipe" />  // Theme transition overlay (imperative, driven by useTheme)
 ```
 
-**`InkDefs` must render before anything else** — it defines the SVG filters that `useInk` / `attachInkBleed` / certain sections reference by id. If you reorder, all filter-based effects go blank.
+**`InkDefs` must render before anything else** - it defines the SVG filters that `useInk` / `attachInkBleed` / certain sections reference by id. If you reorder, all filter-based effects go blank.
 
 ## Visual primitives (`src/components/`)
 
 | File | Role | Key deps |
 |---|---|---|
-| `InkDefs.tsx` | SVG `<defs>` — `#ink-bleed-*` feDisplacementMap filters. Exports `inkBleedUrl(id)` and `InkBleedId` type. | — |
-| `Grain.tsx` | Fixed-position `<canvas>` rendering low-frequency noise. Multiplies over the page. | — |
-| `Crease.tsx` | Thin horizontal line with shadow — gives "folded paper" feel. | — |
+| `InkDefs.tsx` | SVG `<defs>` - `#ink-bleed-*` feDisplacementMap filters. Exports `inkBleedUrl(id)` and `InkBleedId` type. | - |
+| `Grain.tsx` | Fixed-position `<canvas>` rendering low-frequency noise. Multiplies over the page. | - |
+| `Crease.tsx` | Thin horizontal line with shadow - gives "folded paper" feel. | - |
 | `Boot.tsx` | Onboarding screen. Dismisses on any keydown/pointerdown (except `.strip`/`.toggle`). Uses `useBootDismiss`. | `useBootDismiss` |
 | `Strip.tsx` | Sticky top bar. Theme toggle, skip button, section anchor links. Props: `themeGlyph`, `themeLabel`, `onThemeCycle`, `onSkip`, `skipRemembered`. | `useTheme` (via props) |
 | `TabBar.tsx` | Mobile bottom nav. Uses `useSectionObserver` to highlight active section. | `useSectionObserver` |
-| `HeroSlides.tsx` | Portrait slideshow with 5-fx cycle. **Fragile** — see `04-animation.md`. | GSAP, `lib/gsap` |
+| `HeroSlides.tsx` | Portrait slideshow with 5-fx cycle. **Fragile** - see `04-animation.md`. | GSAP, `lib/gsap` |
 | `Lightbox.tsx` | Fullscreen project modal. Animates from `sourceRect` card position. Keyed by `openIdx`. | GSAP |
-| `HoverCard.tsx` | Interactive card primitive. Used by `Repos`. | — |
-| `CodeArt.tsx` | Ascii/code-glyph display for project cards. Uses `iconFor` from `data/portfolio.ts`. | — |
+| `HoverCard.tsx` | Interactive card primitive. Used by `Repos`. | - |
+| `CodeArt.tsx` | Ascii/code-glyph display for project cards. Uses `iconFor` from `data/portfolio.ts`. | - |
 | `InkTimeline.tsx` | GSAP-driven timeline component. Used by `Experience` and `Story`. | GSAP |
 | `Reveal.tsx` | IntersectionObserver-triggered reveal wrapper. Fade + slight Y translate. | IO |
 
@@ -53,7 +53,7 @@ One component per section id. The section id is set on the **outermost element**
 | `Repos.tsx` | `repos` | Project grid. Cards open `Lightbox` via `onOpen(idx)`. Reads `projects` from `data/portfolio.ts`. | `HoverCard`, `CodeArt` |
 | `Music.tsx` | `music` | Music/sound experiments. | `Reveal` |
 | `Notes.tsx` | `notes` | Blog / notes links. | `Reveal` |
-| `Letter.tsx` | `letter` | Contact form (mailto action + copy email to clipboard). Renders `contact` from `data/portfolio.ts`. | — |
+| `Letter.tsx` | `letter` | Contact form (mailto action + copy email to clipboard). Renders `contact` from `data/portfolio.ts`. | - |
 
 ## Where state lives
 
@@ -69,7 +69,7 @@ One component per section id. The section id is set on the **outermost element**
 ## Adding a new section
 
 1. Create `src/components/sections/<Name>.tsx`.
-2. Outer element gets `id="<name>"` — lowercase, stable.
+2. Outer element gets `id="<name>"` - lowercase, stable.
 3. Import + render in `App.tsx` inside `<main>` in the right position.
 4. Add the section to `Strip`'s anchor list and `TabBar`'s tab list (so nav highlighting works).
 5. Register the id with `useSectionObserver`'s call-site (currently the `ids` array is inlined in `TabBar`).

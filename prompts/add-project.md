@@ -26,8 +26,8 @@ Insert position in array (top / bottom / after "<name>"): {{POSITION}}
 2. `language` must either match a key in `LANG_ICON` exactly (`TypeScript`, `JavaScript`, `Go`, `Python`, `Rust`, `Claude`) or be a polyglot string joined with `' · '` (space-dot-space). If neither, you must also output a one-line extension to `LANG_ICON` with a 1–3-char glyph (no emoji).
 3. `description` should place the strongest one-sentence hook first, then `' - '`, then longer detail. `shortDesc` truncates at the first `' - '` so the card preview comes from that segment.
 4. No surrounding comments in the object literal. Keep it tidy.
-5. If `extras` is "none", omit the key entirely — don't set `extras: []`.
-6. URLs must be absolute (`https://…`) — the cards and lightbox link out.
+5. If `extras` is "none", omit the key entirely - don't set `extras: []`.
+6. URLs must be absolute (`https://…`) - the cards and lightbox link out.
 </constraints>
 
 <output_format>

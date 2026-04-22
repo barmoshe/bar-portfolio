@@ -22,7 +22,7 @@
   <img alt="License MIT"    src="https://img.shields.io/badge/license-MIT-6f42c1">
 </p>
 
-Bar Moshe's portfolio. A single-page paper-and-ink site — cover page, seven sections, a portrait slideshow with five clip-path transitions, a project lightbox, a mobile bottom tab bar, and an oklch design system that flips between light and dark via an ink-wipe GSAP timeline.
+Bar Moshe's portfolio. A single-page paper-and-ink site - cover page, seven sections, a portrait slideshow with five clip-path transitions, a project lightbox, a mobile bottom tab bar, and an oklch design system that flips between light and dark via an ink-wipe GSAP timeline.
 
 **Live:** https://barmoshe.github.io/bar-portfolio/ · **Design showcase:** [/#showcase](https://barmoshe.github.io/bar-portfolio/#showcase) · [/showcase.html](https://barmoshe.github.io/bar-portfolio/showcase.html)
 
@@ -66,7 +66,7 @@ Tokens live in `src/styles.css` (`:root` for light, `html.dark` for dark). The d
 | Build | Vite 6 | Instant HMR, `base: '/bar-portfolio/'` for Pages. |
 | Language | TypeScript 5 | Types keep `portfolio.ts` honest. |
 | Animation | GSAP 3 + `@gsap/react` | `useGSAP`, ScrollTrigger, SplitText, Flip, `gsap.matchMedia`. |
-| Styling | Hand-tuned CSS + oklch tokens | No Tailwind — intentional. See `knowledge/01-stack.md`. |
+| Styling | Hand-tuned CSS + oklch tokens | No Tailwind - intentional. See `knowledge/01-stack.md`. |
 | Deploy | GitHub Actions → Pages | Push to `main` = deploy. |
 
 ## Develop
@@ -98,7 +98,7 @@ bar-portfolio/
 │   ├── hooks/                  useTheme, useLightbox, useFolioScrub, …
 │   ├── lib/                    gsap registrar, inkBleed
 │   └── components/
-│       ├── HeroSlides.tsx      fragile 5-fx cycle — see knowledge/04
+│       ├── HeroSlides.tsx      fragile 5-fx cycle - see knowledge/04
 │       ├── Lightbox, Strip, TabBar, Boot, Grain, Crease, …
 │       ├── sections/           Intro, Story, Experience, Repos, Music, Notes, Letter
 │       └── showcase/           #showcase route (ColorGrid, TypeSpecimen, FxPlayground)
@@ -109,7 +109,7 @@ bar-portfolio/
 ├── knowledge/                  01-stack → 06-data + 99-caveats
 ├── recipes/                    add-project, customize-theme, edit-section, deploy
 ├── prompts/                    customize-colors, add-project, add-section-block, design-critique
-├── skills/portfolio-curator/   SKILL.md — intent routing
+├── skills/portfolio-curator/   SKILL.md - intent routing
 └── .claude/
     ├── commands/               /new-project, /theme-preview, /deploy-check, /typecheck
     └── settings.local.json     scoped permissions allowlist
@@ -119,8 +119,8 @@ Start with [`CLAUDE.md`](CLAUDE.md) for the routing table, or [`knowledge/00-ind
 
 ## Contributing
 
-This is a personal portfolio — issues and PRs welcome for bugs, accessibility, or documentation. For design changes, open an issue first.
+This is a personal portfolio - issues and PRs welcome for bugs, accessibility, or documentation. For design changes, open an issue first.
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE).
+MIT - see [`LICENSE`](LICENSE).

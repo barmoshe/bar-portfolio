@@ -15,7 +15,7 @@ import { inkBleedUrl, type InkBleedId } from '../components/InkDefs';
  * @param opts.start   ScrollTrigger `start` string (default `'top 80%'`).
  *
  * @returns Cleanup that removes the inline `filter` style and kills the tween.
- *          Always call it from the enclosing `matchMedia` branch cleanup — the
+ *          Always call it from the enclosing `matchMedia` branch cleanup - the
  *          reduced-motion flip otherwise leaves the heading with a stale filter.
  *
  * See `knowledge/04-animation.md`.
