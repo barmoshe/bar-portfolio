@@ -8,6 +8,7 @@ import {
   DESKTOP_QUERY,
   FULL_MOTION_QUERY,
 } from '../../lib/gsap';
+import { createReveal } from '../../lib/scrollReveal';
 import { attachInkBleed } from '../../lib/inkBleed';
 
 type Entry = {
@@ -217,40 +218,32 @@ export default function Notes() {
         let cleanupBleed: (() => void) | null = null;
 
         if (stamp) {
-          gsap.set(stamp, { opacity: 0, rotate: 10, scale: 0.8 });
-          gsap.to(stamp, {
-            opacity: 1,
-            rotate: -3,
-            scale: 1,
-            duration: 0.6,
-            ease: 'back.out(2)',
-            scrollTrigger: { trigger: root, start: 'top 75%' },
-          });
+          createReveal(
+            stamp,
+            { opacity: 0, rotate: 10, scale: 0.8 },
+            { opacity: 1, rotate: -3, scale: 1, duration: 0.6, ease: 'back.out(2)' },
+            { trigger: root, start: 'top 75%' },
+          );
         }
 
         if (headline) {
           split = new SplitText(headline, { type: 'words' });
-          gsap.set(split.words, { opacity: 0, yPercent: 70, rotate: -3 });
-          gsap.to(split.words, {
-            opacity: 1,
-            yPercent: 0,
-            rotate: 0,
-            duration: 0.7,
-            stagger: 0.05,
-            ease: 'back.out(1.6)',
-            scrollTrigger: { trigger: headline, start: 'top 80%' },
-          });
+          createReveal(
+            split.words,
+            { opacity: 0, yPercent: 70, rotate: -3 },
+            { opacity: 1, yPercent: 0, rotate: 0, duration: 0.7, stagger: 0.05, ease: 'back.out(1.6)' },
+            { trigger: headline, start: 'top 80%' },
+          );
           cleanupBleed = attachInkBleed(headline, 'notes');
         }
 
         if (dek) {
-          gsap.set(dek, { opacity: 0, y: 14 });
-          gsap.to(dek, {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            scrollTrigger: { trigger: dek, start: 'top 85%' },
-          });
+          createReveal(
+            dek,
+            { opacity: 0, y: 14 },
+            { opacity: 1, y: 0, duration: 0.6 },
+            { trigger: dek, start: 'top 85%' },
+          );
         }
 
         return () => {
@@ -261,30 +254,29 @@ export default function Notes() {
 
       mm.add(DESKTOP_QUERY, () => {
         if (!cards.length) return;
-        gsap.set(cards, { opacity: 0, y: 36 });
-        gsap.to(cards, {
-          opacity: 1,
-          y: 0,
-          duration: 0.75,
-          stagger: { each: 0.09, from: 'start' },
-          ease: 'power3.out',
-          scrollTrigger: { trigger: grid, start: 'top 80%' },
-        });
+        createReveal(
+          cards,
+          { opacity: 0, y: 36 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            stagger: { each: 0.09, from: 'start' },
+            ease: 'power3.out',
+          },
+          { trigger: grid, start: 'top 80%' },
+        );
       });
 
       mm.add(MOBILE_QUERY, () => {
         cards.forEach((el, i) => {
           const xFrom = i % 2 === 0 ? -28 : 28;
-          gsap.set(el, { opacity: 0, x: xFrom, y: 45, scale: 0.92 });
-          gsap.to(el, {
-            opacity: 1,
-            x: 0,
-            y: 0,
-            scale: 1,
-            duration: 0.75,
-            ease: 'back.out(1.3)',
-            scrollTrigger: { trigger: el, start: 'top 92%' },
-          });
+          createReveal(
+            el,
+            { opacity: 0, x: xFrom, y: 45, scale: 0.92 },
+            { opacity: 1, x: 0, y: 0, scale: 1, duration: 0.75, ease: 'back.out(1.3)' },
+            { trigger: el, start: 'top 92%' },
+          );
         });
       });
 

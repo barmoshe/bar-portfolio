@@ -8,6 +8,7 @@ import {
   DESKTOP_QUERY,
   FULL_MOTION_QUERY,
 } from '../../lib/gsap';
+import { createReveal } from '../../lib/scrollReveal';
 import { attachInkBleed } from '../../lib/inkBleed';
 
 type Card = {
@@ -162,6 +163,10 @@ const MOBILE_SCATTER = [
   { x: 28, y: 60, r: 4 },
 ];
 
+// Letter is the final section and tends to be read for longer; stretch the
+// stale window so a user who lingers doesn't see it replay unnecessarily.
+const LETTER_STALE_MS = 15000;
+
 export default function Letter() {
   const rootRef = useRef<HTMLElement | null>(null);
   const gridRef = useRef<HTMLDivElement | null>(null);
@@ -183,38 +188,31 @@ export default function Letter() {
 
         if (headline) {
           split = new SplitText(headline, { type: 'chars,words' });
-          gsap.set(split.chars, { opacity: 0, yPercent: 80, rotate: -6 });
-          gsap.to(split.chars, {
-            opacity: 1,
-            yPercent: 0,
-            rotate: 0,
-            duration: 0.7,
-            stagger: 0.04,
-            ease: 'back.out(1.8)',
-            scrollTrigger: { trigger: headline, start: 'top 80%' },
-          });
+          createReveal(
+            split.chars,
+            { opacity: 0, yPercent: 80, rotate: -6 },
+            { opacity: 1, yPercent: 0, rotate: 0, duration: 0.7, stagger: 0.04, ease: 'back.out(1.8)' },
+            { trigger: headline, start: 'top 80%', staleAfterMs: LETTER_STALE_MS },
+          );
           cleanupBleed = attachInkBleed(headline, 'letter');
         }
 
         if (dek) {
-          gsap.set(dek, { opacity: 0, y: 12 });
-          gsap.to(dek, {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            delay: 0.2,
-            scrollTrigger: { trigger: dek, start: 'top 85%' },
-          });
+          createReveal(
+            dek,
+            { opacity: 0, y: 12 },
+            { opacity: 1, y: 0, duration: 0.6, delay: 0.2 },
+            { trigger: dek, start: 'top 85%', staleAfterMs: LETTER_STALE_MS },
+          );
         }
 
         if (footer) {
-          gsap.set(footer, { opacity: 0, y: 16 });
-          gsap.to(footer, {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            scrollTrigger: { trigger: footer, start: 'top 90%' },
-          });
+          createReveal(
+            footer,
+            { opacity: 0, y: 16 },
+            { opacity: 1, y: 0, duration: 0.6 },
+            { trigger: footer, start: 'top 90%', staleAfterMs: LETTER_STALE_MS },
+          );
         }
 
         return () => {
@@ -224,37 +222,47 @@ export default function Letter() {
       });
 
       mm.add(DESKTOP_QUERY, () => {
-        cards.forEach((el, i) => {
-          const s = DESKTOP_SCATTER[i % DESKTOP_SCATTER.length]!;
-          gsap.set(el, { opacity: 0, x: s.x, y: s.y, rotate: s.r, scale: 0.85 });
-        });
-        gsap.to(cards, {
-          opacity: 1,
-          x: 0,
-          y: 0,
-          rotate: (i) => parseFloat(CARDS[i]?.rotate ?? '0deg'),
-          scale: 1,
-          duration: 1,
-          stagger: 0.08,
-          ease: 'power4.out',
-          scrollTrigger: { trigger: grid, start: 'top 80%' },
-        });
+        if (!cards.length) return;
+        createReveal(
+          cards,
+          {
+            opacity: 0,
+            x: (i: number) => DESKTOP_SCATTER[i % DESKTOP_SCATTER.length]!.x,
+            y: (i: number) => DESKTOP_SCATTER[i % DESKTOP_SCATTER.length]!.y,
+            rotate: (i: number) => DESKTOP_SCATTER[i % DESKTOP_SCATTER.length]!.r,
+            scale: 0.85,
+          },
+          {
+            opacity: 1,
+            x: 0,
+            y: 0,
+            rotate: (i: number) => parseFloat(CARDS[i]?.rotate ?? '0deg'),
+            scale: 1,
+            duration: 1,
+            stagger: 0.08,
+            ease: 'power4.out',
+          },
+          { trigger: grid, start: 'top 80%', staleAfterMs: LETTER_STALE_MS },
+        );
       });
 
       mm.add(MOBILE_QUERY, () => {
         cards.forEach((el, i) => {
           const s = MOBILE_SCATTER[i % MOBILE_SCATTER.length]!;
-          gsap.set(el, { opacity: 0, x: s.x, y: s.y, rotate: s.r, scale: 0.88 });
-          gsap.to(el, {
-            opacity: 1,
-            x: 0,
-            y: 0,
-            rotate: parseFloat(CARDS[i]?.rotate ?? '0deg'),
-            scale: 1,
-            duration: 0.75,
-            ease: 'back.out(1.4)',
-            scrollTrigger: { trigger: el, start: 'top 92%' },
-          });
+          createReveal(
+            el,
+            { opacity: 0, x: s.x, y: s.y, rotate: s.r, scale: 0.88 },
+            {
+              opacity: 1,
+              x: 0,
+              y: 0,
+              rotate: parseFloat(CARDS[i]?.rotate ?? '0deg'),
+              scale: 1,
+              duration: 0.75,
+              ease: 'back.out(1.4)',
+            },
+            { trigger: el, start: 'top 92%', staleAfterMs: LETTER_STALE_MS },
+          );
         });
       });
 

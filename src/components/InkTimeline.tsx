@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { gsap, ScrollTrigger, useGSAP, FULL_MOTION_QUERY } from '../lib/gsap';
+import { createReveal } from '../lib/scrollReveal';
 
 // A hand-drawn vertical rail rendered beside the Story section. As the user
 // scrolls through the parent, the path's stroke-dashoffset scrubs to zero -
@@ -50,18 +51,12 @@ export default function InkTimeline({ triggerRef }: Props) {
 
         const dots = root.querySelectorAll<SVGCircleElement>('circle');
         if (dots.length) {
-          gsap.set(dots, { opacity: 0, scale: 0, transformOrigin: '50% 50%' });
-          ScrollTrigger.batch(Array.from(dots), {
-            start: 'top 85%',
-            onEnter: (batch) =>
-              gsap.to(batch, {
-                opacity: 1,
-                scale: 1,
-                duration: 0.5,
-                stagger: 0.08,
-                ease: 'back.out(2.2)',
-              }),
-          });
+          createReveal(
+            dots,
+            { opacity: 0, scale: 0, transformOrigin: '50% 50%' },
+            { opacity: 1, scale: 1, duration: 0.5, stagger: 0.08, ease: 'back.out(2.2)' },
+            { trigger, start: 'top 85%' },
+          );
         }
 
         ScrollTrigger.refresh();

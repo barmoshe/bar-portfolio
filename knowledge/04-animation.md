@@ -90,6 +90,14 @@ DESKTOP_QUERY        = '(prefers-reduced-motion: no-preference) and (min-width: 
 - **Return cleanup from the matchMedia callback** to drop listeners (`root.removeEventListener`, ScrollTrigger kills, etc.).
 - **ScrollTrigger instance ids**: use section-stable ids (e.g. `ink-bleed-<InkBleedId>`) so hot reload doesn't leak duplicate triggers.
 
+### Reveal re-trigger rule (`src/lib/scrollReveal.ts`)
+
+Section reveals use `createReveal(target, fromVars, toVars, opts)`, which builds a paused tween and a ScrollTrigger wired to replay it when the section has been off-screen for longer than `staleAfterMs` (default `DEFAULT_REVEAL_STALE_MS = 8000`). Continuous up-and-down scrolling is a no-op after the first play; returning via the TabBar a few seconds later re-plays the reveal from its initial state.
+
+- Don't combine with `scrub` - the staleness check assumes discrete play, not scrub progress. The InkTimeline path keeps the plain ScrollTrigger API for its scrub.
+- Tune per section: `Intro` uses 5s, `Letter` uses 15s; everything else inherits the default.
+- Side-effects (audio, `data-*` attributes) attach via the `onPlay` / `onLeave` / `onLeaveBack` options - `onPlay` fires only on actual (re)plays, not skipped entries.
+
 ## 3. Ink-bleed SVG filter (`src/lib/inkBleed.ts`)
 
 A section heading can scrub its own `feDisplacementMap` scale from a high value down to 0 as it scrolls into view - so letters "bleed" into the page and resolve into sharp glyphs.
