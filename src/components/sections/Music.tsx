@@ -393,32 +393,33 @@ export default function Music() {
             </div>
             <h3>{t.title}</h3>
             {t.preview ? (
-              <div
-                style={{
-                  width: '70%',
-                  aspectRatio: '1 / 1',
-                  margin: '14px auto 10px',
-                  filter:
-                    'drop-shadow(0 2px 6px oklch(0 0 0 / .35)) drop-shadow(0 0 26px oklch(0.62 0.15 155 / .28))',
-                }}
-              >
-                <img
-                  src={`${import.meta.env.BASE_URL}${t.preview}`}
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center 20%',
-                    display: 'block',
-                    WebkitMaskImage:
-                      'radial-gradient(circle at center, #000 60%, transparent 92%)',
-                    maskImage:
-                      'radial-gradient(circle at center, #000 60%, transparent 92%)',
-                  }}
-                />
+              <div className="track-vinyl">
+                <svg viewBox="0 0 200 200" role="img" aria-label={`${t.title} label art`}>
+                  <defs>
+                    <clipPath id={`vinyl-label-${t.n}`}>
+                      <circle cx="100" cy="100" r="40" />
+                    </clipPath>
+                  </defs>
+                  <g className="disc">
+                    <circle cx="100" cy="100" r="94" className="wax" />
+                    <circle cx="100" cy="100" r="90" className="rim" />
+                    {[84, 78, 72, 66, 60, 54, 48].map((r) => (
+                      <circle key={r} cx="100" cy="100" r={r} className="groove" />
+                    ))}
+                    <image
+                      href={`${import.meta.env.BASE_URL}${t.preview}`}
+                      x="60"
+                      y="60"
+                      width="80"
+                      height="80"
+                      preserveAspectRatio="xMidYMin slice"
+                      clipPath={`url(#vinyl-label-${t.n})`}
+                    />
+                    <circle cx="100" cy="100" r="40" className="label-ring" />
+                    <circle cx="100" cy="100" r="32" className="label-inner" />
+                  </g>
+                  <circle cx="100" cy="100" r="2" className="spindle" />
+                </svg>
               </div>
             ) : null}
             <p>{t.body}</p>
