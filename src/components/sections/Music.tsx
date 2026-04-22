@@ -1,326 +1,131 @@
-// Music section — "Mixtape J-Card" layout.
-//
-// TODO: replace the placeholder tracks below with real titles, runtimes,
-// link URLs, and tech-stack notes when the liner notes are ready.
-
-import { useRef, type CSSProperties } from 'react';
+import { useRef, useState, type CSSProperties } from 'react';
 import {
   gsap,
   SplitText,
   useGSAP,
-  MOBILE_QUERY,
-  DESKTOP_QUERY,
   FULL_MOTION_QUERY,
 } from '../../lib/gsap';
 import { attachInkBleed } from '../../lib/inkBleed';
+import { inkBleedUrl } from '../InkDefs';
 
 type Track = {
-  slot: string; // "A1", "B2"
-  runtime: string; // "03:24"
+  n: string;
+  side: 'A' | 'B';
+  tag: string;
   title: string;
-  tech: string;
-  href: string;
+  body: string;
+  tags: string;
 };
 
-const SIDE_A: Track[] = [
+// Placeholder tracks. These describe the *kind* of music-tech and
+// game-audio work I get pulled into — hackathons, game jams, granular
+// experiments — but the titles, years, and credits are stand-ins until
+// the real inventory is wired up.
+const TRACKS: Track[] = [
   {
-    slot: 'A1',
-    runtime: '03:24',
-    title: '[PLACEHOLDER] Browser granular synth',
-    tech: 'webaudio · canvas',
-    href: '#music',
+    n: 'A1',
+    side: 'A',
+    tag: 'Global Game Jam · 2026',
+    title: 'Mask Theme — adaptive score.',
+    body:
+      'Unity + FMOD layered score that ducks and crests with the player state. Vertical layers, horizontal cues, one 48-hour weekend.',
+    tags: '#ggj   #fmod   #unity   #adaptive',
   },
   {
-    slot: 'A2',
-    runtime: '02:51',
-    title: '[PLACEHOLDER] Live-coding playground',
-    tech: 'tidal · strudel',
-    href: '#music',
+    n: 'A2',
+    side: 'A',
+    tag: 'Global Game Jam · 2025',
+    title: 'Roots — chiptune SFX suite.',
+    body:
+      'A rack of square-wave SFX and a looping 8-bit bed for a two-button platformer. Squeezed into ~12 KB of sound payload.',
+    tags: '#ggj   #chiptune   #webaudio',
   },
   {
-    slot: 'A3',
-    runtime: '04:07',
-    title: '[PLACEHOLDER] Auto-DJ / beat-match prototype',
-    tech: 'claude · webaudio',
-    href: '#music',
+    n: 'A3',
+    side: 'A',
+    tag: 'Music Hack Day · TLV',
+    title: 'Generative Bazaar — web-audio station.',
+    body:
+      'Marketplace-themed generative composer. Scales chosen by city, drum patterns by temperature. Built on Tone.js in a single night.',
+    tags: '#hackathon   #tonejs   #generative',
   },
   {
-    slot: 'A4',
-    runtime: '01:58',
-    title: '[PLACEHOLDER] MIDI gesture → visualizer',
-    tech: 'webmidi · canvas',
-    href: '#music',
+    n: 'B1',
+    side: 'B',
+    tag: 'Self-directed',
+    title: 'Cosmic Synth — 3D browser synthesizer.',
+    body:
+      'A WebGL galaxy that doubles as a performance surface. Stars are oscillators; nebulas are reverb zones. Specced via a Claude skill.',
+    tags: '#webaudio   #webgl   #synth',
+  },
+  {
+    n: 'B2',
+    side: 'B',
+    tag: 'Research · 2024',
+    title: 'Phrase Partner — ML melody sketchpad.',
+    body:
+      'A Magenta-backed notebook that riffs back at you. You play four bars, it extends eight, and marks what it borrowed from you.',
+    tags: '#magenta   #midi   #ml',
+  },
+  {
+    n: 'B3',
+    side: 'B',
+    tag: 'Patch · 2023',
+    title: 'Grainfield — SuperCollider grain cloud.',
+    body:
+      'A granular patch that samples room tone and rebuilds it as a slow harmonic field. Patched live, recorded to a single tape loop.',
+    tags: '#supercollider   #granular   #drone',
   },
 ];
 
-const SIDE_B: Track[] = [
-  {
-    slot: 'B1',
-    runtime: '05:12',
-    title: '[PLACEHOLDER] Global Game Jam 2026 — audio lead',
-    tech: 'unity · c# synth',
-    href: '#music',
-  },
-  {
-    slot: 'B2',
-    runtime: '04:30',
-    title: '[PLACEHOLDER] Global Game Jam 2025 — procedural SFX',
-    tech: 'unity',
-    href: '#music',
-  },
-  {
-    slot: 'B3',
-    runtime: '03:45',
-    title: '[PLACEHOLDER] Global Game Jam 2024 — sound design debut',
-    tech: 'unity',
-    href: '#music',
-  },
-  {
-    slot: 'B4',
-    runtime: '06:02',
-    title: '[PLACEHOLDER] Music Hack Day — weekend build',
-    tech: 'tbd',
-    href: '#music',
-  },
-];
+const stageStyle: CSSProperties = { marginTop: 36 };
 
-// Hand-placed jagged waveform across 800×60 viewBox.
-const WAVE_PATH =
-  'M0 30 L20 22 L40 18 L60 34 L80 15 L100 32 L120 10 L140 38 L160 14 L180 36 L200 22 L220 28 L240 8 L260 42 L280 20 L300 30 L320 12 L340 38 L360 18 L380 34 L400 16 L420 40 L440 20 L460 32 L480 14 L500 36 L520 22 L540 26 L560 10 L580 42 L600 18 L620 30 L640 14 L660 38 L680 20 L700 34 L720 16 L740 32 L760 24 L780 28 L800 30';
-
-const cardStyle: CSSProperties = {
-  background: 'var(--surface-1)',
-  color: 'var(--ink)',
-  border: '1.5px solid var(--ink)',
-  boxShadow: '8px 10px 0 var(--ink)',
-  transform: 'rotate(-.6deg)',
-  padding: 0,
-  overflow: 'hidden',
-};
-
-const spineStyle: CSSProperties = {
-  background: 'var(--surface-strong)',
-  color: 'var(--surface-strong-fg)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: 12,
-  padding: '10px 18px',
-  fontFamily: 'var(--mono)',
-  fontSize: 11,
-  letterSpacing: '.25em',
-  textTransform: 'uppercase',
-  borderBottom: '1.5px solid var(--ink)',
-};
-
-const tracklistStyle: CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr',
-};
-
-const sideColStyle = (borderRight: boolean): CSSProperties => ({
-  padding: '20px 22px 12px',
-  borderRight: borderRight ? '1.5px dashed var(--ink-faint)' : 'none',
-  position: 'relative',
-});
-
-const sideHeaderStyle: CSSProperties = {
-  display: 'flex',
-  alignItems: 'baseline',
-  justifyContent: 'space-between',
-  fontFamily: 'var(--mono)',
-  fontSize: 11,
-  letterSpacing: '.22em',
-  textTransform: 'uppercase',
-  color: 'var(--ink-soft)',
-  marginBottom: 14,
-  paddingBottom: 8,
-  borderBottom: '1px solid var(--ink-faint)',
-};
-
-const sideLetterStyle = (color: string): CSSProperties => ({
-  fontFamily: 'var(--display)',
-  fontWeight: 800,
-  fontSize: '1.9rem',
-  color,
-  lineHeight: 1,
-  letterSpacing: 0,
-});
-
-const rowStyle: CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: '34px 50px 1fr auto',
-  alignItems: 'baseline',
-  gap: 10,
-  padding: '8px 6px',
-  borderBottom: '1px dotted var(--ink-faint)',
-  position: 'relative',
-};
-
-const slotStyle = (color: string): CSSProperties => ({
-  fontFamily: 'var(--mono)',
-  fontSize: 11,
-  letterSpacing: '.12em',
-  color: 'var(--paper)',
-  background: color,
-  padding: '2px 6px',
-  width: 'fit-content',
-  justifySelf: 'start',
-});
-
-const runtimeStyle: CSSProperties = {
-  fontFamily: 'var(--mono)',
-  fontSize: 11,
-  color: 'var(--ink-soft)',
-  letterSpacing: '.08em',
-};
-
-const titleStyle: CSSProperties = {
-  fontFamily: 'var(--serif)',
-  fontSize: '1rem',
-  color: 'var(--ink)',
-  lineHeight: 1.35,
+const linerIntro: CSSProperties = {
   margin: 0,
-};
-
-const techStyle: CSSProperties = {
-  fontFamily: 'var(--mono)',
-  fontSize: 10.5,
-  letterSpacing: '.12em',
+  fontFamily: 'var(--serif)',
   color: 'var(--ink-soft)',
-  textTransform: 'lowercase',
-  textAlign: 'right',
-  whiteSpace: 'nowrap',
+  lineHeight: 1.65,
+  fontSize: 'clamp(1rem, 1.3vw, 1.08rem)',
 };
 
-const playStyle: CSSProperties = {
-  position: 'absolute',
-  left: -14,
-  top: '50%',
-  transform: 'translateY(-50%)',
+const cueList: CSSProperties = {
+  margin: '18px 0 0',
+  padding: 0,
+  listStyle: 'none',
+  display: 'grid',
+  gap: 6,
+  fontFamily: 'var(--mono)',
   fontSize: 12,
-  color: 'var(--ink)',
-};
-
-const marginNoteStyle = (rotate: string): CSSProperties => ({
-  fontFamily: 'var(--hand)',
-  color: 'var(--green)',
-  fontSize: 18,
-  transform: `rotate(${rotate})`,
-  marginTop: 10,
-  display: 'inline-block',
-});
-
-const waveWrapStyle: CSSProperties = {
-  padding: '6px 20px 10px',
-  borderTop: '1.5px dashed var(--ink-faint)',
-  borderBottom: '1.5px solid var(--ink)',
-};
-
-const footerStyle: CSSProperties = {
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: 10,
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  padding: '10px 18px',
-  fontFamily: 'var(--mono)',
-  fontSize: 10.5,
-  letterSpacing: '.22em',
-  textTransform: 'uppercase',
+  letterSpacing: '.08em',
   color: 'var(--ink-soft)',
 };
 
-function ReelHole() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 12 12"
-      aria-hidden="true"
-      style={{ display: 'inline-block', flex: 'none' }}
-    >
-      <circle cx="6" cy="6" r="4.5" fill="none" stroke="currentColor" strokeWidth="1" />
-      <circle cx="6" cy="6" r="1" fill="currentColor" />
-    </svg>
-  );
-}
-
-type SideProps = {
-  letter: 'A' | 'B';
-  title: string;
-  tracks: Track[];
-  color: string;
-  note: string;
-  noteRotate: string;
-  borderRight: boolean;
+const cueItem: CSSProperties = {
+  display: 'flex',
+  gap: 10,
+  alignItems: 'baseline',
 };
 
-function SideColumn({
-  letter,
-  title,
-  tracks,
-  color,
-  note,
-  noteRotate,
-  borderRight,
-}: SideProps) {
-  return (
-    <div style={sideColStyle(borderRight)}>
-      <div style={sideHeaderStyle}>
-        <span style={sideLetterStyle(color)}>Side {letter}</span>
-        <span>{title}</span>
-      </div>
-      <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-        {tracks.map((t) => (
-          <li key={t.slot}>
-            <a
-              href={t.href}
-              className="mixtape-row"
-              data-track-side={letter}
-              aria-label={`Placeholder track ${t.slot}: ${t.title.replace('[PLACEHOLDER] ', '')}`}
-              style={rowStyle}
-            >
-              <span aria-hidden="true" className="mixtape-play" style={playStyle}>
-                ▶
-              </span>
-              <span style={slotStyle(color)}>{t.slot}</span>
-              <span style={runtimeStyle}>{t.runtime}</span>
-              <p style={titleStyle}>{t.title}</p>
-              <span style={techStyle}>{t.tech}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-      <span style={marginNoteStyle(noteRotate)}>{note}</span>
-    </div>
-  );
-}
+const cueKey: CSSProperties = { color: 'var(--green)', minWidth: 92 };
 
 export default function Music() {
   const rootRef = useRef<HTMLElement | null>(null);
-  const cardRef = useRef<HTMLDivElement | null>(null);
-  const waveRef = useRef<SVGPathElement | null>(null);
+  const rigRef = useRef<HTMLDivElement | null>(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
+  const [side, setSide] = useState<'A' | 'B'>('A');
+  const visible = TRACKS.filter((t) => t.side === side);
 
   useGSAP(
     () => {
       const root = rootRef.current;
-      const card = cardRef.current;
-      const wave = waveRef.current;
-      if (!root || !card) return;
-
+      if (!root) return;
       const stamp = root.querySelector<HTMLElement>('.stamp');
       const headline = root.querySelector<HTMLElement>('.headline');
       const dek = root.querySelector<HTMLElement>('.dek');
-      const rowsA = Array.from(
-        card.querySelectorAll<HTMLElement>('[data-track-side="A"]'),
-      );
-      const rowsB = Array.from(
-        card.querySelectorAll<HTMLElement>('[data-track-side="B"]'),
-      );
+      const rig = rigRef.current;
+      const list = listRef.current;
 
       const mm = gsap.matchMedia();
-
       mm.add(FULL_MOTION_QUERY, () => {
         let split: SplitText | null = null;
         let cleanupBleed: (() => void) | null = null;
@@ -338,13 +143,13 @@ export default function Music() {
         }
 
         if (headline) {
-          split = new SplitText(headline, { type: 'words' });
-          gsap.set(split.words, { opacity: 0, yPercent: 60 });
-          gsap.to(split.words, {
+          split = new SplitText(headline, { type: 'chars,words' });
+          gsap.set(split.chars, { opacity: 0, yPercent: 60 });
+          gsap.to(split.chars, {
             opacity: 1,
             yPercent: 0,
-            duration: 0.7,
-            stagger: 0.05,
+            duration: 0.65,
+            stagger: 0.03,
             ease: 'power4.out',
             scrollTrigger: { trigger: headline, start: 'top 80%' },
           });
@@ -352,7 +157,7 @@ export default function Music() {
         }
 
         if (dek) {
-          gsap.set(dek, { opacity: 0, y: 14 });
+          gsap.set(dek, { opacity: 0, y: 12 });
           gsap.to(dek, {
             opacity: 1,
             y: 0,
@@ -361,67 +166,66 @@ export default function Music() {
           });
         }
 
-        // J-card folds down onto the page.
-        gsap.set(card, {
-          opacity: 0,
-          y: 36,
-          rotateX: -12,
-          transformPerspective: 900,
-          transformOrigin: 'top center',
-        });
-        gsap.to(card, {
-          opacity: 1,
-          y: 0,
-          rotateX: 0,
-          duration: 0.9,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: card, start: 'top 85%' },
-        });
+        if (rig) {
+          // Rig fades in + tips forward. On scroll enter we flip
+          // data-playing which both starts the disc and swings the
+          // tonearm over. The disc group also gets its own
+          // `music-disc` feTurbulence filter scrubbed from high
+          // displacement down to 0 so the grooves "settle in ink."
+          gsap.set(rig, { opacity: 0, y: 40, rotate: -2 });
+          gsap.to(rig, {
+            opacity: 1,
+            y: 0,
+            rotate: 0,
+            duration: 0.9,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: rig,
+              start: 'top 78%',
+              onEnter: () => rig.setAttribute('data-playing', 'true'),
+              onLeaveBack: () => rig.setAttribute('data-playing', 'false'),
+            },
+          });
 
-        if (wave) {
-          const len = wave.getTotalLength();
-          gsap.set(wave, { strokeDasharray: len, strokeDashoffset: len });
-          gsap.to(wave, {
-            strokeDashoffset: 0,
-            duration: 1.6,
-            ease: 'power2.out',
-            scrollTrigger: { trigger: card, start: 'top 75%' },
+          const disc = rig.querySelector<SVGGElement>('g.disc');
+          const feDisp = document.querySelector<SVGFEDisplacementMapElement>(
+            'feDisplacementMap[data-ink-bleed="music-disc"]',
+          );
+          if (disc && feDisp) {
+            disc.style.filter = inkBleedUrl('music-disc');
+            gsap.set(feDisp, { attr: { scale: 7 } });
+            gsap.to(feDisp, {
+              attr: { scale: 0 },
+              duration: 1.1,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: rig,
+                start: 'top 78%',
+                id: 'ink-bleed-music-disc',
+              },
+            });
+          }
+        }
+
+        const cards = list ? (Array.from(list.children) as HTMLElement[]) : [];
+        if (cards.length) {
+          gsap.set(cards, { opacity: 0, y: 30 });
+          gsap.to(cards, {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            stagger: 0.08,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: list, start: 'top 85%' },
           });
         }
 
         return () => {
           split?.revert();
           cleanupBleed?.();
+          const disc = rig?.querySelector<SVGGElement>('g.disc');
+          if (disc) disc.style.filter = '';
         };
-      });
-
-      mm.add(DESKTOP_QUERY, () => {
-        [rowsA, rowsB].forEach((rows) => {
-          if (!rows.length) return;
-          gsap.set(rows, { opacity: 0, y: 10 });
-          gsap.to(rows, {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            stagger: 0.08,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: card, start: 'top 80%' },
-          });
-        });
-      });
-
-      mm.add(MOBILE_QUERY, () => {
-        const all = [...rowsA, ...rowsB];
-        if (!all.length) return;
-        gsap.set(all, { opacity: 0, x: -12 });
-        gsap.to(all, {
-          opacity: 1,
-          x: 0,
-          duration: 0.6,
-          stagger: 0.06,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: card, start: 'top 90%' },
-        });
       });
 
       return () => mm.revert();
@@ -431,128 +235,213 @@ export default function Music() {
 
   return (
     <article className="page" id="music" ref={rootRef}>
-      <style>{MIXTAPE_CSS}</style>
-
       <div className="folio">
         <b>05</b> // OFF-KEYBOARD
       </div>
-      <span className="stamp">MIXTAPE</span>
+      <span className="stamp">OFF-KEYBOARD</span>
       <h2 className="headline">
-        Liner notes, <em>mostly in progress.</em>
+        Sound I've <em>tinkered with.</em>
       </h2>
       <p className="dek">
-        Music-tech sketches on Side A, game-jam audio duty and hackathon nights on Side B.
-        Placeholder tape — real details coming.
+        A running discography of music-tech experiments - game-jam scores, hackathon
+        one-nighters, browser synths, granular patches. Pressed loose, not polished.
       </p>
 
-      <section style={{ marginTop: 36 }}>
-        <div ref={cardRef} className="mixtape-card" style={cardStyle}>
-          <div className="mixtape-spine" style={spineStyle}>
-            <span>♪ BAR MOSHE</span>
-            <span
-              className="mixtape-spine-side"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 12 }}
-            >
-              <ReelHole />
-              Side A / Side B
-              <ReelHole />
-            </span>
-            <span>90 MIN · Dolby B ▾</span>
-          </div>
-
-          <div className="mixtape-tracklist" style={tracklistStyle}>
-            <SideColumn
-              letter="A"
-              title="Studio Experiments"
-              tracks={SIDE_A}
-              color="var(--magenta)"
-              note="ideas, mostly WIP →"
-              noteRotate="-2deg"
-              borderRight={true}
-            />
-            <SideColumn
-              letter="B"
-              title="Live Sessions"
-              tracks={SIDE_B}
-              color="var(--cyan)"
-              note="← full stacks of caffeine"
-              noteRotate="1.5deg"
-              borderRight={false}
-            />
-          </div>
-
-          <div style={waveWrapStyle}>
-            <svg
-              viewBox="0 0 800 60"
-              preserveAspectRatio="none"
-              width="100%"
-              height="48"
-              aria-hidden="true"
-            >
-              <path
-                ref={waveRef}
-                d={WAVE_PATH}
-                fill="none"
-                stroke="var(--ink)"
-                strokeOpacity=".45"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-
-          <div style={footerStyle}>
-            <span>Total ≈ 31:49</span>
-            <span>Placeholder tape — real liner notes coming soon</span>
-          </div>
+      <div className="music-stage" style={stageStyle}>
+        <Rig ref={rigRef} side={side} />
+        <div className="liner">
+          <h3>Liner notes.</h3>
+          <p style={linerIntro}>
+            I compose sideways - keyboards are one entry point, but most of the work happens
+            in Unity mixers, SuperCollider buffers, Tone.js graphs, and whatever the next
+            jam theme demands. The rig to the left spins every piece below, in order.
+          </p>
+          <ul style={cueList}>
+            <li style={cueItem}>
+              <span style={cueKey}>// side A</span>
+              <span>Jams &amp; hackathons - built under time pressure.</span>
+            </li>
+            <li style={cueItem}>
+              <span style={cueKey}>// side B</span>
+              <span>Self-directed experiments - patches, synths, research.</span>
+            </li>
+            <li style={cueItem}>
+              <span style={cueKey}>// rpm</span>
+              <span>33⅓ - slow enough to hear the edits.</span>
+            </li>
+          </ul>
+          <button
+            type="button"
+            className="flip-btn"
+            data-side={side}
+            onClick={() => setSide(side === 'A' ? 'B' : 'A')}
+            aria-label={`Flip to side ${side === 'A' ? 'B' : 'A'}`}
+          >
+            <span className="dot" aria-hidden="true" />
+            {side === 'A' ? 'Flip to side B →' : '← Flip back to side A'}
+          </button>
+          <p className="placeholder-note">
+            // placeholder tracklist - swap in the real titles, years &amp; links anytime.
+          </p>
         </div>
-      </section>
+      </div>
+
+      <div className="tracklist" ref={listRef}>
+        {visible.map((t) => (
+          <article key={t.n} className="track">
+            <span className={t.side === 'B' ? 'n side-b' : 'n'}>{t.n}</span>
+            <div className="meta">
+              <span>{t.tag}</span>
+              <span>Side {t.side}</span>
+            </div>
+            <h3>{t.title}</h3>
+            <p>{t.body}</p>
+            <div className="tags">{t.tags}</div>
+          </article>
+        ))}
+      </div>
     </article>
   );
 }
 
-// Scoped style overrides for :hover and mobile stacking. Kept inline so this
-// section ships self-contained and styles.css stays untouched.
-const MIXTAPE_CSS = `
-  #music .mixtape-row {
-    color: var(--ink);
-    text-decoration: none;
-    transition: transform .2s ease, background .2s ease;
-  }
-  #music .mixtape-row:hover,
-  #music .mixtape-row:focus-visible {
-    transform: translateX(4px);
-    background: oklch(0 0 0 / .05);
-    outline: none;
-  }
-  #music .mixtape-row:hover .mixtape-play,
-  #music .mixtape-row:focus-visible .mixtape-play {
-    opacity: 1;
-  }
-  #music .mixtape-row .mixtape-play {
-    opacity: 0;
-    transition: opacity .2s ease;
-  }
-  html.dark #music .mixtape-row:hover,
-  html.dark #music .mixtape-row:focus-visible {
-    background: oklch(1 0 0 / .06);
-  }
-  @media (max-width: 820px) {
-    #music .mixtape-card { transform: none !important; }
-    #music .mixtape-tracklist { grid-template-columns: 1fr !important; }
-    #music .mixtape-tracklist > div:first-child {
-      border-right: none !important;
-      border-bottom: 1.5px dashed var(--ink-faint);
-    }
-    #music .mixtape-spine { padding: 10px 14px !important; font-size: 10px !important; }
-    #music .mixtape-spine .mixtape-spine-side { display: none !important; }
-    #music .mixtape-row {
-      grid-template-columns: auto auto 1fr !important;
-      grid-template-rows: auto auto !important;
-      gap: 6px 10px !important;
-    }
-    #music .mixtape-row > p { grid-column: 1 / -1 !important; }
-    #music .mixtape-row > span:last-child { display: none !important; }
-  }
-`;
+type RigProps = {
+  ref: React.RefObject<HTMLDivElement | null>;
+  side: 'A' | 'B';
+};
+
+const Rig = ({ ref, side }: RigProps) => (
+  <div className="rig" ref={ref} data-playing="false" data-side={side} aria-hidden="true">
+    <svg viewBox="0 0 240 240" role="img" aria-label="Spinning vinyl on a turntable with a patiphone horn">
+      {/* Turntable base (ink slab under the disc) */}
+      <rect x="10" y="36" width="220" height="176" rx="6" className="base" />
+
+      {/* The disc + grooves rotate together. Everything mounted OFF the disc
+          (tonearm, spindle, sheen, horn) stays static. The disc group also
+          carries the `ink-bleed-music-disc` feTurbulence filter that GSAP
+          scrubs from scale 7 → 0 on scroll enter so the grooves settle
+          into ink rather than popping in as CAD circles. */}
+      <g className="disc">
+        <circle cx="108" cy="120" r="92" className="wax" />
+        {/* Concentric grooves. Spacing + contrast give the "pressed vinyl"
+            read without needing a texture. Every 4th ring is slightly
+            brighter, mirroring the way real LPs alternate band edges. */}
+        {Array.from({ length: 24 }).map((_, i) => {
+          const r = 24 + i * 2.9;
+          return (
+            <circle
+              key={i}
+              cx="108"
+              cy="120"
+              r={r}
+              className={i % 4 === 0 ? 'groove bright' : 'groove'}
+            />
+          );
+        })}
+
+        {/* Center label. Fill color is CSS-driven — green for Side A,
+            magenta for Side B (see .rig[data-side="B"] .label). */}
+        <circle cx="108" cy="120" r="26" className="label" />
+        <circle cx="108" cy="120" r="26" className="label-ring" />
+
+        {/* Label text — wraps the spindle on two arcs so it reads as
+            hand-lettered sleeve art when the disc is at rest and blurs
+            into a solid ring once it's spinning. Top arc shows a
+            permanent studio mark; bottom arc flips with the active side. */}
+        <defs>
+          <path
+            id="music-label-top"
+            d="M 88 120 A 20 20 0 0 1 128 120"
+            fill="none"
+          />
+          <path
+            id="music-label-bottom"
+            d="M 128 120 A 20 20 0 0 1 88 120"
+            fill="none"
+          />
+        </defs>
+        <text className="label-text">
+          <textPath href="#music-label-top" startOffset="50%" textAnchor="middle">
+            BAR · MIX
+          </textPath>
+        </text>
+        <text className="label-text">
+          <textPath href="#music-label-bottom" startOffset="50%" textAnchor="middle">
+            {side === 'A' ? 'SIDE A · 33⅓ RPM' : 'SIDE B · 33⅓ RPM'}
+          </textPath>
+        </text>
+
+        {/* Tiny off-center mark - catches the eye and confirms spin */}
+        <circle cx="108" cy="100" r="1.2" fill="var(--paper)" opacity=".6" />
+      </g>
+
+      {/* Static sheen — a pair of thin arcs suggesting overhead light on the
+          lacquer. Sits above the disc so it stays fixed while the wax
+          rotates underneath. */}
+      <path
+        d="M 40 90 A 92 92 0 0 1 176 90"
+        className="sheen"
+        strokeWidth="2"
+        opacity=".08"
+      />
+      <path
+        d="M 50 160 A 92 92 0 0 0 166 160"
+        className="sheen"
+        strokeWidth="1"
+        opacity=".05"
+      />
+
+      {/* Spindle — the pin the vinyl sits on. Static. */}
+      <circle cx="108" cy="120" r="3" className="spindle" />
+      <circle cx="108" cy="120" r="1.1" className="spindle-hole" />
+
+      {/* Patiphone / gramophone horn — a small flared cone rising from the
+          bottom-right of the base. Stays static; the three <circle.puff>
+          elements inside the mouth loop a scale+fade animation whenever
+          the rig is marked data-playing (see .rig .puff in styles.css). */}
+      <g className="horn">
+        {/* Neck: short tapered pipe from base edge up to the body */}
+        <path
+          d="M 213 205 L 219 205 L 223 190 L 217 190 Z"
+          className="horn-neck"
+        />
+        {/* Body: flared cone curving up toward the mouth */}
+        <path
+          d="M 217 190 L 224 190 L 236 160 L 230 154 L 226 160 L 220 175 Z"
+          className="horn-body"
+        />
+        {/* Mouth rim: tilted ellipse suggesting the open end */}
+        <ellipse
+          cx="231"
+          cy="156"
+          rx="6"
+          ry="4"
+          transform="rotate(-38 231 156)"
+          className="horn-rim"
+        />
+        {/* Sound "puff" rings — emanate from the horn mouth. The
+            animation is paused by default and flips to running only
+            once the rig is marked data-playing="true". */}
+        <circle cx="231" cy="156" r="5" className="puff" />
+        <circle cx="231" cy="156" r="5" className="puff" />
+        <circle cx="231" cy="156" r="5" className="puff" />
+      </g>
+
+      {/* Tonearm. Pivot is top-right of the base; the arm swings from a
+          resting position (off the record) over to the outer groove when
+          .rig[data-playing="true"] flips via scroll trigger. */}
+      <g className="tonearm">
+        {/* Counterweight (outside the pivot) */}
+        <rect x="196" y="34" width="18" height="10" rx="2" className="arm-counterweight" />
+        {/* Pivot / base joint */}
+        <circle cx="198" cy="40" r="6" className="arm-joint" />
+        {/* Main shaft from pivot toward the record center */}
+        <rect x="108" y="37.5" width="90" height="5" rx="2" className="arm-shaft" />
+        {/* Headshell (angled down slightly in the resting geometry; the whole
+            arm rotates as a unit via the CSS transform on .tonearm) */}
+        <rect x="100" y="42" width="18" height="9" rx="1" className="arm-head" />
+        {/* Needle */}
+        <path d="M 104 51 L 100 58 L 108 58 Z" className="arm-needle" />
+      </g>
+    </svg>
+  </div>
+);

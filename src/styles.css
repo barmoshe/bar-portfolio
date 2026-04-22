@@ -240,7 +240,7 @@
   /* ── Bottom tab bar (mobile nav) ── */
   .tabbar{display:none}
   @media (max-width:820px){
-    .tabbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:35;
+    .tabbar{display:grid;grid-template-columns:repeat(6,1fr);position:fixed;left:0;right:0;bottom:0;z-index:35;
       background:var(--ink);color:var(--paper);
       border-top:1px solid oklch(1 0 0 / .10);
       padding-bottom:env(safe-area-inset-bottom);
@@ -789,4 +789,133 @@
     .page{padding:36px 14px}
     .tabbar a{font-size:9px;padding:6px 2px;gap:2px}
     .tabbar svg{width:18px;height:18px}
+  }
+
+  /* ─── Music section · vinyl rig ─────────────────────────────────────
+     A pressed vinyl with ink-bled grooves, a hand-lettered label, a
+     tonearm that drops in on scroll-enter, and a patiphone horn that
+     "puffs" sound-rings while the disc is spinning. The disc is an SVG
+     so the grooves stay crisp at any size; rotation is a CSS keyframe
+     on the <g class="disc"> element. Tonearm swing + ink-scrub are
+     driven by GSAP (see sections/Music.tsx). Reduced-motion: the spin
+     keyframe + horn-puff loop are both disabled by the existing
+     prefers-reduced-motion rule near the end of this file. */
+  .rig{position:relative;display:flex;justify-content:center;align-items:center;
+    aspect-ratio:1/1;max-width:420px;margin:0 auto;
+    filter:drop-shadow(8px 10px 0 var(--ink))}
+  .rig svg{width:100%;height:100%;display:block;overflow:visible}
+  .rig .disc{transform-origin:var(--spindle-x,50%) var(--spindle-y,50%);
+    animation:vinyl-spin 1.8s linear infinite;
+    animation-play-state:var(--spin,running)}
+  .rig[data-playing="false"]{--spin:paused}
+  .rig:hover{--spin:running}
+  .rig .tonearm{transform-origin:var(--arm-pivot-x,82%) var(--arm-pivot-y,16%);
+    transform:rotate(var(--arm-rot, 26deg));
+    transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+  .rig[data-playing="true"] .tonearm{--arm-rot:2deg}
+  .rig .base{fill:var(--ink)}
+  .rig .wax{fill:oklch(0.13 0.008 260)}
+  .rig .groove{stroke:oklch(0.24 0.012 260);stroke-width:.4;fill:none;opacity:.75}
+  .rig .groove.bright{stroke:oklch(0.32 0.014 260);opacity:.55}
+  /* Label starts green (Side A) and transitions to magenta when Side B
+     is selected via data-side on .rig. A hand-lettered feel comes from
+     --hand on .label-text, plus a small rotation. */
+  .rig .label{fill:var(--green);transition:fill .24s ease}
+  .rig[data-side="B"] .label{fill:var(--magenta)}
+  .rig .label-ring{fill:none;stroke:var(--ink);stroke-width:1}
+  .rig .spindle{fill:var(--paper)}
+  .rig .spindle-hole{fill:var(--ink)}
+  .rig .label-text{font-family:var(--hand);font-size:6.5px;letter-spacing:.08em;
+    fill:var(--paper);text-transform:uppercase;font-weight:700}
+  .rig .sheen{fill:none;stroke:oklch(1 0 0 / .05);stroke-width:1}
+  .rig .arm-shaft{fill:oklch(0.78 0.01 260)}
+  .rig .arm-joint{fill:var(--ink);stroke:oklch(0.7 0.01 260);stroke-width:1}
+  .rig .arm-head{fill:var(--ink)}
+  .rig .arm-needle{fill:var(--green)}
+  .rig .arm-counterweight{fill:oklch(0.22 0.02 260);stroke:oklch(0.6 0.01 260);stroke-width:.8}
+  /* Patiphone horn — flared cone sitting to the right of the base, with
+     three concentric puff rings at the mouth that loop only while the
+     rig is marked data-playing="true". */
+  .rig .horn-body{fill:oklch(0.44 0.10 60);stroke:var(--ink);stroke-width:1.2}
+  .rig .horn-rim{fill:oklch(0.58 0.12 60);stroke:var(--ink);stroke-width:1}
+  .rig .horn-neck{fill:oklch(0.36 0.09 60);stroke:var(--ink);stroke-width:1}
+  .rig .puff{fill:none;stroke:var(--green);stroke-width:1.2;
+    transform-origin:var(--puff-x,230px) var(--puff-y,100px);
+    transform-box:fill-box;opacity:0;
+    animation:horn-puff 2.2s cubic-bezier(.2,.6,.2,1) infinite;
+    animation-play-state:paused}
+  .rig[data-playing="true"] .puff{animation-play-state:running}
+  .rig .puff:nth-child(2){animation-delay:.73s}
+  .rig .puff:nth-child(3){animation-delay:1.46s}
+  html.dark .rig{filter:drop-shadow(6px 8px 0 oklch(0 0 0 / .6))}
+  html.dark .rig .wax{fill:oklch(0.08 0.008 260)}
+  html.dark .rig .groove{stroke:oklch(0.28 0.012 260)}
+  html.dark .rig .groove.bright{stroke:oklch(0.38 0.014 260)}
+  html.dark .rig .spindle{fill:var(--surface-strong-fg)}
+  html.dark .rig .arm-shaft{fill:oklch(0.68 0.01 260)}
+  html.dark .rig .horn-body{fill:oklch(0.56 0.12 60)}
+  html.dark .rig .horn-rim{fill:oklch(0.68 0.14 60)}
+  html.dark .rig .horn-neck{fill:oklch(0.48 0.10 60)}
+  html.dark .rig .puff{stroke:var(--green)}
+
+  @keyframes vinyl-spin{to{transform:rotate(360deg)}}
+  @keyframes horn-puff{
+    0%{transform:scale(.28);opacity:.55}
+    70%{opacity:.15}
+    100%{transform:scale(1.25);opacity:0}
+  }
+
+  /* Track-list cards under the rig. Reuse the ink-border/offset-shadow
+     language; each card carries a mono "track number" chip + a tiny
+     "side A/B" tag so the full section reads like a vinyl jacket. */
+  .tracklist{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:36px}
+  .track{position:relative;display:flex;flex-direction:column;gap:10px;
+    background:var(--paper);border:1.5px solid var(--ink);padding:18px 20px;
+    box-shadow:5px 6px 0 var(--ink);
+    transition:transform .22s ease, box-shadow .22s ease}
+  .track:hover{transform:translate(-2px,-3px);box-shadow:8px 10px 0 var(--green)}
+  .track .n{position:absolute;top:-10px;left:14px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.22em;
+    background:var(--ink);color:var(--paper);padding:3px 8px;text-transform:uppercase}
+  .track .n.side-b{background:var(--magenta)}
+  .track .meta{display:flex;justify-content:space-between;gap:10px;align-items:baseline;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--ink-soft);margin-top:4px}
+  .track h3{margin:0;font-family:var(--display);font-size:1.35rem;line-height:1.1}
+  .track p{margin:0;font-family:var(--serif);color:var(--ink-soft);line-height:1.5;font-size:.96rem}
+  .track .tags{margin-top:auto;font-family:var(--mono);font-size:10.5px;
+    letter-spacing:.15em;color:var(--ink-faint);text-transform:uppercase}
+  html.dark .track{background:var(--surface-1);box-shadow:6px 8px 0 oklch(0 0 0 / .55)}
+  html.dark .track:hover{box-shadow:8px 10px 0 var(--green)}
+
+  /* Stage: vinyl on the left, "liner notes" intro on the right */
+  .music-stage{display:grid;grid-template-columns:minmax(280px,1fr) 1.1fr;gap:44px;align-items:center;margin-top:36px}
+  .music-stage .liner h3{font-family:var(--display);font-size:clamp(1.3rem,2.2vw,1.8rem);margin:0 0 10px;line-height:1.1}
+  .music-stage .liner .placeholder-note{margin-top:14px;font-family:var(--mono);font-size:11px;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);
+    border-left:3px solid var(--green);padding:4px 0 4px 10px}
+  /* Side-flip button — mono chip that mirrors Strip's toggle voice. Tap
+     target respects the 44×44 minimum. */
+  .flip-btn{margin-top:18px;display:inline-flex;align-items:center;gap:10px;
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+    background:var(--paper);color:var(--ink);
+    border:1.5px solid var(--ink);padding:10px 14px;min-height:44px;
+    box-shadow:3px 3px 0 var(--ink);cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease}
+  .flip-btn:hover{background:var(--green);color:var(--paper);
+    transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+  .flip-btn:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--ink)}
+  .flip-btn .dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block}
+  .flip-btn[data-side="B"] .dot{background:var(--magenta)}
+  html.dark .flip-btn{background:var(--surface-1);color:var(--ink);border-color:var(--ink-faint);
+    box-shadow:3px 3px 0 oklch(0 0 0 / .55)}
+  html.dark .flip-btn:hover{background:var(--green);color:var(--surface-strong)}
+
+  @media (max-width:820px){
+    .music-stage{grid-template-columns:1fr;gap:28px}
+    .rig{max-width:320px}
+  }
+  @media (max-width:640px){
+    .track{box-shadow:4px 5px 0 var(--ink) !important}
+    .track:hover{box-shadow:6px 7px 0 var(--green) !important}
   }

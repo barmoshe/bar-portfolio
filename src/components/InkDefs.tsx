@@ -15,6 +15,7 @@ const BLEED_IDS = [
   'experience',
   'repos',
   'music',
+  'music-disc',
   'notes',
   'letter',
   'boot',
