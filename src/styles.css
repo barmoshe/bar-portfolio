@@ -390,9 +390,9 @@
     box-shadow:6px 8px 0 var(--ink);
     transform:rotate(-1.5deg);transform-origin:left center}
   .bio .credo-card blockquote{margin:0;
-    font-family:var(--display);font-style:italic;font-weight:600;
-    font-size:clamp(1.25rem,2vw,1.7rem);line-height:1.3;
-    letter-spacing:-.005em;color:var(--ink);overflow-wrap:anywhere}
+    font-family:var(--mono);font-style:normal;font-weight:500;
+    font-size:clamp(1.15rem,1.85vw,1.55rem);line-height:1.35;
+    letter-spacing:-.01em;color:var(--ink);overflow-wrap:anywhere}
   .bio .credo-card .tape{position:absolute;
     top:-10px;left:clamp(18px,8%,42px);
     width:clamp(72px,18%,108px);height:18px;
