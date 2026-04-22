@@ -123,7 +123,6 @@ export default function Repos({ onOpen }: Props) {
         {projects.map((p, i) => (
           <article
             key={p.name}
-            className="ink-peelable"
             data-idx={i}
             data-flip-id={`repo-${i}`}
             tabIndex={0}
