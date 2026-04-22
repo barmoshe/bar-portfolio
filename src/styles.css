@@ -542,10 +542,10 @@
      parent's own transform is untouched. Animated entirely through the
      --peel-* custom props which each hover source tweens with GSAP, OR via
      the fallback CSS on :hover where GSAP isn't wired (plain .clip article). */
-  .ink-peelable{--peel:0}
+  .ink-peelable{--peel:0;--peel-color:var(--ink)}
   .ink-peelable::before{content:"";position:absolute;top:0;right:0;
     width:clamp(24px,14%,48px);height:clamp(24px,14%,48px);
-    background:linear-gradient(225deg, var(--green) 0%, var(--green) 40%, transparent 70%);
+    background:linear-gradient(225deg, var(--peel-color) 0%, var(--peel-color) 40%, transparent 70%);
     clip-path:polygon(100% 0,0 0,100% 100%);
     transform:translate(calc(var(--peel) * 6px),calc(var(--peel) * -6px)) rotate(calc(var(--peel) * -4deg));
     transform-origin:100% 0;

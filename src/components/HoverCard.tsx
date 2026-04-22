@@ -113,6 +113,7 @@ export default function HoverCard({
       : (rest.boxShadow as string | undefined),
     transform: 'none', // rotate/y now handled by GSAP
     transition: 'none', // GSAP drives it
+    ['--peel-color' as string]: shadowColor,
   };
 
   return (
