@@ -24,7 +24,7 @@ type Entry = {
 
 const ENTRIES: Entry[] = [
   {
-    href: 'https://www.linkedin.com/feed/update/urn:li:activity:7306517964575408128/',
+    href: 'https://temporal.io/code-exchange/cross-language-data-processing-service-with-temporal',
     rotate: '.6deg',
     shadowColor: 'var(--green)',
     featured: true,
