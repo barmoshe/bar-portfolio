@@ -397,28 +397,28 @@ export default function Music() {
                 <svg viewBox="0 0 200 200" role="img" aria-label={`${t.title} label art`}>
                   <defs>
                     <clipPath id={`vinyl-label-${t.n}`}>
-                      <circle cx="100" cy="100" r="40" />
+                      <circle cx="100" cy="100" r="62" />
                     </clipPath>
                   </defs>
                   <g className="disc">
                     <circle cx="100" cy="100" r="94" className="wax" />
                     <circle cx="100" cy="100" r="90" className="rim" />
-                    {[84, 78, 72, 66, 60, 54, 48].map((r) => (
+                    {[84, 78, 72, 66].map((r) => (
                       <circle key={r} cx="100" cy="100" r={r} className="groove" />
                     ))}
                     <image
                       href={`${import.meta.env.BASE_URL}${t.preview}`}
-                      x="60"
-                      y="60"
-                      width="80"
-                      height="80"
+                      x="38"
+                      y="38"
+                      width="124"
+                      height="124"
                       preserveAspectRatio="xMidYMin slice"
                       clipPath={`url(#vinyl-label-${t.n})`}
                     />
-                    <circle cx="100" cy="100" r="40" className="label-ring" />
-                    <circle cx="100" cy="100" r="32" className="label-inner" />
+                    <circle cx="100" cy="100" r="62" className="label-ring" />
+                    <circle cx="100" cy="100" r="52" className="label-inner" />
                   </g>
-                  <circle cx="100" cy="100" r="2" className="spindle" />
+                  <circle cx="100" cy="100" r="2.5" className="spindle" />
                 </svg>
               </div>
             ) : null}
