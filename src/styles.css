@@ -544,25 +544,23 @@
      accent-coloured strip into the top-right corner on hover/focus. Drives
      off --tape-color set by HoverCard.tsx. GPU-cheap (transform+opacity). */
   .ink-taped{position:relative}
-  /* A piece of tape crossing the top-right corner diagonally — half on the
-     card, half off. Anchored at the corner itself so the tape "holds" it. */
+  /* A vertical piece of tape centered along the top edge of the card —
+     half above the card, half on it, like tape pinning a poster. */
   .ink-taped::after{
     content:"";
     position:absolute;
-    top:0;
-    right:0;
-    width:88px;
-    height:20px;
-    /* center the strip on the corner before rotating */
-    margin-top:-10px;
-    margin-right:-44px;
+    top:-18px;
+    left:50%;
+    width:20px;
+    height:56px;
+    margin-left:-10px;
     background:
-      repeating-linear-gradient(135deg, oklch(0 0 0 / .06) 0 2px, transparent 2px 5px),
+      repeating-linear-gradient(45deg, oklch(0 0 0 / .06) 0 2px, transparent 2px 5px),
       color-mix(in srgb, var(--tape-color, var(--ink)) 55%, var(--paper));
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
-            mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
-    transform: rotate(-45deg) scale(.6);
-    transform-origin: 50% 50%;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+    transform: scaleY(.4);
+    transform-origin: 50% 0;
     opacity: 0;
     box-shadow: 0 1px 2px oklch(0 0 0 / .18);
     pointer-events: none;
@@ -573,7 +571,7 @@
   }
   .ink-taped:hover::after,
   .ink-taped:focus-visible::after{
-    transform: rotate(-45deg) scale(1);
+    transform: scaleY(1);
     opacity: .9;
   }
   html.dark .ink-taped::after{
