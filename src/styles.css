@@ -849,7 +849,7 @@
     stroke-dasharray:1.5 2;opacity:.65}
   .rig .sk-label-dot{fill:var(--green);transition:fill .24s ease}
   .rig[data-side="B"] .sk-label-dot{fill:var(--magenta)}
-  .rig .sk-label-text{font-family:var(--hand);font-size:7px;letter-spacing:.06em;
+  .rig .sk-label-text{font-family:var(--hand);font-size:10px;letter-spacing:.06em;
     fill:var(--ink);text-transform:uppercase;font-weight:700}
   .rig .sk-witness{fill:var(--ink);opacity:.75}
   .rig .sk-spindle{fill:var(--ink);stroke:none}
@@ -975,7 +975,8 @@
 
   @media (max-width:820px){
     .music-stage{grid-template-columns:1fr;gap:28px}
-    .rig{max-width:320px}
+    .rig{max-width:320px;filter:none}
+    html.dark .rig{filter:none}
   }
   @media (max-width:640px){
     .track{box-shadow:4px 5px 0 var(--ink) !important}

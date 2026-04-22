@@ -450,25 +450,25 @@ const Rig = ({ ref, side }: RigProps) => (
           <circle cx="108" cy="120" r="92" className="sk-wax" />
           <circle cx="108" cy="120" r="88" className="sk-rim" />
 
-          {[82, 74, 66, 58, 50, 42, 36].map((r) => (
+          {[82, 74, 66].map((r) => (
             <circle key={r} cx="108" cy="120" r={r} className="sk-groove" />
           ))}
 
           {/* Center label - paper circle with a smaller printed circle
               and an accent dot whose fill swaps with the active side. */}
-          <circle cx="108" cy="120" r="28" className="sk-label" />
-          <circle cx="108" cy="120" r="22" className="sk-label-inner" />
-          <circle cx="108" cy="120" r="5" className="sk-label-dot" />
+          <circle cx="108" cy="120" r="58" className="sk-label" />
+          <circle cx="108" cy="120" r="50" className="sk-label-inner" />
+          <circle cx="108" cy="120" r="6" className="sk-label-dot" />
 
           <defs>
             <path
               id="music-label-top"
-              d="M 84 120 A 24 24 0 0 1 132 120"
+              d="M 64 120 A 44 44 0 0 1 152 120"
               fill="none"
             />
             <path
               id="music-label-bottom"
-              d="M 132 120 A 24 24 0 0 1 84 120"
+              d="M 152 120 A 44 44 0 0 1 64 120"
               fill="none"
             />
           </defs>
@@ -484,7 +484,7 @@ const Rig = ({ ref, side }: RigProps) => (
           </text>
 
           {/* Witness mark - a small ink dot off-center that confirms spin */}
-          <circle cx="108" cy="96" r="1.4" className="sk-witness" />
+          <circle cx="108" cy="74" r="1.4" className="sk-witness" />
         </g>
 
         {/* Spindle pokes through the label - static, doesn't rotate */}
