@@ -26,6 +26,7 @@ const SLIDES: Slide[] = [
   { src: 'portraits/img12.png', alt: 'Bar Moshe - portrait 12', caption: 'portrait · 12' },
   { src: 'portraits/img13.png', alt: 'Bar Moshe - portrait 13', caption: 'portrait · 13' },
   { src: 'portraits/img14.png', alt: 'Bar Moshe - portrait 14', caption: 'portrait · 14' },
+  { src: 'portraits/img15.png', alt: 'Bar Moshe - portrait 15', caption: 'portrait · 15' },
 ];
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
