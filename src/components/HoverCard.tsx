@@ -5,6 +5,7 @@ type Props = {
   href: string;
   target?: string;
   rel?: string;
+  className?: string;
   rest: CSSProperties;
   hover: CSSProperties;
   children: ReactNode;
@@ -35,6 +36,7 @@ export default function HoverCard({
   href,
   target,
   rel,
+  className,
   rest,
   hover,
   children,
@@ -109,6 +111,7 @@ export default function HoverCard({
       : (rest.boxShadow as string | undefined),
     transform: 'none', // rotate/y now handled by GSAP
     transition: 'none', // GSAP drives it
+    ['--tape-color' as string]: shadowColor,
   };
 
   return (
@@ -117,6 +120,7 @@ export default function HoverCard({
       href={href}
       target={target}
       rel={rel}
+      className={className}
       style={style}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}

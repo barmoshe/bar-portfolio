@@ -295,6 +295,7 @@ export default function Letter() {
             href={c.href}
             target={c.target}
             rel={c.rel}
+            className="ink-taped"
             rest={restStyle(c)}
             hover={hoverStyle(c)}
           >

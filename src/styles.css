@@ -540,6 +540,46 @@
 
   .clip article{position:relative}
 
+  /* Washi-tape accent on the Say-hi contact cards. Slides a translucent
+     accent-coloured strip into the top-right corner on hover/focus. Drives
+     off --tape-color set by HoverCard.tsx. GPU-cheap (transform+opacity). */
+  .ink-taped{position:relative}
+  .ink-taped::after{
+    content:"";
+    position:absolute;
+    top:-10px;
+    right:-16px;
+    width:clamp(64px, 26%, 96px);
+    height:20px;
+    background:
+      repeating-linear-gradient(135deg, oklch(0 0 0 / .06) 0 2px, transparent 2px 5px),
+      color-mix(in srgb, var(--tape-color, var(--ink)) 55%, var(--paper));
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    transform: translate(10px, -6px) rotate(-18deg) scale(.94);
+    transform-origin: 100% 0;
+    opacity: 0;
+    box-shadow: 0 1px 2px oklch(0 0 0 / .15);
+    pointer-events: none;
+    transition:
+      transform .32s cubic-bezier(.34,1.3,.64,1),
+      opacity .24s ease;
+    z-index: 4;
+  }
+  .ink-taped:hover::after,
+  .ink-taped:focus-visible::after{
+    transform: translate(0, 0) rotate(-18deg) scale(1);
+    opacity: .85;
+  }
+  html.dark .ink-taped::after{
+    background:
+      repeating-linear-gradient(135deg, oklch(1 0 0 / .05) 0 2px, transparent 2px 5px),
+      color-mix(in srgb, var(--tape-color, var(--ink)) 65%, var(--surface-2));
+  }
+  @media (prefers-reduced-motion: reduce){
+    .ink-taped::after{ transition: opacity .18s ease; transform: rotate(-18deg) scale(1); }
+  }
+
   /* Boot ink-mask exit: GSAP drives --ink-r and --ink-x/y from 0 → 140 */
   .boot{--ink-r:0%;--ink-x:50%;--ink-y:50%}
   .boot.ink-exit{
