@@ -11,16 +11,21 @@ const FX = ['bloom', 'brush', 'tear', 'crumple'] as const;
 type Fx = (typeof FX)[number];
 
 const SLIDES: Slide[] = [
-  { src: 'portraits/img0.png', alt: 'Bar Moshe - painting', caption: 'oil · painted' },
-  { src: 'portraits/img1.png', alt: 'Bar Moshe - sketch', caption: 'pencil · notebook' },
-  { src: 'portraits/img2.png', alt: 'Bar Moshe - photo', caption: 'photo' },
-  { src: 'portraits/img3.png', alt: 'Bar Moshe - cubist', caption: 'cubist · study' },
-  { src: 'portraits/img4.png', alt: 'Bar Moshe - 3d', caption: '3d · render' },
-  { src: 'portraits/img5.png', alt: 'Bar Moshe - ink watercolor', caption: 'ink · watercolor' },
-  { src: 'portraits/img6.png', alt: 'Bar Moshe - cyberpunk', caption: 'cyberpunk · halftone' },
-  { src: 'portraits/img7.png', alt: 'Bar Moshe - cartoon', caption: 'cartoon · ubisoft' },
-  { src: 'portraits/img8.png', alt: 'Bar Moshe - pop art', caption: 'pop · neon' },
-  { src: 'portraits/img9.png', alt: 'Bar Moshe - cubist painted', caption: 'cubist · painted' },
+  { src: 'portraits/img0.png', alt: 'Bar Moshe - portrait 0', caption: 'portrait · 0' },
+  { src: 'portraits/img1.png', alt: 'Bar Moshe - portrait 1', caption: 'portrait · 1' },
+  { src: 'portraits/img2.png', alt: 'Bar Moshe - portrait 2', caption: 'portrait · 2' },
+  { src: 'portraits/img3.png', alt: 'Bar Moshe - portrait 3', caption: 'portrait · 3' },
+  { src: 'portraits/img4.png', alt: 'Bar Moshe - portrait 4', caption: 'portrait · 4' },
+  { src: 'portraits/img5.png', alt: 'Bar Moshe - portrait 5', caption: 'portrait · 5' },
+  { src: 'portraits/img6.png', alt: 'Bar Moshe - portrait 6', caption: 'portrait · 6' },
+  { src: 'portraits/img7.png', alt: 'Bar Moshe - portrait 7', caption: 'portrait · 7' },
+  { src: 'portraits/img8.png', alt: 'Bar Moshe - portrait 8', caption: 'portrait · 8' },
+  { src: 'portraits/img9.png', alt: 'Bar Moshe - portrait 9', caption: 'portrait · 9' },
+  { src: 'portraits/img10.png', alt: 'Bar Moshe - portrait 10', caption: 'portrait · 10' },
+  { src: 'portraits/img11.png', alt: 'Bar Moshe - portrait 11', caption: 'portrait · 11' },
+  { src: 'portraits/img12.png', alt: 'Bar Moshe - portrait 12', caption: 'portrait · 12' },
+  { src: 'portraits/img13.png', alt: 'Bar Moshe - portrait 13', caption: 'portrait · 13' },
+  { src: 'portraits/img14.png', alt: 'Bar Moshe - portrait 14', caption: 'portrait · 14' },
 ];
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
