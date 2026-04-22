@@ -545,9 +545,9 @@
   .ink-peelable{--peel:0;--peel-color:var(--ink)}
   .ink-peelable::before{content:"";position:absolute;top:0;right:0;
     width:clamp(24px,14%,48px);height:clamp(24px,14%,48px);
-    background:linear-gradient(225deg, var(--peel-color) 0%, var(--peel-color) 40%, transparent 70%);
+    background:linear-gradient(225deg, oklch(0 0 0 / .38) 0%, oklch(0 0 0 / .18) 45%, transparent 75%);
     clip-path:polygon(100% 0,0 0,100% 100%);
-    transform:translate(calc(var(--peel) * 6px),calc(var(--peel) * -6px)) rotate(calc(var(--peel) * -4deg));
+    transform:translate(calc(var(--peel) * 8px),calc(var(--peel) * -8px));
     transform-origin:100% 0;
     opacity:calc(var(--peel) * .9);
     pointer-events:none;
@@ -555,17 +555,18 @@
     z-index:4}
   .ink-peelable::after{content:"";position:absolute;top:0;right:0;
     width:clamp(24px,14%,48px);height:clamp(24px,14%,48px);
-    background:var(--paper);
+    background:linear-gradient(225deg, oklch(0 0 0 / .10), transparent 55%), var(--paper);
     clip-path:polygon(100% 0,0 0,100% 100%);
-    transform:translate(calc(var(--peel) * 4px),calc(var(--peel) * -4px));
+    transform:translate(calc(var(--peel) * 5px),calc(var(--peel) * -5px)) rotate(calc(var(--peel) * -14deg));
+    transform-origin:100% 0;
     opacity:calc(var(--peel) * 1);
-    box-shadow:-1px 1px 3px oklch(0 0 0 / .2);
+    filter:drop-shadow(-1px 1px 0 var(--ink)) drop-shadow(-3px 3px 4px oklch(0 0 0 / .28));
     pointer-events:none;
     transition:transform .32s cubic-bezier(.34,1.3,.64,1), opacity .25s ease;
     z-index:5}
   .clip article{position:relative}
   .clip article.ink-peelable:hover{--peel:1}
-  html.dark .ink-peelable::after{background:var(--surface-2)}
+  html.dark .ink-peelable::after{background:linear-gradient(225deg, oklch(1 0 0 / .06), transparent 55%), var(--surface-2)}
 
   /* Boot ink-mask exit: GSAP drives --ink-r and --ink-x/y from 0 → 140 */
   .boot{--ink-r:0%;--ink-x:50%;--ink-y:50%}
