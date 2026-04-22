@@ -7,6 +7,7 @@ import {
   DESKTOP_QUERY,
   FULL_MOTION_QUERY,
 } from '../../lib/gsap';
+import { createReveal } from '../../lib/scrollReveal';
 import { attachInkBleed } from '../../lib/inkBleed';
 
 const card = (rotate: string): CSSProperties => ({
@@ -64,39 +65,32 @@ export default function Experience() {
         let cleanupBleed: (() => void) | null = null;
 
         if (stamp) {
-          gsap.set(stamp, { opacity: 0, rotate: 10, scale: 0.8 });
-          gsap.to(stamp, {
-            opacity: 1,
-            rotate: -3,
-            scale: 1,
-            duration: 0.6,
-            ease: 'back.out(2)',
-            scrollTrigger: { trigger: root, start: 'top 75%' },
-          });
+          createReveal(
+            stamp,
+            { opacity: 0, rotate: 10, scale: 0.8 },
+            { opacity: 1, rotate: -3, scale: 1, duration: 0.6, ease: 'back.out(2)' },
+            { trigger: root, start: 'top 75%' },
+          );
         }
 
         if (headline) {
           split = new SplitText(headline, { type: 'chars,words' });
-          gsap.set(split.chars, { opacity: 0, yPercent: 50 });
-          gsap.to(split.chars, {
-            opacity: 1,
-            yPercent: 0,
-            duration: 0.6,
-            stagger: 0.03,
-            ease: 'power4.out',
-            scrollTrigger: { trigger: headline, start: 'top 80%' },
-          });
+          createReveal(
+            split.chars,
+            { opacity: 0, yPercent: 50 },
+            { opacity: 1, yPercent: 0, duration: 0.6, stagger: 0.03, ease: 'power4.out' },
+            { trigger: headline, start: 'top 80%' },
+          );
           cleanupBleed = attachInkBleed(headline, 'experience');
         }
 
         if (dek) {
-          gsap.set(dek, { opacity: 0, y: 12 });
-          gsap.to(dek, {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            scrollTrigger: { trigger: dek, start: 'top 85%' },
-          });
+          createReveal(
+            dek,
+            { opacity: 0, y: 12 },
+            { opacity: 1, y: 0, duration: 0.6 },
+            { trigger: dek, start: 'top 85%' },
+          );
         }
 
         return () => {
@@ -108,22 +102,25 @@ export default function Experience() {
       mm.add(DESKTOP_QUERY, () => {
         cards.forEach((el, i) => {
           const target = targetRotations[i] ?? 0;
-          gsap.set(el, {
-            opacity: 0,
-            y: 40,
-            rotate: target + (i % 2 === 0 ? -8 : 8),
-            scale: 0.94,
-          });
-          gsap.to(el, {
-            opacity: 1,
-            y: 0,
-            rotate: target,
-            scale: 1,
-            duration: 0.9,
-            ease: 'back.out(1.4)',
-            delay: i * 0.08,
-            scrollTrigger: { trigger: el, start: 'top 82%' },
-          });
+          createReveal(
+            el,
+            {
+              opacity: 0,
+              y: 40,
+              rotate: target + (i % 2 === 0 ? -8 : 8),
+              scale: 0.94,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              rotate: target,
+              scale: 1,
+              duration: 0.9,
+              ease: 'back.out(1.4)',
+              delay: i * 0.08,
+            },
+            { trigger: el, start: 'top 82%' },
+          );
         });
       });
 
@@ -131,16 +128,19 @@ export default function Experience() {
         cards.forEach((el, i) => {
           const target = targetRotations[i] ?? 0;
           const startRotate = target + (i % 2 === 0 ? -4 : 4);
-          gsap.set(el, { opacity: 0, y: 50, rotate: startRotate, scale: 0.92 });
-          gsap.to(el, {
-            opacity: 1,
-            y: 0,
-            rotate: target,
-            scale: 1,
-            duration: 0.75,
-            ease: 'back.out(1.3)',
-            scrollTrigger: { trigger: el, start: 'top 92%' },
-          });
+          createReveal(
+            el,
+            { opacity: 0, y: 50, rotate: startRotate, scale: 0.92 },
+            {
+              opacity: 1,
+              y: 0,
+              rotate: target,
+              scale: 1,
+              duration: 0.75,
+              ease: 'back.out(1.3)',
+            },
+            { trigger: el, start: 'top 92%' },
+          );
         });
       });
 

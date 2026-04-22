@@ -5,6 +5,7 @@ import {
   useGSAP,
   FULL_MOTION_QUERY,
 } from '../../lib/gsap';
+import { createReveal } from '../../lib/scrollReveal';
 import { attachInkBleed } from '../../lib/inkBleed';
 import { inkBleedUrl } from '../InkDefs';
 import {
@@ -201,59 +202,49 @@ export default function Music() {
         let cleanupBleed: (() => void) | null = null;
 
         if (stamp) {
-          gsap.set(stamp, { opacity: 0, rotate: 10, scale: 0.8 });
-          gsap.to(stamp, {
-            opacity: 1,
-            rotate: -3,
-            scale: 1,
-            duration: 0.6,
-            ease: 'back.out(2)',
-            scrollTrigger: { trigger: root, start: 'top 75%' },
-          });
+          createReveal(
+            stamp,
+            { opacity: 0, rotate: 10, scale: 0.8 },
+            { opacity: 1, rotate: -3, scale: 1, duration: 0.6, ease: 'back.out(2)' },
+            { trigger: root, start: 'top 75%' },
+          );
         }
 
         if (headline) {
           split = new SplitText(headline, { type: 'chars,words' });
-          gsap.set(split.chars, { opacity: 0, yPercent: 60 });
-          gsap.to(split.chars, {
-            opacity: 1,
-            yPercent: 0,
-            duration: 0.65,
-            stagger: 0.03,
-            ease: 'power4.out',
-            scrollTrigger: { trigger: headline, start: 'top 80%' },
-          });
+          createReveal(
+            split.chars,
+            { opacity: 0, yPercent: 60 },
+            { opacity: 1, yPercent: 0, duration: 0.65, stagger: 0.03, ease: 'power4.out' },
+            { trigger: headline, start: 'top 80%' },
+          );
           cleanupBleed = attachInkBleed(headline, 'music');
         }
 
         if (dek) {
-          gsap.set(dek, { opacity: 0, y: 12 });
-          gsap.to(dek, {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            scrollTrigger: { trigger: dek, start: 'top 85%' },
-          });
+          createReveal(
+            dek,
+            { opacity: 0, y: 12 },
+            { opacity: 1, y: 0, duration: 0.6 },
+            { trigger: dek, start: 'top 85%' },
+          );
         }
 
         if (rig) {
-          // Rig fades in + tips forward. On scroll enter we flip
+          // Rig fades in + tips forward. On play/replay we flip
           // data-playing which both starts the disc and swings the
           // tonearm over. The whole sketch group carries a persistent
           // low-scale feTurbulence displacement for a hand-drawn pen
           // wobble - we scrub it from a louder starting scale down to a
           // LOW resting scale (not zero: the wobble is the look).
-          gsap.set(rig, { opacity: 0, y: 40, rotate: -2 });
-          gsap.to(rig, {
-            opacity: 1,
-            y: 0,
-            rotate: 0,
-            duration: 0.9,
-            ease: 'power3.out',
-            scrollTrigger: {
+          createReveal(
+            rig,
+            { opacity: 0, y: 40, rotate: -2 },
+            { opacity: 1, y: 0, rotate: 0, duration: 0.9, ease: 'power3.out' },
+            {
               trigger: rig,
               start: 'top 78%',
-              onEnter: () => {
+              onPlay: () => {
                 rig.setAttribute('data-playing', 'true');
                 if (isAudioEnabled()) {
                   sfxNeedleDrop();
@@ -266,7 +257,7 @@ export default function Music() {
                 stopCrackle();
               },
             },
-          });
+          );
 
           const sketchGroup = rig.querySelector<SVGGElement>('g.sketch-ink');
           const feDisp = document.querySelector<SVGFEDisplacementMapElement>(
@@ -274,31 +265,23 @@ export default function Music() {
           );
           if (sketchGroup && feDisp) {
             sketchGroup.style.filter = inkBleedUrl('music-disc');
-            gsap.set(feDisp, { attr: { scale: 5 } });
-            gsap.to(feDisp, {
-              attr: { scale: 1.3 },
-              duration: 1.1,
-              ease: 'power3.out',
-              scrollTrigger: {
-                trigger: rig,
-                start: 'top 78%',
-                id: 'ink-bleed-music-disc',
-              },
-            });
+            createReveal(
+              feDisp,
+              { attr: { scale: 5 } },
+              { attr: { scale: 1.3 }, duration: 1.1, ease: 'power3.out' },
+              { trigger: rig, start: 'top 78%' },
+            );
           }
         }
 
         const cards = list ? (Array.from(list.children) as HTMLElement[]) : [];
-        if (cards.length) {
-          gsap.set(cards, { opacity: 0, y: 30 });
-          gsap.to(cards, {
-            opacity: 1,
-            y: 0,
-            duration: 0.7,
-            stagger: 0.08,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: list, start: 'top 85%' },
-          });
+        if (cards.length && list) {
+          createReveal(
+            cards,
+            { opacity: 0, y: 30 },
+            { opacity: 1, y: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out' },
+            { trigger: list, start: 'top 85%' },
+          );
         }
 
         return () => {

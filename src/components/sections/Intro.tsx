@@ -9,7 +9,12 @@ import {
   DESKTOP_QUERY,
   FULL_MOTION_QUERY,
 } from '../../lib/gsap';
+import { createReveal } from '../../lib/scrollReveal';
 import { attachInkBleed } from '../../lib/inkBleed';
+
+// Intro is the first thing the viewer sees. Keep the stale window short so
+// TabBar returns feel fresh quickly.
+const INTRO_STALE_MS = 5000;
 
 export default function Intro() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -31,64 +36,41 @@ export default function Intro() {
 
       mm.add(DESKTOP_QUERY, () => {
         if (card) {
-          gsap.set(card, { xPercent: -30, y: 18, rotate: -10, opacity: 0 });
-          gsap.to(card, {
-            xPercent: 0,
-            y: 0,
-            rotate: -1.5,
-            opacity: 1,
-            duration: 1.1,
-            ease: 'power4.out',
-            scrollTrigger: {
-              trigger: root,
-              start: 'top 70%',
-              toggleActions: 'play none none none',
-            },
-          });
+          createReveal(
+            card,
+            { xPercent: -30, y: 18, rotate: -10, opacity: 0 },
+            { xPercent: 0, y: 0, rotate: -1.5, opacity: 1, duration: 1.1, ease: 'power4.out' },
+            { trigger: root, start: 'top 70%', staleAfterMs: INTRO_STALE_MS },
+          );
         }
 
         if (credoCard) {
-          gsap.set(credoCard, { y: 40, rotate: -8, opacity: 0 });
-          gsap.to(credoCard, {
-            y: 0,
-            rotate: -1.5,
-            opacity: 1,
-            duration: 0.9,
-            ease: 'power4.out',
-            scrollTrigger: {
-              trigger: credoCard,
-              start: 'top 85%',
-              toggleActions: 'play none none none',
-            },
-          });
+          createReveal(
+            credoCard,
+            { y: 40, rotate: -8, opacity: 0 },
+            { y: 0, rotate: -1.5, opacity: 1, duration: 0.9, ease: 'power4.out' },
+            { trigger: credoCard, start: 'top 85%', staleAfterMs: INTRO_STALE_MS },
+          );
         }
       });
 
       mm.add(MOBILE_QUERY, () => {
         if (card) {
-          gsap.set(card, { y: 60, opacity: 0, scale: 0.92, rotate: -3 });
-          gsap.to(card, {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            rotate: -1.5,
-            duration: 0.85,
-            ease: 'back.out(1.4)',
-            scrollTrigger: { trigger: root, start: 'top 95%' },
-          });
+          createReveal(
+            card,
+            { y: 60, opacity: 0, scale: 0.92, rotate: -3 },
+            { y: 0, opacity: 1, scale: 1, rotate: -1.5, duration: 0.85, ease: 'back.out(1.4)' },
+            { trigger: root, start: 'top 95%', staleAfterMs: INTRO_STALE_MS },
+          );
         }
 
         if (credoCard) {
-          gsap.set(credoCard, { y: 40, scale: 0.92, rotate: -4, opacity: 0 });
-          gsap.to(credoCard, {
-            y: 0,
-            scale: 1,
-            rotate: -1,
-            opacity: 1,
-            duration: 0.75,
-            ease: 'back.out(1.4)',
-            scrollTrigger: { trigger: credoCard, start: 'top 92%' },
-          });
+          createReveal(
+            credoCard,
+            { y: 40, scale: 0.92, rotate: -4, opacity: 0 },
+            { y: 0, scale: 1, rotate: -1, opacity: 1, duration: 0.75, ease: 'back.out(1.4)' },
+            { trigger: credoCard, start: 'top 92%', staleAfterMs: INTRO_STALE_MS },
+          );
         }
       });
 
@@ -96,73 +78,60 @@ export default function Intro() {
         let split: SplitText | null = null;
 
         if (tape) {
-          gsap.set(tape, { scaleX: 0, transformOrigin: 'left center', opacity: 0 });
-          gsap.to(tape, {
-            scaleX: 1,
-            opacity: 1,
-            duration: 0.5,
-            ease: 'power2.out',
-            scrollTrigger: { trigger: root, start: 'top 60%' },
-          });
+          createReveal(
+            tape,
+            { scaleX: 0, transformOrigin: 'left center', opacity: 0 },
+            { scaleX: 1, opacity: 1, duration: 0.5, ease: 'power2.out' },
+            { trigger: root, start: 'top 60%', staleAfterMs: INTRO_STALE_MS },
+          );
         }
 
         if (credoTape) {
-          gsap.set(credoTape, { scaleX: 0, transformOrigin: 'left center', opacity: 0 });
-          gsap.to(credoTape, {
-            scaleX: 1,
-            opacity: 1,
-            duration: 0.5,
-            ease: 'power2.out',
-            scrollTrigger: { trigger: credoCard ?? root, start: 'top 78%' },
-          });
+          createReveal(
+            credoTape,
+            { scaleX: 0, transformOrigin: 'left center', opacity: 0 },
+            { scaleX: 1, opacity: 1, duration: 0.5, ease: 'power2.out' },
+            { trigger: credoCard ?? root, start: 'top 78%', staleAfterMs: INTRO_STALE_MS },
+          );
         }
 
         if (idMeta.length) {
-          gsap.set(idMeta, { opacity: 0, y: 10 });
-          gsap.to(idMeta, {
-            opacity: 1,
-            y: 0,
-            duration: 0.45,
-            stagger: 0.05,
-            scrollTrigger: { trigger: card ?? root, start: 'top 65%' },
-          });
+          createReveal(
+            idMeta,
+            { opacity: 0, y: 10 },
+            { opacity: 1, y: 0, duration: 0.45, stagger: 0.05 },
+            { trigger: card ?? root, start: 'top 65%', staleAfterMs: INTRO_STALE_MS },
+          );
         }
 
         if (byline) {
-          gsap.set(byline, { opacity: 0, x: -12 });
-          gsap.to(byline, {
-            opacity: 1,
-            x: 0,
-            duration: 0.6,
-            scrollTrigger: { trigger: root, start: 'top 70%' },
-          });
+          createReveal(
+            byline,
+            { opacity: 0, x: -12 },
+            { opacity: 1, x: 0, duration: 0.6 },
+            { trigger: root, start: 'top 70%', staleAfterMs: INTRO_STALE_MS },
+          );
         }
 
         let cleanupBleed: (() => void) | null = null;
         if (bioH1) {
           split = new SplitText(bioH1, { type: 'words,chars' });
-          gsap.set(split.words, { opacity: 0, yPercent: 60, rotate: -4 });
-          gsap.to(split.words, {
-            opacity: 1,
-            yPercent: 0,
-            rotate: 0,
-            duration: 0.8,
-            stagger: 0.06,
-            ease: 'back.out(1.6)',
-            scrollTrigger: { trigger: bioH1, start: 'top 80%' },
-          });
+          createReveal(
+            split.words,
+            { opacity: 0, yPercent: 60, rotate: -4 },
+            { opacity: 1, yPercent: 0, rotate: 0, duration: 0.8, stagger: 0.06, ease: 'back.out(1.6)' },
+            { trigger: bioH1, start: 'top 80%', staleAfterMs: INTRO_STALE_MS },
+          );
           cleanupBleed = attachInkBleed(bioH1, 'intro');
         }
 
         if (paras.length) {
-          gsap.set(paras, { opacity: 0, y: 16 });
-          gsap.to(paras, {
-            opacity: 1,
-            y: 0,
-            duration: 0.7,
-            stagger: 0.08,
-            scrollTrigger: { trigger: root, start: 'top 55%' },
-          });
+          createReveal(
+            paras,
+            { opacity: 0, y: 16 },
+            { opacity: 1, y: 0, duration: 0.7, stagger: 0.08 },
+            { trigger: root, start: 'top 55%', staleAfterMs: INTRO_STALE_MS },
+          );
         }
 
         ScrollTrigger.refresh();

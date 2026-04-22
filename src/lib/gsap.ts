@@ -31,3 +31,12 @@ export const MOBILE_QUERY =
 /** Desktop branch - hover-capable, wider than the mobile tabbar. */
 export const DESKTOP_QUERY =
   '(prefers-reduced-motion: no-preference) and (min-width: 821px)';
+
+/**
+ * Default "stale" threshold for scroll reveals: if a section has been
+ * off-screen for this long, re-entering replays the animation from its
+ * initial state. Short enough that TabBar jumps feel fresh; long enough
+ * that continuous scrolling back a section doesn't retrigger reveals.
+ * Tune per-section via the `staleAfterMs` option on `createReveal`.
+ */
+export const DEFAULT_REVEAL_STALE_MS = 8000;
