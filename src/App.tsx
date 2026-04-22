@@ -81,6 +81,7 @@ export default function App() {
   };
 
   const openProject = openIdx !== null ? projects[openIdx] ?? null : null;
+  const modalOpen = openIdx !== null;
 
   return (
     <>
@@ -88,23 +89,25 @@ export default function App() {
       <Grain />
       <Crease />
       {showBoot ? <Boot onGone={() => setShowBoot(false)} /> : null}
-      <Strip
-        themeGlyph={glyph}
-        themeLabel={label}
-        onThemeCycle={cycle}
-        onSkip={onSkip}
-        skipRemembered={skipRemembered}
-      />
-      <main>
-        <Intro />
-        <Story />
-        <Experience />
-        <Repos onOpen={openFromCard} />
-        <Music />
-        <Notes />
-        <Letter />
-      </main>
-      <TabBar />
+      <div inert={modalOpen}>
+        <Strip
+          themeGlyph={glyph}
+          themeLabel={label}
+          onThemeCycle={cycle}
+          onSkip={onSkip}
+          skipRemembered={skipRemembered}
+        />
+        <main>
+          <Intro />
+          <Story />
+          <Experience />
+          <Repos onOpen={openFromCard} />
+          <Music />
+          <Notes />
+          <Letter />
+        </main>
+        <TabBar />
+      </div>
       <Lightbox
         project={openProject}
         idx={openIdx}

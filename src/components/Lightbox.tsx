@@ -23,6 +23,16 @@ export default function Lightbox({ project, idx, sourceRect, onClose }: Props) {
     if (open) setMounted(true);
   }, [open]);
 
+  // Lock body scroll while the modal is mounted.
+  useEffect(() => {
+    if (!mounted) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mounted]);
+
   // Open: FLIP-style morph from source rect → natural panel rect.
   useEffect(() => {
     if (!open) return;

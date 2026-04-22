@@ -520,7 +520,7 @@
   .lb-body h3{font-family:var(--display);font-size:1.8rem;margin:4px 0 6px;line-height:1}
   .lb-body p{margin:6px 0;color:var(--ink-soft)}
   .lb-body a{color:var(--green)}
-  .lb-close{position:absolute;top:-16px;right:-16px;background:var(--green);color:var(--paper);width:40px;height:40px;border-radius:50%;font-family:var(--display);font-size:22px;box-shadow:3px 3px 0 var(--ink)}
+  .lb-close{position:absolute;top:-16px;right:-16px;z-index:2;background:var(--green);color:var(--paper);width:40px;height:40px;border-radius:50%;font-family:var(--display);font-size:22px;box-shadow:3px 3px 0 var(--ink);cursor:pointer;border:0;display:grid;place-items:center;line-height:1;padding:0}
   .lb-tags{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ink-soft);margin-top:10px;line-height:1.6}
 
   /* ─── Ink motif ─────────────────────────────────────────────────────
