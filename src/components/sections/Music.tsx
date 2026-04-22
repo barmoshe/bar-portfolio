@@ -395,77 +395,30 @@ export default function Music() {
             {t.preview ? (
               <div
                 style={{
-                  position: 'relative',
-                  margin: '10px 6px 14px 4px',
-                  transform: 'rotate(-0.6deg)',
-                  transformOrigin: '20% 50%',
+                  width: '70%',
+                  aspectRatio: '1 / 1',
+                  margin: '14px auto 10px',
+                  filter:
+                    'drop-shadow(0 2px 6px oklch(0 0 0 / .35)) drop-shadow(0 0 26px oklch(0.62 0.15 155 / .28))',
                 }}
               >
-                <span
-                  aria-hidden="true"
+                <img
+                  src={`${import.meta.env.BASE_URL}${t.preview}`}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
                   style={{
-                    position: 'absolute',
-                    top: -8,
-                    left: 22,
-                    width: 68,
-                    height: 16,
-                    background: 'oklch(0.86 0.17 90 / .72)',
-                    border: '1px solid var(--ink-faint)',
-                    transform: 'rotate(-5deg)',
-                    zIndex: 2,
-                    boxShadow: '0 1px 0 oklch(0 0 0 / .08)',
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'center 20%',
+                    display: 'block',
+                    WebkitMaskImage:
+                      'radial-gradient(circle at center, #000 60%, transparent 92%)',
+                    maskImage:
+                      'radial-gradient(circle at center, #000 60%, transparent 92%)',
                   }}
                 />
-                <div
-                  style={{
-                    background: 'var(--paper)',
-                    border: '1.5px solid var(--ink)',
-                    padding: 6,
-                    boxShadow: '5px 6px 0 var(--magenta)',
-                  }}
-                >
-                  <div
-                    style={{
-                      aspectRatio: '3 / 1',
-                      overflow: 'hidden',
-                      outline: '1px dashed var(--ink-soft)',
-                      outlineOffset: -3,
-                    }}
-                  >
-                    <img
-                      src={`${import.meta.env.BASE_URL}${t.preview}`}
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        objectPosition: 'center 18%',
-                        display: 'block',
-                      }}
-                    />
-                  </div>
-                </div>
-                <span
-                  aria-hidden="true"
-                  style={{
-                    position: 'absolute',
-                    bottom: -9,
-                    right: 14,
-                    background: 'var(--ink)',
-                    color: 'var(--paper)',
-                    fontFamily: 'var(--mono)',
-                    fontSize: 9,
-                    letterSpacing: '.22em',
-                    padding: '3px 8px',
-                    textTransform: 'uppercase',
-                    transform: 'rotate(-1.2deg)',
-                    zIndex: 2,
-                  }}
-                >
-                  33⅓ · B-side
-                </span>
               </div>
             ) : null}
             <p>{t.body}</p>
