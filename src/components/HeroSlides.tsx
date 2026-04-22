@@ -34,27 +34,6 @@ const rand = (min: number, max: number) => min + Math.random() * (max - min);
 const INITIAL_HOLD_MS = 4000;
 const BOOT_COMPLETE_EVENT = 'bar:boot-complete';
 
-const shuffleRest = (list: Slide[]): Slide[] => {
-  const [first, ...rest] = list;
-  for (let i = rest.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [rest[i], rest[j]] = [rest[j]!, rest[i]!];
-  }
-  return [first!, ...rest];
-};
-
-// Shuffle-bag ("Tetris" / Fiedler-style) randomizer: draw without replacement
-// from a shuffled bag; refill when empty. On refill, guard against the next
-// pick matching the last-shown index so cycle boundaries never produce an
-// adjacent repeat. Feels random without clustering.
-const shuffleInPlace = <T,>(arr: T[]): T[] => {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j]!, arr[i]!];
-  }
-  return arr;
-};
-
 // Clear any inline state a previous fx may have left on a slide element.
 const resetSlide = (el: HTMLElement) => {
   el.style.removeProperty('--bloom-x');
@@ -69,12 +48,10 @@ const resetSlide = (el: HTMLElement) => {
 };
 
 export default function HeroSlides() {
-  const [slides] = useState<Slide[]>(() => shuffleRest(SLIDES));
+  const [slides] = useState<Slide[]>(SLIDES);
   const [idx, setIdx] = useState(0);
   const idxRef = useRef(0);
   const fxCounter = useRef(0);
-  const bagRef = useRef<number[]>([]);
-  const lastNaturalRef = useRef(-1);
   const pausedRef = useRef(false);
   const timerRef = useRef<number | null>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
@@ -88,24 +65,13 @@ export default function HeroSlides() {
     }
   };
 
-  const img0Idx = slides.findIndex((s) => s.src === 'portraits/img0.png');
-
-  const drawFromBag = (): number => {
-    if (bagRef.current.length === 0) {
-      const bag = slides.map((_, i) => i).filter((i) => i !== img0Idx);
-      shuffleInPlace(bag);
-      // Last pop() is the next pick; if it equals the last-shown slide,
-      // swap it with another position to avoid an adjacent repeat across
-      // the cycle boundary.
-      if (bag.length > 1 && bag[bag.length - 1] === lastNaturalRef.current) {
-        const swap = Math.floor(Math.random() * (bag.length - 1));
-        [bag[bag.length - 1], bag[swap]] = [bag[swap]!, bag[bag.length - 1]!];
-      }
-      bagRef.current = bag;
-    }
-    const pick = bagRef.current.pop()!;
-    lastNaturalRef.current = pick;
-    return pick;
+  const pickRandom = (): number => {
+    const prev = idxRef.current;
+    let next: number;
+    do {
+      next = Math.floor(Math.random() * slides.length);
+    } while (next === prev);
+    return next;
   };
 
   const schedule = () => {
@@ -127,12 +93,7 @@ export default function HeroSlides() {
     if (!els.length) return;
 
     const prev = idxRef.current;
-    // Every 8th transition forces img0 back in; other transitions draw from
-    // a shuffle-bag of non-img0 indices so the sequence feels random without
-    // repeats within a cycle.
-    const changeNum = fxCounter.current + 1;
-    const forceImg0 = img0Idx >= 0 && changeNum % 8 === 0;
-    const next = forceImg0 ? img0Idx : drawFromBag();
+    const next = pickRandom();
     const fx = FX[fxCounter.current % FX.length]!;
     fxCounter.current += 1;
 
