@@ -234,7 +234,7 @@ export default function Intro() {
 
         <aside className="credo-card" aria-label="credo">
           <span className="tape" aria-hidden="true" />
-          <blockquote>&ldquo;everything is only one prompt away&rdquo;</blockquote>
+          <blockquote>&ldquo;It&rsquo;s only one prompt away&rdquo;</blockquote>
         </aside>
 
         <p className="toolline">
