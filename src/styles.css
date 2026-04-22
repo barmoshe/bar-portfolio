@@ -933,8 +933,7 @@
      @keyframes vinyl-spin for an optional hover spin. */
   .track-vinyl{width:min(72%,220px);aspect-ratio:1;margin:10px auto 4px;
     cursor:pointer;-webkit-tap-highlight-color:transparent;
-    filter:drop-shadow(0 2px 6px oklch(0 0 0 / .35))
-           drop-shadow(0 0 22px oklch(0.62 0.15 155 / .24))}
+    filter:drop-shadow(0 2px 6px oklch(0 0 0 / .35))}
   .track-vinyl:focus{outline:none}
   .track-vinyl:focus-visible{outline:2px solid var(--green);outline-offset:6px;border-radius:50%}
   .track-vinyl:active{transform:scale(.985)}
@@ -950,8 +949,7 @@
     stroke-dasharray:1.5 2;opacity:.7}
   .track-vinyl .spindle{fill:var(--ink)}
   .track:has(.n.side-b) .track-vinyl .label-ring{stroke:var(--magenta)}
-  html.dark .track-vinyl{filter:drop-shadow(0 2px 6px oklch(0 0 0 / .6))
-                                drop-shadow(0 0 22px oklch(0.62 0.15 155 / .22))}
+  html.dark .track-vinyl{filter:drop-shadow(0 2px 6px oklch(0 0 0 / .6))}
 
   /* Stage: vinyl on the left, "liner notes" intro on the right */
   .music-stage{display:grid;grid-template-columns:minmax(280px,1fr) 1.1fr;gap:44px;align-items:center;margin-top:36px}
