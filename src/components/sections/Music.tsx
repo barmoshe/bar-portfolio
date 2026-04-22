@@ -71,7 +71,7 @@ const TRACKS: Track[] = [
     body:
       'A playable world. Touch to make music across space, jungle, sea, cyberpunk, and tundra biomes - or let the AI DJ compose through DRIFT, PULSE, BLOOM, SURGE, DISSOLVE. Tone.js for audio, Three.js for the space biome, Canvas2D for the rest.',
     tags: '#tonejs   #threejs   #webaudio   #synth',
-    preview: 'tracks/biome-synth.png',
+    preview: 'tracks/biome-synth.jpg',
   },
   {
     n: 'B2',
@@ -441,6 +441,7 @@ export default function Music() {
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
+                        objectPosition: 'center 18%',
                         display: 'block',
                       }}
                     />
