@@ -23,13 +23,21 @@ export default function Lightbox({ project, idx, sourceRect, onClose }: Props) {
     if (open) setMounted(true);
   }, [open]);
 
-  // Lock body scroll while the modal is mounted.
+  // Lock scroll while the modal is mounted. The scrolling root can be
+  // either <html> or <body>, so lock both.
   useEffect(() => {
     if (!mounted) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtml = html.style.overflow;
+    const prevBody = body.style.overflow;
+    html.style.overflow = 'hidden';
+    body.style.overflow = 'hidden';
+    body.dataset['modalOpen'] = 'true';
     return () => {
-      document.body.style.overflow = prev;
+      html.style.overflow = prevHtml;
+      body.style.overflow = prevBody;
+      delete body.dataset['modalOpen'];
     };
   }, [mounted]);
 

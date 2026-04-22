@@ -506,6 +506,11 @@
   .cols li strong{color:var(--ink)}
   .cols ul{padding-left:18px;margin:0}
 
+  body[data-modal-open]{overflow:hidden}
+  html:has(body[data-modal-open]){overflow:hidden}
+  body[data-modal-open] .strip,
+  body[data-modal-open] main,
+  body[data-modal-open] .tabbar{pointer-events:none}
   .lb{position:fixed;inset:0;z-index:60;background:oklch(0 0 0 / .6);display:none;place-items:center;padding:5vw}
   .lb.open{display:grid}
   .lb-panel{position:relative;max-width:900px;width:100%;background:var(--paper);border:1.5px solid var(--ink);
