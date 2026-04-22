@@ -169,9 +169,10 @@ export default function Music() {
         if (rig) {
           // Rig fades in + tips forward. On scroll enter we flip
           // data-playing which both starts the disc and swings the
-          // tonearm over. The disc group also gets its own
-          // `music-disc` feTurbulence filter scrubbed from high
-          // displacement down to 0 so the grooves "settle in ink."
+          // tonearm over. The whole sketch group carries a persistent
+          // low-scale feTurbulence displacement for a hand-drawn pen
+          // wobble — we scrub it from a louder starting scale down to a
+          // LOW resting scale (not zero: the wobble is the look).
           gsap.set(rig, { opacity: 0, y: 40, rotate: -2 });
           gsap.to(rig, {
             opacity: 1,
@@ -187,15 +188,15 @@ export default function Music() {
             },
           });
 
-          const disc = rig.querySelector<SVGGElement>('g.disc');
+          const sketchGroup = rig.querySelector<SVGGElement>('g.sketch-ink');
           const feDisp = document.querySelector<SVGFEDisplacementMapElement>(
             'feDisplacementMap[data-ink-bleed="music-disc"]',
           );
-          if (disc && feDisp) {
-            disc.style.filter = inkBleedUrl('music-disc');
-            gsap.set(feDisp, { attr: { scale: 7 } });
+          if (sketchGroup && feDisp) {
+            sketchGroup.style.filter = inkBleedUrl('music-disc');
+            gsap.set(feDisp, { attr: { scale: 5 } });
             gsap.to(feDisp, {
-              attr: { scale: 0 },
+              attr: { scale: 1.3 },
               duration: 1.1,
               ease: 'power3.out',
               scrollTrigger: {
@@ -223,8 +224,8 @@ export default function Music() {
         return () => {
           split?.revert();
           cleanupBleed?.();
-          const disc = rig?.querySelector<SVGGElement>('g.disc');
-          if (disc) disc.style.filter = '';
+          const sketchGroup = rig?.querySelector<SVGGElement>('g.sketch-ink');
+          if (sketchGroup) sketchGroup.style.filter = '';
         };
       });
 
@@ -244,7 +245,7 @@ export default function Music() {
       </h2>
       <p className="dek">
         A running discography of music-tech experiments - game-jam scores, hackathon
-        one-nighters, browser synths, granular patches. Pressed loose, not polished.
+        one-nighters, browser synths, granular patches. Sketched loose, not pressed.
       </p>
 
       <div className="music-stage" style={stageStyle}>
@@ -254,7 +255,7 @@ export default function Music() {
           <p style={linerIntro}>
             I compose sideways - keyboards are one entry point, but most of the work happens
             in Unity mixers, SuperCollider buffers, Tone.js graphs, and whatever the next
-            jam theme demands. The rig to the left spins every piece below, in order.
+            jam theme demands. The sketch to the left spins every piece below, in order.
           </p>
           <ul style={cueList}>
             <li style={cueItem}>
@@ -309,138 +310,134 @@ type RigProps = {
   side: 'A' | 'B';
 };
 
+// All-stroke sketch rig. The whole `<g class="sketch-ink">` group is wrapped
+// by a feTurbulence/feDisplacementMap filter (ink-bleed-music-disc) at a
+// persistent low scale so every line reads as hand-drawn — that's the
+// "sketch vibes" signature. Fills are kept to paper / paper-2 / one accent
+// color (the side dot). Everything else is ink linework.
 const Rig = ({ ref, side }: RigProps) => (
   <div className="rig" ref={ref} data-playing="false" data-side={side} aria-hidden="true">
-    <svg viewBox="0 0 240 240" role="img" aria-label="Spinning vinyl on a turntable with a patiphone horn">
-      {/* Turntable base (ink slab under the disc) */}
-      <rect x="10" y="36" width="220" height="176" rx="6" className="base" />
+    <svg viewBox="0 0 240 240" role="img" aria-label="Sketched vinyl with gramophone horn">
+      <g className="sketch-ink">
+        {/* Turntable base — sketchy rounded rectangle on paper */}
+        <rect x="10" y="36" width="220" height="176" rx="4" className="sk-base" />
+        {/* A few ink hatch marks at the bottom corners suggest a wooden
+            plinth without needing a fill. */}
+        <g className="sk-hatch">
+          <path d="M 22 198 L 32 208" />
+          <path d="M 34 198 L 44 208" />
+          <path d="M 46 198 L 56 208" />
+          <path d="M 186 198 L 196 208" />
+          <path d="M 198 198 L 208 208" />
+          <path d="M 210 198 L 220 208" />
+        </g>
 
-      {/* The disc + grooves rotate together. Everything mounted OFF the disc
-          (tonearm, spindle, sheen, horn) stays static. The disc group also
-          carries the `ink-bleed-music-disc` feTurbulence filter that GSAP
-          scrubs from scale 7 → 0 on scroll enter so the grooves settle
-          into ink rather than popping in as CAD circles. */}
-      <g className="disc">
-        <circle cx="108" cy="120" r="92" className="wax" />
-        {/* Concentric grooves. Spacing + contrast give the "pressed vinyl"
-            read without needing a texture. Every 4th ring is slightly
-            brighter, mirroring the way real LPs alternate band edges. */}
-        {Array.from({ length: 24 }).map((_, i) => {
-          const r = 24 + i * 2.9;
-          return (
-            <circle
-              key={i}
-              cx="108"
-              cy="120"
-              r={r}
-              className={i % 4 === 0 ? 'groove bright' : 'groove'}
+        {/* Vinyl disc — paper-tinted wax with a stroked rim and a small
+            set of concentric grooves (7 rings, not 22, so the sketch
+            doesn't look like a target). The disc + its grooves rotate
+            together inside g.disc (CSS keyframe). */}
+        <g className="disc">
+          <circle cx="108" cy="120" r="92" className="sk-wax" />
+          <circle cx="108" cy="120" r="88" className="sk-rim" />
+
+          {[82, 74, 66, 58, 50, 42, 36].map((r) => (
+            <circle key={r} cx="108" cy="120" r={r} className="sk-groove" />
+          ))}
+
+          {/* Center label — paper circle with a smaller printed circle
+              and an accent dot whose fill swaps with the active side. */}
+          <circle cx="108" cy="120" r="28" className="sk-label" />
+          <circle cx="108" cy="120" r="22" className="sk-label-inner" />
+          <circle cx="108" cy="120" r="5" className="sk-label-dot" />
+
+          <defs>
+            <path
+              id="music-label-top"
+              d="M 84 120 A 24 24 0 0 1 132 120"
+              fill="none"
             />
-          );
-        })}
+            <path
+              id="music-label-bottom"
+              d="M 132 120 A 24 24 0 0 1 84 120"
+              fill="none"
+            />
+          </defs>
+          <text className="sk-label-text">
+            <textPath href="#music-label-top" startOffset="50%" textAnchor="middle">
+              BAR · MIX
+            </textPath>
+          </text>
+          <text className="sk-label-text">
+            <textPath href="#music-label-bottom" startOffset="50%" textAnchor="middle">
+              {side === 'A' ? 'SIDE A · 33⅓' : 'SIDE B · 33⅓'}
+            </textPath>
+          </text>
 
-        {/* Center label. Fill color is CSS-driven — green for Side A,
-            magenta for Side B (see .rig[data-side="B"] .label). */}
-        <circle cx="108" cy="120" r="26" className="label" />
-        <circle cx="108" cy="120" r="26" className="label-ring" />
+          {/* Witness mark — a small ink dot off-center that confirms spin */}
+          <circle cx="108" cy="96" r="1.4" className="sk-witness" />
+        </g>
 
-        {/* Label text — wraps the spindle on two arcs so it reads as
-            hand-lettered sleeve art when the disc is at rest and blurs
-            into a solid ring once it's spinning. Top arc shows a
-            permanent studio mark; bottom arc flips with the active side. */}
-        <defs>
+        {/* Spindle pokes through the label — static, doesn't rotate */}
+        <circle cx="108" cy="120" r="1.8" className="sk-spindle" />
+
+        {/* Gramophone horn — line-art bell with interior hatch shading,
+            a tilted mouth rim, and three sound-wave arcs rippling off
+            the opening when data-playing="true". */}
+        <g className="horn">
+          {/* Mount box at the base */}
+          <rect x="212" y="200" width="14" height="12" rx="1.5" className="sk-horn-mount" />
+          {/* Neck: tapered pipe from mount up into the flare */}
+          <path d="M 214 200 L 220 200 L 223 186 L 217 186 Z" className="sk-horn-neck" />
+          {/* Body: bell-shaped flare curving up-right */}
           <path
-            id="music-label-top"
-            d="M 88 120 A 20 20 0 0 1 128 120"
-            fill="none"
+            d="M 217 187
+               C 219 180, 225 172, 230 164
+               L 234 154
+               L 237 162
+               C 234 172, 228 182, 223 187 Z"
+            className="sk-horn-body"
           />
-          <path
-            id="music-label-bottom"
-            d="M 128 120 A 20 20 0 0 1 88 120"
-            fill="none"
+          {/* Mouth rim: tilted ellipse at the bell's open end */}
+          <ellipse
+            cx="235"
+            cy="158"
+            rx="5"
+            ry="2.6"
+            transform="rotate(-42 235 158)"
+            className="sk-horn-rim"
           />
-        </defs>
-        <text className="label-text">
-          <textPath href="#music-label-top" startOffset="50%" textAnchor="middle">
-            BAR · MIX
-          </textPath>
-        </text>
-        <text className="label-text">
-          <textPath href="#music-label-bottom" startOffset="50%" textAnchor="middle">
-            {side === 'A' ? 'SIDE A · 33⅓ RPM' : 'SIDE B · 33⅓ RPM'}
-          </textPath>
-        </text>
+          {/* Three short diagonal hatches inside the bell for shading */}
+          <g className="sk-horn-hatch">
+            <path d="M 221 182 L 225 178" />
+            <path d="M 224 176 L 228 170" />
+            <path d="M 228 168 L 231 163" />
+          </g>
+          {/* Sound waves — three nested arcs that fade and drift outward
+              from the mouth on loop when the rig is "playing". */}
+          <g className="sk-waves">
+            <path d="M 240 154 Q 244 158 240 162" className="sk-wave w1" />
+            <path d="M 244 150 Q 250 158 244 166" className="sk-wave w2" />
+            <path d="M 248 147 Q 256 158 248 169" className="sk-wave w3" />
+          </g>
+        </g>
 
-        {/* Tiny off-center mark - catches the eye and confirms spin */}
-        <circle cx="108" cy="100" r="1.2" fill="var(--paper)" opacity=".6" />
-      </g>
-
-      {/* Static sheen — a pair of thin arcs suggesting overhead light on the
-          lacquer. Sits above the disc so it stays fixed while the wax
-          rotates underneath. */}
-      <path
-        d="M 40 90 A 92 92 0 0 1 176 90"
-        className="sheen"
-        strokeWidth="2"
-        opacity=".08"
-      />
-      <path
-        d="M 50 160 A 92 92 0 0 0 166 160"
-        className="sheen"
-        strokeWidth="1"
-        opacity=".05"
-      />
-
-      {/* Spindle — the pin the vinyl sits on. Static. */}
-      <circle cx="108" cy="120" r="3" className="spindle" />
-      <circle cx="108" cy="120" r="1.1" className="spindle-hole" />
-
-      {/* Patiphone / gramophone horn — a small flared cone rising from the
-          bottom-right of the base. Stays static; the three <circle.puff>
-          elements inside the mouth loop a scale+fade animation whenever
-          the rig is marked data-playing (see .rig .puff in styles.css). */}
-      <g className="horn">
-        {/* Neck: short tapered pipe from base edge up to the body */}
-        <path
-          d="M 213 205 L 219 205 L 223 190 L 217 190 Z"
-          className="horn-neck"
-        />
-        {/* Body: flared cone curving up toward the mouth */}
-        <path
-          d="M 217 190 L 224 190 L 236 160 L 230 154 L 226 160 L 220 175 Z"
-          className="horn-body"
-        />
-        {/* Mouth rim: tilted ellipse suggesting the open end */}
-        <ellipse
-          cx="231"
-          cy="156"
-          rx="6"
-          ry="4"
-          transform="rotate(-38 231 156)"
-          className="horn-rim"
-        />
-        {/* Sound "puff" rings — emanate from the horn mouth. The
-            animation is paused by default and flips to running only
-            once the rig is marked data-playing="true". */}
-        <circle cx="231" cy="156" r="5" className="puff" />
-        <circle cx="231" cy="156" r="5" className="puff" />
-        <circle cx="231" cy="156" r="5" className="puff" />
-      </g>
-
-      {/* Tonearm. Pivot is top-right of the base; the arm swings from a
-          resting position (off the record) over to the outer groove when
-          .rig[data-playing="true"] flips via scroll trigger. */}
-      <g className="tonearm">
-        {/* Counterweight (outside the pivot) */}
-        <rect x="196" y="34" width="18" height="10" rx="2" className="arm-counterweight" />
-        {/* Pivot / base joint */}
-        <circle cx="198" cy="40" r="6" className="arm-joint" />
-        {/* Main shaft from pivot toward the record center */}
-        <rect x="108" y="37.5" width="90" height="5" rx="2" className="arm-shaft" />
-        {/* Headshell (angled down slightly in the resting geometry; the whole
-            arm rotates as a unit via the CSS transform on .tonearm) */}
-        <rect x="100" y="42" width="18" height="9" rx="1" className="arm-head" />
-        {/* Needle */}
-        <path d="M 104 51 L 100 58 L 108 58 Z" className="arm-needle" />
+        {/* Tonearm — line art. Pivot is top-right of the base; the arm
+            swings from rest (~26°) to play (~2°) via the --arm-rot var
+            flipped by .rig[data-playing="true"] in styles.css. */}
+        <g className="tonearm">
+          {/* Pivot base plate */}
+          <rect x="190" y="44" width="16" height="6" rx="1" className="sk-arm-base" />
+          {/* Counterweight */}
+          <rect x="198" y="34" width="14" height="8" rx="1.5" className="sk-arm-counterweight" />
+          {/* Pivot joint circle */}
+          <circle cx="198" cy="40" r="5" className="sk-arm-joint" />
+          {/* Shaft line from pivot to headshell */}
+          <line x1="108" y1="40" x2="196" y2="40" className="sk-arm-shaft" />
+          {/* Headshell */}
+          <rect x="100" y="37" width="14" height="8" rx="1" className="sk-arm-head" />
+          {/* Needle pointing down at the groove */}
+          <path d="M 105 45 L 102 52 L 109 52 Z" className="sk-arm-needle" />
+        </g>
       </g>
     </svg>
   </div>

@@ -791,78 +791,101 @@
     .tabbar svg{width:18px;height:18px}
   }
 
-  /* ─── Music section · vinyl rig ─────────────────────────────────────
-     A pressed vinyl with ink-bled grooves, a hand-lettered label, a
-     tonearm that drops in on scroll-enter, and a patiphone horn that
-     "puffs" sound-rings while the disc is spinning. The disc is an SVG
-     so the grooves stay crisp at any size; rotation is a CSS keyframe
-     on the <g class="disc"> element. Tonearm swing + ink-scrub are
-     driven by GSAP (see sections/Music.tsx). Reduced-motion: the spin
-     keyframe + horn-puff loop are both disabled by the existing
-     prefers-reduced-motion rule near the end of this file. */
+  /* ─── Music section · sketch rig ────────────────────────────────────
+     Paper-on-ink linework version of the turntable + gramophone horn.
+     Everything is stroke-only (or paper-filled) and the whole sketch
+     group carries a persistent #ink-bleed-music-disc feTurbulence
+     filter at a low scale (~1.3, set by Music.tsx) so every line has a
+     hand-drawn wobble. Disc spin still uses @vinyl-spin; tonearm drop
+     still uses --arm-rot. Reduced-motion: the global rule near the end
+     of this file strips the keyframes for free. */
   .rig{position:relative;display:flex;justify-content:center;align-items:center;
     aspect-ratio:1/1;max-width:420px;margin:0 auto;
-    filter:drop-shadow(8px 10px 0 var(--ink))}
+    filter:drop-shadow(5px 6px 0 var(--ink))}
   .rig svg{width:100%;height:100%;display:block;overflow:visible}
-  .rig .disc{transform-origin:var(--spindle-x,50%) var(--spindle-y,50%);
+  .rig .disc{transform-origin:108px 120px;
     animation:vinyl-spin 1.8s linear infinite;
     animation-play-state:var(--spin,running)}
   .rig[data-playing="false"]{--spin:paused}
   .rig:hover{--spin:running}
-  .rig .tonearm{transform-origin:var(--arm-pivot-x,82%) var(--arm-pivot-y,16%);
+  .rig .tonearm{transform-origin:198px 40px;
     transform:rotate(var(--arm-rot, 26deg));
     transition:transform .9s cubic-bezier(.2,.7,.2,1)}
   .rig[data-playing="true"] .tonearm{--arm-rot:2deg}
-  .rig .base{fill:var(--ink)}
-  .rig .wax{fill:oklch(0.13 0.008 260)}
-  .rig .groove{stroke:oklch(0.24 0.012 260);stroke-width:.4;fill:none;opacity:.75}
-  .rig .groove.bright{stroke:oklch(0.32 0.014 260);opacity:.55}
-  /* Label starts green (Side A) and transitions to magenta when Side B
-     is selected via data-side on .rig. A hand-lettered feel comes from
-     --hand on .label-text, plus a small rotation. */
-  .rig .label{fill:var(--green);transition:fill .24s ease}
-  .rig[data-side="B"] .label{fill:var(--magenta)}
-  .rig .label-ring{fill:none;stroke:var(--ink);stroke-width:1}
-  .rig .spindle{fill:var(--paper)}
-  .rig .spindle-hole{fill:var(--ink)}
-  .rig .label-text{font-family:var(--hand);font-size:6.5px;letter-spacing:.08em;
-    fill:var(--paper);text-transform:uppercase;font-weight:700}
-  .rig .sheen{fill:none;stroke:oklch(1 0 0 / .05);stroke-width:1}
-  .rig .arm-shaft{fill:oklch(0.78 0.01 260)}
-  .rig .arm-joint{fill:var(--ink);stroke:oklch(0.7 0.01 260);stroke-width:1}
-  .rig .arm-head{fill:var(--ink)}
-  .rig .arm-needle{fill:var(--green)}
-  .rig .arm-counterweight{fill:oklch(0.22 0.02 260);stroke:oklch(0.6 0.01 260);stroke-width:.8}
-  /* Patiphone horn — flared cone sitting to the right of the base, with
-     three concentric puff rings at the mouth that loop only while the
-     rig is marked data-playing="true". */
-  .rig .horn-body{fill:oklch(0.44 0.10 60);stroke:var(--ink);stroke-width:1.2}
-  .rig .horn-rim{fill:oklch(0.58 0.12 60);stroke:var(--ink);stroke-width:1}
-  .rig .horn-neck{fill:oklch(0.36 0.09 60);stroke:var(--ink);stroke-width:1}
-  .rig .puff{fill:none;stroke:var(--green);stroke-width:1.2;
-    transform-origin:var(--puff-x,230px) var(--puff-y,100px);
-    transform-box:fill-box;opacity:0;
-    animation:horn-puff 2.2s cubic-bezier(.2,.6,.2,1) infinite;
+
+  /* Plinth + ground hatches */
+  .rig .sk-base{fill:var(--paper-2);stroke:var(--ink);stroke-width:1.5}
+  .rig .sk-hatch path{stroke:var(--ink-soft);stroke-width:1;fill:none;
+    stroke-linecap:round;opacity:.55}
+
+  /* Disc — paper-tone wax with a thin stroked rim and 7 stroke grooves */
+  .rig .sk-wax{fill:var(--paper-2);stroke:var(--ink);stroke-width:1.6}
+  .rig .sk-rim{fill:none;stroke:var(--ink-soft);stroke-width:.5;
+    stroke-dasharray:2 3;opacity:.55}
+  .rig .sk-groove{fill:none;stroke:var(--ink-soft);stroke-width:.7;
+    stroke-linecap:round;opacity:.58}
+  .rig .sk-groove.bright{stroke:var(--ink);opacity:.4}
+
+  /* Center label — paper circle, printed inner ring, accent dot that
+     swaps color with the active side. */
+  .rig .sk-label{fill:var(--paper);stroke:var(--ink);stroke-width:1.3}
+  .rig .sk-label-inner{fill:none;stroke:var(--ink-soft);stroke-width:.5;
+    stroke-dasharray:1.5 2;opacity:.65}
+  .rig .sk-label-dot{fill:var(--green);transition:fill .24s ease}
+  .rig[data-side="B"] .sk-label-dot{fill:var(--magenta)}
+  .rig .sk-label-text{font-family:var(--hand);font-size:7px;letter-spacing:.06em;
+    fill:var(--ink);text-transform:uppercase;font-weight:700}
+  .rig .sk-witness{fill:var(--ink);opacity:.75}
+  .rig .sk-spindle{fill:var(--ink);stroke:none}
+
+  /* Gramophone horn — paper-fill bell with ink line-art + hatch shading */
+  .rig .sk-horn-mount{fill:var(--paper-2);stroke:var(--ink);stroke-width:1.2}
+  .rig .sk-horn-neck{fill:var(--paper);stroke:var(--ink);stroke-width:1.2;
+    stroke-linejoin:round}
+  .rig .sk-horn-body{fill:var(--paper);stroke:var(--ink);stroke-width:1.5;
+    stroke-linejoin:round}
+  .rig .sk-horn-rim{fill:var(--ink);stroke:var(--ink);stroke-width:.8;opacity:.85}
+  .rig .sk-horn-hatch path{stroke:var(--ink-soft);stroke-width:.8;fill:none;
+    stroke-linecap:round;opacity:.6}
+
+  /* Sound waves — 3 arcs rippling off the horn mouth. Each draws via
+     stroke-dashoffset from full length to 0 while opacity fades and the
+     arc drifts outward. Paused unless the rig is marked playing. */
+  .rig .sk-wave{fill:none;stroke:var(--green);stroke-width:1.3;
+    stroke-linecap:round;stroke-dasharray:30;stroke-dashoffset:30;
+    opacity:0;
+    animation:sk-wave 2.2s cubic-bezier(.3,.6,.3,1) infinite;
     animation-play-state:paused}
-  .rig[data-playing="true"] .puff{animation-play-state:running}
-  .rig .puff:nth-child(2){animation-delay:.73s}
-  .rig .puff:nth-child(3){animation-delay:1.46s}
-  html.dark .rig{filter:drop-shadow(6px 8px 0 oklch(0 0 0 / .6))}
-  html.dark .rig .wax{fill:oklch(0.08 0.008 260)}
-  html.dark .rig .groove{stroke:oklch(0.28 0.012 260)}
-  html.dark .rig .groove.bright{stroke:oklch(0.38 0.014 260)}
-  html.dark .rig .spindle{fill:var(--surface-strong-fg)}
-  html.dark .rig .arm-shaft{fill:oklch(0.68 0.01 260)}
-  html.dark .rig .horn-body{fill:oklch(0.56 0.12 60)}
-  html.dark .rig .horn-rim{fill:oklch(0.68 0.14 60)}
-  html.dark .rig .horn-neck{fill:oklch(0.48 0.10 60)}
-  html.dark .rig .puff{stroke:var(--green)}
+  .rig[data-playing="true"] .sk-wave{animation-play-state:running}
+  .rig .sk-wave.w2{animation-delay:.55s}
+  .rig .sk-wave.w3{animation-delay:1.1s}
+
+  /* Tonearm — line-art. Shaft is a stroked line, not a filled rect. */
+  .rig .sk-arm-base{fill:var(--paper-2);stroke:var(--ink);stroke-width:1}
+  .rig .sk-arm-counterweight{fill:var(--ink);stroke:var(--ink);stroke-width:.8}
+  .rig .sk-arm-joint{fill:var(--paper);stroke:var(--ink);stroke-width:1.2}
+  .rig .sk-arm-shaft{stroke:var(--ink);stroke-width:2.4;stroke-linecap:round;fill:none}
+  .rig .sk-arm-head{fill:var(--ink);stroke:var(--ink);stroke-width:1}
+  .rig .sk-arm-needle{fill:var(--green);stroke:var(--ink);stroke-width:.8}
+
+  /* Dark mode — wax + label + horn pick up tonal surfaces so the sketch
+     still reads against a dark page; ink tokens auto-flip to light ink. */
+  html.dark .rig{filter:drop-shadow(4px 5px 0 oklch(0 0 0 / .6))}
+  html.dark .rig .sk-base{fill:var(--surface-1)}
+  html.dark .rig .sk-wax{fill:var(--surface-2)}
+  html.dark .rig .sk-label{fill:var(--surface-1)}
+  html.dark .rig .sk-horn-mount{fill:var(--surface-1)}
+  html.dark .rig .sk-horn-neck,
+  html.dark .rig .sk-horn-body{fill:var(--surface-2)}
+  html.dark .rig .sk-arm-base{fill:var(--surface-1)}
+  html.dark .rig .sk-arm-joint{fill:var(--surface-2)}
 
   @keyframes vinyl-spin{to{transform:rotate(360deg)}}
-  @keyframes horn-puff{
-    0%{transform:scale(.28);opacity:.55}
-    70%{opacity:.15}
-    100%{transform:scale(1.25);opacity:0}
+  @keyframes sk-wave{
+    0%  {stroke-dashoffset:30;opacity:0;transform:translateX(0)}
+    20% {opacity:.75}
+    80% {opacity:.2}
+    100%{stroke-dashoffset:0;opacity:0;transform:translateX(8px)}
   }
 
   /* Track-list cards under the rig. Reuse the ink-border/offset-shadow
