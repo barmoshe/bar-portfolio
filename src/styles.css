@@ -543,30 +543,45 @@
      --peel-* custom props which each hover source tweens with GSAP, OR via
      the fallback CSS on :hover where GSAP isn't wired (plain .clip article). */
   .ink-peelable{--peel:0;--peel-color:var(--ink)}
+  /* Exposed pocket where the corner has lifted from — reveals the card's
+     accent (same colour as its drop-shadow) with a soft inner darken. */
   .ink-peelable::before{content:"";position:absolute;top:0;right:0;
-    width:clamp(24px,14%,48px);height:clamp(24px,14%,48px);
-    background:linear-gradient(225deg, oklch(0 0 0 / .38) 0%, oklch(0 0 0 / .18) 45%, transparent 75%);
+    width:clamp(28px,16%,52px);height:clamp(28px,16%,52px);
+    background:
+      linear-gradient(225deg, oklch(0 0 0 / .30), transparent 55%),
+      var(--peel-color);
     clip-path:polygon(100% 0,0 0,100% 100%);
-    transform:translate(calc(var(--peel) * 8px),calc(var(--peel) * -8px));
-    transform-origin:100% 0;
-    opacity:calc(var(--peel) * .9);
-    pointer-events:none;
-    transition:transform .32s cubic-bezier(.34,1.3,.64,1), opacity .25s ease;
-    z-index:4}
-  .ink-peelable::after{content:"";position:absolute;top:0;right:0;
-    width:clamp(24px,14%,48px);height:clamp(24px,14%,48px);
-    background:linear-gradient(225deg, oklch(0 0 0 / .10), transparent 55%), var(--paper);
-    clip-path:polygon(100% 0,0 0,100% 100%);
-    transform:translate(calc(var(--peel) * 5px),calc(var(--peel) * -5px)) rotate(calc(var(--peel) * -14deg));
-    transform-origin:100% 0;
     opacity:calc(var(--peel) * 1);
-    filter:drop-shadow(-1px 1px 0 var(--ink)) drop-shadow(-3px 3px 4px oklch(0 0 0 / .28));
     pointer-events:none;
-    transition:transform .32s cubic-bezier(.34,1.3,.64,1), opacity .25s ease;
+    transition:opacity .25s ease;
+    z-index:3}
+  /* The curling corner itself. Only the hypotenuse carries the ink line
+     (the "torn" fold); the top and right edges stay un-outlined because
+     they're the original card border. A subtle gradient fakes curvature
+     and the filter casts a soft shadow down-left onto the card. */
+  .ink-peelable::after{content:"";position:absolute;top:0;right:0;
+    width:clamp(28px,16%,52px);height:clamp(28px,16%,52px);
+    background:
+      linear-gradient(45deg, transparent calc(50% - 1px), var(--ink) calc(50% - 1px), var(--ink) calc(50% + 1px), transparent calc(50% + 1px)),
+      linear-gradient(225deg, oklch(0 0 0 / .16), transparent 60%),
+      var(--paper);
+    clip-path:polygon(100% 0,0 0,100% 100%);
+    transform:
+      translate(calc(var(--peel) * -4px), calc(var(--peel) * 4px))
+      rotate(calc(var(--peel) * 8deg));
+    transform-origin:50% 50%;
+    opacity:calc(var(--peel) * 1);
+    filter:drop-shadow(-2px 3px 3px oklch(0 0 0 / .30));
+    pointer-events:none;
+    transition:transform .35s cubic-bezier(.34,1.3,.64,1), opacity .25s ease;
     z-index:5}
   .clip article{position:relative}
   .clip article.ink-peelable:hover{--peel:1}
-  html.dark .ink-peelable::after{background:linear-gradient(225deg, oklch(1 0 0 / .06), transparent 55%), var(--surface-2)}
+  html.dark .ink-peelable::after{
+    background:
+      linear-gradient(45deg, transparent calc(50% - 1px), var(--ink) calc(50% - 1px), var(--ink) calc(50% + 1px), transparent calc(50% + 1px)),
+      linear-gradient(225deg, oklch(1 0 0 / .08), transparent 60%),
+      var(--surface-2)}
 
   /* Boot ink-mask exit: GSAP drives --ink-r and --ink-x/y from 0 → 140 */
   .boot{--ink-r:0%;--ink-x:50%;--ink-y:50%}
