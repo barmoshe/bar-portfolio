@@ -1,4 +1,4 @@
-import { useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import {
   gsap,
   SplitText,
@@ -7,6 +7,17 @@ import {
 } from '../../lib/gsap';
 import { attachInkBleed } from '../../lib/inkBleed';
 import { inkBleedUrl } from '../InkDefs';
+import {
+  isEnabled as isAudioEnabled,
+  playFlip as sfxFlip,
+  playNeedleDrop as sfxNeedleDrop,
+  setEnabled as setAudioEnabled,
+  startCrackle,
+  stopCrackle,
+  unlock as unlockAudio,
+} from '../../lib/vinylAudio';
+
+const AUDIO_KEY = 'bm:vinyl-audio';
 
 type Track = {
   n: string;
@@ -115,6 +126,65 @@ export default function Music() {
   const [side, setSide] = useState<'A' | 'B'>('A');
   const visible = TRACKS.filter((t) => t.side === side);
 
+  // Audio preference — persisted across sessions. Default off because
+  // browsers block unsolicited playback; the user has to tap the
+  // toggle (or any page element if they previously opted in) to
+  // actually unlock the AudioContext. See src/lib/vinylAudio.ts.
+  const [audioOn, setAudioOn] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(AUDIO_KEY) === '1';
+    } catch {
+      return false;
+    }
+  });
+
+  // If the stored preference is "on" but the context hasn't been
+  // unlocked yet (fresh page load), lift the lock on the next user
+  // gesture anywhere in the page. After that, subsequent sfx calls work.
+  useEffect(() => {
+    if (audioOn && !isAudioEnabled()) {
+      const lift = () => {
+        unlockAudio();
+        setAudioEnabled(true);
+        window.removeEventListener('pointerdown', lift);
+        window.removeEventListener('keydown', lift);
+      };
+      window.addEventListener('pointerdown', lift, { once: true });
+      window.addEventListener('keydown', lift, { once: true });
+      return () => {
+        window.removeEventListener('pointerdown', lift);
+        window.removeEventListener('keydown', lift);
+      };
+    }
+    if (!audioOn && isAudioEnabled()) setAudioEnabled(false);
+    return undefined;
+  }, [audioOn]);
+
+  // Stop any looping crackle if the section unmounts.
+  useEffect(() => () => stopCrackle(), []);
+
+  const toggleAudio = () => {
+    const next = !audioOn;
+    setAudioOn(next);
+    if (next) {
+      unlockAudio();
+      setAudioEnabled(true);
+      // Tiny confirmation tap so the user hears the unlock worked.
+      sfxNeedleDrop();
+      // If the section is currently playing, resume the crackle loop.
+      if (rigRef.current?.getAttribute('data-playing') === 'true') {
+        setTimeout(startCrackle, 220);
+      }
+    } else {
+      setAudioEnabled(false);
+    }
+    try {
+      localStorage.setItem(AUDIO_KEY, next ? '1' : '0');
+    } catch {
+      /* ignore */
+    }
+  };
+
   useGSAP(
     () => {
       const root = rootRef.current;
@@ -183,8 +253,18 @@ export default function Music() {
             scrollTrigger: {
               trigger: rig,
               start: 'top 78%',
-              onEnter: () => rig.setAttribute('data-playing', 'true'),
-              onLeaveBack: () => rig.setAttribute('data-playing', 'false'),
+              onEnter: () => {
+                rig.setAttribute('data-playing', 'true');
+                if (isAudioEnabled()) {
+                  sfxNeedleDrop();
+                  // Delay crackle a hair so the needle-drop lands first.
+                  window.setTimeout(startCrackle, 220);
+                }
+              },
+              onLeaveBack: () => {
+                rig.setAttribute('data-playing', 'false');
+                stopCrackle();
+              },
             },
           });
 
@@ -271,18 +351,48 @@ export default function Music() {
               <span>33⅓ - slow enough to hear the edits.</span>
             </li>
           </ul>
-          <button
-            type="button"
-            className="flip-btn"
-            data-side={side}
-            onClick={() => setSide(side === 'A' ? 'B' : 'A')}
-            aria-label={`Flip to side ${side === 'A' ? 'B' : 'A'}`}
-          >
-            <span className="dot" aria-hidden="true" />
-            {side === 'A' ? 'Flip to side B →' : '← Flip back to side A'}
-          </button>
+          <div className="rig-controls">
+            <button
+              type="button"
+              className="sound-btn"
+              data-on={audioOn ? 'true' : 'false'}
+              aria-pressed={audioOn}
+              aria-label={audioOn ? 'Mute vinyl sound' : 'Enable vinyl sound'}
+              onClick={toggleAudio}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="sound-ico">
+                <path d="M4 9.5 L4 14.5 L8 14.5 L13 18 L13 6 L8 9.5 Z" />
+                {audioOn ? (
+                  <>
+                    <path d="M16 9 Q18 12 16 15" fill="none" />
+                    <path d="M18.5 7 Q21.5 12 18.5 17" fill="none" />
+                  </>
+                ) : (
+                  <>
+                    <line x1="16" y1="9" x2="22" y2="15" />
+                    <line x1="22" y1="9" x2="16" y2="15" />
+                  </>
+                )}
+              </svg>
+              <span>{audioOn ? 'Sound on' : 'Tap for sound'}</span>
+            </button>
+            <button
+              type="button"
+              className="flip-btn"
+              data-side={side}
+              onClick={() => {
+                sfxFlip();
+                setSide(side === 'A' ? 'B' : 'A');
+              }}
+              aria-label={`Flip to side ${side === 'A' ? 'B' : 'A'}`}
+            >
+              <span className="dot" aria-hidden="true" />
+              {side === 'A' ? 'Flip to side B →' : '← Flip back to side A'}
+            </button>
+          </div>
           <p className="placeholder-note">
             // placeholder tracklist - swap in the real titles, years &amp; links anytime.
+            Sound is synthesized in-browser (Web Audio API); no assets fetched.
           </p>
         </div>
       </div>
