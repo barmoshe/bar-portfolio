@@ -820,7 +820,7 @@
     filter:drop-shadow(5px 6px 0 var(--ink))}
   .rig svg{width:100%;height:100%;display:block;overflow:visible}
   .rig .disc{transform-origin:108px 120px;
-    animation:vinyl-spin 1.8s linear infinite;
+    animation:vinyl-spin 3s linear infinite;
     animation-play-state:var(--spin,running)}
   .rig[data-playing="false"]{--spin:paused}
   .rig:hover{--spin:running}
