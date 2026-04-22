@@ -20,6 +20,8 @@ export type Project = {
   url: string;
   /** Optional secondary links rendered in the lightbox footer. */
   extras?: ProjectExtra[];
+  /** Optional preview image, relative to `public/` (e.g. `'projects/foo.png'`). Rendered in the lightbox art panel when set; falls back to `CodeArt`. */
+  preview?: string;
 };
 
 export const projects: Project[] = [
@@ -29,6 +31,7 @@ export const projects: Project[] = [
       'A playable world where touch makes music across five biomes - space, jungle, sea, cyberpunk, and tundra. Built on Tone.js for live audio synthesis and Three.js for WebGL visuals, with an AI DJ mode that composes across five sections (DRIFT → PULSE → BLOOM → SURGE → DISSOLVE) and audio-reactive particles throughout.',
     language: 'TypeScript',
     url: 'https://github.com/barmoshe/cosmic-chord-synth',
+    preview: 'projects/cosmic-chord-synth.png',
     extras: [
       {
         label: 'Try the live demo',
