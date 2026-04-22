@@ -374,7 +374,7 @@ export default function Music() {
                   </>
                 )}
               </svg>
-              <span>{audioOn ? 'Sound on' : 'Tap for sound'}</span>
+              <span>{audioOn ? 'Sound on' : 'Sound off'}</span>
             </button>
             <button
               type="button"
@@ -387,7 +387,7 @@ export default function Music() {
               aria-label={`Flip to side ${side === 'A' ? 'B' : 'A'}`}
             >
               <span className="dot" aria-hidden="true" />
-              {side === 'A' ? 'Flip to side B →' : '← Flip back to side A'}
+              {side === 'A' ? 'Flip to side B →' : '← Flip to side A'}
             </button>
           </div>
           <p className="placeholder-note">
