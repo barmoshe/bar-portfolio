@@ -30,7 +30,7 @@ const ENTRIES: Entry[] = [
     featured: true,
     date: 'MAR 2025',
     tag: '★ featured',
-    title: "Featured on Temporal's Code Exchange.",
+    title: "Read it on Temporal's Code Exchange.",
     desc: (
       <>
         My Cross-Language Data Processing Service - Python, Go, and TypeScript all
