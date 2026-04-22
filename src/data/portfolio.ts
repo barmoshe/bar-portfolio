@@ -26,12 +26,12 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    name: 'cosmic-chord-synth',
+    name: 'biome-synth',
     description:
       'A playable world where touch makes music across five biomes - space, jungle, sea, cyberpunk, and tundra. Built on Tone.js for live audio synthesis and Three.js for WebGL visuals, with an AI DJ mode that composes across five sections (DRIFT → PULSE → BLOOM → SURGE → DISSOLVE) and audio-reactive particles throughout.',
     language: 'TypeScript',
     url: 'https://github.com/barmoshe/cosmic-chord-synth',
-    preview: 'projects/cosmic-chord-synth.png',
+    preview: 'projects/biome-synth.png',
     extras: [
       {
         label: 'Try the live demo',
