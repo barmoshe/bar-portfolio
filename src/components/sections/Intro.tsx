@@ -228,7 +228,7 @@ export default function Intro() {
         </p>
 
         <p>
-          It comes down to a habit of starting &mdash; and one belief I carry into every
+          It comes down to a habit of starting - and one belief I carry into every
           project:
         </p>
 
