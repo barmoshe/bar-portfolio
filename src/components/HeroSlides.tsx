@@ -19,7 +19,6 @@ const SLIDES: Slide[] = [
   { src: 'portraits/img5.png', alt: 'Bar Moshe - portrait 5', caption: 'portrait · 5' },
   { src: 'portraits/img6.png', alt: 'Bar Moshe - portrait 6', caption: 'portrait · 6' },
   { src: 'portraits/img7.png', alt: 'Bar Moshe - portrait 7', caption: 'portrait · 7' },
-  { src: 'portraits/img8.png', alt: 'Bar Moshe - portrait 8', caption: 'portrait · 8' },
   { src: 'portraits/img9.png', alt: 'Bar Moshe - portrait 9', caption: 'portrait · 9' },
   { src: 'portraits/img10.png', alt: 'Bar Moshe - portrait 10', caption: 'portrait · 10' },
   { src: 'portraits/img11.png', alt: 'Bar Moshe - portrait 11', caption: 'portrait · 11' },
