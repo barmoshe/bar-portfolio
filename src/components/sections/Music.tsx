@@ -392,42 +392,78 @@ export default function Music() {
               <span>Side {t.side}</span>
             </div>
             <h3>{t.title}</h3>
-            {t.preview ? (
-              <div className="track-vinyl">
-                <svg viewBox="0 0 200 200" role="img" aria-label={`${t.title} label art`}>
-                  <defs>
-                    <clipPath id={`vinyl-label-${t.n}`}>
-                      <circle cx="100" cy="100" r="62" />
-                    </clipPath>
-                  </defs>
-                  <g className="disc">
-                    <circle cx="100" cy="100" r="94" className="wax" />
-                    <circle cx="100" cy="100" r="90" className="rim" />
-                    {[84, 78, 72, 66].map((r) => (
-                      <circle key={r} cx="100" cy="100" r={r} className="groove" />
-                    ))}
-                    <image
-                      href={`${import.meta.env.BASE_URL}${t.preview}`}
-                      x="38"
-                      y="38"
-                      width="124"
-                      height="124"
-                      preserveAspectRatio="xMidYMin slice"
-                      clipPath={`url(#vinyl-label-${t.n})`}
-                    />
-                    <circle cx="100" cy="100" r="62" className="label-ring" />
-                    <circle cx="100" cy="100" r="52" className="label-inner" />
-                  </g>
-                  <circle cx="100" cy="100" r="2.5" className="spindle" />
-                </svg>
-              </div>
-            ) : null}
+            {t.preview ? <TrackVinyl track={t} /> : null}
             <p>{t.body}</p>
             <div className="tags">{t.tags}</div>
           </article>
         ))}
       </div>
     </article>
+  );
+}
+
+// Mini vinyl record for a track. The preview image is clipped into the
+// center label; clicking flicks the disc through two fast rotations via
+// the Web Animations API (re-triggerable, and bypassed when the user
+// prefers reduced motion).
+function TrackVinyl({ track }: { track: Track }) {
+  const discRef = useRef<SVGGElement | null>(null);
+
+  const spin = () => {
+    const disc = discRef.current;
+    if (!disc) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    disc.animate(
+      [{ transform: 'rotate(0deg)' }, { transform: 'rotate(720deg)' }],
+      { duration: 900, easing: 'cubic-bezier(.2,.7,.2,1)' },
+    );
+  };
+
+  const onKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      spin();
+    }
+  };
+
+  const displayTitle = track.title.replace(/\.$/, '').split(' - ')[0];
+
+  return (
+    <div
+      className="track-vinyl"
+      role="button"
+      tabIndex={0}
+      aria-label={`Spin ${displayTitle}`}
+      onClick={spin}
+      onKeyDown={onKey}
+    >
+      <svg viewBox="0 0 200 200" aria-hidden="true">
+        <defs>
+          <clipPath id={`vinyl-label-${track.n}`}>
+            <circle cx="100" cy="100" r="62" />
+          </clipPath>
+        </defs>
+        <g className="disc" ref={discRef}>
+          <circle cx="100" cy="100" r="94" className="wax" />
+          <circle cx="100" cy="100" r="90" className="rim" />
+          {[84, 78, 72, 66].map((r) => (
+            <circle key={r} cx="100" cy="100" r={r} className="groove" />
+          ))}
+          <image
+            href={`${import.meta.env.BASE_URL}${track.preview}`}
+            x="38"
+            y="38"
+            width="124"
+            height="124"
+            preserveAspectRatio="xMidYMin slice"
+            clipPath={`url(#vinyl-label-${track.n})`}
+          />
+          <circle cx="100" cy="100" r="62" className="label-ring" />
+          <circle cx="100" cy="100" r="52" className="label-inner" />
+        </g>
+        <circle cx="100" cy="100" r="2.5" className="spindle" />
+      </svg>
+    </div>
   );
 }
 
