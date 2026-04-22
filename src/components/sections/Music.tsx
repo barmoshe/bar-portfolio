@@ -27,6 +27,8 @@ type Track = {
   title: string;
   body: string;
   tags: string;
+  /** Optional preview image, relative to `public/` (e.g. `'tracks/foo.png'`). Rendered above the body when set. */
+  preview?: string;
 };
 
 // Placeholder tracks. These describe the *kind* of music-tech and
@@ -64,11 +66,12 @@ const TRACKS: Track[] = [
   {
     n: 'B1',
     side: 'B',
-    tag: 'Self-directed',
-    title: 'Cosmic Synth - 3D browser synthesizer.',
+    tag: 'Self-directed · 2026',
+    title: 'Biome Synth - five-biome browser instrument.',
     body:
-      'A WebGL galaxy that doubles as a performance surface. Stars are oscillators; nebulas are reverb zones. Specced via a Claude skill.',
-    tags: '#webaudio   #webgl   #synth',
+      'A playable world. Touch to make music across space, jungle, sea, cyberpunk, and tundra biomes - or let the AI DJ compose through DRIFT, PULSE, BLOOM, SURGE, DISSOLVE. Tone.js for audio, Three.js for the space biome, Canvas2D for the rest.',
+    tags: '#tonejs   #threejs   #webaudio   #synth',
+    preview: 'tracks/biome-synth.png',
   },
   {
     n: 'B2',
@@ -389,6 +392,28 @@ export default function Music() {
               <span>Side {t.side}</span>
             </div>
             <h3>{t.title}</h3>
+            {t.preview ? (
+              <div
+                style={{
+                  aspectRatio: '16 / 9',
+                  overflow: 'hidden',
+                  border: '1.5px solid var(--ink)',
+                }}
+              >
+                <img
+                  src={`${import.meta.env.BASE_URL}${t.preview}`}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    display: 'block',
+                  }}
+                />
+              </div>
+            ) : null}
             <p>{t.body}</p>
             <div className="tags">{t.tags}</div>
           </article>

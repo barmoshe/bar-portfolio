@@ -124,29 +124,6 @@ export default function Repos({ onOpen }: Props) {
               <span className="path">~/{p.name}</span>
             </header>
             <div className="body">
-              {p.preview ? (
-                <div
-                  style={{
-                    aspectRatio: '16 / 9',
-                    overflow: 'hidden',
-                    border: '1px solid var(--ink)',
-                    marginBottom: 4,
-                  }}
-                >
-                  <img
-                    src={`${import.meta.env.BASE_URL}${p.preview}`}
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      display: 'block',
-                    }}
-                  />
-                </div>
-              ) : null}
               <div className="meta">
                 <span className="glyph" aria-hidden="true">
                   {iconFor(p.language)}

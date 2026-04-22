@@ -226,23 +226,7 @@ export default function Lightbox({ project, idx, sourceRect, onClose }: Props) {
         </button>
         <div className="grid">
           <div className="lb-art" id="lbArt">
-            {project?.preview ? (
-              <img
-                src={`${import.meta.env.BASE_URL}${project.preview}`}
-                alt={`${project.name} preview`}
-                loading="lazy"
-                decoding="async"
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
-              />
-            ) : idx !== null ? (
-              <CodeArt idx={idx} />
-            ) : null}
+            {idx !== null ? <CodeArt idx={idx} /> : null}
           </div>
           <div className="lb-body">
             <div className="kicker" id="lbKicker">
