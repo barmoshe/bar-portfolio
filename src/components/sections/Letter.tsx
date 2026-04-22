@@ -283,7 +283,7 @@ export default function Letter() {
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))',
-          gap: 22,
+          gap: 40,
           maxWidth: 880,
           margin: '40px auto 0',
           padding: '0 4px',
