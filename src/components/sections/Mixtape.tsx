@@ -41,7 +41,7 @@ type Track = {
   title: string;
   body: string;
   hashtags: string;
-  /** External write-up. Present on every Side A post and on merged Side B tracks. */
+  /** External write-up. Present on posts and on experiment tracks that also have a companion post. */
   href?: string;
   /** Preview image relative to `public/` (e.g. `'tracks/foo.jpg'`). Rendered as a mini vinyl. */
   preview?: string;
@@ -54,11 +54,11 @@ type Track = {
   featured?: boolean;
 };
 
-// Side A = posts (public write-ups that stand on their own).
-// Side B = experiments (builds, patches, synths, research).
-// Two Side B tracks are merged with the post that covered them - they
-// carry an `href` so the card links out, but the primary identity is
-// the artifact, not the thread about it.
+// Curated like a real mixtape: each side is a sequenced mix of posts
+// and experiments, not a filter by kind. Side A is the hits (loud,
+// recent, both featureds); Side B is the deep cuts (older sketches,
+// one softer opener). The `kind` field stays as metadata but the sides
+// aren't sorted by it.
 const TRACKS: Track[] = [
   {
     n: 'A1',
@@ -78,46 +78,6 @@ const TRACKS: Track[] = [
   {
     n: 'A2',
     side: 'A',
-    kind: 'post',
-    date: 'FEB 2026',
-    tag: '// launch',
-    title: 'Shipping Joomsy - meaningful moments across the distance.',
-    body:
-      "Kids connect with grandparents, family, and friends through interactive video calls - reading books together, gesture-based games, more coming. Over 35M US grandparents live 200+ miles from a grandchild; we're building the bridge.",
-    hashtags: '#startup   #product   #video',
-    href: 'https://www.linkedin.com/feed/update/urn:li:activity:7421903131573366784/',
-    preview: 'tracks/joomsy.jpg',
-    previewBg: '#f7c80c',
-  },
-  {
-    n: 'A3',
-    side: 'A',
-    kind: 'post',
-    date: 'JAN 2026',
-    tag: '// gift',
-    title: 'A tiny Flappy Bird for a wedding gift.',
-    body:
-      'My cousin Chen was getting married. Her fiancé is into DJI drones - so I built a small drone-themed Flappy Bird with a "Ring Delivered!" finish, a "Chen said YES!" screen, and an endless mode. Sometimes the best gift is 200 lines of web game.',
-    hashtags: '#javascript   #canvas   #gift',
-    href: 'https://v0-chenandoz.vercel.app/',
-    preview: 'tracks/ring-quest.jpg',
-    previewBg: '#91ccf5',
-  },
-  {
-    n: 'A4',
-    side: 'A',
-    kind: 'post',
-    date: 'OCT 2025',
-    tag: '// devtool',
-    title: 'A small GPT that rewrites messy PR notes into clean bullets.',
-    body:
-      'Takes half-written PR descriptions and turns them into Fix · Add · Update · Refactor · Remove. Writing a changelog now takes seconds instead of minutes.',
-    hashtags: '#gpt   #devtools   #workflow',
-    href: 'https://www.linkedin.com/feed/update/urn:li:activity:7382760320420720640/',
-  },
-  {
-    n: 'B1',
-    side: 'B',
     kind: 'experiment',
     date: 'APR 2026',
     tag: 'Self-directed · 2026',
@@ -132,8 +92,8 @@ const TRACKS: Track[] = [
     featured: true,
   },
   {
-    n: 'B2',
-    side: 'B',
+    n: 'A3',
+    side: 'A',
     kind: 'experiment',
     date: 'FEB 2026',
     tag: 'Global Game Jam · 2026',
@@ -146,7 +106,47 @@ const TRACKS: Track[] = [
     previewBg: '#556b77',
   },
   {
-    n: 'B3',
+    n: 'A4',
+    side: 'A',
+    kind: 'post',
+    date: 'FEB 2026',
+    tag: '// launch',
+    title: 'Shipping Joomsy - meaningful moments across the distance.',
+    body:
+      "Kids connect with grandparents, family, and friends through interactive video calls - reading books together, gesture-based games, more coming. Over 35M US grandparents live 200+ miles from a grandchild; we're building the bridge.",
+    hashtags: '#startup   #product   #video',
+    href: 'https://www.linkedin.com/feed/update/urn:li:activity:7421903131573366784/',
+    preview: 'tracks/joomsy.jpg',
+    previewBg: '#f7c80c',
+  },
+  {
+    n: 'A5',
+    side: 'A',
+    kind: 'post',
+    date: 'OCT 2025',
+    tag: '// devtool',
+    title: 'A small GPT that rewrites messy PR notes into clean bullets.',
+    body:
+      'Takes half-written PR descriptions and turns them into Fix · Add · Update · Refactor · Remove. Writing a changelog now takes seconds instead of minutes.',
+    hashtags: '#gpt   #devtools   #workflow',
+    href: 'https://www.linkedin.com/feed/update/urn:li:activity:7382760320420720640/',
+  },
+  {
+    n: 'B1',
+    side: 'B',
+    kind: 'post',
+    date: 'JAN 2026',
+    tag: '// gift',
+    title: 'A tiny Flappy Bird for a wedding gift.',
+    body:
+      'My cousin Chen was getting married. Her fiancé is into DJI drones - so I built a small drone-themed Flappy Bird with a "Ring Delivered!" finish, a "Chen said YES!" screen, and an endless mode. Sometimes the best gift is 200 lines of web game.',
+    hashtags: '#javascript   #canvas   #gift',
+    href: 'https://v0-chenandoz.vercel.app/',
+    preview: 'tracks/ring-quest.jpg',
+    previewBg: '#91ccf5',
+  },
+  {
+    n: 'B2',
     side: 'B',
     kind: 'experiment',
     date: '2025',
@@ -157,7 +157,7 @@ const TRACKS: Track[] = [
     hashtags: '#ggj   #chiptune   #webaudio',
   },
   {
-    n: 'B4',
+    n: 'B3',
     side: 'B',
     kind: 'experiment',
     date: '2024',
@@ -168,7 +168,7 @@ const TRACKS: Track[] = [
     hashtags: '#hackathon   #tonejs   #generative',
   },
   {
-    n: 'B5',
+    n: 'B4',
     side: 'B',
     kind: 'experiment',
     date: '2024',
@@ -179,7 +179,7 @@ const TRACKS: Track[] = [
     hashtags: '#magenta   #midi   #ml',
   },
   {
-    n: 'B6',
+    n: 'B5',
     side: 'B',
     kind: 'experiment',
     date: '2023',
@@ -395,7 +395,7 @@ export default function Mixtape() {
               Now cueing <em>Side {side}</em>
             </span>
             <p className="liner-cta__prompt">
-              Flip the record to {side === 'A' ? 'visit the Lab' : 'hear the Posts'}
+              Flip the record to {side === 'A' ? 'pull the deep cuts' : 'play the hits'}
               <span className="liner-cta__arrow" aria-hidden="true">↓</span>
             </p>
           </div>
@@ -468,8 +468,8 @@ export default function Mixtape() {
           </div>
           <p className="placeholder-note">
             // Sound is synthesized in-browser (Web Audio API); no assets fetched.
-            Side A plays a 78 BPM F-major lo-fi bed; Side B is a 60 BPM D-dorian lab
-            drone. Side A cards open the full write-up; Side B carries the artifact.
+            Side A rolls a 78 BPM F-major lo-fi bed; Side B drifts into a 60 BPM
+            D-dorian drone. Tap any card that carries a link to open its write-up.
           </p>
         </div>
       </div>
@@ -644,7 +644,7 @@ const Rig = ({ ref, side }: RigProps) => (
           </text>
           <text className="sk-label-text">
             <textPath href="#mixtape-label-bottom" startOffset="50%" textAnchor="middle">
-              {side === 'A' ? 'SIDE A · POSTS' : 'SIDE B · LAB'}
+              {side === 'A' ? 'SIDE A · HITS' : 'SIDE B · CUTS'}
             </textPath>
           </text>
 
