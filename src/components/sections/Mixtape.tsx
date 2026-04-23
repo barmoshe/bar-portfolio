@@ -120,11 +120,12 @@ const TRACKS: Track[] = [
     kind: 'experiment',
     date: 'FEB 2026',
     tag: 'Global Game Jam · 2026',
-    title: 'Mask Theme - GGJ 2026 adaptive score.',
+    title: 'Masking Through - adaptive score for a cardboard-doctor short.',
     body:
-      'Second year on audio duty. Unity + FMOD layered score that ducks and crests with the player state - vertical layers, horizontal cues. This time I let Cursor write the sound-effect code (C# synth, mixer, effects chain) while I conducted from the side. One 48-hour weekend, zero manual setup.',
+      'Second year on audio duty. A cut-out cardboard world - tie-wearing doctor, smiling pink flowers, a hand-lettered title card - scored in Unity + FMOD with layered stems that duck and crest with the player state (vertical layers, horizontal cues). This time I let Cursor write the sound-effect code (C# synth, mixer, effects chain) while I conducted from the side. One 48-hour weekend, zero manual setup.',
     hashtags: '#ggj2026   #fmod   #unity   #cursor   #adaptive',
     href: 'https://www.linkedin.com/feed/update/urn:li:activity:7423731964278358016/',
+    preview: 'tracks/masking-through.jpg',
   },
   {
     n: 'B3',
