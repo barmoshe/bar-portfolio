@@ -350,10 +350,7 @@ export default function Mixtape() {
         What I've <em>made.</em>
       </h2>
       <p className="dek">
-        Side A is the hits. Side B is the sketches. Flip the record to switch sides.
-      </p>
-      <p className="placeholder-note">
-        // Live Web Audio - Side A: 78 BPM F-major lo-fi, Side B: 60 BPM D-dorian drone. Tap a card for the write-up.
+        Side A, 78 BPM F-major lo-fi hits. Side B, 60 BPM D-dorian sketches. Flip to switch, tap a card for the write-up.
       </p>
 
       <div className="music-stage" style={stageStyle}>
