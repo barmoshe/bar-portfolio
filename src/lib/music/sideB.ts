@@ -63,7 +63,7 @@ function hash01(seed: number): number {
 }
 
 export function composeSideB(bus: Tone.ToneAudioNode): Composition {
-  const reverb = makePlateReverb(2.4, 0.04);
+  const reverb = makePlateReverb(3.6, 0.04);
   const delay = makePingPong('4n.', 0.42);
   reverb.output.connect(bus);
   delay.output.connect(bus);
