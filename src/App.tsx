@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import Grain from './components/Grain';
 import Crease from './components/Crease';
 import Boot from './components/Boot';
@@ -9,7 +9,9 @@ import InkDefs from './components/InkDefs';
 import Intro from './components/sections/Intro';
 import Background from './components/sections/Background';
 import Repos from './components/sections/Repos';
-import Mixtape from './components/sections/Mixtape';
+// Mixtape pulls in Tone.js — split it into its own chunk so the initial
+// load doesn't pay for an audio engine that only the mixtape uses.
+const Mixtape = lazy(() => import('./components/sections/Mixtape'));
 import Letter from './components/sections/Letter';
 import { projects } from './data/portfolio';
 import { useTheme } from './hooks/useTheme';
@@ -99,7 +101,9 @@ export default function App() {
           <Intro />
           <Background />
           <Repos onOpen={openFromCard} />
-          <Mixtape />
+          <Suspense fallback={<section id="mixtape" aria-hidden="true" style={{ minHeight: 600 }} />}>
+            <Mixtape />
+          </Suspense>
           <Letter />
         </main>
         <TabBar />

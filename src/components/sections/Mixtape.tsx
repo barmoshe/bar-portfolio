@@ -14,8 +14,11 @@ import {
   playNeedleDrop as sfxNeedleDrop,
   playScratch as sfxScratch,
   setEnabled as setAudioEnabled,
+  setMuted as setAudioMuted,
+  setReducedMotion as setAudioReducedMotion,
   setRpm as setAudioRpm,
   setSide as setAudioSide,
+  setVolume as setAudioVolume,
   startBed,
   stopBed,
   unlock as unlockAudio,
@@ -23,6 +26,9 @@ import {
 
 const AUDIO_KEY = 'bm:vinyl-audio';
 const RPM_KEY = 'bm:vinyl-rpm';
+const VOLUME_KEY = 'bm:vinyl-volume';
+const MUTE_KEY = 'bm:vinyl-mute';
+const VOLUME_DEFAULT = 0.65;
 
 type Rpm = 33 | 45 | 78;
 const RPM_OPTIONS: Rpm[] = [33, 45, 78];
@@ -226,6 +232,34 @@ export default function Mixtape() {
     }
   });
 
+  const [volume, setVolume] = useState<number>(() => {
+    try {
+      const raw = localStorage.getItem(VOLUME_KEY);
+      const parsed = raw == null ? VOLUME_DEFAULT : parseFloat(raw);
+      return Number.isFinite(parsed) ? Math.max(0, Math.min(1, parsed)) : VOLUME_DEFAULT;
+    } catch {
+      return VOLUME_DEFAULT;
+    }
+  });
+
+  const [muted, setMuted] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(MUTE_KEY) === '1';
+    } catch {
+      return false;
+    }
+  });
+
+  const [announce, setAnnounce] = useState('');
+  // Re-announce identical strings (e.g. two consecutive volume tweaks at the
+  // same percentage) by appending a zero-width space — the screen reader
+  // sees a "different" value and re-reads it.
+  const announceRef = useRef(0);
+  const announceMessage = (msg: string) => {
+    announceRef.current += 1;
+    setAnnounce(msg + '​'.repeat(announceRef.current % 2));
+  };
+
   useEffect(() => {
     setAudioRpm(RPM_RATE[rpm]);
     rigRef.current?.style.setProperty('--spin-dur', RPM_SPIN[rpm]);
@@ -235,6 +269,37 @@ export default function Mixtape() {
       /* ignore */
     }
   }, [rpm]);
+
+  useEffect(() => {
+    setAudioVolume(volume);
+    try {
+      localStorage.setItem(VOLUME_KEY, volume.toFixed(3));
+    } catch {
+      /* ignore */
+    }
+  }, [volume]);
+
+  useEffect(() => {
+    setAudioMuted(muted);
+    try {
+      localStorage.setItem(MUTE_KEY, muted ? '1' : '0');
+    } catch {
+      /* ignore */
+    }
+  }, [muted]);
+
+  // Forward `prefers-reduced-motion` into the audio engine. Mirrors how the
+  // visual layer suppresses motion — we suppress the audio "motion" layer
+  // (tape wow/flutter, ghost snares, fills, swells) but keep the music
+  // playing.
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const apply = () => setAudioReducedMotion(mq.matches);
+    apply();
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
+  }, []);
 
   useEffect(() => {
     if (audioOn && !isAudioEnabled()) {
@@ -263,12 +328,19 @@ export default function Mixtape() {
     if (next) {
       unlockAudio();
       setAudioEnabled(true);
+      // Re-apply current volume / mute / reduced-motion state — the audio
+      // chain may have just been instantiated and won't have heard the
+      // earlier setters.
+      setAudioVolume(volume);
+      setAudioMuted(muted);
       sfxNeedleDrop(side);
       if (rigRef.current?.getAttribute('data-playing') === 'true') {
         setTimeout(() => startBed(side), 220);
       }
+      announceMessage(`Mixtape playing side ${side}.`);
     } else {
       setAudioEnabled(false);
+      announceMessage('Mixtape stopped.');
     }
     try {
       localStorage.setItem(AUDIO_KEY, next ? '1' : '0');
@@ -282,6 +354,18 @@ export default function Mixtape() {
     sfxFlip();
     setAudioSide(next);
     setSide(next);
+    announceMessage(`Now playing side ${next}.`);
+  };
+
+  const onVolumeChange = (v: number) => {
+    setVolume(v);
+    announceMessage(`Volume ${Math.round(v * 100)} percent.`);
+  };
+
+  const toggleMute = () => {
+    const next = !muted;
+    setMuted(next);
+    announceMessage(next ? 'Audio muted.' : 'Audio unmuted.');
   };
 
   useGSAP(
@@ -407,10 +491,17 @@ export default function Mixtape() {
           side={side}
           audioOn={audioOn}
           rpm={rpm}
+          volume={volume}
+          muted={muted}
           onAudioToggle={toggleAudio}
           onFlip={flipSide}
           onRpmChange={setRpm}
+          onVolumeChange={onVolumeChange}
+          onMuteToggle={toggleMute}
         />
+        <div className="vinyl-live" role="status" aria-live="polite" aria-atomic="true">
+          {announce}
+        </div>
       </div>
 
       <div className="tracklist" ref={listRef}>
@@ -545,15 +636,31 @@ type RigProps = {
   side: 'A' | 'B';
   audioOn: boolean;
   rpm: Rpm;
+  volume: number;
+  muted: boolean;
   onAudioToggle: () => void;
   onFlip: () => void;
   onRpmChange: (r: Rpm) => void;
+  onVolumeChange: (v: number) => void;
+  onMuteToggle: () => void;
 };
 
 // All-stroke sketch rig. The whole `<g class="sketch-ink">` group is wrapped
 // by a feTurbulence/feDisplacementMap filter (ink-bleed-mixtape-disc) at a
 // persistent low scale so every line reads as hand-drawn.
-const Rig = ({ ref, side, audioOn, rpm, onAudioToggle, onFlip, onRpmChange }: RigProps) => (
+const Rig = ({
+  ref,
+  side,
+  audioOn,
+  rpm,
+  volume,
+  muted,
+  onAudioToggle,
+  onFlip,
+  onRpmChange,
+  onVolumeChange,
+  onMuteToggle,
+}: RigProps) => (
   <div
     className="rig"
     ref={ref}
@@ -768,5 +875,45 @@ const Rig = ({ ref, side, audioOn, rpm, onAudioToggle, onFlip, onRpmChange }: Ri
         </text>
       </g>
     </svg>
+    <div className="rig-controls">
+      <button
+        type="button"
+        className="vinyl-mute"
+        aria-pressed={muted}
+        aria-label={muted ? 'Unmute mixtape audio' : 'Mute mixtape audio'}
+        onClick={onMuteToggle}
+        data-muted={muted ? 'true' : 'false'}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 9 H8 L13 5 V19 L8 15 H4 Z" />
+          {muted ? (
+            <>
+              <line x1="16" y1="9" x2="21" y2="14" />
+              <line x1="21" y1="9" x2="16" y2="14" />
+            </>
+          ) : (
+            <>
+              <path d="M16 8 Q19 12 16 16" fill="none" />
+              <path d="M18 6 Q22 12 18 18" fill="none" />
+            </>
+          )}
+        </svg>
+        <span className="vinyl-mute-label">{muted ? 'MUTED' : 'MUTE'}</span>
+      </button>
+      <label className="vinyl-volume">
+        <span className="vinyl-volume-label">VOL</span>
+        <input
+          type="range"
+          min={0}
+          max={100}
+          step={1}
+          value={Math.round(volume * 100)}
+          onChange={(e) => onVolumeChange(parseInt(e.target.value, 10) / 100)}
+          aria-label="Mixtape master volume"
+          aria-valuetext={`${Math.round(volume * 100)} percent`}
+        />
+        <span className="vinyl-volume-readout">{Math.round(volume * 100)}</span>
+      </label>
+    </div>
   </div>
 );

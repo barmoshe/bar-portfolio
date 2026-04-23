@@ -1,10 +1,19 @@
 /**
- * Lookahead scheduler — the Chris Wilson "A Tale of Two Clocks" pattern.
- * A setTimeout loop wakes every LOOKAHEAD ms and schedules any steps that
- * fall within SCHEDULE_AHEAD seconds of the current AudioContext time.
- * The callback receives precise audio time and the step index, which it
- * uses to trigger sample-accurate note starts.
+ * Lookahead scheduler — Chris Wilson's "A Tale of Two Clocks" pattern.
+ *
+ * Why custom (instead of Tone.Transport): the two sides have different
+ * native tempos (78 BPM vs 60 BPM) and we want them to run independently
+ * so the user's RPM knob can scale both without the math gymnastics of
+ * shared transport time. Tone.Transport is a singleton — fine for global
+ * SFX timing, awkward for two co-running compositions at different rates.
+ *
+ * The scheduler runs on a setTimeout loop that wakes every LOOKAHEAD_MS
+ * and schedules every step that falls within SCHEDULE_AHEAD_S of `now`.
+ * The callback receives the precise audio time (in Tone.Transport seconds)
+ * and the absolute step index — it triggers Tone synths with that time.
  */
+
+import * as Tone from 'tone';
 
 const LOOKAHEAD_MS = 25;
 const SCHEDULE_AHEAD_S = 0.12;
@@ -17,13 +26,12 @@ export type Scheduler = {
 };
 
 export function startScheduler(
-  ctx: AudioContext,
   bpm: number,
   stepsPerBeat: number,
   onStep: StepCallback,
 ): Scheduler {
   let currentBpm = bpm;
-  let nextStepTime = ctx.currentTime + 0.05;
+  let nextStepTime = Tone.now() + 0.06;
   let step = 0;
   let timer: ReturnType<typeof setTimeout> | null = null;
   let stopped = false;
@@ -32,7 +40,8 @@ export function startScheduler(
 
   const tick = () => {
     if (stopped) return;
-    while (nextStepTime < ctx.currentTime + SCHEDULE_AHEAD_S) {
+    const horizon = Tone.now() + SCHEDULE_AHEAD_S;
+    while (nextStepTime < horizon) {
       onStep(nextStepTime, step);
       nextStepTime += stepDuration();
       step += 1;
