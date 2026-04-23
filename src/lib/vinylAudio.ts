@@ -357,7 +357,7 @@ function startSurfaceNoise(audioCtx: AudioContext, dest: AudioNode): () => void 
 
   const surfaceGain = audioCtx.createGain();
   surfaceGain.gain.setValueAtTime(0, audioCtx.currentTime);
-  surfaceGain.gain.linearRampToValueAtTime(0.17, audioCtx.currentTime + 0.6);
+  surfaceGain.gain.linearRampToValueAtTime(0.09, audioCtx.currentTime + 0.6);
 
   src.connect(hp).connect(peak).connect(surfaceGain).connect(dest);
   src.start();
@@ -372,9 +372,9 @@ function startSurfaceNoise(audioCtx: AudioContext, dest: AudioNode): () => void 
   hum.frequency.value = 50;
   hum2.frequency.value = 100;
   humGain.gain.setValueAtTime(0, audioCtx.currentTime);
-  humGain.gain.linearRampToValueAtTime(0.018, audioCtx.currentTime + 0.8);
+  humGain.gain.linearRampToValueAtTime(0.012, audioCtx.currentTime + 0.8);
   hum2Gain.gain.setValueAtTime(0, audioCtx.currentTime);
-  hum2Gain.gain.linearRampToValueAtTime(0.007, audioCtx.currentTime + 0.8);
+  hum2Gain.gain.linearRampToValueAtTime(0.004, audioCtx.currentTime + 0.8);
   hum.connect(humGain).connect(dest);
   hum2.connect(hum2Gain).connect(dest);
   hum.start();
