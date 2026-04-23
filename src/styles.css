@@ -916,7 +916,7 @@
      center label. Reuses the Rig's sketch-stroke vocabulary (paper-tone
      wax, ink-soft grooves, dashed inner ring) and the existing
      @keyframes vinyl-spin for an optional hover spin. */
-  .track-vinyl{width:min(50%,150px);aspect-ratio:1;margin:10px auto 4px;
+  .track-vinyl{width:min(42%,120px);aspect-ratio:1;margin:10px auto 4px;
     cursor:pointer;-webkit-tap-highlight-color:transparent;
     filter:drop-shadow(0 2px 6px oklch(0 0 0 / .35))}
   .track-vinyl:focus{outline:none}
