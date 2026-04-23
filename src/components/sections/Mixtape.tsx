@@ -49,6 +49,10 @@ type Track = {
   href?: string;
   /** Override the track-link label when `href` points somewhere other than a blog post (e.g. a live app). */
   linkLabel?: string;
+  /** Optional second external link rendered after the primary `href`. Used for write-ups that accompany a live app. */
+  secondaryHref?: string;
+  /** Label for `secondaryHref`. Defaults to `'Read the write-up →'` in the renderer. */
+  secondaryLabel?: string;
   /** Preview image relative to `public/` (e.g. `'tracks/foo.jpg'`). Rendered as a mini vinyl. */
   preview?: string;
   /** How to fit the preview inside the label circle. 'cover' (default) crops to fill; 'contain' shrinks to show the whole image. */
@@ -128,10 +132,13 @@ const TRACKS: Track[] = [
     tag: 'Self-directed · 2026',
     title: 'Biome Synth - five-biome browser instrument.',
     body:
-      'A playable world. Touch to make music across space, jungle, sea, cyberpunk, and tundra biomes - or let an AI DJ compose through DRIFT, PULSE, BLOOM, SURGE, DISSOLVE. The whole spec came out of a Claude skill I wrote that interviews you step-by-step until it has a full brief. Tone.js for audio, Three.js for the space biome, Canvas2D for the rest.',
+      'Started as a Claude skill I wrote that interviews you with AskUserQuestion until it has a full project brief — no technical background needed. Took that brief and built the app: a five-biome browser instrument with an AI DJ that composes through DRIFT, PULSE, BLOOM, SURGE, DISSOLVE. Tone.js + Three.js + Canvas2D, polished in Lovable.',
     hashtags: '#tonejs   #threejs   #webaudio   #synth   #claude',
     href: 'https://biome-synth.lovable.app/',
     linkLabel: 'Play the app →',
+    secondaryHref:
+      'https://www.linkedin.com/posts/barmoshe_claude-skill-activity-7450179482327576576-M9J9',
+    secondaryLabel: 'Read the write-up →',
     preview: 'tracks/biome-synth.jpg',
     previewFit: 'contain',
     previewBg: '#12192f',
@@ -398,6 +405,16 @@ export default function Mixtape() {
                 rel="noopener"
               >
                 {t.linkLabel ?? 'Read the post →'}
+              </a>
+            ) : null}
+            {t.secondaryHref ? (
+              <a
+                className="track-link"
+                href={t.secondaryHref}
+                target="_blank"
+                rel="noopener"
+              >
+                {t.secondaryLabel ?? 'Read the write-up →'}
               </a>
             ) : null}
             <div className="tags">{t.hashtags}</div>
