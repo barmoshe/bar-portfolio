@@ -242,10 +242,6 @@ export function unlock(): void {
     ensure();
     return;
   }
-  // Raise scheduler pre-roll so React re-renders and GC pauses don't turn
-  // into audible late fires. Cheap, safe to set on the existing context —
-  // it's just a number the Tone scheduler reads each tick.
-  Tone.getContext().lookAhead = 0.2;
   // Tone.start() returns a Promise but the user gesture is preserved
   // because we kick it off synchronously inside the click handler.
   void Tone.start();
