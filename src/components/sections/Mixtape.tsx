@@ -54,11 +54,8 @@ type Track = {
   featured?: boolean;
 };
 
-// Curated like a real mixtape: each side is a sequenced mix of posts
-// and experiments, not a filter by kind. Side A is the hits (loud,
-// recent, both featureds); Side B is the deep cuts (older sketches,
-// one softer opener). The `kind` field stays as metadata but the sides
-// aren't sorted by it.
+// Tracks are split randomly across Side A and Side B - the `kind`
+// field stays as metadata but the sides aren't sorted by it.
 const TRACKS: Track[] = [
   {
     n: 'A1',
@@ -78,6 +75,48 @@ const TRACKS: Track[] = [
   {
     n: 'A2',
     side: 'A',
+    kind: 'post',
+    date: 'JAN 2026',
+    tag: '// gift',
+    title: 'A tiny Flappy Bird for a wedding gift.',
+    body:
+      'My cousin Chen was getting married. Her fiancé is into DJI drones - so I built a small drone-themed Flappy Bird with a "Ring Delivered!" finish, a "Chen said YES!" screen, and an endless mode. Sometimes the best gift is 200 lines of web game.',
+    hashtags: '#javascript   #canvas   #gift',
+    href: 'https://v0-chenandoz.vercel.app/',
+    preview: 'tracks/ring-quest.jpg',
+    previewBg: '#91ccf5',
+  },
+  {
+    n: 'A3',
+    side: 'A',
+    kind: 'post',
+    date: 'FEB 2026',
+    tag: '// launch',
+    title: 'Shipping Joomsy - meaningful moments across the distance.',
+    body:
+      "Kids connect with grandparents, family, and friends through interactive video calls - reading books together, gesture-based games, more coming. Over 35M US grandparents live 200+ miles from a grandchild; we're building the bridge.",
+    hashtags: '#startup   #product   #video',
+    href: 'https://www.linkedin.com/feed/update/urn:li:activity:7421903131573366784/',
+    preview: 'tracks/joomsy.jpg',
+    previewBg: '#f7c80c',
+  },
+  {
+    n: 'A4',
+    side: 'A',
+    kind: 'experiment',
+    date: 'MAR 2023',
+    tag: 'Tech-Music Hack · Afeka × Rimon',
+    title: 'MIDI Violin - Arduino hack, 3rd place.',
+    body:
+      'Second year at the Afeka × Rimon Tech-Music Hackathon. First time on an Arduino - 24 hours later the team had wired a real violin into a MIDI controller that does vibrato and glissando (kind of). Fairy lights were not in the spec. Placed third.',
+    hashtags: '#arduino   #midi   #hackathon',
+    href: 'https://www.linkedin.com/posts/barmoshe_musichackathon-arduino-midiviolin-share-7047819554294501377-CTdU',
+    preview: 'tracks/midi-violin.jpg',
+    previewBg: '#8d512e',
+  },
+  {
+    n: 'B1',
+    side: 'B',
     kind: 'experiment',
     date: 'APR 2026',
     tag: 'Self-directed · 2026',
@@ -92,8 +131,20 @@ const TRACKS: Track[] = [
     featured: true,
   },
   {
-    n: 'A3',
-    side: 'A',
+    n: 'B2',
+    side: 'B',
+    kind: 'post',
+    date: 'OCT 2025',
+    tag: '// devtool',
+    title: 'A small GPT that rewrites messy PR notes into clean bullets.',
+    body:
+      'Takes half-written PR descriptions and turns them into Fix · Add · Update · Refactor · Remove. Writing a changelog now takes seconds instead of minutes.',
+    hashtags: '#gpt   #devtools   #workflow',
+    href: 'https://www.linkedin.com/feed/update/urn:li:activity:7382760320420720640/',
+  },
+  {
+    n: 'B3',
+    side: 'B',
     kind: 'experiment',
     date: 'FEB 2026',
     tag: 'Global Game Jam · 2026',
@@ -106,47 +157,7 @@ const TRACKS: Track[] = [
     previewBg: '#556b77',
   },
   {
-    n: 'A4',
-    side: 'A',
-    kind: 'post',
-    date: 'FEB 2026',
-    tag: '// launch',
-    title: 'Shipping Joomsy - meaningful moments across the distance.',
-    body:
-      "Kids connect with grandparents, family, and friends through interactive video calls - reading books together, gesture-based games, more coming. Over 35M US grandparents live 200+ miles from a grandchild; we're building the bridge.",
-    hashtags: '#startup   #product   #video',
-    href: 'https://www.linkedin.com/feed/update/urn:li:activity:7421903131573366784/',
-    preview: 'tracks/joomsy.jpg',
-    previewBg: '#f7c80c',
-  },
-  {
-    n: 'A5',
-    side: 'A',
-    kind: 'post',
-    date: 'OCT 2025',
-    tag: '// devtool',
-    title: 'A small GPT that rewrites messy PR notes into clean bullets.',
-    body:
-      'Takes half-written PR descriptions and turns them into Fix · Add · Update · Refactor · Remove. Writing a changelog now takes seconds instead of minutes.',
-    hashtags: '#gpt   #devtools   #workflow',
-    href: 'https://www.linkedin.com/feed/update/urn:li:activity:7382760320420720640/',
-  },
-  {
-    n: 'B1',
-    side: 'B',
-    kind: 'post',
-    date: 'JAN 2026',
-    tag: '// gift',
-    title: 'A tiny Flappy Bird for a wedding gift.',
-    body:
-      'My cousin Chen was getting married. Her fiancé is into DJI drones - so I built a small drone-themed Flappy Bird with a "Ring Delivered!" finish, a "Chen said YES!" screen, and an endless mode. Sometimes the best gift is 200 lines of web game.',
-    hashtags: '#javascript   #canvas   #gift',
-    href: 'https://v0-chenandoz.vercel.app/',
-    preview: 'tracks/ring-quest.jpg',
-    previewBg: '#91ccf5',
-  },
-  {
-    n: 'B2',
+    n: 'B4',
     side: 'B',
     kind: 'experiment',
     date: '2025',
@@ -155,20 +166,6 @@ const TRACKS: Track[] = [
     body:
       'A rack of square-wave SFX and a looping 8-bit bed for a two-button platformer. Squeezed into ~12 KB of sound payload.',
     hashtags: '#ggj   #chiptune   #webaudio',
-  },
-  {
-    n: 'B3',
-    side: 'B',
-    kind: 'experiment',
-    date: 'MAR 2023',
-    tag: 'Tech-Music Hack · Afeka × Rimon',
-    title: 'MIDI Violin - Arduino hack, 3rd place.',
-    body:
-      'Second year at the Afeka × Rimon Tech-Music Hackathon. First time on an Arduino - 24 hours later the team had wired a real violin into a MIDI controller that does vibrato and glissando (kind of). Fairy lights were not in the spec. Placed third.',
-    hashtags: '#arduino   #midi   #hackathon',
-    href: 'https://www.linkedin.com/posts/barmoshe_musichackathon-arduino-midiviolin-share-7047819554294501377-CTdU',
-    preview: 'tracks/midi-violin.jpg',
-    previewBg: '#8d512e',
   },
 ];
 
