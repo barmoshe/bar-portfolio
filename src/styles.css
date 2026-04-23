@@ -943,9 +943,9 @@
   /* Stage: vinyl on the left, "liner notes" intro on the right */
   .music-stage{display:grid;grid-template-columns:minmax(280px,1fr) 1.1fr;gap:44px;align-items:center;margin-top:36px}
   .music-stage .liner h3{font-family:var(--display);font-size:clamp(1.3rem,2.2vw,1.8rem);margin:0 0 10px;line-height:1.1}
-  .music-stage .liner .placeholder-note{margin-top:14px;font-family:var(--mono);font-size:11px;
+  .placeholder-note{margin-top:14px;font-family:var(--mono);font-size:11px;
     letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);
-    border-left:3px solid var(--green);padding:4px 0 4px 10px}
+    border-left:3px solid var(--green);padding:4px 0 4px 10px;max-width:72ch}
   /* Rig controls - sound toggle + side flip sit in a single row so the
      interactive affordances are clustered. Wraps to two lines on narrow. */
   .rig-controls{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}

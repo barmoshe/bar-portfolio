@@ -352,6 +352,9 @@ export default function Mixtape() {
       <p className="dek">
         Side A is the hits. Side B is the sketches. Flip the record to switch sides.
       </p>
+      <p className="placeholder-note">
+        // Live Web Audio - Side A: 78 BPM F-major lo-fi, Side B: 60 BPM D-dorian drone. Tap a card for the write-up.
+      </p>
 
       <div className="music-stage" style={stageStyle}>
         <Rig ref={rigRef} side={side} audioOn={audioOn} />
@@ -432,11 +435,6 @@ export default function Mixtape() {
               ))}
             </div>
           </div>
-          <p className="placeholder-note">
-            // Sound is synthesized in-browser (Web Audio API); no assets fetched.
-            Side A rolls a 78 BPM F-major lo-fi bed; Side B drifts into a 60 BPM
-            D-dorian drone. Tap any card that carries a link to open its write-up.
-          </p>
         </div>
       </div>
 
