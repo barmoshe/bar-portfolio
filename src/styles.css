@@ -946,10 +946,6 @@
   .placeholder-note{margin-top:14px;font-family:var(--mono);font-size:11px;
     letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);
     border-left:3px solid var(--green);padding:4px 0 4px 10px;max-width:72ch}
-  /* Rig controls - sound toggle + side flip sit in a single row so the
-     interactive affordances are clustered. Wraps to two lines on narrow. */
-  .rig-controls{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-
   /* Side-flip button - mono chip that mirrors Strip's toggle voice. Tap
      target respects the 44×44 minimum. */
   .flip-btn,.sound-btn{display:inline-flex;align-items:center;gap:10px;
@@ -1041,10 +1037,34 @@
   html.dark .rpm-seg[data-active="true"]{background:var(--green);color:var(--surface-strong)}
   html.dark .rpm-seg[data-active="true"]:hover{background:var(--green);color:var(--surface-strong)}
 
+  /* In-rig control panel - absolutely positioned over the enlarged plinth's
+     bottom strip (SVG y=212..252) so the three chips read as physical
+     controls on the gramophone. */
+  .rig-panel{position:absolute;left:50%;bottom:14%;
+    transform:translateX(-50%);display:flex;flex-direction:column;
+    align-items:center;gap:8px;z-index:2}
+  .rig-panel__row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+    justify-content:center}
+  .rig .flip-btn,
+  .rig .sound-btn{font-size:10px;letter-spacing:.18em;gap:6px;
+    padding:6px 10px;min-height:32px;box-shadow:2px 2px 0 var(--ink)}
+  .rig .flip-btn:hover,
+  .rig .sound-btn:hover{box-shadow:3px 3px 0 var(--ink)}
+  .rig .sound-btn .sound-ico{width:14px;height:14px}
+  .rig .flip-btn .dot{width:6px;height:6px}
+  .rig .rpm-toggle{min-height:30px;box-shadow:2px 2px 0 var(--ink)}
+  .rig .rpm-toggle:hover{box-shadow:3px 3px 0 var(--ink)}
+  .rig .rpm-toggle__label{padding:0 8px 0 10px;font-size:9px;letter-spacing:.2em}
+  .rig .rpm-seg{min-width:36px;padding:0 8px;font-size:10.5px;min-height:30px}
+
   @media (max-width:820px){
     .music-stage{grid-template-columns:1fr;gap:28px}
     .rig{max-width:320px;filter:none}
     html.dark .rig{filter:none}
+    .rig-panel{bottom:11%;gap:6px}
+    .rig .flip-btn,
+    .rig .sound-btn{font-size:9.5px;padding:5px 8px;min-height:30px}
+    .rig .rpm-seg{min-width:32px;padding:0 6px}
   }
   @media (max-width:640px){
     .track{box-shadow:4px 5px 0 var(--ink) !important}

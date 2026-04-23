@@ -236,6 +236,13 @@ export default function Mixtape() {
     }
   };
 
+  const flipSide = () => {
+    const next = side === 'A' ? 'B' : 'A';
+    sfxFlip();
+    setAudioSide(next);
+    setSide(next);
+  };
+
   useGSAP(
     () => {
       const root = rootRef.current;
@@ -354,7 +361,15 @@ export default function Mixtape() {
       </p>
 
       <div className="music-stage" style={stageStyle}>
-        <Rig ref={rigRef} side={side} audioOn={audioOn} />
+        <Rig
+          ref={rigRef}
+          side={side}
+          audioOn={audioOn}
+          rpm={rpm}
+          onAudioToggle={toggleAudio}
+          onFlip={flipSide}
+          onRpmChange={setRpm}
+        />
         <div className="liner">
           <div className="liner-cta" data-side={side}>
             <span className="liner-cta__kicker">
@@ -364,73 +379,6 @@ export default function Mixtape() {
               Flip the record to {side === 'A' ? 'pull the deep cuts' : 'play the hits'}
               <span className="liner-cta__arrow" aria-hidden="true">↓</span>
             </p>
-          </div>
-          <div className="rig-controls">
-            <button
-              type="button"
-              className="sound-btn"
-              data-on={audioOn ? 'true' : 'false'}
-              aria-pressed={audioOn}
-              aria-label={
-                audioOn
-                  ? `Mute mixtape audio (Side ${side})`
-                  : `Play mixtape audio (Side ${side})`
-              }
-              onClick={toggleAudio}
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true" className="sound-ico">
-                <path d="M4 9.5 L4 14.5 L8 14.5 L13 18 L13 6 L8 9.5 Z" />
-                {audioOn ? (
-                  <>
-                    <path d="M16 9 Q18 12 16 15" fill="none" />
-                    <path d="M18.5 7 Q21.5 12 18.5 17" fill="none" />
-                  </>
-                ) : (
-                  <>
-                    <line x1="16" y1="9" x2="22" y2="15" />
-                    <line x1="22" y1="9" x2="16" y2="15" />
-                  </>
-                )}
-              </svg>
-              <span>{audioOn ? 'Sound on' : 'Sound off'}</span>
-            </button>
-            <button
-              type="button"
-              className="flip-btn"
-              data-side={side}
-              onClick={() => {
-                const next = side === 'A' ? 'B' : 'A';
-                sfxFlip();
-                setAudioSide(next);
-                setSide(next);
-              }}
-              aria-label={`Flip to side ${side === 'A' ? 'B' : 'A'}`}
-            >
-              <span className="dot" aria-hidden="true" />
-              {side === 'A' ? 'Flip to side B →' : '← Flip to side A'}
-            </button>
-            <div
-              className="rpm-toggle"
-              role="radiogroup"
-              aria-label="Playback speed (RPM)"
-            >
-              <span className="rpm-toggle__label" aria-hidden="true">
-                rpm
-              </span>
-              {RPM_OPTIONS.map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  role="radio"
-                  aria-checked={rpm === r}
-                  className="rpm-seg"
-                  data-active={rpm === r ? 'true' : 'false'}
-                  onClick={() => setRpm(r)}
-                >
-                  {RPM_LABEL[r]}
-                </button>
-              ))}
-            </div>
           </div>
         </div>
       </div>
@@ -556,30 +504,33 @@ type RigProps = {
   ref: React.RefObject<HTMLDivElement | null>;
   side: 'A' | 'B';
   audioOn: boolean;
+  rpm: Rpm;
+  onAudioToggle: () => void;
+  onFlip: () => void;
+  onRpmChange: (r: Rpm) => void;
 };
 
 // All-stroke sketch rig. The whole `<g class="sketch-ink">` group is wrapped
 // by a feTurbulence/feDisplacementMap filter (ink-bleed-mixtape-disc) at a
 // persistent low scale so every line reads as hand-drawn.
-const Rig = ({ ref, side, audioOn }: RigProps) => (
+const Rig = ({ ref, side, audioOn, rpm, onAudioToggle, onFlip, onRpmChange }: RigProps) => (
   <div
     className="rig"
     ref={ref}
     data-playing="false"
     data-audio={audioOn ? 'on' : 'off'}
     data-side={side}
-    aria-hidden="true"
   >
-    <svg viewBox="0 0 240 240" role="img" aria-label="Sketched vinyl with gramophone horn">
+    <svg viewBox="0 0 240 280" aria-hidden="true">
       <g className="sketch-ink">
-        <rect x="10" y="36" width="220" height="176" rx="4" className="sk-base" />
+        <rect x="10" y="36" width="220" height="216" rx="4" className="sk-base" />
         <g className="sk-hatch">
-          <path d="M 22 198 L 32 208" />
-          <path d="M 34 198 L 44 208" />
-          <path d="M 46 198 L 56 208" />
-          <path d="M 186 198 L 196 208" />
-          <path d="M 198 198 L 208 208" />
-          <path d="M 210 198 L 220 208" />
+          <path d="M 22 238 L 32 248" />
+          <path d="M 34 238 L 44 248" />
+          <path d="M 46 238 L 56 248" />
+          <path d="M 186 238 L 196 248" />
+          <path d="M 198 238 L 208 248" />
+          <path d="M 210 238 L 220 248" />
         </g>
 
         <g className="disc">
@@ -663,5 +614,63 @@ const Rig = ({ ref, side, audioOn }: RigProps) => (
         </g>
       </g>
     </svg>
+    <div className="rig-panel">
+      <div className="rpm-toggle" role="radiogroup" aria-label="Playback speed (RPM)">
+        <span className="rpm-toggle__label" aria-hidden="true">rpm</span>
+        {RPM_OPTIONS.map((r) => (
+          <button
+            key={r}
+            type="button"
+            role="radio"
+            aria-checked={rpm === r}
+            className="rpm-seg"
+            data-active={rpm === r ? 'true' : 'false'}
+            onClick={() => onRpmChange(r)}
+          >
+            {RPM_LABEL[r]}
+          </button>
+        ))}
+      </div>
+      <div className="rig-panel__row">
+        <button
+          type="button"
+          className="sound-btn"
+          data-on={audioOn ? 'true' : 'false'}
+          aria-pressed={audioOn}
+          aria-label={
+            audioOn
+              ? `Stop mixtape (Side ${side})`
+              : `Start mixtape (Side ${side})`
+          }
+          onClick={onAudioToggle}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="sound-ico">
+            <path d="M4 9.5 L4 14.5 L8 14.5 L13 18 L13 6 L8 9.5 Z" />
+            {audioOn ? (
+              <>
+                <path d="M16 9 Q18 12 16 15" fill="none" />
+                <path d="M18.5 7 Q21.5 12 18.5 17" fill="none" />
+              </>
+            ) : (
+              <>
+                <line x1="16" y1="9" x2="22" y2="15" />
+                <line x1="22" y1="9" x2="16" y2="15" />
+              </>
+            )}
+          </svg>
+          <span>{audioOn ? 'Stop' : 'Start'}</span>
+        </button>
+        <button
+          type="button"
+          className="flip-btn"
+          data-side={side}
+          onClick={onFlip}
+          aria-label={`Flip to side ${side === 'A' ? 'B' : 'A'}`}
+        >
+          <span className="dot" aria-hidden="true" />
+          {side === 'A' ? 'Side B →' : '← Side A'}
+        </button>
+      </div>
+    </div>
   </div>
 );
