@@ -26,13 +26,13 @@ export const projects: Project[] = [
   {
     name: 'Israelify',
     description:
-      'Spotify-style music app built as a pair project during the Coding Academy bootcamp. Node.js + MongoDB backend with REST API, auth, middleware, and a custom logger; React frontend in a sibling repo.',
+      'Spotify-style music app built as a pair project during the Coding Academy bootcamp. React frontend paired with a Node.js + MongoDB backend in a sibling repo - REST API, auth, middleware, and a custom logger.',
     language: 'JavaScript',
-    url: 'https://github.com/barmoshe/Israelify-backend',
+    url: 'https://github.com/Gal-Or/IsraelifyApp',
     extras: [
       {
-        label: 'Frontend repo →',
-        url: 'https://github.com/Gal-Or/IsraelifyApp',
+        label: 'Backend repo →',
+        url: 'https://github.com/barmoshe/Israelify-backend',
       },
       {
         label: 'Read the write-up →',
