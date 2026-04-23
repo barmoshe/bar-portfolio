@@ -32,6 +32,7 @@
     --magenta:  oklch(0.62 0.22 340);
     --purple:   oklch(0.46 0.22 295);
     --cyan:     oklch(0.80 0.14 200);
+    --ocean:    oklch(0.50 0.15 225);
     --shadow:   oklch(0.2 0.04 40 / .22);
     --serif: "Iowan Old Style", "Georgia", ui-serif, serif;
     --display: "Bodoni 72", "Didot", "Playfair Display", ui-serif, serif;
@@ -60,6 +61,7 @@
     --magenta:  oklch(0.78 0.17 340);
     --purple:   oklch(0.75 0.17 295);
     --cyan:     oklch(0.85 0.12 200);
+    --ocean:    oklch(0.78 0.13 220);
     --shadow:   oklch(0 0 0 / .55);
     /* Back-compat aliases for existing --band consumers */
     --band:     var(--surface-strong);
@@ -832,7 +834,7 @@
   .rig .sk-label-inner{fill:none;stroke:var(--ink-soft);stroke-width:.5;
     stroke-dasharray:1.5 2;opacity:.65}
   .rig .sk-label-dot{fill:var(--green);transition:fill .24s ease}
-  .rig[data-side="B"] .sk-label-dot{fill:var(--magenta)}
+  .rig[data-side="B"] .sk-label-dot{fill:var(--ocean)}
   .rig .sk-label-text{font-family:var(--hand);font-size:10px;letter-spacing:.06em;
     fill:var(--ink);text-transform:uppercase;font-weight:700}
   .rig .sk-witness{fill:var(--ink);opacity:.75}
@@ -899,7 +901,7 @@
   .track .n{position:absolute;top:-10px;left:14px;
     font-family:var(--mono);font-size:10px;letter-spacing:.22em;
     background:var(--ink);color:var(--paper);padding:3px 8px;text-transform:uppercase}
-  .track .n.side-b{background:var(--magenta)}
+  .track .n.side-b{background:var(--ocean)}
   .track .meta{display:flex;justify-content:space-between;gap:10px;align-items:baseline;
     font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
     color:var(--ink-soft);margin-top:4px}
@@ -937,7 +939,7 @@
   .track-vinyl .label-inner{fill:none;stroke:var(--ink-soft);stroke-width:.45;
     stroke-dasharray:1.5 2;opacity:.7}
   .track-vinyl .spindle{fill:var(--ink)}
-  .track:has(.n.side-b) .track-vinyl .label-ring{stroke:var(--magenta)}
+  .track:has(.n.side-b) .track-vinyl .label-ring{stroke:var(--ocean)}
   html.dark .track-vinyl{filter:drop-shadow(0 2px 6px oklch(0 0 0 / .6))}
 
   /* Stage: single-column centered rig. The turntable carries its own
@@ -987,7 +989,7 @@
   .rig .sk-toggle-body{fill:var(--paper-2);stroke:var(--ink);stroke-width:1.3}
   .rig .sk-toggle-cap{fill:var(--green);stroke:var(--ink);stroke-width:1;
     transition:x .28s cubic-bezier(.2,.7,.2,1), fill .2s ease}
-  .rig .sk-toggle[data-side="B"] .sk-toggle-cap{fill:var(--magenta)}
+  .rig .sk-toggle[data-side="B"] .sk-toggle-cap{fill:var(--ocean)}
   .rig .sk-toggle-letter{font-family:var(--mono);font-size:10px;font-weight:700;
     letter-spacing:.04em;fill:var(--ink-soft);text-anchor:middle;pointer-events:none;
     transition:fill .2s ease}
@@ -1005,7 +1007,7 @@
   .rig .sk-caption-kicker{font-family:var(--mono);font-size:6.5px;
     letter-spacing:.26em;fill:var(--ink-soft);text-transform:uppercase}
   .rig .sk-caption-side{fill:var(--green);font-weight:700}
-  .rig[data-side="B"] .sk-caption-side{fill:var(--magenta)}
+  .rig[data-side="B"] .sk-caption-side{fill:var(--ocean)}
 
   @media (prefers-reduced-motion: reduce){
     .rig .sk-knob-notch,

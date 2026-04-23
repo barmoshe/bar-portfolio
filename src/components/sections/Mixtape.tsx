@@ -533,7 +533,7 @@ const Rig = ({ ref, side, audioOn, rpm, onAudioToggle, onFlip, onRpmChange }: Ri
 
           <circle cx="108" cy="120" r="58" className="sk-label" />
           <circle cx="108" cy="120" r="50" className="sk-label-inner" />
-          <circle cx="108" cy="120" r="6" className="sk-label-dot" />
+          <circle cx="108" cy="120" r="10" className="sk-label-dot" />
 
           <defs>
             <path
