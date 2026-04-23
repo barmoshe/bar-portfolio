@@ -12,7 +12,11 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  # Queue rather than cancel: GitHub Pages allows only one in-flight
+  # deployment, and cancelling the workflow run does not cancel the API
+  # deployment it already kicked off. Cancelling here causes the next
+  # push's deploy step to fail with "in progress deployment" 400s.
+  cancel-in-progress: false
 
 jobs:
   build:
