@@ -122,25 +122,17 @@
      don't vanish into the body. Inline styles win on specificity, so !important. ── */
   html.dark #story > div[style*="var(--paper)"],
   html.dark #experience > div > div[style*="var(--paper)"],
-  html.dark #notes a[style*="background:var(--paper)"],
-  html.dark #music > div > div[style*="background:var(--paper)"],
   html.dark #letter a[style*="background:var(--paper)"]{
     background:var(--surface-1) !important;
     border-color:var(--ink-faint) !important}
 
   /* Dark mode: inline dark-accent surfaces (originally bg:var(--ink)) must stay
      dark in dark mode, not flip to light. Map to --surface-strong. */
-  html.dark #repos .gh-cta,
-  html.dark #notes a[style*="background:var(--ink)"],
-  html.dark #music > div > div[style*="background:var(--ink)"]{
+  html.dark #repos .gh-cta{
     background:var(--surface-strong) !important;
     border-color:var(--surface-strong) !important;
     color:var(--surface-strong-fg) !important}
-  html.dark #repos .gh-cta p,
-  html.dark #notes a[style*="background:var(--ink)"] h3,
-  html.dark #notes a[style*="background:var(--ink)"] p,
-  html.dark #music > div > div[style*="background:var(--ink)"] h3,
-  html.dark #music > div > div[style*="background:var(--ink)"] p{
+  html.dark #repos .gh-cta p{
     color:var(--surface-strong-fg) !important}
   /* Nested CTA button inside the dark-accent gh-cta bar */
   html.dark #repos .gh-cta a{
@@ -154,8 +146,6 @@
      flips bright in dark, producing harsh white outlines). Map to subtle dark shadow. */
   html.dark #story > div[style*="var(--paper)"],
   html.dark #experience > div > div[style*="var(--paper)"],
-  html.dark #notes a,
-  html.dark #music > div > div,
   html.dark #letter a,
   html.dark #repos .gh-cta,
   html.dark .id-card,
@@ -171,8 +161,6 @@
   html.dark #letter a[style*="var(--yellow)"] {box-shadow: 6px 8px 0 var(--yellow) !important}
   html.dark #letter a[style*="var(--blue)"]   {box-shadow: 6px 8px 0 var(--blue) !important}
   html.dark #letter a[style*="var(--purple)"] {box-shadow: 6px 8px 0 var(--purple) !important}
-  html.dark #notes a[style*="5px 6px 0 var(--green)"]{box-shadow: 6px 8px 0 var(--green) !important}
-  html.dark #music > div > div[style*="var(--green)"]{box-shadow: 6px 8px 0 var(--green) !important}
 
   /* Theme toggle button */
   .theme-btn{font-family:var(--mono);font-size:14px;letter-spacing:.1em;line-height:1;display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px}
@@ -651,8 +639,6 @@
     .pull,
     #experience .page > div > div,
     #experience > div > div,
-    #music > div > div,
-    #notes > div > a,
     #letter > div > a,
     #story div[style*="rotate"],
     [style*="rotate"]{transform:none !important}
@@ -665,15 +651,11 @@
 
     /* Force heavy grids to single column for readability */
     .clip,
-    #music > div[style*="grid-template-columns"],
-    #notes > div[style*="grid-template-columns"],
     #letter > div[style*="grid-template-columns"],
     #experience > div[style*="grid"]{grid-template-columns:1fr !important}
 
-    /* Shrink experience/music/notes/contact card padding */
+    /* Shrink experience/contact card padding */
     #experience > div > div,
-    #music > div > div,
-    #notes > div > a,
     #letter > div > a{padding:18px !important;box-shadow:4px 5px 0 var(--ink) !important}
 
     /* Colored-shadow contact cards - preserve accent color but trim offset */
@@ -684,9 +666,6 @@
     #letter > div > a[style*="var(--yellow)"] {box-shadow:4px 5px 0 var(--yellow) !important}
     #letter > div > a[style*="var(--blue)"]   {box-shadow:4px 5px 0 var(--blue)   !important}
     #letter > div > a[style*="var(--purple)"] {box-shadow:4px 5px 0 var(--purple) !important}
-
-    /* Featured (green) dispatch card shadow */
-    #notes > div > a[style*="var(--green)"]{box-shadow:4px 5px 0 var(--green) !important}
 
     /* ─── Hero (01 · Intro) - MOBILE REDESIGN ───
        Desktop: 2-col with big portrait card left, bio right.
@@ -920,8 +899,14 @@
   .track .meta{display:flex;justify-content:space-between;gap:10px;align-items:baseline;
     font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
     color:var(--ink-soft);margin-top:4px}
+  .track .meta .track-date{color:var(--ink-faint);font-size:10px}
   .track h3{margin:0;font-family:var(--display);font-size:1.35rem;line-height:1.1}
   .track p{margin:0;font-family:var(--serif);color:var(--ink-soft);line-height:1.5;font-size:.96rem}
+  .track .track-link{align-self:flex-start;font-family:var(--mono);font-size:11px;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--ink);
+    text-decoration-thickness:1.5px;text-underline-offset:4px}
+  .track .track-link:hover{background:var(--green);color:var(--paper)}
+  .track[data-kind="post"] .track-link{color:var(--green)}
   .track .tags{margin-top:auto;font-family:var(--mono);font-size:10.5px;
     letter-spacing:.15em;color:var(--ink-faint);text-transform:uppercase}
   html.dark .track{background:var(--surface-1);box-shadow:6px 8px 0 oklch(0 0 0 / .55)}

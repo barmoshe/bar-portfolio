@@ -218,8 +218,8 @@ export default function Experience() {
             areas, including fullstack, DevOps, product design, creative coding, and game
             development. A wide variety of projects fall into this space, some of which you
             can see in{' '}
-            <a href="#notes" style={{ color: 'var(--green)' }}>
-              Dispatches
+            <a href="#mixtape" style={{ color: 'var(--green)' }}>
+              the mixtape
             </a>{' '}
             or on{' '}
             <a

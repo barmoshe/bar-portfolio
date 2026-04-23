@@ -10,8 +10,7 @@ import Intro from './components/sections/Intro';
 import Story from './components/sections/Story';
 import Experience from './components/sections/Experience';
 import Repos from './components/sections/Repos';
-import Music from './components/sections/Music';
-import Notes from './components/sections/Notes';
+import Mixtape from './components/sections/Mixtape';
 import Letter from './components/sections/Letter';
 import { projects } from './data/portfolio';
 import { useTheme } from './hooks/useTheme';
@@ -102,8 +101,7 @@ export default function App() {
           <Story />
           <Experience />
           <Repos onOpen={openFromCard} />
-          <Music />
-          <Notes />
+          <Mixtape />
           <Letter />
         </main>
         <TabBar />

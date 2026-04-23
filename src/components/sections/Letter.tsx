@@ -274,7 +274,7 @@ export default function Letter() {
   return (
     <article className="page" id="letter" ref={rootRef}>
       <div className="folio">
-        <b>07</b> // PING
+        <b>06</b> // PING
       </div>
       <h2 className="headline" style={{ textAlign: 'center' }}>
         Say <em>hi.</em>

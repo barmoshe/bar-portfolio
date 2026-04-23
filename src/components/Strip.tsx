@@ -44,8 +44,7 @@ export default function Strip({
       <a className="key" href="#story">Story</a>
       <a href="#experience">Work</a>
       <a href="#repos">Open Source</a>
-      <a href="#music">Music</a>
-      <a href="#notes">Notes</a>
+      <a href="#mixtape">Mixtape</a>
       <a href="#letter">Contact</a>
       <span className="grow" />
       <button
