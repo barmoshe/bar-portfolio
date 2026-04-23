@@ -1,6 +1,11 @@
 # 06 - Data
 
-All portfolio content lives in **one file**: `src/data/portfolio.ts`. Typed, tiny, reviewable at a glance.
+Portfolio content is split across two files:
+
+- `src/data/portfolio.ts` - **stable public surface**: `Project`/`Contact`/`ProjectExtra`/`PortfolioData` types, `projects`/`contact` exports, helpers `iconFor`/`shortDesc`. Components import from here.
+- `src/data/portfolio.data.ts` - **auto-generated data**: written by the `#admin` backoffice via the GitHub Contents API. Do not hand-edit. The serializer in `src/admin/serializer.ts` round-trips this file byte-identically, so edits produce minimal diffs. The file format is load-bearing: a fixed header, `export const data: PortfolioData = `, a single JSON literal, and `;\n`.
+
+See `src/admin/AdminApp.tsx` for the editor surface (`#admin` hash route, password-gated, commits on Save).
 
 ## Types
 
@@ -76,7 +81,7 @@ So `description` can be long and rich; the card preview stays tight.
 6. `npm run typecheck` - catches missing fields.
 7. `npm run dev` - verify the card renders in `#repos`; click it to verify the lightbox.
 
-There is no CMS, no loader, no Markdown. The project list is code. This is on purpose - it makes content changes reviewable in diffs.
+There is no CMS, no loader, no Markdown. The project list is code. This is on purpose - it makes content changes reviewable in diffs. The `#admin` backoffice is an alternative *writer* that still produces the same code diffs - it doesn't bypass the "content is code" contract.
 
 For a guided creation flow, use `../prompts/add-project.md` and `../recipes/add-project.md`.
 

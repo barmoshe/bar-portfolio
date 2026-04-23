@@ -1,9 +1,13 @@
 /**
  * Portfolio content - projects and contact info.
  *
- * There is no CMS and no loader. All content is code so changes are reviewable
- * in diffs. See `knowledge/06-data.md` and `recipes/add-project.md`.
+ * Data lives in `portfolio.data.ts`, which is rewritten by the #admin
+ * backoffice via the GitHub Contents API. This file keeps the stable public
+ * surface (types, helpers, named exports) so consumers don't import the
+ * auto-generated file directly. See `knowledge/06-data.md`.
  */
+
+import { data } from './portfolio.data';
 
 /** A secondary link on a project card (article, listing, etc.). */
 export type ProjectExtra = { label: string; url: string };
@@ -22,47 +26,27 @@ export type Project = {
   extras?: ProjectExtra[];
 };
 
-export const projects: Project[] = [
-  {
-    name: 'claude-creative-stack',
-    description:
-      'A reference pack for building creative work with Claude - knowledge docs, Agent Skills, single-file artifact starters, prompt scaffolds, and a working MCP server. Designed to be mounted straight into a Claude Project.',
-    language: 'Claude',
-    url: 'https://github.com/barmoshe/claude-creative-stack',
-  },
-  {
-    name: 'isralify',
-    description:
-      'Node.js backend for a Spotify-inspired music app - REST API, user auth, custom middleware, integrated logger, MongoDB. The React frontend lives in a sibling repo.',
-    language: 'JavaScript',
-    url: 'https://github.com/barmoshe/Israelify-backend',
-  },
-  {
-    name: 'temporal-data-processing',
-    description:
-      "A single Temporal workflow that orchestrates three language workers - Go, Python, and TypeScript, each on its own task queue - to process data end-to-end. Featured on Temporal's Code Exchange with a companion Medium write-up.",
-    language: 'Go · Python · TypeScript',
-    url: 'https://github.com/barmoshe/data-processing-service',
-    extras: [
-      {
-        label: 'Temporal Code Exchange',
-        url: 'https://temporal.io/code-exchange/cross-language-data-processing-service-with-temporal',
-      },
-      {
-        label: 'Read the Medium article',
-        url: 'https://medium.com/@barmoshe/building-a-cross-language-data-processing-service-with-temporal-a-practical-guide-bf0fb1155d46',
-      },
-    ],
-  },
-];
-
 /** Contact surface - consumed by `Letter.tsx` (copy-to-clipboard + mailto) and Intro/Letter links. */
-export const contact = {
-  email: '1barmoshe1@gmail.com',
-  github: 'https://github.com/barmoshe',
-  linkedin: 'https://www.linkedin.com/in/barmoshe/',
-  phone: '+972546561465',
+export type Contact = {
+  email: string;
+  github: string;
+  linkedin: string;
+  phone: string;
 };
+
+/** Full shape of `portfolio.data.ts`. The backoffice serializer round-trips this. */
+export type PortfolioData = {
+  projects: Project[];
+  contact: Contact;
+};
+
+/** Projects grid. Deep-cloned so callers may sort/slice without mutating source data. */
+export const projects: Project[] = data.projects.map((p) => ({
+  ...p,
+  extras: p.extras ? p.extras.map((e) => ({ ...e })) : undefined,
+}));
+
+export const contact: Contact = { ...data.contact };
 
 /** Language → glyph map used by `iconFor`. Extend only for languages expected to recur. */
 const LANG_ICON: Record<string, string> = {
