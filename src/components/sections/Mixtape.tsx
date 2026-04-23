@@ -12,9 +12,11 @@ import {
   isEnabled as isAudioEnabled,
   playFlip as sfxFlip,
   playNeedleDrop as sfxNeedleDrop,
+  playScratch as sfxScratch,
   setEnabled as setAudioEnabled,
-  startCrackle,
-  stopCrackle,
+  setSide as setAudioSide,
+  startBed,
+  stopBed,
   unlock as unlockAudio,
 } from '../../lib/vinylAudio';
 
@@ -231,7 +233,7 @@ export default function Mixtape() {
     return undefined;
   }, [audioOn]);
 
-  useEffect(() => () => stopCrackle(), []);
+  useEffect(() => () => stopBed(), []);
 
   const toggleAudio = () => {
     const next = !audioOn;
@@ -239,9 +241,9 @@ export default function Mixtape() {
     if (next) {
       unlockAudio();
       setAudioEnabled(true);
-      sfxNeedleDrop();
+      sfxNeedleDrop(side);
       if (rigRef.current?.getAttribute('data-playing') === 'true') {
-        setTimeout(startCrackle, 220);
+        setTimeout(() => startBed(side), 220);
       }
     } else {
       setAudioEnabled(false);
@@ -308,13 +310,13 @@ export default function Mixtape() {
               onPlay: () => {
                 rig.setAttribute('data-playing', 'true');
                 if (isAudioEnabled()) {
-                  sfxNeedleDrop();
-                  window.setTimeout(startCrackle, 220);
+                  sfxNeedleDrop(side);
+                  window.setTimeout(() => startBed(side), 220);
                 }
               },
               onLeaveBack: () => {
                 rig.setAttribute('data-playing', 'false');
-                stopCrackle();
+                stopBed();
               },
             },
           );
@@ -400,7 +402,11 @@ export default function Mixtape() {
               className="sound-btn"
               data-on={audioOn ? 'true' : 'false'}
               aria-pressed={audioOn}
-              aria-label={audioOn ? 'Mute vinyl sound' : 'Enable vinyl sound'}
+              aria-label={
+                audioOn
+                  ? `Mute mixtape audio (Side ${side})`
+                  : `Play mixtape audio (Side ${side})`
+              }
               onClick={toggleAudio}
             >
               <svg viewBox="0 0 24 24" aria-hidden="true" className="sound-ico">
@@ -424,8 +430,10 @@ export default function Mixtape() {
               className="flip-btn"
               data-side={side}
               onClick={() => {
+                const next = side === 'A' ? 'B' : 'A';
                 sfxFlip();
-                setSide(side === 'A' ? 'B' : 'A');
+                setAudioSide(next);
+                setSide(next);
               }}
               aria-label={`Flip to side ${side === 'A' ? 'B' : 'A'}`}
             >
@@ -435,7 +443,8 @@ export default function Mixtape() {
           </div>
           <p className="placeholder-note">
             // Sound is synthesized in-browser (Web Audio API); no assets fetched.
-            Side A cards open the full write-up; side B carries the artifact.
+            Side A plays a 78 BPM F-major lo-fi bed; Side B is a 60 BPM D-dorian lab
+            drone. Side A cards open the full write-up; Side B carries the artifact.
           </p>
         </div>
       </div>
@@ -479,6 +488,7 @@ function TrackVinyl({ track }: { track: Track }) {
   const spin = () => {
     const disc = discRef.current;
     if (!disc) return;
+    if (isAudioEnabled()) sfxScratch(track.side);
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     disc.animate(
       [{ transform: 'rotate(0deg)' }, { transform: 'rotate(720deg)' }],
