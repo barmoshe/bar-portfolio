@@ -339,9 +339,9 @@ export default function Background() {
               <h3 style={h3Small}>BPM College</h3>
               <span style={date}>Feb 2019 – Aug 2019</span>
             </div>
-            <p style={roleSmall}>Music</p>
+            <p style={roleSmall}>Ableton Certification</p>
             <p style={bodySmall}>
-              Studied Ableton Live and music theory.
+              My first certification. Ableton Live and music theory.
             </p>
           </div>
         </div>
