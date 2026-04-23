@@ -156,17 +156,6 @@ const TRACKS: Track[] = [
     preview: 'tracks/masking-through.jpg',
     previewBg: '#556b77',
   },
-  {
-    n: 'B4',
-    side: 'B',
-    kind: 'experiment',
-    date: '2025',
-    tag: 'Global Game Jam · 2025',
-    title: 'Roots - chiptune SFX suite.',
-    body:
-      'A rack of square-wave SFX and a looping 8-bit bed for a two-button platformer. Squeezed into ~12 KB of sound payload.',
-    hashtags: '#ggj   #chiptune   #webaudio',
-  },
 ];
 
 const stageStyle: CSSProperties = { marginTop: 36 };
