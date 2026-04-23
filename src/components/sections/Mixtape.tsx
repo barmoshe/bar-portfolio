@@ -394,11 +394,10 @@ export default function Mixtape() {
       </div>
       <span className="stamp">MIXTAPE</span>
       <h2 className="headline">
-        Things I've <em>pressed to tape.</em>
+        What I've <em>made.</em>
       </h2>
       <p className="dek">
-        One running mixtape of what I ship and what I sketch - launches, posts, game-jam
-        scores, browser synths, devtools. Flip the record to swap between the two sides.
+        Side A is the hits. Side B is the sketches. Flip the record to switch sides.
       </p>
 
       <div className="music-stage" style={stageStyle}>
