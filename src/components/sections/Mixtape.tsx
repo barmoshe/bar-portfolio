@@ -160,28 +160,6 @@ const TRACKS: Track[] = [
     n: 'B3',
     side: 'B',
     kind: 'experiment',
-    date: '2024',
-    tag: 'Music Hack Day · TLV',
-    title: 'Generative Bazaar - web-audio station.',
-    body:
-      'Marketplace-themed generative composer. Scales chosen by city, drum patterns by temperature. Built on Tone.js in a single night.',
-    hashtags: '#hackathon   #tonejs   #generative',
-  },
-  {
-    n: 'B4',
-    side: 'B',
-    kind: 'experiment',
-    date: '2024',
-    tag: 'Research · 2024',
-    title: 'Phrase Partner - ML melody sketchpad.',
-    body:
-      'A Magenta-backed notebook that riffs back at you. You play four bars, it extends eight, and marks what it borrowed from you.',
-    hashtags: '#magenta   #midi   #ml',
-  },
-  {
-    n: 'B5',
-    side: 'B',
-    kind: 'experiment',
     date: 'MAR 2023',
     tag: 'Tech-Music Hack · Afeka × Rimon',
     title: 'MIDI Violin - Arduino hack, 3rd place.',
@@ -191,17 +169,6 @@ const TRACKS: Track[] = [
     href: 'https://www.linkedin.com/posts/barmoshe_musichackathon-arduino-midiviolin-share-7047819554294501377-CTdU',
     preview: 'tracks/midi-violin.jpg',
     previewBg: '#8d512e',
-  },
-  {
-    n: 'B6',
-    side: 'B',
-    kind: 'experiment',
-    date: '2023',
-    tag: 'Patch · 2023',
-    title: 'Grainfield - SuperCollider grain cloud.',
-    body:
-      'A granular patch that samples room tone and rebuilds it as a slow harmonic field. Patched live, recorded to a single tape loop.',
-    hashtags: '#supercollider   #granular   #drone',
   },
 ];
 
