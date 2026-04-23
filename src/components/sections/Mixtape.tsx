@@ -150,14 +150,16 @@ const TRACKS: TrackBase[] = [
     featured: true,
   },
   {
-    kind: 'post',
-    date: 'OCT 2025',
-    tag: '// devtool',
-    title: 'A small GPT that rewrites messy PR notes into clean bullets.',
+    kind: 'experiment',
+    date: 'JAN 2025',
+    tag: 'Global Game Jam · 2025',
+    title: 'Hamster Bubbles — my first Global Game Jam, on audio.',
     body:
-      'Takes half-written PR descriptions and turns them into clean bullets grouped by Fix, Add, Update, Refactor, and Remove. Writing a changelog now takes seconds instead of minutes.',
-    hashtags: '#gpt   #devtools   #workflow',
-    href: 'https://www.linkedin.com/feed/update/urn:li:activity:7382760320420720640/',
+      'My first Global Game Jam: 48 hours to build a game around a secret theme announced at the start of the weekend. The theme was "Bubbles." First time taking on sound design and music for a project. Big thanks to Yuval Dorfman, Noam Goldfarb, Yotam Goren, and Yuval Beck for getting through the chaos with me.',
+    hashtags: '#ggj   #sfx   #gamejam   #audio',
+    href: 'https://www.linkedin.com/posts/barmoshe_globalgamejam-sfx-ggj-activity-7289377770042773505-u7Me',
+    preview: 'tracks/hamster-bubbles.jpg',
+    previewBg: '#a3d4f5',
   },
   {
     kind: 'experiment',
