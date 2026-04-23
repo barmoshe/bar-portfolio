@@ -16,8 +16,7 @@ Map from section id to file:
 | `story` | `src/components/sections/Story.tsx` |
 | `experience` | `src/components/sections/Experience.tsx` |
 | `repos` | `src/components/sections/Repos.tsx` |
-| `music` | `src/components/sections/Music.tsx` |
-| `notes` | `src/components/sections/Notes.tsx` |
+| `mixtape` | `src/components/sections/Mixtape.tsx` |
 | `letter` | `src/components/sections/Letter.tsx` |
 
 (See `knowledge/05-components.md` for the full table with roles and primitives used.)

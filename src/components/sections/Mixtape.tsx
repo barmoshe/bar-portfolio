@@ -33,6 +33,8 @@ type Track = {
   href?: string;
   /** Preview image relative to `public/` (e.g. `'tracks/foo.jpg'`). Rendered as a mini vinyl. */
   preview?: string;
+  /** Programmatic vinyl label - solid colored center with a monogram glyph. Used when there's no photo. */
+  label?: { bg: string; monogram: string; fg?: string };
   featured?: boolean;
 };
 
@@ -53,6 +55,7 @@ const TRACKS: Track[] = [
       "My Cross-Language Data Processing Service - Python, Go, and TypeScript all coordinated through a single Temporal workflow - was picked up for Temporal's official Code Exchange, with a companion Medium write-up.",
     hashtags: '#temporal   #opensource   #python   #go',
     href: 'https://temporal.io/code-exchange/cross-language-data-processing-service-with-temporal',
+    label: { bg: 'var(--purple)', monogram: 'T', fg: 'var(--paper)' },
     featured: true,
   },
   {
@@ -445,7 +448,7 @@ export default function Mixtape() {
               <span className="track-date">{t.date}</span>
             </div>
             <h3>{t.title}</h3>
-            {t.preview ? <TrackVinyl track={t} /> : null}
+            {t.preview || t.label ? <TrackVinyl track={t} /> : null}
             <p>{t.body}</p>
             {t.href ? (
               <a
@@ -512,15 +515,34 @@ function TrackVinyl({ track }: { track: Track }) {
           {[84, 78, 72, 66].map((r) => (
             <circle key={r} cx="100" cy="100" r={r} className="groove" />
           ))}
-          <image
-            href={`${import.meta.env.BASE_URL}${track.preview}`}
-            x="38"
-            y="38"
-            width="124"
-            height="124"
-            preserveAspectRatio="xMidYMin slice"
-            clipPath={`url(#vinyl-label-${track.n})`}
-          />
+          {track.preview ? (
+            <image
+              href={`${import.meta.env.BASE_URL}${track.preview}`}
+              x="38"
+              y="38"
+              width="124"
+              height="124"
+              preserveAspectRatio="xMidYMin slice"
+              clipPath={`url(#vinyl-label-${track.n})`}
+            />
+          ) : track.label ? (
+            <>
+              <circle cx="100" cy="100" r="62" fill={track.label.bg} />
+              <text
+                x="100"
+                y="100"
+                textAnchor="middle"
+                dominantBaseline="central"
+                fontFamily="var(--display)"
+                fontSize="56"
+                fontWeight="700"
+                fill={track.label.fg ?? 'var(--paper)'}
+                letterSpacing="-0.02em"
+              >
+                {track.label.monogram}
+              </text>
+            </>
+          ) : null}
           <circle cx="100" cy="100" r="62" className="label-ring" />
           <circle cx="100" cy="100" r="52" className="label-inner" />
         </g>

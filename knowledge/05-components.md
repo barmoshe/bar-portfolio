@@ -13,8 +13,7 @@
   <Story />               // id="story"     - narrative + timeline
   <Experience />          // id="experience"- work history cards
   <Repos onOpen={…} />    // id="repos"     - project grid (opens Lightbox on click)
-  <Music />               // id="music"     - music / sound work
-  <Notes />               // id="notes"     - thoughts / writing
+  <Mixtape />             // id="mixtape"   - unified vinyl-themed section: posts (Side A) + experiments (Side B)
   <Letter />              // id="letter"    - contact form (mailto)
 </main>
 <TabBar />                // Mobile bottom nav (hidden > 820px)
@@ -51,8 +50,7 @@ One component per section id. The section id is set on the **outermost element**
 | `Story.tsx` | `story` | Education + narrative timeline. | `InkTimeline`, `Reveal` |
 | `Experience.tsx` | `experience` | Work history cards (Joomsy, Wochit). | `InkTimeline`, `Reveal` |
 | `Repos.tsx` | `repos` | Project grid. Cards open `Lightbox` via `onOpen(idx)`. Reads `projects` from `data/portfolio.ts`. | `HoverCard`, `CodeArt` |
-| `Music.tsx` | `music` | Music/sound experiments. | `Reveal` |
-| `Notes.tsx` | `notes` | Blog / notes links. | `Reveal` |
+| `Mixtape.tsx` | `mixtape` | Vinyl-themed "tracks" section. Side A = posts/launches/dispatches; Side B = music-tech experiments. Inline `TRACKS` array, sketch rig + horn (`Rig`), optional mini preview vinyls (`TrackVinyl`, image- or programmatic-label), Web Audio SFX, side-flip toggle. | `Reveal` (via `scrollReveal`) |
 | `Letter.tsx` | `letter` | Contact form (mailto action + copy email to clipboard). Renders `contact` from `data/portfolio.ts`. | - |
 
 ## Where state lives

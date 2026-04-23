@@ -38,9 +38,10 @@ export default function TabBar() {
       </a>
       <a href="#mixtape" data-target="mixtape" aria-label="Mixtape" {...isCurrent('mixtape')}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="12" cy="12" r="9" />
-          <circle cx="12" cy="12" r="5" />
-          <circle cx="12" cy="12" r="1.2" fill="currentColor" />
+          <rect x="3" y="6" width="18" height="12" rx="2" />
+          <circle cx="9" cy="12" r="1.6" />
+          <circle cx="15" cy="12" r="1.6" />
+          <path d="M7 18 l-1 2 M17 18 l1 2" />
         </svg>
         <span>Mixtape</span>
       </a>
