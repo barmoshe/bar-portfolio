@@ -47,6 +47,8 @@ type Track = {
   hashtags: string;
   /** External write-up. Present on posts and on experiment tracks that also have a companion post. */
   href?: string;
+  /** Override the track-link label when `href` points somewhere other than a blog post (e.g. a live app). */
+  linkLabel?: string;
   /** Preview image relative to `public/` (e.g. `'tracks/foo.jpg'`). Rendered as a mini vinyl. */
   preview?: string;
   /** How to fit the preview inside the label circle. 'cover' (default) crops to fill; 'contain' shrinks to show the whole image. */
@@ -128,7 +130,8 @@ const TRACKS: Track[] = [
     body:
       'A playable world. Touch to make music across space, jungle, sea, cyberpunk, and tundra biomes - or let an AI DJ compose through DRIFT, PULSE, BLOOM, SURGE, DISSOLVE. The whole spec came out of a Claude skill I wrote that interviews you step-by-step until it has a full brief. Tone.js for audio, Three.js for the space biome, Canvas2D for the rest.',
     hashtags: '#tonejs   #threejs   #webaudio   #synth   #claude',
-    href: 'https://www.linkedin.com/feed/update/urn:li:activity:7450179482327576576/',
+    href: 'https://biome-synth.lovable.app/',
+    linkLabel: 'Play the app →',
     preview: 'tracks/biome-synth.jpg',
     previewFit: 'contain',
     previewBg: '#12192f',
@@ -394,7 +397,7 @@ export default function Mixtape() {
                 target="_blank"
                 rel="noopener"
               >
-                Read the post →
+                {t.linkLabel ?? 'Read the post →'}
               </a>
             ) : null}
             <div className="tags">{t.hashtags}</div>
