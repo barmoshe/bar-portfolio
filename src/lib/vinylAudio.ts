@@ -242,11 +242,9 @@ export function unlock(): void {
     ensure();
     return;
   }
-  // Tune the AudioContext before it materializes. 'playback' asks the browser
-  // for a large audio-callback buffer so React re-renders and GC pauses don't
-  // cause xruns. 0.2 s lookAhead gives the Tone scheduler extra pre-roll.
-  // Must run before Tone.start(); latencyHint is read at context construction.
-  Tone.getContext().latencyHint = 'playback';
+  // Raise scheduler pre-roll so React re-renders and GC pauses don't turn
+  // into audible late fires. Cheap, safe to set on the existing context —
+  // it's just a number the Tone scheduler reads each tick.
   Tone.getContext().lookAhead = 0.2;
   // Tone.start() returns a Promise but the user gesture is preserved
   // because we kick it off synchronously inside the click handler.
