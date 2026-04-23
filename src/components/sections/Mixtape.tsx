@@ -73,6 +73,7 @@ const TRACKS: Track[] = [
       "Kids connect with grandparents, family, and friends through interactive video calls - reading books together, gesture-based games, more coming. Over 35M US grandparents live 200+ miles from a grandchild; we're building the bridge.",
     hashtags: '#startup   #product   #video',
     href: 'https://www.linkedin.com/feed/update/urn:li:activity:7421903131573366784/',
+    preview: 'tracks/joomsy.jpg',
   },
   {
     n: 'A3',
