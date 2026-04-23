@@ -37,6 +37,8 @@ type Track = {
   preview?: string;
   /** How to fit the preview inside the label circle. 'cover' (default) crops to fill; 'contain' shrinks to show the whole image. */
   previewFit?: 'cover' | 'contain';
+  /** Disc face color - shown in the thin outer rim (cover mode) and any letterbox bars (contain mode). Picked to match the preview art's edges. */
+  previewBg?: string;
   /** Programmatic vinyl label - solid colored center with a monogram glyph. Used when there's no photo. */
   label?: { bg: string; monogram: string; fg?: string };
   featured?: boolean;
@@ -60,6 +62,7 @@ const TRACKS: Track[] = [
     hashtags: '#temporal   #opensource   #python   #go',
     href: 'https://temporal.io/code-exchange/cross-language-data-processing-service-with-temporal',
     preview: 'tracks/temporal.jpg',
+    previewBg: '#684b36',
     featured: true,
   },
   {
@@ -74,6 +77,7 @@ const TRACKS: Track[] = [
     hashtags: '#startup   #product   #video',
     href: 'https://www.linkedin.com/feed/update/urn:li:activity:7421903131573366784/',
     preview: 'tracks/joomsy.jpg',
+    previewBg: '#f7c80c',
   },
   {
     n: 'A3',
@@ -87,6 +91,7 @@ const TRACKS: Track[] = [
     hashtags: '#javascript   #canvas   #gift',
     href: 'https://v0-chenandoz.vercel.app/',
     preview: 'tracks/ring-quest.jpg',
+    previewBg: '#91ccf5',
   },
   {
     n: 'A4',
@@ -113,6 +118,7 @@ const TRACKS: Track[] = [
     href: 'https://www.linkedin.com/feed/update/urn:li:activity:7450179482327576576/',
     preview: 'tracks/biome-synth.jpg',
     previewFit: 'contain',
+    previewBg: '#12192f',
     featured: true,
   },
   {
@@ -127,6 +133,7 @@ const TRACKS: Track[] = [
     hashtags: '#ggj2026   #fmod   #unity   #cursor   #adaptive',
     href: 'https://www.linkedin.com/feed/update/urn:li:activity:7423731964278358016/',
     preview: 'tracks/masking-through.jpg',
+    previewBg: '#556b77',
   },
   {
     n: 'B3',
@@ -526,7 +533,13 @@ function TrackVinyl({ track }: { track: Track }) {
           </clipPath>
         </defs>
         <g className="disc" ref={discRef}>
-          <circle cx="100" cy="100" r="94" className="wax" />
+          <circle
+            cx="100"
+            cy="100"
+            r="94"
+            className="wax"
+            {...(track.previewBg ? { style: { fill: track.previewBg } } : {})}
+          />
           <circle cx="100" cy="100" r="92" className="rim" />
           {track.preview ? (
             <image
