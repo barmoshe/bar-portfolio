@@ -365,7 +365,7 @@ export default function Mixtape() {
       </p>
 
       <div className="music-stage" style={stageStyle}>
-        <Rig ref={rigRef} side={side} />
+        <Rig ref={rigRef} side={side} audioOn={audioOn} />
         <div className="liner">
           <div className="liner-cta" data-side={side}>
             <span className="liner-cta__kicker">
@@ -571,13 +571,21 @@ function TrackVinyl({ track }: { track: Track }) {
 type RigProps = {
   ref: React.RefObject<HTMLDivElement | null>;
   side: 'A' | 'B';
+  audioOn: boolean;
 };
 
 // All-stroke sketch rig. The whole `<g class="sketch-ink">` group is wrapped
 // by a feTurbulence/feDisplacementMap filter (ink-bleed-mixtape-disc) at a
 // persistent low scale so every line reads as hand-drawn.
-const Rig = ({ ref, side }: RigProps) => (
-  <div className="rig" ref={ref} data-playing="false" data-side={side} aria-hidden="true">
+const Rig = ({ ref, side, audioOn }: RigProps) => (
+  <div
+    className="rig"
+    ref={ref}
+    data-playing="false"
+    data-audio={audioOn ? 'on' : 'off'}
+    data-side={side}
+    aria-hidden="true"
+  >
     <svg viewBox="0 0 240 240" role="img" aria-label="Sketched vinyl with gramophone horn">
       <g className="sketch-ink">
         <rect x="10" y="36" width="220" height="176" rx="4" className="sk-base" />

@@ -798,11 +798,16 @@
     aspect-ratio:1/1;max-width:420px;margin:0 auto;
     filter:drop-shadow(5px 6px 0 var(--ink))}
   .rig svg{width:100%;height:100%;display:block;overflow:visible}
+  /* Global play-state for every loop animation inside the rig. Default
+     paused; only runs when the rig is on-screen (data-playing="true")
+     AND the user enabled audio (data-audio="on"). Following the
+     "CSS custom property + data-attr" pattern from css-tricks.com /
+     dev.to so one toggle drives every animation inside the rig. */
+  .rig{--anim-state:paused}
+  .rig[data-playing="true"][data-audio="on"]{--anim-state:running}
   .rig .disc{transform-origin:108px 120px;
     animation:vinyl-spin var(--spin-dur,3s) linear infinite;
-    animation-play-state:var(--spin,running)}
-  .rig[data-playing="false"]{--spin:paused}
-  .rig:hover{--spin:running}
+    animation-play-state:var(--anim-state)}
   .rig .tonearm{transform-origin:198px 40px;
     transform:rotate(var(--arm-rot, 26deg));
     transition:transform .9s cubic-bezier(.2,.7,.2,1)}
@@ -850,8 +855,7 @@
     stroke-linecap:round;stroke-dasharray:30;stroke-dashoffset:30;
     opacity:0;
     animation:sk-wave 2.2s cubic-bezier(.3,.6,.3,1) infinite;
-    animation-play-state:paused}
-  .rig[data-playing="true"] .sk-wave{animation-play-state:running}
+    animation-play-state:var(--anim-state)}
   .rig .sk-wave.w2{animation-delay:.55s}
   .rig .sk-wave.w3{animation-delay:1.1s}
 
