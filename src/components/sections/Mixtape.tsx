@@ -81,6 +81,7 @@ const TRACKS: Track[] = [
       'My cousin Chen was getting married. Her fiancé is into DJI drones - so I built a small drone-themed Flappy Bird with a "Ring Delivered!" finish, a "Chen said YES!" screen, and an endless mode. Sometimes the best gift is 200 lines of web game.',
     hashtags: '#javascript   #canvas   #gift',
     href: 'https://v0-chenandoz.vercel.app/',
+    preview: 'tracks/ring-quest.jpg',
   },
   {
     n: 'A4',
