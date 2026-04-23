@@ -31,6 +31,8 @@ const RPM_LABEL: Record<Rpm, string> = { 33: '33⅓', 45: '45', 78: '78' };
 const RPM_RATE: Record<Rpm, number> = { 33: 1, 45: 1.35, 78: 2.34 };
 // Disc rotation period in seconds — 33⅓ rpm = 1.8 s/rev, scaled for the SVG.
 const RPM_SPIN: Record<Rpm, string> = { 33: '3s', 45: '2.22s', 78: '1.28s' };
+// Knob pointer angle per speed — 33 sweeps left, 78 sweeps right.
+const RPM_ANGLE: Record<Rpm, number> = { 33: -50, 45: 0, 78: 50 };
 
 type Track = {
   n: string;
@@ -370,17 +372,6 @@ export default function Mixtape() {
           onFlip={flipSide}
           onRpmChange={setRpm}
         />
-        <div className="liner">
-          <div className="liner-cta" data-side={side}>
-            <span className="liner-cta__kicker">
-              Now cueing <em>Side {side}</em>
-            </span>
-            <p className="liner-cta__prompt">
-              Flip the record to {side === 'A' ? 'pull the deep cuts' : 'play the hits'}
-              <span className="liner-cta__arrow" aria-hidden="true">↓</span>
-            </p>
-          </div>
-        </div>
       </div>
 
       <div className="tracklist" ref={listRef}>
@@ -521,17 +512,14 @@ const Rig = ({ ref, side, audioOn, rpm, onAudioToggle, onFlip, onRpmChange }: Ri
     data-audio={audioOn ? 'on' : 'off'}
     data-side={side}
   >
-    <svg viewBox="0 0 240 280" aria-hidden="true">
+    <svg
+      viewBox="0 0 240 310"
+      role="group"
+      aria-label="Mixtape turntable. RPM knob, start button, and side toggle."
+    >
       <g className="sketch-ink">
-        <rect x="10" y="36" width="220" height="216" rx="4" className="sk-base" />
-        <g className="sk-hatch">
-          <path d="M 22 238 L 32 248" />
-          <path d="M 34 238 L 44 248" />
-          <path d="M 46 238 L 56 248" />
-          <path d="M 186 238 L 196 248" />
-          <path d="M 198 238 L 208 248" />
-          <path d="M 210 238 L 220 248" />
-        </g>
+        <rect x="10" y="36" width="220" height="256" rx="4" className="sk-base" />
+        <line x1="20" y1="218" x2="220" y2="218" className="sk-divider" />
 
         <g className="disc">
           <circle cx="108" cy="120" r="92" className="sk-wax" />
@@ -612,65 +600,126 @@ const Rig = ({ ref, side, audioOn, rpm, onAudioToggle, onFlip, onRpmChange }: Ri
           <rect x="100" y="37" width="14" height="8" rx="1" className="sk-arm-head" />
           <path d="M 105 45 L 102 52 L 109 52 Z" className="sk-arm-needle" />
         </g>
-      </g>
-    </svg>
-    <div className="rig-panel">
-      <div className="rpm-toggle" role="radiogroup" aria-label="Playback speed (RPM)">
-        <span className="rpm-toggle__label" aria-hidden="true">rpm</span>
-        {RPM_OPTIONS.map((r) => (
-          <button
-            key={r}
-            type="button"
-            role="radio"
-            aria-checked={rpm === r}
-            className="rpm-seg"
-            data-active={rpm === r ? 'true' : 'false'}
-            onClick={() => onRpmChange(r)}
-          >
-            {RPM_LABEL[r]}
-          </button>
-        ))}
-      </div>
-      <div className="rig-panel__row">
-        <button
-          type="button"
-          className="sound-btn"
-          data-on={audioOn ? 'true' : 'false'}
+
+        <g
+          className="sk-knob"
+          role="radiogroup"
+          aria-label="Playback speed (RPM)"
+        >
+          <circle cx="46" cy="232" r="16" className="sk-knob-body" />
+          <circle cx="46" cy="232" r="12" className="sk-knob-cap" />
+          <line
+            x1="46"
+            y1="232"
+            x2="46"
+            y2="222"
+            className="sk-knob-tick"
+            style={{ transform: `rotate(${RPM_ANGLE[rpm]}deg)` }}
+          />
+          {RPM_OPTIONS.map((r, i) => {
+            const x = 28 + i * 18;
+            return (
+              <g
+                key={r}
+                className="sk-knob-opt"
+                role="radio"
+                aria-checked={rpm === r}
+                aria-label={`${RPM_LABEL[r]} rpm`}
+                tabIndex={0}
+                data-active={rpm === r ? 'true' : 'false'}
+                onClick={() => onRpmChange(r)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onRpmChange(r);
+                  }
+                }}
+              >
+                <circle cx={x} cy="254" r="7" className="sk-knob-hit" />
+                <text x={x} y="257" className="sk-knob-label">
+                  {RPM_LABEL[r]}
+                </text>
+              </g>
+            );
+          })}
+        </g>
+
+        <g
+          className="sk-button"
+          role="button"
           aria-pressed={audioOn}
           aria-label={
             audioOn
               ? `Stop mixtape (Side ${side})`
               : `Start mixtape (Side ${side})`
           }
+          tabIndex={0}
+          data-on={audioOn ? 'true' : 'false'}
           onClick={onAudioToggle}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onAudioToggle();
+            }
+          }}
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true" className="sound-ico">
-            <path d="M4 9.5 L4 14.5 L8 14.5 L13 18 L13 6 L8 9.5 Z" />
-            {audioOn ? (
-              <>
-                <path d="M16 9 Q18 12 16 15" fill="none" />
-                <path d="M18.5 7 Q21.5 12 18.5 17" fill="none" />
-              </>
-            ) : (
-              <>
-                <line x1="16" y1="9" x2="22" y2="15" />
-                <line x1="22" y1="9" x2="16" y2="15" />
-              </>
-            )}
-          </svg>
-          <span>{audioOn ? 'Stop' : 'Start'}</span>
-        </button>
-        <button
-          type="button"
-          className="flip-btn"
+          <circle cx="120" cy="232" r="16" className="sk-button-rim" />
+          <circle cx="120" cy="232" r="12" className="sk-button-cap" />
+          {audioOn ? (
+            <rect
+              x="115"
+              y="227"
+              width="10"
+              height="10"
+              rx="1"
+              className="sk-button-glyph"
+            />
+          ) : (
+            <path
+              d="M 116 226 L 116 238 L 126 232 Z"
+              className="sk-button-glyph"
+            />
+          )}
+          <text x="120" y="257" className="sk-ctrl-label">
+            {audioOn ? 'STOP' : 'START'}
+          </text>
+        </g>
+
+        <g
+          className="sk-toggle"
+          role="button"
+          aria-label={`Flip to side ${side === 'A' ? 'B' : 'A'}. Currently on side ${side}.`}
+          tabIndex={0}
           data-side={side}
           onClick={onFlip}
-          aria-label={`Flip to side ${side === 'A' ? 'B' : 'A'}`}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onFlip();
+            }
+          }}
         >
-          <span className="dot" aria-hidden="true" />
-          {side === 'A' ? 'Side B →' : '← Side A'}
-        </button>
-      </div>
-    </div>
+          <rect x="170" y="220" width="50" height="24" rx="4" className="sk-toggle-body" />
+          <rect
+            x={side === 'A' ? 172 : 197}
+            y="222"
+            width="21"
+            height="20"
+            rx="3"
+            className="sk-toggle-cap"
+          />
+          <text x="182" y="236" className="sk-toggle-letter">A</text>
+          <text x="208" y="236" className="sk-toggle-letter">B</text>
+          <text x="195" y="257" className="sk-ctrl-label">SIDE</text>
+        </g>
+
+        <text x="120" y="274" className="sk-caption-kicker" textAnchor="middle">
+          NOW CUEING · <tspan className="sk-caption-side">SIDE {side}</tspan>
+        </text>
+        <text x="120" y="286" className="sk-caption-prompt" textAnchor="middle">
+          Flip the record to {side === 'A' ? 'pull the deep cuts' : 'play the hits'} ↓
+        </text>
+      </g>
+    </svg>
   </div>
 );
