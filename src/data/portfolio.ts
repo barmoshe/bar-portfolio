@@ -34,6 +34,10 @@ export const projects: Project[] = [
         label: 'Frontend repo →',
         url: 'https://github.com/Gal-Or/IsraelifyApp',
       },
+      {
+        label: 'Read the write-up →',
+        url: 'https://www.linkedin.com/posts/barmoshe_proud-to-present-israelifyspotify-web-clone-share-7224361235268476928-Qu9-',
+      },
     ],
   },
   {
