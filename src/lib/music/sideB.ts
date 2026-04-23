@@ -41,7 +41,9 @@ function pick<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export function composeSideB(ctx: AudioContext, bus: AudioNode): () => void {
+import type { Composition } from './sideA';
+
+export function composeSideB(ctx: AudioContext, bus: AudioNode): Composition {
   const padVoice = sawPad(ctx, bus);
   const droneVoice = subDrone(ctx, bus);
   const bellVoice = fmBell(ctx, bus);
@@ -71,5 +73,8 @@ export function composeSideB(ctx: AudioContext, bus: AudioNode): () => void {
   };
 
   const sched = startScheduler(ctx, BPM, 4, onStep);
-  return () => sched.stop();
+  return {
+    stop: () => sched.stop(),
+    setRate: (m: number) => sched.setBpm(BPM * m),
+  };
 }

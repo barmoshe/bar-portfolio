@@ -14,6 +14,7 @@ import {
   playNeedleDrop as sfxNeedleDrop,
   playScratch as sfxScratch,
   setEnabled as setAudioEnabled,
+  setRpm as setAudioRpm,
   setSide as setAudioSide,
   startBed,
   stopBed,
@@ -21,6 +22,15 @@ import {
 } from '../../lib/vinylAudio';
 
 const AUDIO_KEY = 'bm:vinyl-audio';
+const RPM_KEY = 'bm:vinyl-rpm';
+
+type Rpm = 33 | 45 | 78;
+const RPM_OPTIONS: Rpm[] = [33, 45, 78];
+const RPM_LABEL: Record<Rpm, string> = { 33: '33⅓', 45: '45', 78: '78' };
+// Tempo multiplier vs. the 33⅓ baseline at which each composition was written.
+const RPM_RATE: Record<Rpm, number> = { 33: 1, 45: 1.35, 78: 2.34 };
+// Disc rotation period in seconds — 33⅓ rpm = 1.8 s/rev, scaled for the SVG.
+const RPM_SPIN: Record<Rpm, string> = { 33: '3s', 45: '2.22s', 78: '1.28s' };
 
 type Track = {
   n: string;
@@ -226,6 +236,25 @@ export default function Mixtape() {
     }
   });
 
+  const [rpm, setRpm] = useState<Rpm>(() => {
+    try {
+      const v = parseInt(localStorage.getItem(RPM_KEY) ?? '33', 10) as Rpm;
+      return RPM_OPTIONS.includes(v) ? v : 33;
+    } catch {
+      return 33;
+    }
+  });
+
+  useEffect(() => {
+    setAudioRpm(RPM_RATE[rpm]);
+    rigRef.current?.style.setProperty('--spin-dur', RPM_SPIN[rpm]);
+    try {
+      localStorage.setItem(RPM_KEY, String(rpm));
+    } catch {
+      /* ignore */
+    }
+  }, [rpm]);
+
   useEffect(() => {
     if (audioOn && !isAudioEnabled()) {
       const lift = () => {
@@ -401,10 +430,6 @@ export default function Mixtape() {
               <span style={cueKey}>// side B</span>
               <span>Builds, patches, sketches.</span>
             </li>
-            <li style={cueItem}>
-              <span style={cueKey}>// rpm</span>
-              <span>33⅓.</span>
-            </li>
           </ul>
           <div className="rig-controls">
             <button
@@ -450,6 +475,28 @@ export default function Mixtape() {
               <span className="dot" aria-hidden="true" />
               {side === 'A' ? 'Flip to side B →' : '← Flip to side A'}
             </button>
+            <div
+              className="rpm-toggle"
+              role="radiogroup"
+              aria-label="Playback speed (RPM)"
+            >
+              <span className="rpm-toggle__label" aria-hidden="true">
+                rpm
+              </span>
+              {RPM_OPTIONS.map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  role="radio"
+                  aria-checked={rpm === r}
+                  className="rpm-seg"
+                  data-active={rpm === r ? 'true' : 'false'}
+                  onClick={() => setRpm(r)}
+                >
+                  {RPM_LABEL[r]}
+                </button>
+              ))}
+            </div>
           </div>
           <p className="placeholder-note">
             // Sound is synthesized in-browser (Web Audio API); no assets fetched.

@@ -36,9 +36,12 @@ type BedState = {
   stopA: () => void;
   stopB: () => void;
   stopSurface: () => void;
+  setRateA: (m: number) => void;
+  setRateB: (m: number) => void;
 };
 let bed: BedState | null = null;
 let currentSide: 'A' | 'B' = 'A';
+let currentRate = 1;
 
 const CROSSFADE_S = 0.5;
 const FADE_OUT_S = 0.6;
@@ -248,12 +251,30 @@ export function startBed(side: 'A' | 'B' = currentSide): void {
   sideAGain.connect(master);
   sideBGain.connect(master);
 
-  const stopA = composeSideA(ctx, sideAGain);
-  const stopB = composeSideB(ctx, sideBGain);
+  const compA = composeSideA(ctx, sideAGain);
+  const compB = composeSideB(ctx, sideBGain);
+  compA.setRate(currentRate);
+  compB.setRate(currentRate);
   const stopSurface = startSurfaceNoise(ctx, master);
 
   currentSide = side;
-  bed = { sideAGain, sideBGain, stopA, stopB, stopSurface };
+  bed = {
+    sideAGain,
+    sideBGain,
+    stopA: compA.stop,
+    stopB: compB.stop,
+    stopSurface,
+    setRateA: compA.setRate,
+    setRateB: compB.setRate,
+  };
+}
+
+/** Tempo multiplier applied to both compositions. 1 = native BPM. */
+export function setRpm(multiplier: number): void {
+  currentRate = multiplier;
+  if (!bed) return;
+  bed.setRateA(multiplier);
+  bed.setRateB(multiplier);
 }
 
 /** Tear down the bed with a short fade-out so cutoff is inaudible. */

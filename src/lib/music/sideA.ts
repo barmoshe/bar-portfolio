@@ -59,7 +59,12 @@ const MELODY_VAR: Array<{ step: number; midi: number; vel?: number }> = [
 // fraction of a step duration. 55% swing → delay = (0.55 - 0.5) × 2 × stepDur.
 const SWING = 0.1;
 
-export function composeSideA(ctx: AudioContext, bus: AudioNode): () => void {
+export type Composition = {
+  stop: () => void;
+  setRate: (multiplier: number) => void;
+};
+
+export function composeSideA(ctx: AudioContext, bus: AudioNode): Composition {
   const kickVoice = kick(ctx, bus);
   const snareVoice = snare(ctx, bus);
   const hatVoice = hat(ctx, bus);
@@ -117,5 +122,8 @@ export function composeSideA(ctx: AudioContext, bus: AudioNode): () => void {
   };
 
   const sched: Scheduler = startScheduler(ctx, BPM, 4, onStep);
-  return () => sched.stop();
+  return {
+    stop: () => sched.stop(),
+    setRate: (m: number) => sched.setBpm(BPM * m),
+  };
 }
