@@ -38,9 +38,8 @@ npm run dev
 ```
 
 Visit `http://localhost:5173/#repos`. The Repos section is **collapsible and
-starts closed**, but the `#repos` hash auto-expands it on load (and on
-`hashchange`). If you got there by scrolling, click the "Show N projects ↓"
-toggle. Find your new card. Verify:
+always starts closed** — click the "Show N projects ↓" toggle to expand it.
+Find your new card. Verify:
 
 - Glyph renders (not `{ }` unless that's intended).
 - Hover animation feels right (`HoverCard` is shared, so it should just work).

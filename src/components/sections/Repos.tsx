@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { iconFor, projects, shortDesc } from '../../data/portfolio';
 import {
   gsap,
@@ -16,17 +16,8 @@ type Props = { onOpen: (idx: number) => void };
 export default function Repos({ onOpen }: Props) {
   const rootRef = useRef<HTMLElement | null>(null);
   const gridRef = useRef<HTMLDivElement | null>(null);
+  // Always starts collapsed; the toggle button is the only way to expand.
   const [expanded, setExpanded] = useState(false);
-
-  // Auto-expand when a nav link points here, so users don't land on a stub.
-  useEffect(() => {
-    const sync = () => {
-      if (window.location.hash === '#repos') setExpanded(true);
-    };
-    sync();
-    window.addEventListener('hashchange', sync);
-    return () => window.removeEventListener('hashchange', sync);
-  }, []);
 
   useGSAP(
     () => {
