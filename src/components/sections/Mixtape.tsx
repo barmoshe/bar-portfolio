@@ -507,35 +507,32 @@ function TrackVinyl({ track }: { track: Track }) {
       <svg viewBox="0 0 200 200" aria-hidden="true">
         <defs>
           <clipPath id={`vinyl-label-${track.n}`}>
-            <circle cx="100" cy="100" r="62" />
+            <circle cx="100" cy="100" r="86" />
           </clipPath>
         </defs>
         <g className="disc" ref={discRef}>
           <circle cx="100" cy="100" r="94" className="wax" />
-          <circle cx="100" cy="100" r="90" className="rim" />
-          {[84, 78, 72, 66].map((r) => (
-            <circle key={r} cx="100" cy="100" r={r} className="groove" />
-          ))}
+          <circle cx="100" cy="100" r="92" className="rim" />
           {track.preview ? (
             <image
               href={`${import.meta.env.BASE_URL}${track.preview}`}
-              x="38"
-              y="38"
-              width="124"
-              height="124"
-              preserveAspectRatio="xMidYMin slice"
+              x="14"
+              y="14"
+              width="172"
+              height="172"
+              preserveAspectRatio="xMidYMid slice"
               clipPath={`url(#vinyl-label-${track.n})`}
             />
           ) : track.label ? (
             <>
-              <circle cx="100" cy="100" r="62" fill={track.label.bg} />
+              <circle cx="100" cy="100" r="86" fill={track.label.bg} />
               <text
                 x="100"
                 y="100"
                 textAnchor="middle"
                 dominantBaseline="central"
                 fontFamily="var(--display)"
-                fontSize="56"
+                fontSize="84"
                 fontWeight="700"
                 fill={track.label.fg ?? 'var(--paper)'}
                 letterSpacing="-0.02em"
@@ -544,8 +541,8 @@ function TrackVinyl({ track }: { track: Track }) {
               </text>
             </>
           ) : null}
-          <circle cx="100" cy="100" r="62" className="label-ring" />
-          <circle cx="100" cy="100" r="52" className="label-inner" />
+          <circle cx="100" cy="100" r="86" className="label-ring" />
+          <circle cx="100" cy="100" r="18" className="label-inner" />
         </g>
         <circle cx="100" cy="100" r="2.5" className="spindle" />
       </svg>
