@@ -390,22 +390,20 @@ export default function Mixtape() {
         <div className="liner">
           <h3>Liner notes.</h3>
           <p style={linerIntro}>
-            Side A is the public cut - posts, launches, threads about things I've put out in
-            the world. Side B is the workshop - patches, synths, game-jam scores, research
-            sketches. The rig to the left spins whichever side is queued up.
+            Side A ships. Side B experiments. The rig spins whichever side is queued.
           </p>
           <ul style={cueList}>
             <li style={cueItem}>
               <span style={cueKey}>// side A</span>
-              <span>Posts - public dispatches &amp; launches.</span>
+              <span>Posts &amp; launches.</span>
             </li>
             <li style={cueItem}>
               <span style={cueKey}>// side B</span>
-              <span>Experiments - builds, patches, research.</span>
+              <span>Builds, patches, sketches.</span>
             </li>
             <li style={cueItem}>
               <span style={cueKey}>// rpm</span>
-              <span>33⅓ - slow enough to hear the edits.</span>
+              <span>33⅓.</span>
             </li>
           </ul>
           <div className="rig-controls">
