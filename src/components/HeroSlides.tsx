@@ -30,7 +30,7 @@ const SLIDES: Slide[] = [
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
 
-const INITIAL_HOLD_MS = 4000;
+const INITIAL_HOLD_MS = 2500;
 const BOOT_COMPLETE_EVENT = 'bar:boot-complete';
 
 // Clear any inline state a previous fx may have left on a slide element.
