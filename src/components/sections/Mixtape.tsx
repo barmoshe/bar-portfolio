@@ -55,7 +55,7 @@ const TRACKS: Track[] = [
       "My Cross-Language Data Processing Service - Python, Go, and TypeScript all coordinated through a single Temporal workflow - was picked up for Temporal's official Code Exchange, with a companion Medium write-up.",
     hashtags: '#temporal   #opensource   #python   #go',
     href: 'https://temporal.io/code-exchange/cross-language-data-processing-service-with-temporal',
-    label: { bg: 'var(--purple)', monogram: 'T', fg: 'var(--paper)' },
+    preview: 'tracks/temporal.jpg',
     featured: true,
   },
   {
