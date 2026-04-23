@@ -175,19 +175,29 @@ export function makeTape(): Tape {
     spread: 30,
     type: 'sine',
   }).start();
-  flutter.wet.value = 0.18;
+  flutter.wet.value = 0.12;
   const output = new Tone.Gain(1);
 
   input.chain(wow, flutter, output);
 
   let intensity = 1;
+  let flutterRunning = true;
   return {
     input,
     output,
     setIntensity: (n) => {
       intensity = Math.max(0, Math.min(1, n));
       wow.depth.value = 0.04 * intensity;
-      flutter.wet.value = 0.18 * intensity;
+      flutter.wet.value = 0.12 * intensity;
+      // Chorus LFO + multi-tap delay-line keep running when wet=0; stop()
+      // bypasses them entirely so reduced-motion reclaims real CPU.
+      if (intensity === 0 && flutterRunning) {
+        flutter.stop();
+        flutterRunning = false;
+      } else if (intensity > 0 && !flutterRunning) {
+        flutter.start();
+        flutterRunning = true;
+      }
     },
     dispose: () => {
       input.dispose();
@@ -247,7 +257,23 @@ export function makeSurfaceNoise(): Surface {
   });
   dust.connect(output);
 
-  let crackleTimer: ReturnType<typeof setInterval> | null = null;
+  // Self-rescheduling setTimeout that schedules each crackle hit ~50 ms ahead
+  // on the audio clock. If a callback fires late (GC, React render stall), the
+  // next one still lands correctly via Tone's scheduling — no setInterval-style
+  // catch-up burst. Density stays tempo-independent.
+  let crackleTimer: ReturnType<typeof setTimeout> | null = null;
+  let crackleAlive = false;
+
+  const scheduleNextCrackle = () => {
+    if (!crackleAlive) return;
+    const r = Math.random();
+    const t = Tone.now() + 0.05;
+    if (r < 0.62) tick.triggerAttackRelease(0.006, t);
+    else if (r < 0.92) pop.triggerAttackRelease(0.012, t);
+    else if (r < 0.97) dust.triggerAttackRelease(0.04, t);
+    const nextDelay = 55 + Math.random() * 30;
+    crackleTimer = setTimeout(scheduleNextCrackle, nextDelay);
+  };
 
   return {
     output,
@@ -258,21 +284,17 @@ export function makeSurfaceNoise(): Surface {
       bed.start();
       hum50.start();
       hum100.start();
-      if (crackleTimer) return;
-      crackleTimer = setInterval(() => {
-        const r = Math.random();
-        const t = Tone.now();
-        if (r < 0.62) tick.triggerAttackRelease(0.006, t);
-        else if (r < 0.92) pop.triggerAttackRelease(0.012, t);
-        else if (r < 0.97) dust.triggerAttackRelease(0.04, t);
-      }, 70);
+      if (crackleAlive) return;
+      crackleAlive = true;
+      scheduleNextCrackle();
     },
     stop: () => {
       const t = Tone.now();
       output.gain.cancelScheduledValues(t);
       output.gain.setTargetAtTime(0, t, 0.18);
+      crackleAlive = false;
       if (crackleTimer) {
-        clearInterval(crackleTimer);
+        clearTimeout(crackleTimer);
         crackleTimer = null;
       }
       setTimeout(() => {
@@ -286,7 +308,8 @@ export function makeSurfaceNoise(): Surface {
       }, 700);
     },
     dispose: () => {
-      if (crackleTimer) clearInterval(crackleTimer);
+      crackleAlive = false;
+      if (crackleTimer) clearTimeout(crackleTimer);
       bed.dispose();
       hp.dispose();
       peak.dispose();

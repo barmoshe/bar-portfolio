@@ -16,7 +16,7 @@
 import * as Tone from 'tone';
 
 const LOOKAHEAD_MS = 25;
-const SCHEDULE_AHEAD_S = 0.12;
+const SCHEDULE_AHEAD_S = 0.18;
 
 export type StepCallback = (time: number, step: number) => void;
 
@@ -49,6 +49,27 @@ export function startScheduler(
     timer = setTimeout(tick, LOOKAHEAD_MS);
   };
 
+  // Hidden tabs throttle setTimeout to 1 Hz; on refocus the while-loop above
+  // would otherwise catch up by firing dozens of missed steps at once — an
+  // audible burst. Pause on hide, snap forward to the next bar boundary on
+  // return so the phrase stays aligned.
+  const onVisibility = () => {
+    if (stopped) return;
+    if (typeof document === 'undefined') return;
+    if (document.hidden) {
+      if (timer) clearTimeout(timer);
+      timer = null;
+    } else if (!timer) {
+      nextStepTime = Tone.now() + 0.06;
+      const barSteps = stepsPerBeat * 4;
+      step = Math.ceil(step / barSteps) * barSteps;
+      tick();
+    }
+  };
+  if (typeof document !== 'undefined') {
+    document.addEventListener('visibilitychange', onVisibility);
+  }
+
   tick();
 
   return {
@@ -56,6 +77,9 @@ export function startScheduler(
       stopped = true;
       if (timer) clearTimeout(timer);
       timer = null;
+      if (typeof document !== 'undefined') {
+        document.removeEventListener('visibilitychange', onVisibility);
+      }
     },
     setBpm: (next: number) => {
       currentBpm = next;
