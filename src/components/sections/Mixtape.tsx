@@ -393,7 +393,7 @@ export default function Mixtape() {
         What I've <em>made.</em>
       </h2>
       <p className="dek">
-        Side A is finished projects. Side B is experiments. Flip to switch sides, tap a card to read more.
+        A mix of finished projects and experiments, shuffled across both sides. Flip to switch sides, tap a card to read more.
       </p>
 
       <div className="music-stage" style={stageStyle}>
