@@ -125,6 +125,20 @@ const TRACKS: Track[] = [
     previewBg: '#8d512e',
   },
   {
+    n: 'A5',
+    side: 'A',
+    kind: 'post',
+    date: 'AUG 2024',
+    tag: '// bootcamp final',
+    title: 'Israelify — our Spotify-clone final project.',
+    body:
+      'Final project from Coding Academy Israel. Built in a pair over a few weeks: a music streaming platform with real-time collaboration and personalized recommendations. Node.js + MongoDB backend, React frontend. Demo and repos in the post.',
+    hashtags: '#react   #nodejs   #mongodb   #bootcamp',
+    href: 'https://www.linkedin.com/posts/barmoshe_proud-to-present-israelifyspotify-web-clone-share-7224361235268476928-Qu9-',
+    preview: 'tracks/israelify.jpg',
+    previewBg: '#2f7be0',
+  },
+  {
     n: 'B1',
     side: 'B',
     kind: 'experiment',
