@@ -31,8 +31,10 @@ const RPM_LABEL: Record<Rpm, string> = { 33: '33⅓', 45: '45', 78: '78' };
 const RPM_RATE: Record<Rpm, number> = { 33: 1, 45: 1.35, 78: 2.34 };
 // Disc rotation period in seconds — 33⅓ rpm = 1.8 s/rev, scaled for the SVG.
 const RPM_SPIN: Record<Rpm, string> = { 33: '3s', 45: '2.22s', 78: '1.28s' };
-// Knob pointer angle per speed — 33 sweeps left, 78 sweeps right.
-const RPM_ANGLE: Record<Rpm, number> = { 33: -50, 45: 0, 78: 50 };
+// Angle of each detent notch on the knob rim (degrees from the bottom of
+// the knob, positive clockwise). Three-click stop: 33 sweeps left, 78
+// sweeps right.
+const RPM_ANGLE: Record<Rpm, number> = { 33: -40, 45: 0, 78: 40 };
 
 type Track = {
   n: string;
@@ -513,13 +515,13 @@ const Rig = ({ ref, side, audioOn, rpm, onAudioToggle, onFlip, onRpmChange }: Ri
     data-side={side}
   >
     <svg
-      viewBox="0 0 240 310"
+      viewBox="0 0 240 300"
       role="group"
       aria-label="Mixtape turntable. RPM knob, start button, and side toggle."
     >
       <g className="sketch-ink">
-        <rect x="10" y="36" width="220" height="256" rx="4" className="sk-base" />
-        <line x1="20" y1="218" x2="220" y2="218" className="sk-divider" />
+        <rect x="10" y="36" width="220" height="246" rx="4" className="sk-base" />
+        <line x1="20" y1="214" x2="220" y2="214" className="sk-divider" />
 
         <g className="disc">
           <circle cx="108" cy="120" r="92" className="sk-wax" />
@@ -603,45 +605,46 @@ const Rig = ({ ref, side, audioOn, rpm, onAudioToggle, onFlip, onRpmChange }: Ri
 
         <g
           className="sk-knob"
-          role="radiogroup"
-          aria-label="Playback speed (RPM)"
+          role="button"
+          aria-label={`Playback speed: ${RPM_LABEL[rpm]} rpm. Click to cycle speeds.`}
+          tabIndex={0}
+          data-rpm={rpm}
+          onClick={() => {
+            const i = RPM_OPTIONS.indexOf(rpm);
+            onRpmChange(RPM_OPTIONS[(i + 1) % RPM_OPTIONS.length]);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              const i = RPM_OPTIONS.indexOf(rpm);
+              onRpmChange(RPM_OPTIONS[(i + 1) % RPM_OPTIONS.length]);
+            }
+          }}
         >
-          <circle cx="46" cy="232" r="16" className="sk-knob-body" />
-          <circle cx="46" cy="232" r="12" className="sk-knob-cap" />
-          <line
-            x1="46"
-            y1="232"
-            x2="46"
-            y2="222"
-            className="sk-knob-tick"
-            style={{ transform: `rotate(${RPM_ANGLE[rpm]}deg)` }}
-          />
-          {RPM_OPTIONS.map((r, i) => {
-            const x = 28 + i * 18;
+          <circle cx="46" cy="232" r="17" className="sk-knob-body" />
+          <circle cx="46" cy="232" r="13" className="sk-knob-cap" />
+          {RPM_OPTIONS.map((r) => {
+            const rad = (RPM_ANGLE[r] * Math.PI) / 180;
+            const x1 = 46 + 13 * Math.sin(rad);
+            const y1 = 232 + 13 * Math.cos(rad);
+            const x2 = 46 + 17 * Math.sin(rad);
+            const y2 = 232 + 17 * Math.cos(rad);
             return (
-              <g
+              <line
                 key={r}
-                className="sk-knob-opt"
-                role="radio"
-                aria-checked={rpm === r}
-                aria-label={`${RPM_LABEL[r]} rpm`}
-                tabIndex={0}
+                x1={x1}
+                y1={y1}
+                x2={x2}
+                y2={y2}
+                className="sk-knob-notch"
                 data-active={rpm === r ? 'true' : 'false'}
-                onClick={() => onRpmChange(r)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    onRpmChange(r);
-                  }
-                }}
-              >
-                <circle cx={x} cy="254" r="7" className="sk-knob-hit" />
-                <text x={x} y="257" className="sk-knob-label">
-                  {RPM_LABEL[r]}
-                </text>
-              </g>
+              />
             );
           })}
+          <text x="46" y="235" className="sk-knob-value" textAnchor="middle">
+            {RPM_LABEL[rpm]}
+          </text>
+          <text x="46" y="256" className="sk-ctrl-label">RPM</text>
         </g>
 
         <g
@@ -713,11 +716,8 @@ const Rig = ({ ref, side, audioOn, rpm, onAudioToggle, onFlip, onRpmChange }: Ri
           <text x="195" y="257" className="sk-ctrl-label">SIDE</text>
         </g>
 
-        <text x="120" y="274" className="sk-caption-kicker" textAnchor="middle">
+        <text x="120" y="272" className="sk-caption-kicker" textAnchor="middle">
           NOW CUEING · <tspan className="sk-caption-side">SIDE {side}</tspan>
-        </text>
-        <text x="120" y="286" className="sk-caption-prompt" textAnchor="middle">
-          Flip the record to {side === 'A' ? 'pull the deep cuts' : 'play the hits'} ↓
         </text>
       </g>
     </svg>
