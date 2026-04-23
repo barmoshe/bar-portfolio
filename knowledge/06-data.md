@@ -87,6 +87,15 @@ Same file, `contact` object. The email is consumed by `Letter.tsx` (copy-to-clip
 ## What is NOT in `portfolio.ts`
 
 - Section copy (headlines, body text) lives in JSX in `src/components/sections/*.tsx`.
-- Education and work history details live in `Story.tsx` and `Experience.tsx` respectively.
+- Education and work history live in `Background.tsx` (replaced the older
+  `Story` / `Experience` split).
+- Mixtape tracks live in the inline `TRACKS: TrackBase[]` array at the top of
+  `Mixtape.tsx`. Each entry omits `n` and `side` — those are assigned at
+  runtime by `shuffleAndAssignSides()`. The first entry in `TRACKS` is
+  **pinned to A1**; the rest Fisher-Yates into the remaining slots, split
+  into balanced A/B halves (counts differ by at most 1). To re-pin a
+  different track, move its literal to index 0.
+- Letter contact cards live in the inline `CARDS` array in `Letter.tsx`
+  (per-channel `kicker` + `title` + `value`).
 
 If any of those grow past ~20 lines of static content, consider extracting them into `portfolio.ts` as typed arrays - but for now, inline JSX is fine because each lives once.

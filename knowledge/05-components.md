@@ -9,17 +9,21 @@
 <Boot ? />                // Full-screen onboarding (dismissible, hidden after skip)
 <Strip />                 // Sticky top nav: theme toggle, skip button, section links
 <main>
-  <Intro />             // id="intro"   - hero / intro / portrait slideshow
-  <Story />               // id="story"     - narrative + timeline
-  <Experience />          // id="experience"- work history cards
-  <Repos onOpen={…} />    // id="repos"     - project grid (opens Lightbox on click)
-  <Mixtape />             // id="mixtape"   - unified vinyl-themed section: posts (Side A) + experiments (Side B)
-  <Letter />              // id="letter"    - contact form (mailto)
+  <Intro />               // id="intro"      - 01 WHOAMI - hero, identity card, portrait slideshow
+  <Background />          // id="background" - 02 BACKGROUND - work + education cards (Joomsy, Self-directed, Afeka, Wochit, Wix, Coding Academy, BPM College)
+  <Mixtape />             // id="mixtape"    - 03 MIXTAPE - vinyl rig + tracks shuffled across sides each load
+  <Repos onOpen={…} />    // id="repos"      - 04 REPOS - project grid (collapsible, default closed; opens Lightbox on click)
+  <Letter />              // id="letter"     - 05 PING - contact cards
 </main>
 <TabBar />                // Mobile bottom nav (hidden > 820px)
 <Lightbox />              // Fullscreen project modal, portaled into root
 <div class="ink-wipe" />  // Theme transition overlay (imperative, driven by useTheme)
 ```
+
+Folio numbers are hand-typed inside each section file (`<b>03</b> // MIXTAPE`).
+If sections are reordered, renumber the `<b>NN</b>` literals too — there is no
+auto-numbering. The folio fade is handled by `useFolioScrub`, which queries
+`.page .folio` from the DOM and is sequence-agnostic.
 
 **`InkDefs` must render before anything else** - it defines the SVG filters that `useInk` / `attachInkBleed` / certain sections reference by id. If you reorder, all filter-based effects go blank.
 
@@ -30,28 +34,30 @@
 | `InkDefs.tsx` | SVG `<defs>` - `#ink-bleed-*` feDisplacementMap filters. Exports `inkBleedUrl(id)` and `InkBleedId` type. | - |
 | `Grain.tsx` | Fixed-position `<canvas>` rendering low-frequency noise. Multiplies over the page. | - |
 | `Crease.tsx` | Thin horizontal line with shadow - gives "folded paper" feel. | - |
-| `Boot.tsx` | Onboarding screen. Dismisses on any keydown/pointerdown (except `.strip`/`.toggle`). Uses `useBootDismiss`. | `useBootDismiss` |
+| `Boot.tsx` | Onboarding cover. Click "Enter the portfolio" to dismiss. | - |
 | `Strip.tsx` | Sticky top bar. Theme toggle, skip button, section anchor links. Props: `themeGlyph`, `themeLabel`, `onThemeCycle`, `onSkip`, `skipRemembered`. | `useTheme` (via props) |
-| `TabBar.tsx` | Mobile bottom nav. Uses `useSectionObserver` to highlight active section. | `useSectionObserver` |
-| `HeroSlides.tsx` | Portrait slideshow with 5-fx cycle. **Fragile** - see `04-animation.md`. | GSAP, `lib/gsap` |
+| `TabBar.tsx` | Mobile bottom nav. Uses `useSectionObserver` to highlight active section. The `SECTIONS` const must mirror the page render order. | `useSectionObserver` |
+| `HeroSlides.tsx` | Portrait slideshow with multi-fx cycle. **Fragile** - see `04-animation.md`. | GSAP, `lib/gsap` |
 | `Lightbox.tsx` | Fullscreen project modal. Animates from `sourceRect` card position. Keyed by `openIdx`. | GSAP |
-| `HoverCard.tsx` | Interactive card primitive. Used by `Repos`. | - |
+| `HoverCard.tsx` | Interactive card primitive. Used by `Letter` for contact cards. | - |
 | `CodeArt.tsx` | Ascii/code-glyph display for project cards. Uses `iconFor` from `data/portfolio.ts`. | - |
-| `InkTimeline.tsx` | GSAP-driven timeline component. Used by `Experience` and `Story`. | GSAP |
-| `Reveal.tsx` | IntersectionObserver-triggered reveal wrapper. Fade + slight Y translate. | IO |
+
+Reveal animations are not a wrapper component anymore — sections call
+`createReveal` from `src/lib/scrollReveal.ts` directly inside `useGSAP` blocks,
+gated on `FULL_MOTION_QUERY` (and `MOBILE_QUERY` / `DESKTOP_QUERY` where the
+choreography differs by viewport).
 
 ## Sections (`src/components/sections/`)
 
 One component per section id. The section id is set on the **outermost element** (usually the `<section>` or `<article>`) so `useSectionObserver` picks it up.
 
-| File | id | Role | Primitives used |
+| File | id | Role | Notes |
 |---|---|---|---|
-| `Intro.tsx` | `intro` | Hero intro with `HeroSlides`, identity card, quick facts. | `HeroSlides`, `Reveal` |
-| `Story.tsx` | `story` | Education + narrative timeline. | `InkTimeline`, `Reveal` |
-| `Experience.tsx` | `experience` | Work history cards (Joomsy, Wochit). | `InkTimeline`, `Reveal` |
-| `Repos.tsx` | `repos` | Project grid. Cards open `Lightbox` via `onOpen(idx)`. Reads `projects` from `data/portfolio.ts`. | `HoverCard`, `CodeArt` |
-| `Mixtape.tsx` | `mixtape` | Vinyl-themed "tracks" section. Side A = posts/launches/dispatches; Side B = music-tech experiments. Inline `TRACKS` array, sketch rig + horn (`Rig`), optional mini preview vinyls (`TrackVinyl`, image- or programmatic-label), Web Audio SFX, side-flip toggle. | `Reveal` (via `scrollReveal`) |
-| `Letter.tsx` | `letter` | Contact form (mailto action + copy email to clipboard). Renders `contact` from `data/portfolio.ts`. | - |
+| `Intro.tsx` | `intro` | Hero intro with `HeroSlides`, taped ID card, byline, drop paragraph, credo card. | folio 01 // WHOAMI |
+| `Background.tsx` | `background` | Work + education cards: Joomsy, Self-directed, Afeka, plus a small grid for Wochit, Wix, Coding Academy, BPM College. All inline (no `data/`-driven list). | folio 02 // BACKGROUND |
+| `Mixtape.tsx` | `mixtape` | Vinyl-themed "tracks" section. Inline `TRACKS` array (typed as `TrackBase[]`) + `shuffleAndAssignSides()` that pins the first track to A1 and Fisher-Yates the rest into balanced A/B halves on each mount. Sketch rig (`Rig`) with RPM knob + start/stop button + side toggle, optional mini preview vinyls (`TrackVinyl`, image- or monogram-label), Web Audio SFX. | folio 03 // MIXTAPE |
+| `Repos.tsx` | `repos` | Project grid. **Collapsible** — starts closed; toggle button (`.repos-toggle`) flips an `expanded` state, body wraps `<div id="repos-body">`. Auto-expands when `window.location.hash === '#repos'` (initial + `hashchange`). Cards open `Lightbox` via `onOpen(idx)`. Reads `projects` from `data/portfolio.ts`. | folio 04 // REPOS, uses `CodeArt` |
+| `Letter.tsx` | `letter` | Contact cards (`HoverCard` per channel: email, phone, LinkedIn, Instagram, WhatsApp, GitHub). Inline `CARDS` array; the `contact` object in `data/portfolio.ts` is for cross-section reuse. | folio 05 // PING |
 
 ## Where state lives
 

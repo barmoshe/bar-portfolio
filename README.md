@@ -22,7 +22,7 @@
   <img alt="License MIT"    src="https://img.shields.io/badge/license-MIT-6f42c1">
 </p>
 
-Bar Moshe's portfolio. A single-page paper-and-ink site - cover page, seven sections, a portrait slideshow with five clip-path transitions, a project lightbox, a mobile bottom tab bar, and an oklch design system that flips between light and dark via an ink-wipe GSAP timeline.
+Bar Moshe's portfolio. A single-page paper-and-ink site - cover page, five sections (Intro, Background, Mixtape, Repos, Letter), a portrait slideshow with multiple clip-path transitions, a vinyl-themed mixtape with shuffled tracks, a collapsible project grid that opens into a lightbox, a mobile bottom tab bar, and an oklch design system that flips between light and dark via an ink-wipe GSAP timeline.
 
 **Live:** https://barmoshe.github.io/bar-portfolio/ · **Design showcase:** [/#showcase](https://barmoshe.github.io/bar-portfolio/#showcase) · [/showcase.html](https://barmoshe.github.io/bar-portfolio/showcase.html)
 
@@ -98,9 +98,9 @@ bar-portfolio/
 │   ├── hooks/                  useTheme, useLightbox, useFolioScrub, …
 │   ├── lib/                    gsap registrar, inkBleed
 │   └── components/
-│       ├── HeroSlides.tsx      fragile 5-fx cycle - see knowledge/04
-│       ├── Lightbox, Strip, TabBar, Boot, Grain, Crease, …
-│       ├── sections/           Intro, Story, Experience, Repos, Music, Notes, Letter
+│       ├── HeroSlides.tsx      fragile multi-fx cycle - see knowledge/04
+│       ├── Lightbox, Strip, TabBar, Boot, Grain, Crease, HoverCard, CodeArt, InkDefs
+│       ├── sections/           Intro, Background, Mixtape, Repos (collapsible), Letter
 │       └── showcase/           #showcase route (ColorGrid, TypeSpecimen, FxPlayground)
 ├── public/
 │   ├── .nojekyll               keeps Pages from eating folders

@@ -13,7 +13,7 @@ Routing skill for the `bar-portfolio` repo (React 19 + Vite 6 + TypeScript, depl
 Matches the user's intent to one of four workflows, opens the relevant recipe + prompt, and keeps the four site invariants intact:
 
 1. Pre-paint theme script stays inline in `index.html` `<head>`.
-2. `HeroSlides` fx cycle - `.is-enter` → forced reflow → RAF → `.is-active`.
+2. `HeroSlides` fx cycle - GSAP-owned, one timeline at a time; `resetSlide()` must clear every fx-specific inline style.
 3. `base: '/bar-portfolio/'` in `vite.config.ts`.
 4. `public/.nojekyll` must land in `dist/`.
 
@@ -25,7 +25,8 @@ Full rationale: `knowledge/99-caveats.md`.
 |---|---|
 | "add a project", "new repo entry", "put this on the portfolio" | `recipes/add-project.md` → `prompts/add-project.md` |
 | "change the colors", "new palette", "make it warmer/cooler" | `recipes/customize-theme.md` → `prompts/customize-colors.md` |
-| "edit the intro/story/experience/…", "add a paragraph to <section>" | `recipes/edit-section.md` → `prompts/add-section-block.md` |
+| "edit the intro/background/mixtape/repos/letter", "add a paragraph to <section>" | `recipes/edit-section.md` → `prompts/add-section-block.md` |
+| "add a track to the mixtape" | append to `TRACKS` in `Mixtape.tsx`; first entry is pinned to A1, rest shuffle into balanced halves on each load |
 | "deploy", "push live", "ship it" | `recipes/deploy.md` |
 | "critique the design", "something looks off" | `prompts/design-critique.md` |
 

@@ -10,24 +10,24 @@ Each section is one file under `src/components/sections/` whose outermost elemen
 
 Map from section id to file:
 
-| id | file |
-|---|---|
-| `intro` | `src/components/sections/Intro.tsx` |
-| `story` | `src/components/sections/Story.tsx` |
-| `experience` | `src/components/sections/Experience.tsx` |
-| `repos` | `src/components/sections/Repos.tsx` |
-| `mixtape` | `src/components/sections/Mixtape.tsx` |
-| `letter` | `src/components/sections/Letter.tsx` |
+| id | file | folio |
+|---|---|---|
+| `intro` | `src/components/sections/Intro.tsx` | 01 // WHOAMI |
+| `background` | `src/components/sections/Background.tsx` | 02 // BACKGROUND |
+| `mixtape` | `src/components/sections/Mixtape.tsx` | 03 // MIXTAPE |
+| `repos` | `src/components/sections/Repos.tsx` | 04 // REPOS (collapsible) |
+| `letter` | `src/components/sections/Letter.tsx` | 05 // PING |
 
 (See `knowledge/05-components.md` for the full table with roles and primitives used.)
 
 ## 2. Decide the block type
 
-- **Body text** - drop a `<p>` inside the section's main column. Wrap it in `<Reveal>` if surrounding blocks are revealed, so the scroll cadence stays consistent.
-- **Link list** - a `<ul>` with the section's usual link styling (see existing siblings). If the list is long enough that it earns a row-by-row reveal, wrap each `<li>` in `<Reveal delay={…}>`; otherwise wrap the whole `<ul>`.
-- **Card block** - reuse `<HoverCard>`. Don't build a new card primitive unless the hover interaction is genuinely different.
-- **Quote / pull** - the site has a consistent "fold" typography for quotes (serif display, a leading rule). Match whatever the nearest existing quote does.
-- **Timeline entry** - use `InkTimeline` (already used in `Story.tsx` and `Experience.tsx`). Its item shape is documented inline; the key constraint is a stable `key` per entry.
+- **Body text** - drop a `<p>` inside the section's main column. To match neighbours, register it with the section's `useGSAP` block via `createReveal` from `src/lib/scrollReveal.ts` (gated on `FULL_MOTION_QUERY`).
+- **Link list** - a `<ul>` with the section's usual link styling (see existing siblings). For row-by-row reveal, give the `<li>`s a class and feed them to `createReveal` with a `stagger`.
+- **Card block** - reuse `<HoverCard>` (used by `Letter`). Don't build a new card primitive unless the hover interaction is genuinely different.
+- **Quote / pull** - the site has a consistent "fold" typography for quotes (serif display, a leading rule). Match whatever the nearest existing quote does (see Intro's credo card).
+- **Background card** - if you want to add another work or education entry, append a `bigCard`/`smallCard` block in `Background.tsx`; the styling helpers and reveal animations already exist there.
+- **Mixtape track** - append a literal to the `TRACKS: TrackBase[]` array in `Mixtape.tsx`. The first entry is pinned to A1; everything else shuffles into balanced halves on each page load. Drop the disc art in `public/tracks/` and reference via `preview: 'tracks/<file>.jpg'` (or use `label: { bg, monogram }` for a programmatic disc).
 
 ## 3. Preserve the section id
 

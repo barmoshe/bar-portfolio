@@ -6,6 +6,12 @@ You've made changes on `main` and you want them live at `https://barmoshe.github
 
 Deploys are fully automated from `main`. `.github/workflows/deploy.yml` installs deps, runs `npm run build`, uploads `dist/` as a Pages artifact, and publishes. The whole chain takes 60–120 seconds from push to green; Pages CDN propagation adds up to another minute on top. There is no manual step - if the workflow is green and enough time has passed, the site is up.
 
+The workflow uses `concurrency: { group: pages, cancel-in-progress: false }`,
+so back-to-back pushes **queue** rather than cancel each other. This avoids
+the `actions/deploy-pages` 400-error trap; full rationale in
+`knowledge/99-caveats.md`. Practically: rapid pushes are safe — the second
+deploy waits for the first to finish.
+
 ## 1. Pre-flight
 
 Clean working tree, right branch:
@@ -77,6 +83,7 @@ Open in a browser and spot-check:
 ## 6. If something's wrong
 
 - **Workflow failed**: click into the run, read the failing step. Usually `npm run build` with a TS error. Fix locally, push again.
+- **Deploy step fails with `Deployment request failed ... due to in progress deployment`**: an earlier deploy is stuck in the Pages queue. Open the repo's Deployments page, find the in-progress `github-pages` deploy for the prior SHA, three-dot menu → Cancel deployment. Then re-run the failed workflow. See `knowledge/99-caveats.md` for the underlying concurrency rule.
 - **Workflow green but site 404**: `base: '/bar-portfolio/'` in `vite.config.ts` got changed, or `public/.nojekyll` is missing. See `knowledge/99-caveats.md`.
 - **Workflow green but styles broken**: asset paths probably hardcoded somewhere. Grep for `href="/` and `src="/` - everything should go through `import.meta.env.BASE_URL`.
 
