@@ -661,6 +661,7 @@ const Rig = ({
   onVolumeChange,
   onMuteToggle,
 }: RigProps) => (
+  <>
   <div
     className="rig"
     ref={ref}
@@ -875,45 +876,46 @@ const Rig = ({
         </text>
       </g>
     </svg>
-    <div className="rig-controls">
-      <button
-        type="button"
-        className="vinyl-mute"
-        aria-pressed={muted}
-        aria-label={muted ? 'Unmute mixtape audio' : 'Mute mixtape audio'}
-        onClick={onMuteToggle}
-        data-muted={muted ? 'true' : 'false'}
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 9 H8 L13 5 V19 L8 15 H4 Z" />
-          {muted ? (
-            <>
-              <line x1="16" y1="9" x2="21" y2="14" />
-              <line x1="21" y1="9" x2="16" y2="14" />
-            </>
-          ) : (
-            <>
-              <path d="M16 8 Q19 12 16 16" fill="none" />
-              <path d="M18 6 Q22 12 18 18" fill="none" />
-            </>
-          )}
-        </svg>
-        <span className="vinyl-mute-label">{muted ? 'MUTED' : 'MUTE'}</span>
-      </button>
-      <label className="vinyl-volume">
-        <span className="vinyl-volume-label">VOL</span>
-        <input
-          type="range"
-          min={0}
-          max={100}
-          step={1}
-          value={Math.round(volume * 100)}
-          onChange={(e) => onVolumeChange(parseInt(e.target.value, 10) / 100)}
-          aria-label="Mixtape master volume"
-          aria-valuetext={`${Math.round(volume * 100)} percent`}
-        />
-        <span className="vinyl-volume-readout">{Math.round(volume * 100)}</span>
-      </label>
-    </div>
   </div>
+  <div className="rig-controls">
+    <button
+      type="button"
+      className="vinyl-mute"
+      aria-pressed={muted}
+      aria-label={muted ? 'Unmute mixtape audio' : 'Mute mixtape audio'}
+      onClick={onMuteToggle}
+      data-muted={muted ? 'true' : 'false'}
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 9 H8 L13 5 V19 L8 15 H4 Z" />
+        {muted ? (
+          <>
+            <line x1="16" y1="9" x2="21" y2="14" />
+            <line x1="21" y1="9" x2="16" y2="14" />
+          </>
+        ) : (
+          <>
+            <path d="M16 8 Q19 12 16 16" fill="none" />
+            <path d="M18 6 Q22 12 18 18" fill="none" />
+          </>
+        )}
+      </svg>
+      <span className="vinyl-mute-label">{muted ? 'MUTED' : 'MUTE'}</span>
+    </button>
+    <label className="vinyl-volume">
+      <span className="vinyl-volume-label">VOL</span>
+      <input
+        type="range"
+        min={0}
+        max={100}
+        step={1}
+        value={Math.round(volume * 100)}
+        onChange={(e) => onVolumeChange(parseInt(e.target.value, 10) / 100)}
+        aria-label="Mixtape master volume"
+        aria-valuetext={`${Math.round(volume * 100)} percent`}
+      />
+      <span className="vinyl-volume-readout">{Math.round(volume * 100)}</span>
+    </label>
+  </div>
+  </>
 );
