@@ -255,7 +255,7 @@ export default function Background() {
           </div>
           <p style={role}>Software Engineer, Full-Stack</p>
           <p style={body}>
-            Early-stage startup. Five-person team. Primary developer owning full-stack
+            Early-stage startup. Small team. Primary developer owning full-stack
             architecture and database design, plus the deploy pipeline and infra it runs on.
             Every layer - frontend, backend, the plumbing between - shaped as the product
             finds its shape.
