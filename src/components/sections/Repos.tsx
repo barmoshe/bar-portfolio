@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { iconFor, projects, shortDesc } from '../../data/portfolio';
 import {
   gsap,
@@ -16,6 +16,17 @@ type Props = { onOpen: (idx: number) => void };
 export default function Repos({ onOpen }: Props) {
   const rootRef = useRef<HTMLElement | null>(null);
   const gridRef = useRef<HTMLDivElement | null>(null);
+  const [expanded, setExpanded] = useState(false);
+
+  // Auto-expand when a nav link points here, so users don't land on a stub.
+  useEffect(() => {
+    const sync = () => {
+      if (window.location.hash === '#repos') setExpanded(true);
+    };
+    sync();
+    window.addEventListener('hashchange', sync);
+    return () => window.removeEventListener('hashchange', sync);
+  }, []);
 
   useGSAP(
     () => {
@@ -98,12 +109,22 @@ export default function Repos({ onOpen }: Props) {
   return (
     <article className="page" id="repos" ref={rootRef}>
       <div className="folio">
-        <b>03</b> // REPOS
+        <b>04</b> // REPOS
       </div>
       <span className="stamp">REPOS</span>
       <h2 className="headline">
         A few of the <em>many things</em> I've built.
       </h2>
+      <button
+        type="button"
+        className="repos-toggle"
+        aria-expanded={expanded}
+        aria-controls="repos-body"
+        onClick={() => setExpanded((v) => !v)}
+      >
+        {expanded ? 'Hide projects ↑' : `Show ${projects.length} projects ↓`}
+      </button>
+      <div id="repos-body" className="repos-body" hidden={!expanded}>
       <div className="clip" id="proj-grid" ref={gridRef} style={{ marginTop: 28 }}>
         {projects.map((p, i) => (
           <article
@@ -198,6 +219,7 @@ export default function Repos({ onOpen }: Props) {
           github.com/barmoshe →
         </a>
       </aside>
+      </div>
     </article>
   );
 }

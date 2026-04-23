@@ -391,7 +391,7 @@ export default function Mixtape() {
   return (
     <article className="page" id="mixtape" ref={rootRef}>
       <div className="folio">
-        <b>04</b> // MIXTAPE
+        <b>03</b> // MIXTAPE
       </div>
       <span className="stamp">MIXTAPE</span>
       <h2 className="headline">

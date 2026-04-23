@@ -98,8 +98,8 @@ export default function App() {
         <main>
           <Intro />
           <Background />
-          <Repos onOpen={openFromCard} />
           <Mixtape />
+          <Repos onOpen={openFromCard} />
           <Letter />
         </main>
         <TabBar />

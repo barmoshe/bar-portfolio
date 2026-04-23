@@ -1,6 +1,6 @@
 import { useSectionObserver } from '../hooks/useSectionObserver';
 
-const SECTIONS = ['intro', 'background', 'repos', 'mixtape', 'letter'] as const;
+const SECTIONS = ['intro', 'background', 'mixtape', 'repos', 'letter'] as const;
 
 export default function TabBar() {
   const activeId = useSectionObserver(SECTIONS);
@@ -29,13 +29,6 @@ export default function TabBar() {
         </svg>
         <span>Background</span>
       </a>
-      <a href="#repos" data-target="repos" aria-label="Open Source" {...isCurrent('repos')}>
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M8 18l-6-6 6-6" />
-          <path d="M16 6l6 6-6 6" />
-        </svg>
-        <span>Repos</span>
-      </a>
       <a href="#mixtape" data-target="mixtape" aria-label="Mixtape" {...isCurrent('mixtape')}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <rect x="3" y="6" width="18" height="12" rx="2" />
@@ -44,6 +37,13 @@ export default function TabBar() {
           <path d="M7 18 l-1 2 M17 18 l1 2" />
         </svg>
         <span>Mixtape</span>
+      </a>
+      <a href="#repos" data-target="repos" aria-label="Open Source" {...isCurrent('repos')}>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8 18l-6-6 6-6" />
+          <path d="M16 6l6 6-6 6" />
+        </svg>
+        <span>Repos</span>
       </a>
       <a href="#letter" data-target="letter" aria-label="Contact" {...isCurrent('letter')}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
