@@ -24,18 +24,17 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    name: 'claude-creative-stack',
+    name: 'Israelify',
     description:
-      'A reference pack for building creative work with Claude - knowledge docs, Agent Skills, single-file artifact starters, prompt scaffolds, and a working MCP server. Designed to be mounted straight into a Claude Project.',
-    language: 'Claude',
-    url: 'https://github.com/barmoshe/claude-creative-stack',
-  },
-  {
-    name: 'isralify',
-    description:
-      'Node.js backend for a Spotify-inspired music app - REST API, user auth, custom middleware, integrated logger, MongoDB. The React frontend lives in a sibling repo.',
+      'Spotify-style music app built as a pair project during the Coding Academy bootcamp. Node.js + MongoDB backend with REST API, auth, middleware, and a custom logger; React frontend in a sibling repo.',
     language: 'JavaScript',
     url: 'https://github.com/barmoshe/Israelify-backend',
+    extras: [
+      {
+        label: 'Frontend repo →',
+        url: 'https://github.com/Gal-Or/IsraelifyApp',
+      },
+    ],
   },
   {
     name: 'temporal-data-processing',
@@ -51,6 +50,19 @@ export const projects: Project[] = [
       {
         label: 'Read the Medium article',
         url: 'https://medium.com/@barmoshe/building-a-cross-language-data-processing-service-with-temporal-a-practical-guide-bf0fb1155d46',
+      },
+    ],
+  },
+  {
+    name: 'Biome Synth',
+    description:
+      'Started as a Claude skill that interviews you with AskUserQuestion until it has a full project brief — no technical background needed. Used that brief to build the actual app: a five-biome browser instrument with an AI DJ that composes through DRIFT · PULSE · BLOOM · SURGE · DISSOLVE. Tone.js + Three.js + Canvas2D, polished in Lovable.',
+    language: 'TypeScript',
+    url: 'https://github.com/barmoshe/cosmic-chord-synth',
+    extras: [
+      {
+        label: 'Play the live app →',
+        url: 'https://biome-synth.lovable.app/',
       },
     ],
   },
