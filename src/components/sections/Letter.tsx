@@ -283,7 +283,7 @@ export default function Letter() {
         className="dek"
         style={{ textAlign: 'center', marginLeft: 'auto', marginRight: 'auto' }}
       >
-        Pick a channel. I actually reply - usually same day.
+        Inbox, phone, DM — whichever's easiest. I reply, usually same day.
       </p>
 
       <div
