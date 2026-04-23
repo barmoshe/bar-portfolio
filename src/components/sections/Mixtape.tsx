@@ -68,7 +68,8 @@ type TrackBase = Omit<Track, 'n' | 'side'>;
 
 // Source list. Side ('A'/'B') and track number ('A1', 'B2', ...) are assigned
 // at runtime by `shuffleAndAssignSides` so each page load gets a fresh layout
-// with a balanced split (counts differ by at most 1).
+// with a balanced split (counts differ by at most 1). The first entry is
+// pinned to A1 — keep the Temporal track on top.
 const TRACKS: TrackBase[] = [
   {
     kind: 'post',
@@ -175,20 +176,22 @@ const TRACKS: TrackBase[] = [
   },
 ];
 
-// Fisher-Yates shuffle, then split into two near-equal halves and assign
-// Side A / Side B with sequential numbers (A1, A2, ..., B1, B2, ...).
-// Side A gets the first ceil(N/2) tracks, Side B gets the rest, so the
-// counts differ by at most 1.
+// Pin the first track to A1; Fisher-Yates the rest, then split into two
+// near-equal halves and assign Side A / Side B with sequential numbers
+// (A1, A2, ..., B1, B2, ...). Side A gets the first ceil(N/2) tracks,
+// Side B gets the rest, so the counts differ by at most 1.
 function shuffleAndAssignSides(base: TrackBase[]): Track[] {
-  const arr = [...base];
+  const [pinned, ...rest] = base;
+  const arr = [...rest];
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j]!, arr[i]!];
   }
-  const sideACount = Math.ceil(arr.length / 2);
+  const ordered = pinned ? [pinned, ...arr] : arr;
+  const sideACount = Math.ceil(ordered.length / 2);
   let aIdx = 0;
   let bIdx = 0;
-  return arr.map((t, i) => {
+  return ordered.map((t, i) => {
     const side: 'A' | 'B' = i < sideACount ? 'A' : 'B';
     const n = side === 'A' ? `A${++aIdx}` : `B${++bIdx}`;
     return { ...t, side, n };
