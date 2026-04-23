@@ -98,9 +98,9 @@ export default function Repos({ onOpen }: Props) {
   return (
     <article className="page" id="repos" ref={rootRef}>
       <div className="folio">
-        <b>04</b> // REPOS
+        <b>03</b> // REPOS
       </div>
-      <span className="stamp">ON GITHUB</span>
+      <span className="stamp">REPOS</span>
       <h2 className="headline">
         A few of the <em>many things</em> I've built.
       </h2>

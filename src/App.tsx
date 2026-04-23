@@ -7,8 +7,7 @@ import TabBar from './components/TabBar';
 import Lightbox from './components/Lightbox';
 import InkDefs from './components/InkDefs';
 import Intro from './components/sections/Intro';
-import Story from './components/sections/Story';
-import Experience from './components/sections/Experience';
+import Background from './components/sections/Background';
 import Repos from './components/sections/Repos';
 import Mixtape from './components/sections/Mixtape';
 import Letter from './components/sections/Letter';
@@ -98,8 +97,7 @@ export default function App() {
         />
         <main>
           <Intro />
-          <Story />
-          <Experience />
+          <Background />
           <Repos onOpen={openFromCard} />
           <Mixtape />
           <Letter />
