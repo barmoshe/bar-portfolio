@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import {
   gsap,
   SplitText,
@@ -64,18 +64,19 @@ type Track = {
   featured?: boolean;
 };
 
-// Tracks are split randomly across Side A and Side B - the `kind`
-// field stays as metadata but the sides aren't sorted by it.
-const TRACKS: Track[] = [
+type TrackBase = Omit<Track, 'n' | 'side'>;
+
+// Source list. Side ('A'/'B') and track number ('A1', 'B2', ...) are assigned
+// at runtime by `shuffleAndAssignSides` so each page load gets a fresh layout
+// with a balanced split (counts differ by at most 1).
+const TRACKS: TrackBase[] = [
   {
-    n: 'A1',
-    side: 'A',
     kind: 'post',
     date: 'MAR 2025',
     tag: '★ featured',
     title: "Read it on Temporal's Code Exchange.",
     body:
-      "My Cross-Language Data Processing Service - Python, Go, and TypeScript all coordinated through a single Temporal workflow - was picked up for Temporal's official Code Exchange, with a companion Medium write-up.",
+      "My Cross-Language Data Processing Service, which coordinates Python, Go, and TypeScript through a single Temporal workflow, was picked up for Temporal's official Code Exchange. A Medium write-up went out with it.",
     hashtags: '#temporal   #opensource   #python   #go',
     href: 'https://temporal.io/code-exchange/cross-language-data-processing-service-with-temporal',
     preview: 'tracks/temporal.jpg',
@@ -83,70 +84,60 @@ const TRACKS: Track[] = [
     featured: true,
   },
   {
-    n: 'A2',
-    side: 'A',
     kind: 'post',
     date: 'JAN 2026',
     tag: '// gift',
     title: 'A tiny Flappy Bird for a wedding gift.',
     body:
-      'My cousin Chen was getting married. Her fiancé is into DJI drones - so I built a small drone-themed Flappy Bird with a "Ring Delivered!" finish, a "Chen said YES!" screen, and an endless mode. Sometimes the best gift is 200 lines of web game.',
+      'My cousin Chen was getting married. Her fiancé is into DJI drones, so I built a small drone-themed Flappy Bird with a "Ring Delivered!" finish, a "Chen said YES!" screen, and an endless mode. About 200 lines of code, given as a wedding gift.',
     hashtags: '#javascript   #canvas   #gift',
     href: 'https://v0-chenandoz.vercel.app/',
     preview: 'tracks/ring-quest.jpg',
     previewBg: '#91ccf5',
   },
   {
-    n: 'A3',
-    side: 'A',
     kind: 'post',
     date: 'FEB 2026',
     tag: '// launch',
-    title: 'Shipping Joomsy - meaningful moments across the distance.',
+    title: 'Shipping Joomsy — meaningful moments across the distance.',
     body:
-      "Kids connect with grandparents, family, and friends through interactive video calls - reading books together, gesture-based games, more coming. Over 35M US grandparents live 200+ miles from a grandchild; we're building the bridge.",
+      'Kids connect with grandparents, family, and friends through interactive video calls — reading books together, playing gesture-based games, with more coming. Over 35 million US grandparents live more than 200 miles from a grandchild. Joomsy helps close that distance.',
     hashtags: '#startup   #product   #video',
     href: 'https://www.linkedin.com/feed/update/urn:li:activity:7421903131573366784/',
     preview: 'tracks/joomsy.jpg',
     previewBg: '#f7c80c',
   },
   {
-    n: 'A4',
-    side: 'A',
     kind: 'experiment',
     date: 'MAR 2023',
     tag: 'Tech-Music Hack · Afeka × Rimon',
-    title: 'MIDI Violin - Arduino hack, 3rd place.',
+    title: 'MIDI Violin — Arduino hack, 3rd place.',
     body:
-      'Second year at the Afeka × Rimon Tech-Music Hackathon. First time on an Arduino - 24 hours later the team had wired a real violin into a MIDI controller that does vibrato and glissando (kind of). Fairy lights were not in the spec. Placed third.',
+      'Second year at the Afeka × Rimon Tech-Music Hackathon. My first time using an Arduino. After 24 hours, the team had wired a real violin into a MIDI controller that handles vibrato and glissando (mostly). We added fairy lights for fun. Placed third.',
     hashtags: '#arduino   #midi   #hackathon',
     href: 'https://www.linkedin.com/posts/barmoshe_musichackathon-arduino-midiviolin-share-7047819554294501377-CTdU',
     preview: 'tracks/midi-violin.jpg',
     previewBg: '#8d512e',
   },
   {
-    n: 'A5',
-    side: 'A',
     kind: 'post',
     date: 'AUG 2024',
     tag: '// bootcamp final',
     title: 'Israelify — our Spotify-clone final project.',
     body:
-      'Final project from Coding Academy Israel. Built in a pair over a few weeks: a music streaming platform with real-time collaboration and personalized recommendations. Node.js + MongoDB backend, React frontend. Demo and repos in the post.',
+      'Final project from Coding Academy Israel. Built in a pair over a few weeks: a music streaming platform with real-time collaboration and personalized recommendations. Node.js and MongoDB backend, React frontend. Demo and repos in the post.',
     hashtags: '#react   #nodejs   #mongodb   #bootcamp',
     href: 'https://www.linkedin.com/posts/barmoshe_proud-to-present-israelifyspotify-web-clone-share-7224361235268476928-Qu9-',
     preview: 'tracks/israelify.jpg',
     previewBg: '#2f7be0',
   },
   {
-    n: 'B1',
-    side: 'B',
     kind: 'experiment',
     date: 'APR 2026',
     tag: 'Self-directed · 2026',
-    title: 'Biome Synth - five-biome browser instrument.',
+    title: 'Biome Synth — five-biome browser instrument.',
     body:
-      'Started as a Claude skill I wrote that interviews you with AskUserQuestion until it has a full project brief — no technical background needed. Took that brief and built the app: a five-biome browser instrument with an AI DJ that composes through DRIFT, PULSE, BLOOM, SURGE, DISSOLVE. Tone.js + Three.js + Canvas2D, polished in Lovable.',
+      'Started as a Claude skill I wrote that interviews you with AskUserQuestion to build a full project brief, no technical background needed. I used that brief to build the app: a browser instrument with five biomes and an AI DJ that moves through five states (DRIFT, PULSE, BLOOM, SURGE, DISSOLVE). Built with Tone.js, Three.js, and Canvas2D, polished in Lovable.',
     hashtags: '#tonejs   #threejs   #webaudio   #synth   #claude',
     href: 'https://biome-synth.lovable.app/',
     linkLabel: 'Play the app →',
@@ -159,32 +150,48 @@ const TRACKS: Track[] = [
     featured: true,
   },
   {
-    n: 'B2',
-    side: 'B',
     kind: 'post',
     date: 'OCT 2025',
     tag: '// devtool',
     title: 'A small GPT that rewrites messy PR notes into clean bullets.',
     body:
-      'Takes half-written PR descriptions and turns them into Fix · Add · Update · Refactor · Remove. Writing a changelog now takes seconds instead of minutes.',
+      'Takes half-written PR descriptions and turns them into clean bullets grouped by Fix, Add, Update, Refactor, and Remove. Writing a changelog now takes seconds instead of minutes.',
     hashtags: '#gpt   #devtools   #workflow',
     href: 'https://www.linkedin.com/feed/update/urn:li:activity:7382760320420720640/',
   },
   {
-    n: 'B3',
-    side: 'B',
     kind: 'experiment',
     date: 'FEB 2026',
     tag: 'Global Game Jam · 2026',
-    title: 'Masking Through - adaptive score for a cardboard-doctor short.',
+    title: 'Masking Through — adaptive score for a cardboard-doctor short.',
     body:
-      'Second year on audio duty. A cut-out cardboard world - tie-wearing doctor, smiling pink flowers, a hand-lettered title card - scored in Unity + FMOD with layered stems that duck and crest with the player state (vertical layers, horizontal cues). This time I let Cursor write the sound-effect code (C# synth, mixer, effects chain) while I conducted from the side. One 48-hour weekend, zero manual setup.',
+      'Second year doing audio. A cut-out cardboard world: tie-wearing doctor, smiling pink flowers, a hand-lettered title card. Scored in Unity and FMOD with layered stems that respond to player state (vertical layers, horizontal cues). I had Cursor write the sound-effect code (C# synth, mixer, effects chain) while I directed. One 48-hour weekend, no manual setup.',
     hashtags: '#ggj2026   #fmod   #unity   #cursor   #adaptive',
     href: 'https://www.linkedin.com/feed/update/urn:li:activity:7423731964278358016/',
     preview: 'tracks/masking-through.jpg',
     previewBg: '#556b77',
   },
 ];
+
+// Fisher-Yates shuffle, then split into two near-equal halves and assign
+// Side A / Side B with sequential numbers (A1, A2, ..., B1, B2, ...).
+// Side A gets the first ceil(N/2) tracks, Side B gets the rest, so the
+// counts differ by at most 1.
+function shuffleAndAssignSides(base: TrackBase[]): Track[] {
+  const arr = [...base];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j]!, arr[i]!];
+  }
+  const sideACount = Math.ceil(arr.length / 2);
+  let aIdx = 0;
+  let bIdx = 0;
+  return arr.map((t, i) => {
+    const side: 'A' | 'B' = i < sideACount ? 'A' : 'B';
+    const n = side === 'A' ? `A${++aIdx}` : `B${++bIdx}`;
+    return { ...t, side, n };
+  });
+}
 
 const stageStyle: CSSProperties = { marginTop: 36 };
 
@@ -194,7 +201,8 @@ export default function Mixtape() {
   const rigRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
   const [side, setSide] = useState<'A' | 'B'>('A');
-  const visible = TRACKS.filter((t) => t.side === side);
+  const tracks = useMemo(() => shuffleAndAssignSides(TRACKS), []);
+  const visible = tracks.filter((t) => t.side === side);
 
   const [audioOn, setAudioOn] = useState<boolean>(() => {
     try {
@@ -385,7 +393,7 @@ export default function Mixtape() {
         What I've <em>made.</em>
       </h2>
       <p className="dek">
-        Side A, 78 BPM F-major lo-fi hits. Side B, 60 BPM D-dorian sketches. Flip to switch, tap a card for the write-up.
+        Side A is finished projects. Side B is experiments. Flip to switch sides, tap a card to read more.
       </p>
 
       <div className="music-stage" style={stageStyle}>

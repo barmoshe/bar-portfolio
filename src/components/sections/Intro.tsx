@@ -181,21 +181,20 @@ export default function Intro() {
         </h1>
         <div className="drop">
           <p>
-            I'm Bar. I build - software, mostly, but the medium is whatever the idea
-            needs. Web apps, hardware hacks, game-jam soundtracks, weekend scripts that
-            quietly become daily tools.
+            I'm Bar. I build software, mostly. Web apps, hardware experiments,
+            game-jam soundtracks, weekend scripts that turn into daily tools.
           </p>
         </div>
 
         <p>
-          Day job is full-stack. Off-hours is whatever I'm curious about that week. Both
-          feed each other - the side projects keep the reflexes sharp, the day job keeps
-          the side projects honest.
+          My day job is full-stack. Off-hours, I work on whatever I'm curious about.
+          The two help each other: side projects keep my skills sharp, the day job
+          keeps the side projects practical.
         </p>
 
         <p>
-          Title and stack matter less than the habit underneath them. The habit, and one
-          belief I keep proving to myself:
+          Title and stack matter less than the habit of building. That, and one belief
+          I keep proving to myself:
         </p>
 
         <aside className="credo-card" aria-label="credo">
@@ -206,13 +205,13 @@ export default function Intro() {
         <p className="toolline">
           <span className="prompt">&gt;&nbsp;now</span>
           <span className="args">
-            builder first
+            builder
             <span className="sep">·</span>
-            full-stack by trade
+            full-stack
             <span className="sep">·</span>
-            AI-native by reflex
+            AI-native
             <span className="sep">·</span>
-            happiest shipping the thing
+            happy shipping things
           </span>
           <span className="caret" aria-hidden="true" />
         </p>

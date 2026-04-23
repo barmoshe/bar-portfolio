@@ -226,9 +226,9 @@ export default function Background() {
       </div>
       <span className="stamp">BACKGROUND</span>
       <h2 className="headline">
-        I follow the <em>interesting</em> things - and there are a lot of them.
+        I work on the <em>interesting</em> things, and there are a lot of them.
       </h2>
-      <p className="dek">Build, engineer, design, compose - pick a verb.</p>
+      <p className="dek">Building, engineering, designing, composing.</p>
 
       <div style={{ marginTop: 40, display: 'grid', gap: 32 }}>
         <div data-bg-big style={bigCard('-.8deg')}>
@@ -255,10 +255,9 @@ export default function Background() {
           </div>
           <p style={role}>Software Engineer, Full-Stack</p>
           <p style={body}>
-            Early-stage startup. Small team. Primary developer owning full-stack
-            architecture and database design, plus the deploy pipeline and infra it runs on.
-            Every layer - frontend, backend, the plumbing between - shaped as the product
-            finds its shape.
+            Early-stage startup. Small team. I lead full-stack architecture and
+            database design, plus the deploy pipeline and the infrastructure it runs
+            on. I work across every layer: frontend, backend, and everything in between.
           </p>
         </div>
 
@@ -269,9 +268,9 @@ export default function Background() {
           </div>
           <p style={role}>Builder / Maker</p>
           <p style={body}>
-            A lot of my work happens on my own time, and I don't limit it to one role or
-            field - fullstack, DevOps, product design, creative coding, game dev, music
-            tools. Some of it shows up in{' '}
+            A lot of my work happens on my own time, across many areas: full-stack,
+            DevOps, product design, creative coding, game dev, and music tools. Some
+            of it shows up in{' '}
             <a href="#mixtape" style={{ color: 'var(--green)' }}>
               the mixtape
             </a>{' '}
@@ -295,7 +294,7 @@ export default function Background() {
           </div>
           <p style={role}>B.S. Computer Science</p>
           <p style={body}>
-            Wide range - low-level assembly through .NET - on top of foundational
+            A wide range, from low-level assembly to .NET, on top of foundational
             coursework in operating systems, data structures, and algorithms.
           </p>
         </div>
@@ -338,9 +337,12 @@ export default function Background() {
           <div data-bg-small style={smallCard('.3deg')}>
             <div style={rowCompact}>
               <h3 style={h3Small}>BPM College</h3>
-              <span style={date}>Program</span>
+              <span style={date}>Feb 2019 – Aug 2019</span>
             </div>
             <p style={roleSmall}>Music</p>
+            <p style={bodySmall}>
+              Studied Ableton Live and music theory.
+            </p>
           </div>
         </div>
       </div>

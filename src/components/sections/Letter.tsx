@@ -283,7 +283,7 @@ export default function Letter() {
         className="dek"
         style={{ textAlign: 'center', marginLeft: 'auto', marginRight: 'auto' }}
       >
-        Inbox, phone, DM — whichever's easiest. I reply, usually same day.
+        Email, phone, or DM — whichever's easiest. I usually reply the same day.
       </p>
 
       <div

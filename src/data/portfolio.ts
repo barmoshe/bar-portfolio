@@ -26,7 +26,7 @@ export const projects: Project[] = [
   {
     name: 'Israelify',
     description:
-      'Spotify-style music app built as a pair project during the Coding Academy bootcamp. React frontend paired with a Node.js + MongoDB backend in a sibling repo - REST API, auth, middleware, and a custom logger.',
+      'Spotify-style music app, built as a pair project during the Coding Academy bootcamp. React frontend paired with a Node.js + MongoDB backend in a sibling repo, with REST API, auth, middleware, and a custom logger.',
     language: 'JavaScript',
     url: 'https://github.com/Gal-Or/IsraelifyApp',
     extras: [
@@ -43,7 +43,7 @@ export const projects: Project[] = [
   {
     name: 'temporal-data-processing',
     description:
-      "A single Temporal workflow that orchestrates three language workers - Go, Python, and TypeScript, each on its own task queue - to process data end-to-end. Featured on Temporal's Code Exchange with a companion Medium write-up.",
+      "A single Temporal workflow that coordinates Go, Python, and TypeScript workers, each on its own task queue, to process data end-to-end. Featured on Temporal's Code Exchange with a companion Medium write-up.",
     language: 'Go · Python · TypeScript',
     url: 'https://github.com/barmoshe/data-processing-service',
     extras: [
@@ -60,7 +60,7 @@ export const projects: Project[] = [
   {
     name: 'Biome Synth',
     description:
-      'Started as a Claude skill that interviews you with AskUserQuestion until it has a full project brief — no technical background needed. Used that brief to build the actual app: a five-biome browser instrument with an AI DJ that composes through DRIFT · PULSE · BLOOM · SURGE · DISSOLVE. Tone.js + Three.js + Canvas2D, polished in Lovable.',
+      'Started as a Claude skill that interviews you with AskUserQuestion to build a full project brief, no technical background needed. I used that brief to build the app: a browser instrument with five biomes and an AI DJ that moves through five states (DRIFT, PULSE, BLOOM, SURGE, DISSOLVE). Built with Tone.js, Three.js, and Canvas2D, polished in Lovable.',
     language: 'TypeScript',
     url: 'https://github.com/barmoshe/cosmic-chord-synth',
     extras: [

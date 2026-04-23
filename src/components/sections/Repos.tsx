@@ -175,7 +175,7 @@ export default function Repos({ onOpen }: Props) {
               fontSize: '.98rem',
             }}
           >
-            Experiments, scripts, and half-built ideas - all public.
+            Experiments, scripts, and half-built ideas. All public.
           </p>
         </div>
         <a
