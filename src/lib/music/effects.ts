@@ -261,16 +261,41 @@ export function makeSurfaceNoise(): Surface {
   // on the audio clock. If a callback fires late (GC, React render stall), the
   // next one still lands correctly via Tone's scheduling — no setInterval-style
   // catch-up burst. Density stays tempo-independent.
+  //
+  // NoiseSynth is monophonic and throws "Start time must be strictly greater
+  // than previous start time" if two triggers on the same voice land at the
+  // same or earlier audio time. That can happen if the AudioContext is still
+  // resuming (Tone.now() is frozen) or if two rapid callbacks pick the same
+  // synth. We track last-fire-time per synth and nudge forward when needed.
   let crackleTimer: ReturnType<typeof setTimeout> | null = null;
   let crackleAlive = false;
+  let lastTickT = 0;
+  let lastPopT = 0;
+  let lastDustT = 0;
+
+  const fire = (
+    synth: Tone.NoiseSynth,
+    dur: number,
+    desired: number,
+    last: number,
+  ): number => {
+    const t = desired > last ? desired : last + 0.002;
+    synth.triggerAttackRelease(dur, t);
+    return t;
+  };
 
   const scheduleNextCrackle = () => {
     if (!crackleAlive) return;
-    const r = Math.random();
-    const t = Tone.now() + 0.05;
-    if (r < 0.62) tick.triggerAttackRelease(0.006, t);
-    else if (r < 0.92) pop.triggerAttackRelease(0.012, t);
-    else if (r < 0.97) dust.triggerAttackRelease(0.04, t);
+    // Only fire if the AudioContext is running — otherwise Tone.now() is
+    // frozen and every trigger tries to schedule at the same time. Still
+    // reschedule ourselves so crackle resumes once the context is ready.
+    if (Tone.getContext().state === 'running') {
+      const r = Math.random();
+      const desired = Tone.now() + 0.05;
+      if (r < 0.62) lastTickT = fire(tick, 0.006, desired, lastTickT);
+      else if (r < 0.92) lastPopT = fire(pop, 0.012, desired, lastPopT);
+      else if (r < 0.97) lastDustT = fire(dust, 0.04, desired, lastDustT);
+    }
     const nextDelay = 55 + Math.random() * 30;
     crackleTimer = setTimeout(scheduleNextCrackle, nextDelay);
   };
@@ -286,7 +311,12 @@ export function makeSurfaceNoise(): Surface {
       hum100.start();
       if (crackleAlive) return;
       crackleAlive = true;
-      scheduleNextCrackle();
+      lastTickT = 0;
+      lastPopT = 0;
+      lastDustT = 0;
+      // Small initial delay so the AudioContext has a moment to finish
+      // resuming before the first crackle hit is scheduled.
+      crackleTimer = setTimeout(scheduleNextCrackle, 120);
     },
     stop: () => {
       const t = Tone.now();
