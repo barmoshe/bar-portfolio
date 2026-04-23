@@ -35,6 +35,8 @@ type Track = {
   href?: string;
   /** Preview image relative to `public/` (e.g. `'tracks/foo.jpg'`). Rendered as a mini vinyl. */
   preview?: string;
+  /** How to fit the preview inside the label circle. 'cover' (default) crops to fill; 'contain' shrinks to show the whole image. */
+  previewFit?: 'cover' | 'contain';
   /** Programmatic vinyl label - solid colored center with a monogram glyph. Used when there's no photo. */
   label?: { bg: string; monogram: string; fg?: string };
   featured?: boolean;
@@ -109,6 +111,7 @@ const TRACKS: Track[] = [
     hashtags: '#tonejs   #threejs   #webaudio   #synth   #claude',
     href: 'https://www.linkedin.com/feed/update/urn:li:activity:7450179482327576576/',
     preview: 'tracks/biome-synth.jpg',
+    previewFit: 'contain',
     featured: true,
   },
   {
@@ -530,7 +533,7 @@ function TrackVinyl({ track }: { track: Track }) {
               y="14"
               width="172"
               height="172"
-              preserveAspectRatio="xMidYMid slice"
+              preserveAspectRatio={track.previewFit === 'contain' ? 'xMidYMid meet' : 'xMidYMid slice'}
               clipPath={`url(#vinyl-label-${track.n})`}
             />
           ) : track.label ? (
