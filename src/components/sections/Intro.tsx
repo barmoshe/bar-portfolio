@@ -160,9 +160,9 @@ export default function Intro() {
           <b>NAME</b>
           <span>Bar Moshe</span>
           <b>ROLE</b>
-          <span>Build things</span>
+          <span>Builder</span>
           <b>FOCUS</b>
-          <span>Full-Stack · AI-native · Builder</span>
+          <span>Full-stack · AI-native · makes things</span>
           <b>REACH</b>
           <span>
             <a href="https://github.com/barmoshe" target="_blank" rel="noopener">
@@ -174,31 +174,28 @@ export default function Intro() {
 
       <div className="bio">
         <p className="byline">
-          From idea to the thing that runs - with people, with AI, with whatever.
+          Builder by default. Stack and field are negotiable.
         </p>
         <h1>
-          Most things <em>just need</em>
-          <br />
-          doing.
+          I just <em>build the thing.</em>
         </h1>
         <div className="drop">
           <p>
-            I'm Bar - a full-stack engineer with a builder's habit and an AI-native reflex.
-            I like closing the gap between an idea and the thing that runs it: a feature
-            shipped, a script that saves someone an afternoon, a weekend experiment that
-            quietly becomes a tool I use daily.
+            I'm Bar. I build - software, mostly, but the medium is whatever the idea
+            needs. Web apps, hardware hacks, game-jam soundtracks, weekend scripts that
+            quietly become daily tools.
           </p>
         </div>
 
         <p>
-          I make software for a living and keep making it on the side: small tools,
-          music-leaning experiments, half-formed ideas pulled forward until they hold. The
-          through-line isn't a stack or a title.
+          Day job is full-stack. Off-hours is whatever I'm curious about that week. Both
+          feed each other - the side projects keep the reflexes sharp, the day job keeps
+          the side projects honest.
         </p>
 
         <p>
-          It comes down to a habit of starting - and one belief I carry into every
-          project:
+          Title and stack matter less than the habit underneath them. The habit, and one
+          belief I keep proving to myself:
         </p>
 
         <aside className="credo-card" aria-label="credo">
@@ -209,11 +206,13 @@ export default function Intro() {
         <p className="toolline">
           <span className="prompt">&gt;&nbsp;now</span>
           <span className="args">
-            full-stack product work
+            builder first
             <span className="sep">·</span>
-            AI-assisted tooling
+            full-stack by trade
             <span className="sep">·</span>
-            small things that make bigger things possible
+            AI-native by reflex
+            <span className="sep">·</span>
+            happiest shipping the thing
           </span>
           <span className="caret" aria-hidden="true" />
         </p>

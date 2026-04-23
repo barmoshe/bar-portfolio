@@ -13,6 +13,7 @@ const BLEED_IDS = [
   'intro',
   'story',
   'experience',
+  'background',
   'repos',
   'mixtape',
   'mixtape-disc',
