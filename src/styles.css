@@ -982,6 +982,33 @@
     box-shadow:3px 3px 0 oklch(0 0 0 / .55)}
   html.dark .flip-btn:hover,html.dark .sound-btn:hover{background:var(--green);color:var(--surface-strong)}
 
+  /* Liner-note CTA - replaces the old cue list. A small mono kicker with
+     the current side name tinted in the side accent (green for A, magenta
+     for B), then a serif prompt line with a gently-bouncing arrow aimed
+     at the rig controls below. Dashed top rule separates it from the
+     headline block without adding another card. */
+  .liner-cta{margin:0;display:grid;gap:8px;padding-top:16px;
+    border-top:1px dashed var(--ink-faint)}
+  .liner-cta__kicker{font-family:var(--mono);font-size:11px;letter-spacing:.24em;
+    text-transform:uppercase;color:var(--ink-soft)}
+  .liner-cta__kicker em{font-style:normal;font-weight:700;color:var(--green);
+    transition:color .24s ease}
+  .liner-cta[data-side="B"] .liner-cta__kicker em{color:var(--magenta)}
+  .liner-cta__prompt{margin:0;font-family:var(--serif);
+    font-size:clamp(1.05rem, 1.5vw, 1.2rem);line-height:1.35;color:var(--ink);
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .liner-cta__arrow{display:inline-block;font-size:1.15em;color:var(--green);
+    transition:color .24s ease;
+    animation:liner-cta-bounce 1.6s ease-in-out infinite}
+  .liner-cta[data-side="B"] .liner-cta__arrow{color:var(--magenta)}
+  @keyframes liner-cta-bounce{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(5px)}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .liner-cta__arrow{animation:none}
+  }
+
   /* RPM segmented control - three-option speed selector. Shares the ink-chip
      visual language with flip-btn/sound-btn but presents as a single grouped
      pill so it reads as a toggle, not three loose buttons. */

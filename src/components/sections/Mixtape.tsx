@@ -193,33 +193,6 @@ const TRACKS: Track[] = [
 
 const stageStyle: CSSProperties = { marginTop: 36 };
 
-const linerIntro: CSSProperties = {
-  margin: 0,
-  fontFamily: 'var(--serif)',
-  color: 'var(--ink-soft)',
-  lineHeight: 1.65,
-  fontSize: 'clamp(1rem, 1.3vw, 1.08rem)',
-};
-
-const cueList: CSSProperties = {
-  margin: '18px 0 0',
-  padding: 0,
-  listStyle: 'none',
-  display: 'grid',
-  gap: 6,
-  fontFamily: 'var(--mono)',
-  fontSize: 12,
-  letterSpacing: '.08em',
-  color: 'var(--ink-soft)',
-};
-
-const cueItem: CSSProperties = {
-  display: 'flex',
-  gap: 10,
-  alignItems: 'baseline',
-};
-
-const cueKey: CSSProperties = { color: 'var(--green)', minWidth: 92 };
 
 export default function Mixtape() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -417,20 +390,15 @@ export default function Mixtape() {
       <div className="music-stage" style={stageStyle}>
         <Rig ref={rigRef} side={side} />
         <div className="liner">
-          <h3>Liner notes.</h3>
-          <p style={linerIntro}>
-            Side A ships. Side B experiments. The rig spins whichever side is queued.
-          </p>
-          <ul style={cueList}>
-            <li style={cueItem}>
-              <span style={cueKey}>// side A</span>
-              <span>Posts &amp; launches.</span>
-            </li>
-            <li style={cueItem}>
-              <span style={cueKey}>// side B</span>
-              <span>Builds, patches, sketches.</span>
-            </li>
-          </ul>
+          <div className="liner-cta" data-side={side}>
+            <span className="liner-cta__kicker">
+              Now cueing <em>Side {side}</em>
+            </span>
+            <p className="liner-cta__prompt">
+              Flip the record to {side === 'A' ? 'visit the Lab' : 'hear the Posts'}
+              <span className="liner-cta__arrow" aria-hidden="true">↓</span>
+            </p>
+          </div>
           <div className="rig-controls">
             <button
               type="button"
