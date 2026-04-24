@@ -246,7 +246,8 @@
       -webkit-touch-callout:none}
     .tabbar a:active,.tabbar a:focus,.tabbar a:focus-visible,.tabbar a:hover{background:transparent;outline:none}
     .tabbar a svg{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
-    .tabbar a:hover,.tabbar a:focus-visible{opacity:1;color:var(--paper)}
+    .tabbar a:focus-visible{opacity:1;color:var(--paper)}
+    @media (hover:hover){.tabbar a:hover{opacity:1;color:var(--paper)}}
     .tabbar a:focus-visible{outline:1px solid oklch(1 0 0 / .35);outline-offset:-6px;border-radius:8px}
     .tabbar a[aria-current="true"]{opacity:1;color:var(--paper);background:transparent}
     .tabbar a[aria-current="true"] svg{transform:translateY(-1px) scale(1.06)}
