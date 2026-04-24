@@ -8,14 +8,7 @@ import {
 import { createReveal } from '../../lib/scrollReveal';
 import { attachInkBleed } from '../../lib/inkBleed';
 import { inkBleedUrl } from '../InkDefs';
-// TODO: audio engine removed — reintroduce later with a redesigned sound
-// palette + music bed. Target surface:
-//   unlock(), setEnabled(on), isEnabled(), startBed(side), stopBed(),
-//   setSide('A'|'B'), setRpm(multiplier), setVolume(0..1), setMuted(bool),
-//   setReducedMotion(bool), playNeedleDrop(side), playFlip(),
-//   playScratch(side).
-// Until then, all Mixtape controls are visual-only: the rig animates, the
-// knob + toggle update state, but no sound is produced.
+import * as audio from '../../lib/mixtapeAudio';
 
 const AUDIO_KEY = 'bm:vinyl-audio';
 const RPM_KEY = 'bm:vinyl-rpm';
@@ -26,9 +19,7 @@ const VOLUME_DEFAULT = 0.65;
 type Rpm = 33 | 45 | 78;
 const RPM_OPTIONS: Rpm[] = [33, 45, 78];
 const RPM_LABEL: Record<Rpm, string> = { 33: '33⅓', 45: '45', 78: '78' };
-// TODO(audio): tempo multiplier vs. the 33⅓ baseline — forward into the
-// audio engine's setRpm() when music is re-introduced.
-// const RPM_RATE: Record<Rpm, number> = { 33: 1, 45: 1.35, 78: 2.34 };
+const RPM_RATE: Record<Rpm, number> = { 33: 1, 45: 1.35, 78: 2.34 };
 // Disc rotation period in seconds — 33⅓ rpm = 1.8 s/rev, scaled for the SVG.
 const RPM_SPIN: Record<Rpm, string> = { 33: '3s', 45: '2.22s', 78: '1.28s' };
 // Angle of each detent notch on the knob rim (degrees from the bottom of
@@ -253,7 +244,7 @@ export default function Mixtape() {
   };
 
   useEffect(() => {
-    // TODO(audio): forward RPM_RATE[rpm] into the audio engine's setRpm().
+    audio.setRpm(RPM_RATE[rpm]);
     rigRef.current?.style.setProperty('--spin-dur', RPM_SPIN[rpm]);
     try {
       localStorage.setItem(RPM_KEY, String(rpm));
@@ -263,7 +254,7 @@ export default function Mixtape() {
   }, [rpm]);
 
   useEffect(() => {
-    // TODO(audio): forward volume into the audio engine's setVolume().
+    audio.setVolume(volume);
     try {
       localStorage.setItem(VOLUME_KEY, volume.toFixed(3));
     } catch {
@@ -272,7 +263,7 @@ export default function Mixtape() {
   }, [volume]);
 
   useEffect(() => {
-    // TODO(audio): forward muted into the audio engine's setMuted().
+    audio.setMuted(muted);
     try {
       localStorage.setItem(MUTE_KEY, muted ? '1' : '0');
     } catch {
@@ -280,15 +271,26 @@ export default function Mixtape() {
     }
   }, [muted]);
 
-  // TODO(audio): mirror `prefers-reduced-motion` into the engine so the
-  // audio "motion" layer (tape wow/flutter, ghost snares, swells) is gated
-  // without silencing the composition.
+  useEffect(() => {
+    const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const apply = () => audio.setReducedMotion(mql.matches);
+    apply();
+    mql.addEventListener('change', apply);
+    return () => mql.removeEventListener('change', apply);
+  }, []);
 
   const toggleAudio = () => {
     const next = !audioOn;
+    if (next) {
+      audio.unlock();
+      audio.setEnabled(true);
+      audio.playNeedleDrop(side);
+      audio.startBed(side);
+    } else {
+      audio.stopBed();
+      audio.setEnabled(false);
+    }
     setAudioOn(next);
-    // TODO(audio): on `next === true`, call unlock() + setEnabled(true) +
-    // playNeedleDrop(side) + startBed(side). On `false`, setEnabled(false).
     announceMessage(next ? `Mixtape playing side ${side}.` : 'Mixtape stopped.');
     try {
       localStorage.setItem(AUDIO_KEY, next ? '1' : '0');
@@ -299,7 +301,8 @@ export default function Mixtape() {
 
   const flipSide = () => {
     const next = side === 'A' ? 'B' : 'A';
-    // TODO(audio): playFlip() + setSide(next) here.
+    audio.playFlip();
+    audio.setSide(next);
     setSide(next);
     announceMessage(`Now playing side ${next}.`);
   };
@@ -495,7 +498,7 @@ function TrackVinyl({ track }: { track: Track }) {
   const spin = () => {
     const disc = discRef.current;
     if (!disc) return;
-    // TODO(audio): if audio engine enabled, call playScratch(track.side).
+    audio.playScratch(track.side);
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     disc.animate(
       [{ transform: 'rotate(0deg)' }, { transform: 'rotate(720deg)' }],

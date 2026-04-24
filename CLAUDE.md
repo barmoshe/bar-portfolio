@@ -27,7 +27,7 @@ Slash commands: `/new-project`, `/theme-preview`, `/deploy-check`, `/typecheck` 
 2. **`HeroSlides` fx cycle** - four ink-native transitions (`bloom`, `brush`, `tear`, `crumple`) are GSAP-driven from `src/components/HeroSlides.tsx`. One timeline at a time (advance is serialized). `resetSlide()` must clear every fx-specific inline style on completion or the next cycle starts from stale state. See `knowledge/04-animation.md`.
 3. **`base: '/bar-portfolio/'`** in `vite.config.ts` - if the repo is renamed, update this in lockstep.
 4. **`public/.nojekyll`** - must land in `dist/`. Keeps GitHub Pages' Jekyll from stripping underscore folders.
-5. **Mixtape audio is intentionally absent** - do not restore the Tone.js build or the previous zero-dep engine verbatim. See `knowledge/07-mixtape-audio.md` for the re-introduction contract. Any new audio work must gate `AudioContext` creation behind an explicit Start-button click.
+5. **Mixtape audio engine lives at `src/lib/mixtapeAudio.ts`** - small flat WebAudio engine backed by pre-rendered MP3s listed in `src/lib/mixtapeTracks.ts`. `AudioContext` is only constructed inside `unlock()`, invoked from the Start-button click; do not add any other unlock path. See `knowledge/07-mixtape-audio.md`. Do not restore the Tone.js build or the previous procedural zero-dep engine verbatim.
 
 Full rationale and anti-patterns: `knowledge/99-caveats.md`.
 
@@ -37,7 +37,7 @@ Full rationale and anti-patterns: `knowledge/99-caveats.md`.
 - Motion: prefer `transform` / `opacity` / `filter`. Respect `prefers-reduced-motion` via `gsap.matchMedia` + `FULL_MOTION_QUERY` from `src/lib/gsap.ts`.
 - Styling: CSS custom properties in `src/styles.css`. Tailwind is intentionally rejected - see `knowledge/01-stack.md`.
 - No new runtime deps for cosmetic changes. Current deps: `react`, `react-dom`, `gsap`, `@gsap/react`.
-- Audio: **currently removed**. The mixtape is visual-only; `TODO(audio):` stubs in `src/components/sections/Mixtape.tsx` mark the re-introduction points. See `knowledge/07-mixtape-audio.md` before adding audio back.
+- Audio: engine at `src/lib/mixtapeAudio.ts`, manifest at `src/lib/mixtapeTracks.ts`, MP3 assets under `public/audio/{sideA,sideB,sfx}/`. Side A is lofi hip hop, Side B is house/techno. `AudioContext` is gated behind the Start button click. See `knowledge/07-mixtape-audio.md`.
 - Routing: single page + hash links (`#intro`, `#background`, `#mixtape`, `#repos`, `#letter`). Do not add React Router. Note that `#repos` auto-expands the collapsed Repos section.
 
 ## Scripts
