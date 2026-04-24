@@ -249,11 +249,11 @@ export default function Background() {
         }}
       >
         <span>
-          <span aria-hidden="true" style={{ color: 'var(--green)', marginRight: 6 }}>●</span>
+          <span aria-hidden="true" style={{ color: 'var(--green)', marginRight: 6 }}>{'⚒︎'}</span>
           Experience
         </span>
         <span>
-          <span aria-hidden="true" style={{ color: 'var(--blue)', marginRight: 6 }}>◆</span>
+          <span aria-hidden="true" style={{ color: 'var(--blue)', marginRight: 6 }}>{'✎︎'}</span>
           Education
         </span>
       </div>
@@ -281,7 +281,7 @@ export default function Background() {
             </h3>
             <span style={date}>May 2025 – Present</span>
           </div>
-          <p style={role}><span aria-hidden="true">● </span>Software Engineer, Full-Stack</p>
+          <p style={role}><span aria-hidden="true">{'⚒︎ '}</span>Software Engineer, Full-Stack</p>
           <p style={body}>
             Early-stage startup. Small team. I lead full-stack architecture and
             database design, plus the deploy pipeline and the infrastructure it runs
@@ -294,7 +294,7 @@ export default function Background() {
             <h3 style={h3}>Self-directed work</h3>
             <span style={date}>Ongoing</span>
           </div>
-          <p style={role}><span aria-hidden="true">● </span>Builder / Maker</p>
+          <p style={role}><span aria-hidden="true">{'⚒︎ '}</span>Builder / Maker</p>
           <p style={body}>
             A lot of my work happens on my own time, across many areas: full-stack,
             DevOps, product design, creative coding, game dev, and music tools. Some
@@ -320,7 +320,7 @@ export default function Background() {
             <h3 style={h3}>Afeka</h3>
             <span style={date}>Oct 2020 – Aug 2023</span>
           </div>
-          <p style={roleEdu}><span aria-hidden="true">◆ </span>B.S. Computer Science</p>
+          <p style={roleEdu}><span aria-hidden="true">{'✎︎ '}</span>B.S. Computer Science</p>
           <p style={body}>
             A wide range, from low-level assembly to .NET, on top of foundational
             coursework in operating systems, data structures, and algorithms.
@@ -333,7 +333,7 @@ export default function Background() {
               <h3 style={h3Small}>Wochit</h3>
               <span style={date}>Oct 2021 – Present</span>
             </div>
-            <p style={roleSmall}><span aria-hidden="true">● </span>Customer Support Engineer</p>
+            <p style={roleSmall}><span aria-hidden="true">{'⚒︎ '}</span>Customer Support Engineer</p>
             <p style={bodySmall}>
               Frontline support and dev-team liaison for a cloud video editor at scale.
             </p>
@@ -344,7 +344,7 @@ export default function Background() {
               <h3 style={h3Small}>Wix, Tel Aviv</h3>
               <span style={date}>Workshop</span>
             </div>
-            <p style={roleSmallEdu}><span aria-hidden="true">◆ </span>DevOps Workshop</p>
+            <p style={roleSmallEdu}><span aria-hidden="true">{'✎︎ '}</span>DevOps Workshop</p>
             <p style={bodySmall}>
               Hands-on with EKS, Kubernetes, Terraform, microservices.
             </p>
@@ -355,7 +355,7 @@ export default function Background() {
               <h3 style={h3Small}>Coding Academy</h3>
               <span style={date}>Bootcamp</span>
             </div>
-            <p style={roleSmallEdu}><span aria-hidden="true">◆ </span>Full-Stack Bootcamp</p>
+            <p style={roleSmallEdu}><span aria-hidden="true">{'✎︎ '}</span>Full-Stack Bootcamp</p>
             <p style={bodySmall}>
               Intensive Node / React / MongoDB course for students with prior coding
               experience.
@@ -367,7 +367,7 @@ export default function Background() {
               <h3 style={h3Small}>BPM College</h3>
               <span style={date}>Feb 2019 – Aug 2019</span>
             </div>
-            <p style={roleSmallEdu}><span aria-hidden="true">◆ </span>Ableton Certification</p>
+            <p style={roleSmallEdu}><span aria-hidden="true">{'✎︎ '}</span>Ableton Certification</p>
             <p style={bodySmall}>
               My first certification. Ableton Live and music theory.
             </p>
