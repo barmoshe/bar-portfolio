@@ -27,8 +27,7 @@ Slash commands: `/new-project`, `/theme-preview`, `/deploy-check`, `/typecheck` 
 2. **`HeroSlides` fx cycle** - four ink-native transitions (`bloom`, `brush`, `tear`, `crumple`) are GSAP-driven from `src/components/HeroSlides.tsx`. One timeline at a time (advance is serialized). `resetSlide()` must clear every fx-specific inline style on completion or the next cycle starts from stale state. See `knowledge/04-animation.md`.
 3. **`base: '/bar-portfolio/'`** in `vite.config.ts` - if the repo is renamed, update this in lockstep.
 4. **`public/.nojekyll`** - must land in `dist/`. Keeps GitHub Pages' Jekyll from stripping underscore folders.
-5. **Mixtape audio is zero-dep Web Audio** - single `AudioContext` lazily created inside `unlock()` (first user gesture). Do not introduce audio libraries (no Tone.js, Howler, etc.) and do not add audio samples. See `knowledge/07-mixtape-audio.md`.
-6. **Side buses crossfade equal-power** - `setSide()` ramps two `GainNode`s with `setTargetAtTime`; both compositions run continuously. Don't replace with a pause-relaunch model.
+5. **Mixtape audio is intentionally absent** - do not restore the Tone.js build or the previous zero-dep engine verbatim. See `knowledge/07-mixtape-audio.md` for the re-introduction contract. Any new audio work must gate `AudioContext` creation behind an explicit Start-button click.
 
 Full rationale and anti-patterns: `knowledge/99-caveats.md`.
 
@@ -38,7 +37,7 @@ Full rationale and anti-patterns: `knowledge/99-caveats.md`.
 - Motion: prefer `transform` / `opacity` / `filter`. Respect `prefers-reduced-motion` via `gsap.matchMedia` + `FULL_MOTION_QUERY` from `src/lib/gsap.ts`.
 - Styling: CSS custom properties in `src/styles.css`. Tailwind is intentionally rejected - see `knowledge/01-stack.md`.
 - No new runtime deps for cosmetic changes. Current deps: `react`, `react-dom`, `gsap`, `@gsap/react`.
-- Audio: zero-dep Web Audio API. Procedural SFX and two generative compositions built directly on `AudioContext`. No samples, no audio libraries. See `knowledge/07-mixtape-audio.md`.
+- Audio: **currently removed**. The mixtape is visual-only; `TODO(audio):` stubs in `src/components/sections/Mixtape.tsx` mark the re-introduction points. See `knowledge/07-mixtape-audio.md` before adding audio back.
 - Routing: single page + hash links (`#intro`, `#background`, `#mixtape`, `#repos`, `#letter`). Do not add React Router. Note that `#repos` auto-expands the collapsed Repos section.
 
 ## Scripts
