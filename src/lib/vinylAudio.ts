@@ -58,8 +58,30 @@ let currentSide: 'A' | 'B' = 'A';
 let currentRate = 1;
 let bedRunning = false;
 
-const CROSSFADE_S = 0.5;
 const FADE_OUT_S = 0.6;
+
+// When the user changes RPM or side, we pause the bed, apply the change,
+// then relaunch — cheaper on CPU than crossfading two live compositions
+// and avoids dropped notes from live BPM changes. Coalesced via this
+// timer so rapid consecutive toggles don't queue multiple restarts.
+let pendingRestartTimer: ReturnType<typeof setTimeout> | null = null;
+
+function restartBed(): void {
+  if (pendingRestartTimer) {
+    clearTimeout(pendingRestartTimer);
+    pendingRestartTimer = null;
+  }
+  const wasRunning = bedRunning;
+  if (wasRunning) stopBed();
+  if (!wasRunning || !enabled) return;
+  // Wait for stopBed's fade + composition disposal to complete, then
+  // relaunch on the new side at the new rate.
+  pendingRestartTimer = setTimeout(() => {
+    pendingRestartTimer = null;
+    if (!enabled) return;
+    startBed(currentSide);
+  }, Math.ceil(FADE_OUT_S * 1000) + 180);
+}
 
 // Reusable SFX synths — built lazily so the AudioContext only spins up
 // after the first user gesture. All connect to chain.sfxIn (parallel path).
@@ -299,25 +321,20 @@ export function setReducedMotion(r: boolean): void {
   sideB?.comp?.setReducedMotion(r);
 }
 
-/** Crossfade between the two side gains using equal-power tapers. */
+/** Switch sides by pausing, changing, and relaunching — cheaper and
+ *  glitch-free vs. crossfading two simultaneously-running compositions. */
 export function setSide(side: 'A' | 'B'): void {
+  if (side === currentSide) return;
   currentSide = side;
-  if (!bedRunning) return;
-  const aTarget = side === 'A' ? 1 : 0;
-  const bTarget = side === 'B' ? 1 : 0;
-  // setTargetAtTime gives a smooth, click-free transition — matches the
-  // perceptual loudness of an equal-power crossfade closely enough.
-  if (sideA) sideA.gain.gain.cancelScheduledValues(Tone.now());
-  if (sideB) sideB.gain.gain.cancelScheduledValues(Tone.now());
-  sideA?.gain.gain.setTargetAtTime(aTarget, Tone.now(), CROSSFADE_S / 3);
-  sideB?.gain.gain.setTargetAtTime(bTarget, Tone.now(), CROSSFADE_S / 3);
+  if (bedRunning) restartBed();
 }
 
-/** Tempo multiplier applied to both compositions. 1 = native BPM. */
+/** Tempo multiplier applied on next launch. 1 = native BPM. Pauses and
+ *  relaunches if playing so the new rate kicks in cleanly. */
 export function setRpm(multiplier: number): void {
+  if (multiplier === currentRate) return;
   currentRate = multiplier;
-  sideA?.comp?.setRate(multiplier);
-  sideB?.comp?.setRate(multiplier);
+  if (bedRunning) restartBed();
 }
 
 export function startBed(side: 'A' | 'B' = currentSide): void {
@@ -349,6 +366,10 @@ export function startBed(side: 'A' | 'B' = currentSide): void {
 }
 
 export function stopBed(): void {
+  if (pendingRestartTimer) {
+    clearTimeout(pendingRestartTimer);
+    pendingRestartTimer = null;
+  }
   if (!bedRunning) return;
   bedRunning = false;
   if (sideA) sideA.gain.gain.setTargetAtTime(0, Tone.now(), FADE_OUT_S / 3);
