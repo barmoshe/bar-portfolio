@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 
-// Scroll-spy for the tab bar. Picks the last tracked section whose top has
-// crossed an anchor line ~35% down the viewport. This matches the classic
-// "whichever section you most recently scrolled into" behavior and handles
-// short final sections (e.g. a collapsed Repos followed by Letter) without
-// needing special edge cases. Re-evaluates on scroll, resize, and when a
-// tracked id's element is added or removed from the DOM (for lazy/Suspense-
-// mounted sections like Mixtape).
+// Scroll-spy for the tab bar. In the middle of the page, the active section is
+// the last tracked one whose top has crossed an anchor line ~35% down the
+// viewport — classic "whichever section you most recently scrolled into"
+// behavior, symmetric for up- and down-scroll. At the document edges, pin the
+// first/last tabs explicitly: a short section at the top or bottom physically
+// can't get its top to cross the anchor (the page runs out of scroll before
+// that happens), so without these pins the first/last tab would never
+// activate. Re-evaluates on scroll, resize, and when a tracked id's element is
+// added or removed from the DOM (covers lazy/Suspense-mounted sections like
+// Mixtape).
 export function useSectionObserver(ids: readonly string[]): string | null {
   const [activeId, setActiveId] = useState<string | null>(ids[0] ?? null);
 
@@ -26,6 +29,12 @@ export function useSectionObserver(ids: readonly string[]): string | null {
       rafId = 0;
       const vh = window.innerHeight;
       if (!vh) return;
+
+      const doc = document.documentElement;
+      const y = window.scrollY;
+
+      if (y <= 2) return apply(ids[0] ?? null);
+      if (y + vh >= doc.scrollHeight - 2) return apply(ids[ids.length - 1] ?? null);
 
       const anchor = vh * 0.35;
       let candidate: string | null = null;
