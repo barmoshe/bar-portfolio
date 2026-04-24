@@ -98,7 +98,7 @@ export type Composition = {
 export function composeSideA(bus: Tone.ToneAudioNode): Composition {
   // Per-side sends: own reverb + ping-pong delay so the tails crossfade
   // along with the side gain.
-  const reverb = makePlateReverb(2.6, 0.025);
+  const reverb = makePlateReverb(1.6, 0.025);
   const delay = makePingPong('8n.', 0.32);
   reverb.output.connect(bus);
   delay.output.connect(bus);

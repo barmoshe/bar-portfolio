@@ -251,7 +251,7 @@ export function unlock(): void {
   // would swap the underlying AudioContext mid-flight and silence audio.
   try {
     Tone.setContext(
-      new Tone.Context({ latencyHint: 'playback', lookAhead: 0.2 }),
+      new Tone.Context({ latencyHint: 'playback', lookAhead: 0.3 }),
     );
   } catch {
     /* fall through — keep Tone's default context on exotic browsers */

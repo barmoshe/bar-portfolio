@@ -175,7 +175,7 @@ export function makeTape(): Tape {
     spread: 30,
     type: 'sine',
   }).start();
-  flutter.wet.value = 0.18;
+  flutter.wet.value = 0.08;
   const output = new Tone.Gain(1);
 
   input.chain(wow, flutter, output);
@@ -187,7 +187,7 @@ export function makeTape(): Tape {
     setIntensity: (n) => {
       intensity = Math.max(0, Math.min(1, n));
       wow.depth.value = 0.04 * intensity;
-      flutter.wet.value = 0.18 * intensity;
+      flutter.wet.value = 0.08 * intensity;
     },
     dispose: () => {
       input.dispose();
