@@ -9,8 +9,8 @@ import InkDefs from './components/InkDefs';
 import Intro from './components/sections/Intro';
 import Background from './components/sections/Background';
 import Repos from './components/sections/Repos';
-// Mixtape pulls in Tone.js — split it into its own chunk so the initial
-// load doesn't pay for an audio engine that only the mixtape uses.
+// Split the mixtape into its own chunk so the initial load doesn't pay
+// for an audio engine that only the mixtape uses.
 const Mixtape = lazy(() => import('./components/sections/Mixtape'));
 import Letter from './components/sections/Letter';
 import { projects } from './data/portfolio';

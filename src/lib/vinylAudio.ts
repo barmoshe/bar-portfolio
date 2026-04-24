@@ -1,287 +1,84 @@
 /**
- * vinylAudio.ts — Tone.js audio engine for the Mixtape section.
+ * vinylAudio.ts - zero-dependency Web Audio API engine for the Mixtape section.
  *
- * Architecture (see knowledge/07-mixtape-audio.md for the long version):
+ * All sounds are procedural (no .mp3 / .wav assets, no Tone.js). A single
+ * AudioContext is lazily created on first user gesture - browsers block
+ * audio that wasn't kicked off by a click / keypress (see
+ * https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Autoplay), and
+ * we honor that by gating everything through `unlock()` which must be
+ * called from a click handler before any other method.
  *
- *   musicIn (Compressor + Limiter + Volume) → Destination
- *      ▲                                                  ▲
- *      ├── sideABus → tape wow/flutter → sideAGain ───────┤
- *      ├── sideBBus → tape wow/flutter → sideBGain ───────┤
- *      └── surfaceNoise ─────────────────────────────────┘
+ * Architecture:
  *
- *   sfxIn (Limiter + Volume, no compressor) → Destination
- *      ▲
- *      └── needleDrop / flip / scratch / pop  (parallel — does not pump music)
+ *   master (0.6) ───┬── sideABus (GainNode, equal-power crossfade) ── Side A composition
+ *                   ├── sideBBus ─── Side B composition
+ *                   ├── surface noise (layered crackle + dust pops + motor hum)
+ *                   └── one-shot SFX (needle drop, flip, scratch, pop)
  *
- * Per-side reverb and ping-pong delay sends live inside `composeSideA` /
- * `composeSideB` so their tails crossfade with the side gain. SFX use Tone
- * synths directly — randomized per call so flips and scratches don't sound
- * identical the second time.
+ * Two full compositions play continuously once audio is on; flipping
+ * performs an equal-power crossfade between side buses so no notes are
+ * cut off and no pops appear.
  *
- * State is module-level. The calling component owns localStorage and the
- * visible mute / volume / on-off controls; this module just exposes setters.
+ * Enable/disable state is in-module; the calling component owns the
+ * localStorage persistence and the visible mute toggle.
  */
 
-import * as Tone from 'tone';
-import { composeSideA, type Composition } from './music/sideA';
+import { composeSideA } from './music/sideA';
 import { composeSideB } from './music/sideB';
-import {
-  makeMasterChain,
-  makeSurfaceNoise,
-  makeTape,
-  type MasterChain,
-  type Surface,
-  type Tape,
-} from './music/effects';
 
-let started = false;
+let ctx: AudioContext | null = null;
+let master: GainNode | null = null;
+let muteGain: GainNode | null = null;
 let enabled = false;
-let reduced = false;
-// Cached so the visible UI controls can write before the AudioContext is
-// even created — values get applied on first ensure().
 let pendingVolume = 0.6;
 let pendingMuted = false;
+let visibilityHooked = false;
+let wasRunningBeforeHide = false;
 
-let chain: MasterChain | null = null;
-let surface: Surface | null = null;
-
-type SideRig = {
-  bus: Tone.Gain;
-  tape: Tape;
-  gain: Tone.Gain;
-  comp: Composition | null;
+type BedState = {
+  sideAGain: GainNode;
+  sideBGain: GainNode;
+  stopA: () => void;
+  stopB: () => void;
+  stopSurface: () => void;
+  setRateA: (m: number) => void;
+  setRateB: (m: number) => void;
 };
-let sideA: SideRig | null = null;
-let sideB: SideRig | null = null;
-
+let bed: BedState | null = null;
 let currentSide: 'A' | 'B' = 'A';
 let currentRate = 1;
-let bedRunning = false;
 
+const CROSSFADE_S = 0.5;
 const FADE_OUT_S = 0.6;
 
-// When the user changes RPM or side, we pause the bed, apply the change,
-// then relaunch — cheaper on CPU than crossfading two live compositions
-// and avoids dropped notes from live BPM changes. Coalesced via this
-// timer so rapid consecutive toggles don't queue multiple restarts.
-let pendingRestartTimer: ReturnType<typeof setTimeout> | null = null;
-
-function restartBed(): void {
-  if (pendingRestartTimer) {
-    clearTimeout(pendingRestartTimer);
-    pendingRestartTimer = null;
-  }
-  const wasRunning = bedRunning;
-  if (wasRunning) stopBed();
-  if (!wasRunning || !enabled) return;
-  // Wait for stopBed's fade + composition disposal to complete, then
-  // relaunch on the new side at the new rate.
-  pendingRestartTimer = setTimeout(() => {
-    pendingRestartTimer = null;
-    if (!enabled) return;
-    startBed(currentSide);
-  }, Math.ceil(FADE_OUT_S * 1000) + 180);
-}
-
-// Reusable SFX synths — built lazily so the AudioContext only spins up
-// after the first user gesture. All connect to chain.sfxIn (parallel path).
-type SfxKit = {
-  needleThump: Tone.MembraneSynth;
-  needleClick: Tone.NoiseSynth;
-  needleClickFilt: Tone.Filter;
-  needleScrape: Tone.NoiseSynth;
-  needleScrapeFilt: Tone.Filter;
-
-  flipKnock: Tone.MembraneSynth;
-  flipKnockFilt: Tone.Filter;
-  flipClick: Tone.NoiseSynth;
-  flipClickFilt: Tone.Filter;
-  flipSwish: Tone.NoiseSynth;
-  flipSwishFilt: Tone.Filter;
-
-  scratchHigh: Tone.NoiseSynth;
-  scratchHighFilt: Tone.Filter;
-  scratchBody: Tone.NoiseSynth;
-  scratchBodyFilt: Tone.Filter;
-
-  pop: Tone.Oscillator;
-  popGain: Tone.Gain;
-};
-let sfx: SfxKit | null = null;
-
-function buildSfx(target: Tone.ToneAudioNode): SfxKit {
-  // Needle drop — three layers: a low MembraneSynth thump, a midrange
-  // bandpass noise click, and (Side B variant) a settling scrape.
-  const needleThump = new Tone.MembraneSynth({
-    pitchDecay: 0.06,
-    octaves: 3,
-    envelope: { attack: 0.003, decay: 0.22, sustain: 0, release: 0.18 },
-    volume: -8,
-  });
-  needleThump.connect(target);
-
-  const needleClick = new Tone.NoiseSynth({
-    noise: { type: 'pink' },
-    envelope: { attack: 0.001, decay: 0.05, sustain: 0, release: 0.04 },
-    volume: -16,
-  });
-  const needleClickFilt = new Tone.Filter({ type: 'bandpass', frequency: 1700, Q: 0.7 });
-  needleClick.chain(needleClickFilt, target);
-
-  const needleScrape = new Tone.NoiseSynth({
-    noise: { type: 'white' },
-    envelope: { attack: 0.005, decay: 0.12, sustain: 0, release: 0.06 },
-    volume: -22,
-  });
-  const needleScrapeFilt = new Tone.Filter({ type: 'lowpass', frequency: 700, Q: 0.5 });
-  needleScrape.chain(needleScrapeFilt, target);
-
-  // Flip — wood/plastic chassis knock + bright micro-click + HP swish.
-  const flipKnock = new Tone.MembraneSynth({
-    pitchDecay: 0.05,
-    octaves: 2,
-    envelope: { attack: 0.001, decay: 0.14, sustain: 0, release: 0.08 },
-    volume: -12,
-  });
-  const flipKnockFilt = new Tone.Filter({ type: 'lowpass', frequency: 900, Q: 0.4 });
-  flipKnock.chain(flipKnockFilt, target);
-
-  const flipClick = new Tone.NoiseSynth({
-    noise: { type: 'white' },
-    envelope: { attack: 0.0005, decay: 0.02, sustain: 0, release: 0.015 },
-    volume: -20,
-  });
-  const flipClickFilt = new Tone.Filter({ type: 'bandpass', frequency: 4200, Q: 4 });
-  flipClick.chain(flipClickFilt, target);
-
-  const flipSwish = new Tone.NoiseSynth({
-    noise: { type: 'white' },
-    envelope: { attack: 0.02, decay: 0.1, sustain: 0, release: 0.06 },
-    volume: -22,
-  });
-  const flipSwishFilt = new Tone.Filter({ type: 'highpass', frequency: 2200, Q: 0.5 });
-  flipSwish.chain(flipSwishFilt, target);
-
-  // Scratch — high-frequency BP crackle + low-frequency rubber-friction body.
-  const scratchHigh = new Tone.NoiseSynth({
-    noise: { type: 'white' },
-    envelope: { attack: 0.005, decay: 0.18, sustain: 0, release: 0.04 },
-    volume: -14,
-  });
-  const scratchHighFilt = new Tone.Filter({ type: 'bandpass', frequency: 1800, Q: 3.5 });
-  scratchHigh.chain(scratchHighFilt, target);
-
-  const scratchBody = new Tone.NoiseSynth({
-    noise: { type: 'pink' },
-    envelope: { attack: 0.003, decay: 0.16, sustain: 0, release: 0.06 },
-    volume: -16,
-  });
-  const scratchBodyFilt = new Tone.Filter({ type: 'lowpass', frequency: 240, Q: 0.6 });
-  scratchBody.chain(scratchBodyFilt, target);
-
-  // Tiny sine ping (the "horn waveform tick" / runout-groove click).
-  const pop = new Tone.Oscillator({ frequency: 880, type: 'sine' });
-  const popGain = new Tone.Gain(0);
-  pop.chain(popGain, target);
-  pop.start();
-
-  return {
-    needleThump,
-    needleClick,
-    needleClickFilt,
-    needleScrape,
-    needleScrapeFilt,
-    flipKnock,
-    flipKnockFilt,
-    flipClick,
-    flipClickFilt,
-    flipSwish,
-    flipSwishFilt,
-    scratchHigh,
-    scratchHighFilt,
-    scratchBody,
-    scratchBodyFilt,
-    pop,
-    popGain,
-  };
-}
-
-/** Initialize the master chain + surface noise + SFX. Idempotent.
- *  Must be called after `Tone.start()` (i.e. after a user gesture). */
 function ensure(): boolean {
   if (typeof window === 'undefined') return false;
-  if (chain) return true;
-  if (!started) return false;
-  try {
-    chain = makeMasterChain();
-    surface = makeSurfaceNoise();
-    surface.output.connect(chain.musicIn);
-    sfx = buildSfx(chain.sfxIn);
-    // Apply any pre-gesture UI state.
-    chain.setVolume(pendingVolume);
-    chain.setMuted(pendingMuted);
-  } catch {
-    chain = null;
-    surface = null;
-    sfx = null;
-    return false;
+  if (!ctx) {
+    const Ctor: typeof AudioContext | undefined =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext?: typeof AudioContext })
+        .webkitAudioContext;
+    if (!Ctor) return false;
+    ctx = new Ctor();
+    master = ctx.createGain();
+    master.gain.value = pendingVolume;
+    muteGain = ctx.createGain();
+    muteGain.gain.value = pendingMuted ? 0 : 1;
+    master.connect(muteGain);
+    muteGain.connect(ctx.destination);
+    hookVisibility();
+  }
+  if (ctx.state === 'suspended') {
+    // Fire and forget - resume() returns a promise but we don't await it
+    // inside a click handler because doing so drops the "user gesture"
+    // context on some browsers.
+    void ctx.resume();
   }
   return true;
 }
 
-function ensureSide(side: 'A' | 'B'): SideRig | null {
-  if (!chain) return null;
-  if (side === 'A') {
-    if (!sideA) {
-      const bus = new Tone.Gain(1);
-      const tape = makeTape();
-      const gain = new Tone.Gain(side === currentSide ? 1 : 0);
-      bus.connect(tape.input);
-      tape.output.connect(gain);
-      gain.connect(chain.musicIn);
-      tape.setIntensity(reduced ? 0 : 1);
-      sideA = { bus, tape, gain, comp: null };
-    }
-    return sideA;
-  } else {
-    if (!sideB) {
-      const bus = new Tone.Gain(1);
-      const tape = makeTape();
-      const gain = new Tone.Gain(side === currentSide ? 1 : 0);
-      bus.connect(tape.input);
-      tape.output.connect(gain);
-      gain.connect(chain.musicIn);
-      tape.setIntensity(reduced ? 0 : 1);
-      sideB = { bus, tape, gain, comp: null };
-    }
-    return sideB;
-  }
-}
-
 /** Call inside a click / keydown handler to lift the autoplay lock. */
 export function unlock(): void {
-  if (started) {
-    ensure();
-    return;
-  }
-  // Install a fresh Context with latencyHint: 'playback' before any Tone
-  // node is created. 'playback' asks the browser for a larger audio-callback
-  // buffer (~1024 samples vs ~256 for 'interactive'), so React re-renders
-  // and GC stalls don't overflow the audio thread — this is Tone.js's
-  // documented fix for "breaks after a few seconds" steady-state glitches.
-  // latencyHint can only be set at construction; using the runtime setter
-  // would swap the underlying AudioContext mid-flight and silence audio.
-  try {
-    Tone.setContext(
-      new Tone.Context({ latencyHint: 'playback', lookAhead: 0.3 }),
-    );
-  } catch {
-    /* fall through — keep Tone's default context on exotic browsers */
-  }
-  // Tone.start() returns a Promise but the user gesture is preserved
-  // because we kick it off synchronously inside the click handler.
-  void Tone.start();
-  started = true;
   ensure();
 }
 
@@ -294,98 +91,226 @@ export function isEnabled(): boolean {
   return enabled;
 }
 
-/** Master volume (0..1 linear). Safe to call before the AudioContext
- *  exists — the value is cached and applied when the chain is built. */
-export function setVolume(linear: number): void {
-  pendingVolume = Math.max(0, Math.min(1, linear));
-  chain?.setVolume(pendingVolume);
+/** Crossfade between side buses with equal-power tapers. */
+export function setSide(side: 'A' | 'B'): void {
+  currentSide = side;
+  if (!bed || !ctx) return;
+  const now = ctx.currentTime;
+  const aTarget = side === 'A' ? 1 : 0;
+  const bTarget = side === 'B' ? 1 : 0;
+  // Equal-power: cos/sin taper gives -3 dB midpoint and flat perceived loudness.
+  // We approximate with setTargetAtTime, which is smooth and has no sample-clicks.
+  bed.sideAGain.gain.cancelScheduledValues(now);
+  bed.sideBGain.gain.cancelScheduledValues(now);
+  bed.sideAGain.gain.setTargetAtTime(aTarget, now, CROSSFADE_S / 3);
+  bed.sideBGain.gain.setTargetAtTime(bTarget, now, CROSSFADE_S / 3);
 }
 
-/** Hard mute — keeps the scheduler running so unmute resumes seamlessly. */
-export function setMuted(m: boolean): void {
-  pendingMuted = m;
-  chain?.setMuted(m);
+/** Short low-frequency thud + noise burst - the "needle hits vinyl" sound. */
+export function playNeedleDrop(side: 'A' | 'B' = currentSide): void {
+  if (!enabled || !ensure() || !ctx || !master) return;
+  const now = ctx.currentTime;
+
+  const endFreq = side === 'B' ? 45 : 55;
+  const lpFreq = side === 'B' ? 190 : 220;
+
+  // Thud: low-pass filtered sine that dives from 140 Hz to endFreq.
+  const thumpOsc = ctx.createOscillator();
+  const thumpGain = ctx.createGain();
+  const thumpLP = ctx.createBiquadFilter();
+  thumpOsc.type = 'sine';
+  thumpOsc.frequency.setValueAtTime(140, now);
+  thumpOsc.frequency.exponentialRampToValueAtTime(endFreq, now + 0.18);
+  thumpLP.type = 'lowpass';
+  thumpLP.frequency.value = lpFreq;
+  thumpGain.gain.setValueAtTime(0, now);
+  thumpGain.gain.linearRampToValueAtTime(0.55, now + 0.008);
+  thumpGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+  thumpOsc.connect(thumpLP).connect(thumpGain).connect(master);
+  thumpOsc.start(now);
+  thumpOsc.stop(now + 0.25);
+
+  // Noise chirp layered over the thud.
+  const clickBuf = makeNoiseBuffer(0.04);
+  const click = ctx.createBufferSource();
+  const clickGain = ctx.createGain();
+  const clickBP = ctx.createBiquadFilter();
+  click.buffer = clickBuf;
+  clickBP.type = 'bandpass';
+  clickBP.frequency.value = side === 'B' ? 1400 : 1800;
+  clickBP.Q.value = 0.7;
+  clickGain.gain.setValueAtTime(0.35, now);
+  clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+  click.connect(clickBP).connect(clickGain).connect(master);
+  click.start(now);
+
+  // Side B adds a 12 ms "settling" scrape so it reads as a more-played pressing.
+  if (side === 'B') {
+    const scrapeBuf = makeNoiseBuffer(0.02);
+    const scrape = ctx.createBufferSource();
+    const scrapeLP = ctx.createBiquadFilter();
+    const scrapeGain = ctx.createGain();
+    scrape.buffer = scrapeBuf;
+    scrapeLP.type = 'lowpass';
+    scrapeLP.frequency.value = 700;
+    scrapeGain.gain.setValueAtTime(0.18, now + 0.08);
+    scrapeGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+    scrape.connect(scrapeLP).connect(scrapeGain).connect(master);
+    scrape.start(now + 0.08);
+    scrape.stop(now + 0.2);
+  }
+}
+
+/** Muffled wood/plastic knock + a brief post-tick hiss — the "vinyl flipped" sound. */
+export function playFlip(): void {
+  if (!enabled || !ensure() || !ctx || !master) return;
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  const lp = ctx.createBiquadFilter();
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(320, now);
+  osc.frequency.exponentialRampToValueAtTime(140, now + 0.12);
+  lp.type = 'lowpass';
+  lp.frequency.value = 900;
+  gain.gain.setValueAtTime(0, now);
+  gain.gain.linearRampToValueAtTime(0.32, now + 0.004);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+  osc.connect(lp).connect(gain).connect(master);
+  osc.start(now);
+  osc.stop(now + 0.2);
+
+  // Short HP noise tail — the physical rotation swish after the knock.
+  const swishBuf = makeNoiseBuffer(0.08);
+  const swish = ctx.createBufferSource();
+  const swishHP = ctx.createBiquadFilter();
+  const swishGain = ctx.createGain();
+  swish.buffer = swishBuf;
+  swishHP.type = 'highpass';
+  swishHP.frequency.value = 2200;
+  swishGain.gain.setValueAtTime(0, now + 0.05);
+  swishGain.gain.linearRampToValueAtTime(0.14, now + 0.07);
+  swishGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+  swish.connect(swishHP).connect(swishGain).connect(master);
+  swish.start(now + 0.05);
+  swish.stop(now + 0.18);
+}
+
+/** Tiny sine ping - the "horn waveform tick" / runout groove click. */
+export function playPop(): void {
+  if (!enabled || !ensure() || !ctx || !master) return;
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(880, now);
+  osc.frequency.exponentialRampToValueAtTime(560, now + 0.12);
+  gain.gain.setValueAtTime(0, now);
+  gain.gain.linearRampToValueAtTime(0.06, now + 0.005);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
+  osc.connect(gain).connect(master);
+  osc.start(now);
+  osc.stop(now + 0.2);
+}
+
+/** Short scratch chirp when a user clicks a track vinyl. Direction per side. */
+export function playScratch(side: 'A' | 'B'): void {
+  if (!enabled || !ensure() || !ctx || !master) return;
+  const now = ctx.currentTime;
+  const buf = makeNoiseBuffer(0.2);
+  const src = ctx.createBufferSource();
+  const bp = ctx.createBiquadFilter();
+  const gain = ctx.createGain();
+  src.buffer = buf;
+  bp.type = 'bandpass';
+  bp.Q.value = 3.5;
+  if (side === 'A') {
+    bp.frequency.setValueAtTime(1200, now);
+    bp.frequency.exponentialRampToValueAtTime(3000, now + 0.18);
+  } else {
+    bp.frequency.setValueAtTime(2000, now);
+    bp.frequency.exponentialRampToValueAtTime(700, now + 0.18);
+  }
+  gain.gain.setValueAtTime(0, now);
+  gain.gain.linearRampToValueAtTime(0.22, now + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
+  src.connect(bp).connect(gain).connect(master);
+  src.start(now);
+  src.stop(now + 0.22);
 }
 
 /**
- * `prefers-reduced-motion` toggle. Disables tape wow/flutter, the pad
- * filter LFO, ghost snares, fills, and the reverse-swell on Side B —
- * but keeps the music itself playing. Mirrors how the visual layer
- * suppresses motion without removing content.
+ * Start the full audio bed: two compositions on two side buses (crossfaded),
+ * plus layered surface noise that sits over both. Called when the rig
+ * enters view with audio enabled.
  */
-export function setReducedMotion(r: boolean): void {
-  reduced = r;
-  if (sideA) sideA.tape.setIntensity(r ? 0 : 1);
-  if (sideB) sideB.tape.setIntensity(r ? 0 : 1);
-  sideA?.comp?.setReducedMotion(r);
-  sideB?.comp?.setReducedMotion(r);
-}
-
-/** Switch sides by pausing, changing, and relaunching — cheaper and
- *  glitch-free vs. crossfading two simultaneously-running compositions. */
-export function setSide(side: 'A' | 'B'): void {
-  if (side === currentSide) return;
-  currentSide = side;
-  if (bedRunning) restartBed();
-}
-
-/** Tempo multiplier applied on next launch. 1 = native BPM. Pauses and
- *  relaunches if playing so the new rate kicks in cleanly. */
-export function setRpm(multiplier: number): void {
-  if (multiplier === currentRate) return;
-  currentRate = multiplier;
-  if (bedRunning) restartBed();
-}
-
 export function startBed(side: 'A' | 'B' = currentSide): void {
-  if (!enabled || !ensure() || !chain) return;
-  currentSide = side;
-  if (bedRunning) {
+  if (!enabled || !ensure() || !ctx || !master) return;
+  if (bed) {
+    // Already running - just sync the side.
+    currentSide = side;
     setSide(side);
     return;
   }
-  const a = ensureSide('A');
-  const b = ensureSide('B');
-  if (!a || !b) return;
 
-  if (!a.comp) {
-    a.comp = composeSideA(a.bus);
-    a.comp.setRate(currentRate);
-    a.comp.setReducedMotion(reduced);
-  }
-  if (!b.comp) {
-    b.comp = composeSideB(b.bus);
-    b.comp.setRate(currentRate);
-    b.comp.setReducedMotion(reduced);
-  }
-  // Initial gains.
-  a.gain.gain.value = side === 'A' ? 1 : 0;
-  b.gain.gain.value = side === 'B' ? 1 : 0;
-  surface?.start();
-  bedRunning = true;
+  const sideAGain = ctx.createGain();
+  const sideBGain = ctx.createGain();
+  sideAGain.gain.value = side === 'A' ? 1 : 0;
+  sideBGain.gain.value = side === 'B' ? 1 : 0;
+  sideAGain.connect(master);
+  sideBGain.connect(master);
+
+  const compA = composeSideA(ctx, sideAGain);
+  const compB = composeSideB(ctx, sideBGain);
+  compA.setRate(currentRate);
+  compB.setRate(currentRate);
+  const stopSurface = startSurfaceNoise(ctx, master);
+
+  currentSide = side;
+  bed = {
+    sideAGain,
+    sideBGain,
+    stopA: compA.stop,
+    stopB: compB.stop,
+    stopSurface,
+    setRateA: compA.setRate,
+    setRateB: compB.setRate,
+  };
 }
 
+/** Tempo multiplier applied to both compositions. 1 = native BPM. */
+export function setRpm(multiplier: number): void {
+  currentRate = multiplier;
+  if (!bed) return;
+  bed.setRateA(multiplier);
+  bed.setRateB(multiplier);
+}
+
+/** Tear down the bed with a short fade-out so cutoff is inaudible. */
 export function stopBed(): void {
-  if (pendingRestartTimer) {
-    clearTimeout(pendingRestartTimer);
-    pendingRestartTimer = null;
-  }
-  if (!bedRunning) return;
-  bedRunning = false;
-  if (sideA) sideA.gain.gain.setTargetAtTime(0, Tone.now(), FADE_OUT_S / 3);
-  if (sideB) sideB.gain.gain.setTargetAtTime(0, Tone.now(), FADE_OUT_S / 3);
-  surface?.stop();
+  if (!bed || !ctx) return;
+  const b = bed;
+  bed = null;
+  const t = ctx.currentTime;
+  b.sideAGain.gain.cancelScheduledValues(t);
+  b.sideBGain.gain.cancelScheduledValues(t);
+  b.sideAGain.gain.setTargetAtTime(0, t, FADE_OUT_S / 3);
+  b.sideBGain.gain.setTargetAtTime(0, t, FADE_OUT_S / 3);
+  // Stop scheduler + surface source after the fade completes.
   setTimeout(() => {
-    sideA?.comp?.stop();
-    sideB?.comp?.stop();
-    sideA?.comp?.dispose();
-    sideB?.comp?.dispose();
-    if (sideA) sideA.comp = null;
-    if (sideB) sideB.comp = null;
-  }, Math.ceil(FADE_OUT_S * 1000) + 120);
+    b.stopA();
+    b.stopB();
+    b.stopSurface();
+    try {
+      b.sideAGain.disconnect();
+      b.sideBGain.disconnect();
+    } catch {
+      /* already disconnected */
+    }
+  }, Math.ceil(FADE_OUT_S * 1000) + 100);
 }
 
-// ---- back-compat shims (kept for any external caller) ----
+// ---- back-compat shims (Mixtape.tsx references these names) ----
 export function startCrackle(): void {
   startBed(currentSide);
 }
@@ -393,71 +318,147 @@ export function stopCrackle(): void {
   stopBed();
 }
 
-// ---------- one-shot SFX ----------
+/**
+ * Layered vinyl surface noise.
+ *
+ * Three voices sum into the master bus:
+ *   1. Pink-ish hiss (2 s loop) — the continuous surface texture.
+ *   2. Crackle ticks — sparse sharp impulses sprinkled in the buffer.
+ *   3. Motor hum — a quiet 50 Hz sine + faint 2nd harmonic (the belt drive).
+ *
+ * The hiss buffer is long enough (4 s) that the loop point is inaudible,
+ * and EQ is tuned so the bed sits below the music in the 400–1800 Hz range.
+ */
+function startSurfaceNoise(audioCtx: AudioContext, dest: AudioNode): () => void {
+  const duration = 4;
+  const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * duration, audioCtx.sampleRate);
+  const data = buf.getChannelData(0);
+  // Pink noise via Voss-McCartney approximation.
+  let b0 = 0,
+    b1 = 0,
+    b2 = 0;
+  for (let i = 0; i < data.length; i++) {
+    const w = Math.random() * 2 - 1;
+    b0 = 0.99886 * b0 + w * 0.0555179;
+    b1 = 0.99332 * b1 + w * 0.0750759;
+    b2 = 0.969 * b2 + w * 0.153852;
+    let s = (b0 + b1 + b2 + w * 0.115926) * 0.22;
+    // Sparse crackle ticks (~1/80ms on average).
+    if (Math.random() < 0.0005) s += (Math.random() * 2 - 1) * 0.45;
+    // Rarer bigger dust pop (~1/2s).
+    if (Math.random() < 0.000015) s += (Math.random() * 2 - 1) * 0.75;
+    data[i] = s;
+  }
 
-const RAND = () => Math.random();
+  const src = audioCtx.createBufferSource();
+  src.buffer = buf;
+  src.loop = true;
 
-export function playNeedleDrop(side: 'A' | 'B' = currentSide): void {
-  if (!enabled || !ensure() || !sfx) return;
-  const t = Tone.now();
-  // Per-call variation — thump pitch wobble and click center freq.
-  const thumpHz = (side === 'B' ? 52 : 62) + (RAND() * 8 - 4);
-  const clickFreq = (side === 'B' ? 1500 : 1800) + (RAND() * 400 - 200);
+  const hp = audioCtx.createBiquadFilter();
+  hp.type = 'highpass';
+  hp.frequency.value = 420;
 
-  sfx.needleClickFilt.frequency.setValueAtTime(clickFreq, t);
-  sfx.needleThump.triggerAttackRelease(thumpHz, '8n', t, 0.85);
-  sfx.needleClick.triggerAttackRelease(0.05, t + 0.002, 0.55);
+  const peak = audioCtx.createBiquadFilter();
+  peak.type = 'peaking';
+  peak.frequency.value = 1500;
+  peak.Q.value = 0.8;
+  peak.gain.value = 3;
 
-  // Side B: settling scrape ~80 ms in (worn-tape character).
-  if (side === 'B') {
-    sfx.needleScrape.triggerAttackRelease(0.16, t + 0.08, 0.6);
+  const surfaceGain = audioCtx.createGain();
+  surfaceGain.gain.setValueAtTime(0, audioCtx.currentTime);
+  surfaceGain.gain.linearRampToValueAtTime(0.09, audioCtx.currentTime + 0.6);
+
+  src.connect(hp).connect(peak).connect(surfaceGain).connect(dest);
+  src.start();
+
+  // 50 Hz motor hum (mains-style) — very quiet, constant.
+  const hum = audioCtx.createOscillator();
+  const hum2 = audioCtx.createOscillator();
+  const humGain = audioCtx.createGain();
+  const hum2Gain = audioCtx.createGain();
+  hum.type = 'sine';
+  hum2.type = 'sine';
+  hum.frequency.value = 50;
+  hum2.frequency.value = 100;
+  humGain.gain.setValueAtTime(0, audioCtx.currentTime);
+  humGain.gain.linearRampToValueAtTime(0.012, audioCtx.currentTime + 0.8);
+  hum2Gain.gain.setValueAtTime(0, audioCtx.currentTime);
+  hum2Gain.gain.linearRampToValueAtTime(0.004, audioCtx.currentTime + 0.8);
+  hum.connect(humGain).connect(dest);
+  hum2.connect(hum2Gain).connect(dest);
+  hum.start();
+  hum2.start();
+
+  return () => {
+    const t = audioCtx.currentTime;
+    surfaceGain.gain.cancelScheduledValues(t);
+    surfaceGain.gain.setTargetAtTime(0, t, 0.15);
+    humGain.gain.setTargetAtTime(0, t, 0.15);
+    hum2Gain.gain.setTargetAtTime(0, t, 0.15);
+    setTimeout(() => {
+      try {
+        src.stop();
+        hum.stop();
+        hum2.stop();
+      } catch {
+        /* already stopped */
+      }
+    }, 550);
+  };
+}
+
+/** Master volume (0..1 linear). Safe to call before the context exists —
+ *  the value is cached and applied when the chain is built. */
+export function setVolume(linear: number): void {
+  const v = Math.max(0, Math.min(1, linear));
+  pendingVolume = v;
+  if (master && ctx) {
+    const t = ctx.currentTime;
+    master.gain.cancelScheduledValues(t);
+    master.gain.setTargetAtTime(v, t, 0.02);
   }
 }
 
-/** Muffled chassis knock + bright plastic click + HP rotation swish.
- *  Each click randomized so two flips in a row sound subtly different. */
-export function playFlip(): void {
-  if (!enabled || !ensure() || !sfx) return;
-  const t = Tone.now();
-  const knockHz = 130 + RAND() * 30;
-  const clickHz = 3500 + RAND() * 1800;
-  sfx.flipKnockFilt.frequency.setValueAtTime(900 + RAND() * 200, t);
-  sfx.flipClickFilt.frequency.setValueAtTime(clickHz, t);
-  sfx.flipKnock.triggerAttackRelease(knockHz, '16n', t, 0.7);
-  sfx.flipClick.triggerAttackRelease(0.018, t + 0.005 + RAND() * 0.01, 0.55);
-  // Optional second click — gives the "two-handed flip" feel ~40% of the time.
-  if (RAND() < 0.4) {
-    sfx.flipClick.triggerAttackRelease(0.014, t + 0.06 + RAND() * 0.04, 0.4);
+/** Hard mute via a post-master GainNode — keeps the scheduler running so
+ *  unmute resumes seamlessly without relaunching compositions. */
+export function setMuted(m: boolean): void {
+  pendingMuted = m;
+  if (muteGain && ctx) {
+    const t = ctx.currentTime;
+    muteGain.gain.cancelScheduledValues(t);
+    muteGain.gain.setTargetAtTime(m ? 0 : 1, t, 0.03);
   }
-  sfx.flipSwish.triggerAttackRelease(0.16, t + 0.05, 0.6);
 }
 
-export function playPop(): void {
-  if (!enabled || !ensure() || !sfx) return;
-  const t = Tone.now();
-  sfx.pop.frequency.cancelScheduledValues(t);
-  sfx.pop.frequency.setValueAtTime(880, t);
-  sfx.pop.frequency.exponentialRampToValueAtTime(560, t + 0.12);
-  sfx.popGain.gain.cancelScheduledValues(t);
-  sfx.popGain.gain.setValueAtTime(0, t);
-  sfx.popGain.gain.linearRampToValueAtTime(0.08, t + 0.005);
-  sfx.popGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
+/** `prefers-reduced-motion` gate — no-op today because the restored
+ *  engine's compositions are intentionally static (no tape wow/flutter,
+ *  no ghost snares, no pad LFO). The setter is kept for API stability. */
+export function setReducedMotion(_r: boolean): void {
+  // No-op. The restored pre-Tone compositions are intentionally static
+  // (no tape wow, filter LFO, or ghost snares) so there is no motion
+  // layer to gate. Kept for API parity with callers.
 }
 
-/** Reduced-motion suppresses scratch SFX entirely (matches visual gate). */
-export function playScratch(side: 'A' | 'B'): void {
-  if (!enabled || !ensure() || !sfx) return;
-  if (reduced) return;
-  const t = Tone.now();
+function hookVisibility(): void {
+  if (visibilityHooked || typeof document === 'undefined') return;
+  visibilityHooked = true;
+  document.addEventListener('visibilitychange', () => {
+    if (!ctx) return;
+    if (document.hidden) {
+      wasRunningBeforeHide = !!bed && ctx.state === 'running';
+      if (wasRunningBeforeHide) void ctx.suspend();
+    } else if (wasRunningBeforeHide) {
+      wasRunningBeforeHide = false;
+      void ctx.resume();
+    }
+  });
+}
 
-  // Direction-specific high-freq sweep.
-  const startF = side === 'A' ? 1200 : 2000;
-  const endF = side === 'A' ? 3000 : 700;
-  sfx.scratchHighFilt.frequency.cancelScheduledValues(t);
-  sfx.scratchHighFilt.frequency.setValueAtTime(startF, t);
-  sfx.scratchHighFilt.frequency.exponentialRampToValueAtTime(endF, t + 0.18);
-  sfx.scratchHigh.triggerAttackRelease(0.2, t, 0.7);
-
-  // Low rubber-friction body — gives weight and "physicality" to the scratch.
-  sfx.scratchBody.triggerAttackRelease(0.18, t, 0.5);
+function makeNoiseBuffer(seconds: number): AudioBuffer {
+  // ensure() runs before callers - ctx is non-null here.
+  const c = ctx as AudioContext;
+  const buf = c.createBuffer(1, Math.floor(c.sampleRate * seconds), c.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  return buf;
 }

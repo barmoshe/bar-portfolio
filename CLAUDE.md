@@ -27,9 +27,8 @@ Slash commands: `/new-project`, `/theme-preview`, `/deploy-check`, `/typecheck` 
 2. **`HeroSlides` fx cycle** - four ink-native transitions (`bloom`, `brush`, `tear`, `crumple`) are GSAP-driven from `src/components/HeroSlides.tsx`. One timeline at a time (advance is serialized). `resetSlide()` must clear every fx-specific inline style on completion or the next cycle starts from stale state. See `knowledge/04-animation.md`.
 3. **`base: '/bar-portfolio/'`** in `vite.config.ts` - if the repo is renamed, update this in lockstep.
 4. **`public/.nojekyll`** - must land in `dist/`. Keeps GitHub Pages' Jekyll from stripping underscore folders.
-5. **Mixtape master chain split** - `musicIn` (music + surface bed, runs through compressor + limiter) vs `sfxIn` (transient SFX, skips the compressor so needle/flip/scratch don't pump the bed). Don't collapse them. See `knowledge/07-mixtape-audio.md`.
-6. **Per-side reverb + delay sends live inside the side composition** - their tails crossfade with the side gain. Don't promote them to a global send bus.
-7. **`prefers-reduced-motion` suppresses audio motion**, not the music itself. `setReducedMotion(true)` flattens tape wow/flutter, the pad filter LFO, ghost snares, the bar-8 fill, the reverse-swell, and gates scratch SFX - but the composition keeps playing.
+5. **Mixtape audio is zero-dep Web Audio** - single `AudioContext` lazily created inside `unlock()` (first user gesture). Do not introduce audio libraries (no Tone.js, Howler, etc.) and do not add audio samples. See `knowledge/07-mixtape-audio.md`.
+6. **Side buses crossfade equal-power** - `setSide()` ramps two `GainNode`s with `setTargetAtTime`; both compositions run continuously. Don't replace with a pause-relaunch model.
 
 Full rationale and anti-patterns: `knowledge/99-caveats.md`.
 
@@ -38,8 +37,8 @@ Full rationale and anti-patterns: `knowledge/99-caveats.md`.
 - Colors: `oklch()` only. New tokens land in `:root` **and** `html.dark` together. Body-text pairs must clear WCAG AA (≥ 4.5:1).
 - Motion: prefer `transform` / `opacity` / `filter`. Respect `prefers-reduced-motion` via `gsap.matchMedia` + `FULL_MOTION_QUERY` from `src/lib/gsap.ts`.
 - Styling: CSS custom properties in `src/styles.css`. Tailwind is intentionally rejected - see `knowledge/01-stack.md`.
-- No new runtime deps for cosmetic changes. Current deps: `react`, `react-dom`, `gsap`, `@gsap/react`, `tone` (mixtape audio only — see `knowledge/07-mixtape-audio.md`).
-- Audio: Tone.js is the audio stack. No samples, no other audio libraries. Instrument factories accept an optional `sends` map but `trigger(time, midi, vel)` stays stable. Humanization uses a deterministic hash of `bar*16+step` (never `Math.random()` per-tick) so two side flips don't drift.
+- No new runtime deps for cosmetic changes. Current deps: `react`, `react-dom`, `gsap`, `@gsap/react`.
+- Audio: zero-dep Web Audio API. Procedural SFX and two generative compositions built directly on `AudioContext`. No samples, no audio libraries. See `knowledge/07-mixtape-audio.md`.
 - Routing: single page + hash links (`#intro`, `#background`, `#mixtape`, `#repos`, `#letter`). Do not add React Router. Note that `#repos` auto-expands the collapsed Repos section.
 
 ## Scripts
