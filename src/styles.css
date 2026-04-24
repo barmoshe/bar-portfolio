@@ -653,12 +653,37 @@
 
     /* Force heavy grids to single column for readability */
     .clip,
-    #letter > div[style*="grid-template-columns"],
-    #background > div[style*="grid"]{grid-template-columns:1fr !important}
+    #letter > div[style*="grid-template-columns"]{grid-template-columns:1fr !important}
+
+    /* Outer big-card stack: single column, tighter vertical gap on mobile */
+    #background > div[style*="grid"]{
+      grid-template-columns:1fr !important;
+      gap:20px !important;
+    }
+
+    /* Small-cards wrapper stays a 2-col compact grid on mobile so the
+       supporting roles (Wochit / Wix / Coding Academy / BPM) read as a
+       cluster, not as more full-width cards below the big ones.
+       Neutralises the padding/box-shadow from the #background > div > div
+       rule below — the wrapper is a grid container, not a card. */
+    #background > div > div[style*="grid"]{
+      grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+      gap:12px !important;
+      padding:0 !important;
+      box-shadow:none !important;
+      margin-top:6px !important;
+    }
 
     /* Shrink background/contact card padding */
     #background > div > div,
     #letter > div > a{padding:18px !important;box-shadow:4px 5px 0 var(--ink) !important}
+
+    /* Small cards themselves: compact padding + lighter shadow, keeping
+       them clearly secondary to the big cards above. */
+    #background [data-bg-small]{
+      padding:12px 14px !important;
+      box-shadow:3px 4px 0 var(--ink) !important;
+    }
 
     /* Colored-shadow contact cards - preserve accent color but trim offset */
     #letter > div > a[style*="var(--red)"]    {box-shadow:4px 5px 0 var(--red)    !important}
@@ -786,6 +811,11 @@
     .page{padding:36px 14px}
     .tabbar a{font-size:9px;padding:6px 2px;gap:2px}
     .tabbar svg{width:18px;height:18px}
+
+    /* 2-col small-cards grid is too cramped here — drop back to 1 col. */
+    #background > div > div[style*="grid"]{
+      grid-template-columns:1fr !important;
+    }
   }
 
   /* ─── Music section · sketch rig ────────────────────────────────────
