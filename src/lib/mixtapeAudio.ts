@@ -13,7 +13,6 @@ let muteGain: GainNode | null = null;
 let comp: DynamicsCompressorNode | null = null;
 let sideBus: SideMap<GainNode> | null = null;
 let sideReverb: SideMap<ConvolverNode> | null = null;
-let hissSource: AudioBufferSourceNode | null = null;
 let hissGain: GainNode | null = null;
 
 let activeSide: MixtapeSide = 'A';
@@ -79,6 +78,7 @@ async function fetchBuffer(rel: string): Promise<AudioBuffer | null> {
 function preloadSfx() {
   if (!ctx) return;
   (Object.keys(MIXTAPE_SFX) as MixtapeSfxKey[]).forEach(async (key) => {
+    if (key === 'hiss') return;
     const buf = await fetchBuffer(MIXTAPE_SFX[key]);
     if (buf) sfxBufs[key] = buf;
   });
@@ -94,18 +94,13 @@ function startHiss() {
   filter.Q.value = 0.7;
   gain.gain.value = reducedMotion ? 0 : HISS_GAIN_DEFAULT;
   source.loop = true;
+  source.buffer = makeNoiseBuffer(ctx, 2);
   source.connect(filter).connect(gain).connect(master);
-  (async () => {
-    const fromFile = await fetchBuffer(MIXTAPE_SFX.hiss);
-    if (!ctx || source !== hissSource) return;
-    source.buffer = fromFile ?? makeNoiseBuffer(ctx, 2);
-    try {
-      source.start(0);
-    } catch {
-      /* already started or disposed */
-    }
-  })();
-  hissSource = source;
+  try {
+    source.start(0);
+  } catch {
+    /* already started or disposed */
+  }
   hissGain = gain;
 }
 
