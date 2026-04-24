@@ -242,6 +242,20 @@ export function unlock(): void {
     ensure();
     return;
   }
+  // Install a fresh Context with latencyHint: 'playback' before any Tone
+  // node is created. 'playback' asks the browser for a larger audio-callback
+  // buffer (~1024 samples vs ~256 for 'interactive'), so React re-renders
+  // and GC stalls don't overflow the audio thread — this is Tone.js's
+  // documented fix for "breaks after a few seconds" steady-state glitches.
+  // latencyHint can only be set at construction; using the runtime setter
+  // would swap the underlying AudioContext mid-flight and silence audio.
+  try {
+    Tone.setContext(
+      new Tone.Context({ latencyHint: 'playback', lookAhead: 0.2 }),
+    );
+  } catch {
+    /* fall through — keep Tone's default context on exotic browsers */
+  }
   // Tone.start() returns a Promise but the user gesture is preserved
   // because we kick it off synchronously inside the click handler.
   void Tone.start();
