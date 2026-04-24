@@ -104,7 +104,7 @@ export default function Repos({ onOpen }: Props) {
       </div>
       <span className="stamp">REPOS</span>
       <h2 className="headline">
-        A few of the <em>many things</em> I've built.
+        A selection of my <em>repositories</em>.
       </h2>
       <button
         type="button"
