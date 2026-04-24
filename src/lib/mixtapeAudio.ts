@@ -28,7 +28,8 @@ const buffers = new Map<string, Promise<AudioBuffer | null>>();
 const sfxBufs: Partial<Record<MixtapeSfxKey, AudioBuffer>> = {};
 let relaunchTimer: number | null = null;
 
-const HISS_GAIN_DEFAULT = 0.0316;
+const HISS_GAIN_DEFAULT = 0.012;
+const HISS_FADE_S = 0.6;
 const FADE_IN_S = 0.35;
 const FADE_OUT_S = 0.35;
 const PAUSE_ON_CHANGE_MS = 780;
@@ -92,7 +93,7 @@ function startHiss() {
   filter.type = 'highpass';
   filter.frequency.value = 2000;
   filter.Q.value = 0.7;
-  gain.gain.value = reducedMotion ? 0 : HISS_GAIN_DEFAULT;
+  gain.gain.value = 0;
   source.loop = true;
   source.buffer = makeNoiseBuffer(ctx, 2);
   source.connect(filter).connect(gain).connect(master);
@@ -102,6 +103,14 @@ function startHiss() {
     /* already started or disposed */
   }
   hissGain = gain;
+}
+
+function fadeHissTo(target: number, seconds: number) {
+  if (!ctx || !hissGain) return;
+  const now = ctx.currentTime;
+  hissGain.gain.cancelScheduledValues(now);
+  hissGain.gain.setValueAtTime(hissGain.gain.value, now);
+  hissGain.gain.linearRampToValueAtTime(target, now + seconds);
 }
 
 export function unlock() {
@@ -208,6 +217,7 @@ async function launchBedFor(side: MixtapeSide) {
     fadeSideOut(other, FADE_IN_S);
     fadeSideIn(side);
   }
+  fadeHissTo(reducedMotion ? 0 : HISS_GAIN_DEFAULT, HISS_FADE_S);
 }
 
 export function startBed(side: MixtapeSide) {
@@ -221,6 +231,7 @@ export function stopBed() {
   if (!ctx || !sideBus) return;
   fadeSideOut('A');
   fadeSideOut('B');
+  fadeHissTo(0, HISS_FADE_S);
   const src = bedSource;
   bedSource = null;
   if (src) {
@@ -290,10 +301,8 @@ export function setMuted(m: boolean) {
 export function setReducedMotion(rm: boolean) {
   reducedMotion = rm;
   if (!ctx || !hissGain) return;
-  const now = ctx.currentTime;
-  hissGain.gain.cancelScheduledValues(now);
-  hissGain.gain.setValueAtTime(hissGain.gain.value, now);
-  hissGain.gain.linearRampToValueAtTime(rm ? 0 : HISS_GAIN_DEFAULT, now + 0.12);
+  const target = rm || !bedSource ? 0 : HISS_GAIN_DEFAULT;
+  fadeHissTo(target, 0.12);
 }
 
 function playOneShot(key: MixtapeSfxKey, routeSide: MixtapeSide | null) {
