@@ -144,7 +144,7 @@ const valueStyle: CSSProperties = {
 };
 
 // Fan-in scatter offsets per card (indexed). Desktop uses wide scatter;
-// mobile stacks vertically so we use a tighter, bottom-biased rise.
+// mobile uses a paired-entry that's driven by card index (see below).
 const DESKTOP_SCATTER = [
   { x: -120, y: -40, r: -20 },
   { x: 140, y: -50, r: 24 },
@@ -152,15 +152,6 @@ const DESKTOP_SCATTER = [
   { x: 130, y: 40, r: 22 },
   { x: -90, y: 70, r: -16 },
   { x: 160, y: 80, r: 20 },
-];
-// Tighter scatter for mobile - alternating left/right for visible motion.
-const MOBILE_SCATTER = [
-  { x: -32, y: 50, r: -6 },
-  { x: 32, y: 55, r: 6 },
-  { x: -28, y: 60, r: -5 },
-  { x: 30, y: 50, r: 5 },
-  { x: -34, y: 55, r: -4 },
-  { x: 28, y: 60, r: 4 },
 ];
 
 // Letter is the final section and tends to be read for longer; stretch the
@@ -247,23 +238,32 @@ export default function Letter() {
       });
 
       mm.add(MOBILE_QUERY, () => {
-        cards.forEach((el, i) => {
-          const s = MOBILE_SCATTER[i % MOBILE_SCATTER.length]!;
-          createReveal(
-            el,
-            { opacity: 0, x: s.x, y: s.y, rotate: s.r, scale: 0.88 },
-            {
-              opacity: 1,
-              x: 0,
-              y: 0,
-              rotate: parseFloat(CARDS[i]?.rotate ?? '0deg'),
-              scale: 1,
-              duration: 0.75,
-              ease: 'back.out(1.4)',
-            },
-            { trigger: el, start: 'top 92%', staleAfterMs: LETTER_STALE_MS },
-          );
-        });
+        if (!cards.length) return;
+        // Paired per-row entry for the 2-col mobile grid: even-index cards
+        // swoop from the left, odd-index cards from the right. The grid
+        // stagger with axis:'y' keeps both cards in a row in sync while
+        // rows cascade top→bottom.
+        createReveal(
+          cards,
+          {
+            opacity: 0,
+            x: (i: number) => (i % 2 === 0 ? -64 : 64),
+            y: 18,
+            rotate: 0,
+            scale: 0.9,
+          },
+          {
+            opacity: 1,
+            x: 0,
+            y: 0,
+            rotate: 0,
+            scale: 1,
+            duration: 0.65,
+            ease: 'back.out(1.5)',
+            stagger: { each: 0.14, grid: [3, 2], axis: 'y', from: 'start' },
+          },
+          { trigger: grid, start: 'top 85%', staleAfterMs: LETTER_STALE_MS },
+        );
       });
 
       return () => mm.revert();
