@@ -7,7 +7,9 @@
  */
 
 const LOOKAHEAD_MS = 25;
-const SCHEDULE_AHEAD_S = 0.12;
+// 0.2s horizon survives most desktop Chrome GC / React render stalls.
+// Tighter values caused late notes under load.
+const SCHEDULE_AHEAD_S = 0.2;
 
 export type StepCallback = (time: number, step: number) => void;
 

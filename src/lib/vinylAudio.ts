@@ -59,12 +59,27 @@ function ensure(): boolean {
       (window as unknown as { webkitAudioContext?: typeof AudioContext })
         .webkitAudioContext;
     if (!Ctor) return false;
-    ctx = new Ctor();
+    // Request a larger hardware buffer ("playback" ~1024 samples vs
+     // "interactive" ~256) so React renders / GC stalls don't starve the
+     // audio callback on desktop — the single biggest desktop-vs-mobile
+     // audio-glitch factor per MDN + Tone.js docs.
+    ctx = new Ctor({ latencyHint: 'playback' });
     master = ctx.createGain();
     master.gain.value = pendingVolume;
+    // Soft-knee compressor as a final limiter. Two compositions summing with
+    // surface noise can exceed 0 dBFS; without this the pre-Tone engine
+    // audibly distorts on loud sections. Threshold −6 dB with a 4:1 ratio
+    // catches peaks without squashing the mix.
+    const limiter = ctx.createDynamicsCompressor();
+    limiter.threshold.value = -6;
+    limiter.knee.value = 6;
+    limiter.ratio.value = 4;
+    limiter.attack.value = 0.003;
+    limiter.release.value = 0.25;
     muteGain = ctx.createGain();
     muteGain.gain.value = pendingMuted ? 0 : 1;
-    master.connect(muteGain);
+    master.connect(limiter);
+    limiter.connect(muteGain);
     muteGain.connect(ctx.destination);
     hookVisibility();
   }

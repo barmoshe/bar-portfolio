@@ -215,13 +215,11 @@ export default function Mixtape() {
   const tracks = useMemo(() => shuffleAndAssignSides(TRACKS), []);
   const visible = tracks.filter((t) => t.side === side);
 
-  const [audioOn, setAudioOn] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem(AUDIO_KEY) === '1';
-    } catch {
-      return false;
-    }
-  });
+  // Intentionally session-only — every page load starts muted/stopped so the
+  // user's first gesture is always the explicit Start button. A previously
+  // persisted "on" combined with the old auto-unlock-on-any-click listener
+  // let audio start without the user pressing Start; that felt like autoplay.
+  const [audioOn, setAudioOn] = useState<boolean>(false);
 
   const [rpm, setRpm] = useState<Rpm>(() => {
     try {
@@ -302,22 +300,7 @@ export default function Mixtape() {
   }, []);
 
   useEffect(() => {
-    if (audioOn && !isAudioEnabled()) {
-      const lift = () => {
-        unlockAudio();
-        setAudioEnabled(true);
-        window.removeEventListener('pointerdown', lift);
-        window.removeEventListener('keydown', lift);
-      };
-      window.addEventListener('pointerdown', lift, { once: true });
-      window.addEventListener('keydown', lift, { once: true });
-      return () => {
-        window.removeEventListener('pointerdown', lift);
-        window.removeEventListener('keydown', lift);
-      };
-    }
     if (!audioOn && isAudioEnabled()) setAudioEnabled(false);
-    return undefined;
   }, [audioOn]);
 
   useEffect(() => () => stopBed(), []);
@@ -334,9 +317,7 @@ export default function Mixtape() {
       setAudioVolume(volume);
       setAudioMuted(muted);
       sfxNeedleDrop(side);
-      if (rigRef.current?.getAttribute('data-playing') === 'true') {
-        setTimeout(() => startBed(side), 220);
-      }
+      setTimeout(() => startBed(side), 220);
       announceMessage(`Mixtape playing side ${side}.`);
     } else {
       setAudioEnabled(false);
@@ -422,14 +403,9 @@ export default function Mixtape() {
               start: 'top 78%',
               onPlay: () => {
                 rig.setAttribute('data-playing', 'true');
-                if (isAudioEnabled()) {
-                  sfxNeedleDrop(side);
-                  window.setTimeout(() => startBed(side), 220);
-                }
               },
               onLeaveBack: () => {
                 rig.setAttribute('data-playing', 'false');
-                stopBed();
               },
             },
           );
