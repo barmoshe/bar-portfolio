@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 
-// Scroll-spy for the tab bar. Picks whichever tracked section is crossing an
-// anchor line ~35% from the top of the viewport, with explicit pinning at the
-// top and bottom of the document so the first/last tabs are correct at the
-// edges. Re-evaluates on scroll, resize, and when a tracked id's element
-// appears in the DOM (covers lazy/Suspense-mounted sections).
+// Scroll-spy for the tab bar. Picks the last tracked section whose top has
+// crossed an anchor line ~35% down the viewport. This matches the classic
+// "whichever section you most recently scrolled into" behavior and handles
+// short final sections (e.g. a collapsed Repos followed by Letter) without
+// needing special edge cases. Re-evaluates on scroll, resize, and when a
+// tracked id's element is added or removed from the DOM (for lazy/Suspense-
+// mounted sections like Mixtape).
 export function useSectionObserver(ids: readonly string[]): string | null {
   const [activeId, setActiveId] = useState<string | null>(ids[0] ?? null);
 
@@ -25,31 +27,18 @@ export function useSectionObserver(ids: readonly string[]): string | null {
       const vh = window.innerHeight;
       if (!vh) return;
 
-      const doc = document.documentElement;
-      const y = window.scrollY;
-
-      if (y <= 2) return apply(ids[0] ?? null);
-      if (y + vh >= doc.scrollHeight - 2) return apply(ids[ids.length - 1] ?? null);
-
       const anchor = vh * 0.35;
-      let contained: string | null = null;
-      let nearest: { id: string; distance: number } | null = null;
+      let candidate: string | null = null;
 
       for (const id of ids) {
         const el = document.getElementById(id);
         if (!el) continue;
         const r = el.getBoundingClientRect();
         if (r.height <= 0) continue;
-        if (r.top <= anchor && r.bottom > anchor) {
-          contained = id;
-          break;
-        }
-        const mid = (r.top + r.bottom) / 2;
-        const distance = Math.abs(mid - anchor);
-        if (!nearest || distance < nearest.distance) nearest = { id, distance };
+        if (r.top <= anchor) candidate = id;
       }
 
-      apply(contained ?? nearest?.id ?? null);
+      apply(candidate ?? ids[0] ?? null);
     };
 
     const schedule = () => {
