@@ -62,6 +62,8 @@ const role: CSSProperties = {
   color: 'var(--green)',
 };
 
+const roleEdu: CSSProperties = { ...role, color: 'var(--blue)' };
+
 const roleSmall: CSSProperties = {
   margin: 0,
   fontFamily: 'var(--mono)',
@@ -70,6 +72,8 @@ const roleSmall: CSSProperties = {
   letterSpacing: '.1em',
   color: 'var(--green)',
 };
+
+const roleSmallEdu: CSSProperties = { ...roleSmall, color: 'var(--blue)' };
 
 const body: CSSProperties = { margin: '10px 0 0', color: 'var(--ink-soft)' };
 const bodySmall: CSSProperties = { margin: '6px 0 0', color: 'var(--ink-soft)', fontSize: '.95rem' };
@@ -292,7 +296,7 @@ export default function Background() {
             <h3 style={h3}>Afeka</h3>
             <span style={date}>Oct 2020 – Aug 2023</span>
           </div>
-          <p style={role}>B.S. Computer Science</p>
+          <p style={roleEdu}>B.S. Computer Science</p>
           <p style={body}>
             A wide range, from low-level assembly to .NET, on top of foundational
             coursework in operating systems, data structures, and algorithms.
@@ -316,7 +320,7 @@ export default function Background() {
               <h3 style={h3Small}>Wix, Tel Aviv</h3>
               <span style={date}>Workshop</span>
             </div>
-            <p style={roleSmall}>DevOps Workshop</p>
+            <p style={roleSmallEdu}>DevOps Workshop</p>
             <p style={bodySmall}>
               Hands-on with EKS, Kubernetes, Terraform, microservices.
             </p>
@@ -327,7 +331,7 @@ export default function Background() {
               <h3 style={h3Small}>Coding Academy</h3>
               <span style={date}>Bootcamp</span>
             </div>
-            <p style={roleSmall}>Full-Stack Bootcamp</p>
+            <p style={roleSmallEdu}>Full-Stack Bootcamp</p>
             <p style={bodySmall}>
               Intensive Node / React / MongoDB course for students with prior coding
               experience.
@@ -339,7 +343,7 @@ export default function Background() {
               <h3 style={h3Small}>BPM College</h3>
               <span style={date}>Feb 2019 – Aug 2019</span>
             </div>
-            <p style={roleSmall}>Ableton Certification</p>
+            <p style={roleSmallEdu}>Ableton Certification</p>
             <p style={bodySmall}>
               My first certification. Ableton Live and music theory.
             </p>
