@@ -243,9 +243,14 @@ export default function Mixtape() {
     setAnnounce(msg + '​'.repeat(announceRef.current % 2));
   };
 
+  const rpmMounted = useRef(false);
   useEffect(() => {
     audio.setRpm(RPM_RATE[rpm]);
     rigRef.current?.style.setProperty('--spin-dur', RPM_SPIN[rpm]);
+    if (rpmMounted.current && audioOn) {
+      audio.playRpmShift(side);
+    }
+    rpmMounted.current = true;
     try {
       localStorage.setItem(RPM_KEY, String(rpm));
     } catch {

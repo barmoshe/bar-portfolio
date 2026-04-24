@@ -11,6 +11,7 @@ let ctx: AudioContext | null = null;
 let master: GainNode | null = null;
 let muteGain: GainNode | null = null;
 let comp: DynamicsCompressorNode | null = null;
+let bedDuck: GainNode | null = null;
 let sideBus: SideMap<GainNode> | null = null;
 let sideReverb: SideMap<ConvolverNode> | null = null;
 let hissGain: GainNode | null = null;
@@ -113,6 +114,21 @@ function fadeHissTo(target: number, seconds: number) {
   hissGain.gain.linearRampToValueAtTime(target, now + seconds);
 }
 
+function duckBedFor(durationSec: number) {
+  if (!ctx || !bedDuck) return;
+  const now = ctx.currentTime;
+  const DUCK_TARGET = 0.7;
+  const ATTACK = 0.03;
+  const RELEASE = 0.2;
+  const hold = Math.max(0.15, Math.min(1.2, durationSec));
+  const g = bedDuck.gain;
+  g.cancelScheduledValues(now);
+  g.setValueAtTime(g.value, now);
+  g.linearRampToValueAtTime(DUCK_TARGET, now + ATTACK);
+  g.setValueAtTime(DUCK_TARGET, now + ATTACK + hold);
+  g.linearRampToValueAtTime(1, now + ATTACK + hold + RELEASE);
+}
+
 export function unlock() {
   if (!ctx) {
     const Ctor = (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext);
@@ -133,12 +149,16 @@ export function unlock() {
 
     master.connect(muteGain).connect(comp).connect(ctx.destination);
 
+    bedDuck = ctx.createGain();
+    bedDuck.gain.value = 1;
+    bedDuck.connect(master);
+
     const busA = ctx.createGain();
     const busB = ctx.createGain();
     busA.gain.value = 0;
     busB.gain.value = 0;
-    busA.connect(master);
-    busB.connect(master);
+    busA.connect(bedDuck);
+    busB.connect(bedDuck);
     sideBus = { A: busA, B: busB };
 
     const revA = ctx.createConvolver();
@@ -232,6 +252,12 @@ export function stopBed() {
   fadeSideOut('A');
   fadeSideOut('B');
   fadeHissTo(0, HISS_FADE_S);
+  if (bedDuck) {
+    const now = ctx.currentTime;
+    bedDuck.gain.cancelScheduledValues(now);
+    bedDuck.gain.setValueAtTime(bedDuck.gain.value, now);
+    bedDuck.gain.linearRampToValueAtTime(1, now + 0.05);
+  }
   const src = bedSource;
   bedSource = null;
   if (src) {
@@ -277,9 +303,15 @@ export function setSide(next: MixtapeSide) {
 }
 
 export function setRpm(mult: number) {
+  const prev = bedPlaybackRate;
   bedPlaybackRate = mult;
   if (!ctx || !bedSource) return;
-  schedulePauseAndRelaunch();
+  const RAMP = 0.28;
+  const now = ctx.currentTime;
+  const rate = bedSource.playbackRate;
+  rate.cancelScheduledValues(now);
+  rate.setValueAtTime(prev, now);
+  rate.linearRampToValueAtTime(mult, now + RAMP);
 }
 
 export function setVolume(v: number) {
@@ -305,14 +337,14 @@ export function setReducedMotion(rm: boolean) {
   fadeHissTo(target, 0.12);
 }
 
-function playOneShot(key: MixtapeSfxKey, routeSide: MixtapeSide | null) {
+function playOneShot(key: MixtapeSfxKey, routeSide: MixtapeSide | null, envGain = 1) {
   if (!enabled || !ctx || !master) return;
   const buf = sfxBufs[key];
   if (!buf) return;
   const src = ctx.createBufferSource();
   const env = ctx.createGain();
   src.buffer = buf;
-  env.gain.value = 1;
+  env.gain.value = envGain;
   src.connect(env);
   if (routeSide && sideBus && sideReverb) {
     env.connect(sideBus[routeSide]);
@@ -325,6 +357,7 @@ function playOneShot(key: MixtapeSfxKey, routeSide: MixtapeSide | null) {
   } catch {
     /* ignore */
   }
+  if (bedSource) duckBedFor(buf.duration);
 }
 
 export function playNeedleDrop(side: MixtapeSide) {
@@ -337,4 +370,8 @@ export function playFlip() {
 
 export function playScratch(side: MixtapeSide) {
   playOneShot(side === 'A' ? 'scratchA' : 'scratchB', side);
+}
+
+export function playRpmShift(side: MixtapeSide) {
+  playOneShot(side === 'A' ? 'scratchA' : 'scratchB', side, 0.35);
 }
