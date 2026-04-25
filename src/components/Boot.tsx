@@ -5,15 +5,31 @@ import { gsap, useGSAP, SplitText, FULL_MOTION_QUERY } from '../lib/gsap';
 type Props = { onGone: () => void };
 
 // Portrait paths mirror HeroSlides.tsx so the browser cache is warm by the
-// time the portfolio mounts behind the boot exit.
-const PORTRAIT_NAMES = ['img0', 'img1', 'img2', 'img3', 'img4'];
+// time the portfolio mounts behind the boot exit. Note img8 is intentionally
+// missing from the slide set, matching HeroSlides.
+const PORTRAIT_NAMES = [
+  'img0',
+  'img1',
+  'img2',
+  'img3',
+  'img4',
+  'img5',
+  'img6',
+  'img7',
+  'img9',
+  'img10',
+  'img11',
+  'img12',
+  'img13',
+  'img14',
+  'img15',
+];
 
 export default function Boot({ onGone }: Props) {
   const [leaving, setLeaving] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const breathRef = useRef<gsap.core.Timeline | null>(null);
-  const progressSetterRef = useRef<((v: number) => void) | null>(null);
   const progressVisibleRef = useRef(false);
 
   const base = import.meta.env.BASE_URL;
@@ -46,16 +62,9 @@ export default function Boot({ onGone }: Props) {
         const em = phrase?.querySelector<HTMLElement>('em') ?? null;
         const sub = root.querySelector<HTMLElement>('.sub');
         const btn = root.querySelector<HTMLElement>('.enter');
-        const fill = root.querySelector<HTMLElement>('.enter-progress-fill');
         const fe = document.querySelector<SVGFETurbulenceElement>(
           'feTurbulence[data-grain="wash"]',
         );
-
-        if (fill) {
-          progressSetterRef.current = gsap.quickSetter(fill, 'scaleX') as (
-            v: number,
-          ) => void;
-        }
 
         let mastSplit: SplitText | null = null;
 
@@ -222,7 +231,6 @@ export default function Boot({ onGone }: Props) {
           breathRef.current?.kill();
           breathRef.current = null;
           tlRef.current = null;
-          progressSetterRef.current = null;
         };
       });
 
@@ -306,22 +314,40 @@ export default function Boot({ onGone }: Props) {
   }, [done, leaving]);
 
   // Advance the fill bar as preload progresses, hide on completion.
+  // Tween rather than snap so the bar reads as continuous progress, and
+  // run in both motion modes so reduced-motion users see the fill too
+  // (the previous quickSetter wiring lived inside the full-motion
+  // matchMedia branch and never ran for reduced motion).
   useEffect(() => {
-    const setter = progressSetterRef.current;
+    const root = rootRef.current;
+    if (!root) return;
+    const fill = root.querySelector<HTMLElement>('.enter-progress-fill');
+    const bar = root.querySelector<HTMLElement>('.enter-progress');
+    if (!fill || !bar) return;
+
     const progress = total > 0 ? loaded / total : 1;
-    if (setter) setter(progress);
+    const prefersReduced = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
+
+    if (prefersReduced) {
+      gsap.set(fill, { scaleX: progress });
+    } else {
+      gsap.to(fill, {
+        scaleX: progress,
+        duration: 0.45,
+        ease: 'power2.out',
+        overwrite: 'auto',
+      });
+    }
 
     if (done && progressVisibleRef.current) {
-      const root = rootRef.current;
-      const bar = root?.querySelector<HTMLElement>('.enter-progress');
-      if (bar) {
-        gsap.to(bar, {
-          opacity: 0,
-          duration: 0.25,
-          ease: 'power2.out',
-          delay: 0.15,
-        });
-      }
+      gsap.to(bar, {
+        opacity: 0,
+        duration: 0.25,
+        ease: 'power2.out',
+        delay: 0.4,
+      });
     }
   }, [loaded, total, done]);
 
