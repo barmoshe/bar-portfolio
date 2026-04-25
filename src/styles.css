@@ -310,6 +310,7 @@
   .strip .grow{flex:1}
   .strip .toggle{padding:0 8px;min-width:44px;min-height:44px;height:100%;display:inline-flex;align-items:center;justify-content:center;border:0;opacity:.72;transition:opacity .15s ease, color .15s ease}
   .strip .toggle:hover{background:transparent;color:var(--green);opacity:1}
+  .strip #a11yBtn{font-size:20px;line-height:1}
   @media (max-width:820px){.strip a{display:none}.strip #skipBtn{display:none}}
 
   /* ── Bottom tab bar (mobile nav) ── */
