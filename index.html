@@ -6,14 +6,24 @@
 <title>Bar Moshe — full-stack builder</title>
 <meta name="description" content="Bar Moshe — full-stack builder. Web, DevOps, and AI.">
 <script>
-  /* Pre-paint theme resolver - avoid flash. Runs before <body>. */
+  /* Pre-paint theme + a11y resolver - avoid flash. Runs before <body>. */
   (function(){
     try{
+      var html = document.documentElement;
       var saved = localStorage.getItem("bm:theme"); // "light" | "dark" | null (auto)
       var mq = matchMedia("(prefers-color-scheme: dark)");
       var dark = saved === "dark" || (saved !== "light" && mq.matches);
-      if (dark) document.documentElement.classList.add("dark");
-      document.documentElement.dataset.themePref = saved || "auto";
+      if (dark) html.classList.add("dark");
+      html.dataset.themePref = saved || "auto";
+
+      // Accessibility prefs (Phase 2): contrast, text size, readable typography.
+      // Each is also set from React via usePreferences after mount; this block
+      // exists only to avoid a flash on reload for users who picked an option.
+      var contrast = localStorage.getItem("bm:contrast");
+      if (contrast === "more" || contrast === "less") html.dataset.contrast = contrast;
+      var scale = parseFloat(localStorage.getItem("bm:text-scale"));
+      if (scale && scale !== 1) html.style.setProperty("--text-scale", String(scale));
+      if (localStorage.getItem("bm:readable") === "1") html.dataset.readable = "true";
     }catch(e){}
   })();
 </script>

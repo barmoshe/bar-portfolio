@@ -82,6 +82,33 @@ Target: **score ≥ 95** on both `/` and `/#showcase`, in light and dark theme.
 - **2.5.8 Target Size**: Strip toggles `min-width:44px;min-height:44px`; TabBar links `min-height:56px`; Mixtape SVG controls (knob r=17 / start r=16 / side flip 50×24) all clear the 24×24 minimum.
 - **2.5.7 Dragging**: Volume is `<input type="range">` (keyboard arrows work). No drag-only interactions.
 
+## Phase 2 manual checks
+
+These cover features that the AA baseline doesn't include but disabled users actually rely on.
+
+### Accessibility settings panel
+
+1. Click the ⚙ icon in the Strip → panel opens; focus lands on the close button.
+2. Tab through the controls in order: close → theme radios → contrast radios → text-size radios → readable checkbox.
+3. Esc closes; focus returns to the ⚙ button.
+4. Backdrop click closes (mouse).
+5. Pick **Theme: Dark**, **Contrast: High**, **Text size: 125%**, **Readable: on** → reload. Page paints in those settings on the *first frame* (no flash to default).
+6. Reset (Auto, Auto, 100%, off). OS-level `prefers-reduced-motion` and `prefers-contrast` still take effect when each panel option is "Auto".
+
+### HeroSlides keyboard pause (WCAG 2.2.2 Level A)
+
+1. Tab into the portrait slideshow region. The Pause button reveals (bottom-right).
+2. Activate with Space → slides freeze; `aria-pressed="true"`.
+3. Tab away → button stays visible because the slideshow is paused.
+4. Tab back, activate again → slides resume; button hides on blur.
+
+### Boot focus trap
+
+1. Clear `localStorage.bm:skip` (or open in a private window). Reload.
+2. The Boot cover is up. Tab repeatedly — focus stays on the Enter button (or cycles within the dialog), never escapes to the Strip behind.
+3. Esc dismisses (new in Phase 2). Page transitions in.
+4. After dismiss, Tab once → focus is somewhere reasonable inside the page (skip link reveals).
+
 ## Before merging
 
 `npm run build` must succeed and produce a `dist/` with no `@axe-core/react` references (Vite tree-shakes the DEV branch).

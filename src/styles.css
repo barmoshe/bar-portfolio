@@ -208,20 +208,50 @@
 
   /* Higher-contrast branch (WCAG 2.2 1.4.6 / OS-level "increase contrast").
      Tightens body-text pairs and bumps focus rings to ensure 3:1 against any
-     adjacent surface. */
+     adjacent surface. Either OS preference OR explicit user pick triggers it;
+     `data-contrast="less"` lets the user opt out of the OS-level pref. */
   @media (prefers-contrast: more){
-    :root{
+    html:not([data-contrast="less"]){
       --ink:oklch(0.10 0.03 40);
       --ink-soft:oklch(0.20 0.03 40);
       --border:oklch(0 0 0 / .55);
     }
-    html.dark{
+    html.dark:not([data-contrast="less"]){
       --ink:oklch(0.99 0.005 260);
       --ink-soft:oklch(0.92 0.01 260);
       --border:oklch(1 0 0 / .35);
     }
-    :focus-visible{outline-width:4px}
+    html:not([data-contrast="less"]) :focus-visible{outline-width:4px}
   }
+  html[data-contrast="more"]{
+    --ink:oklch(0.10 0.03 40);
+    --ink-soft:oklch(0.20 0.03 40);
+    --border:oklch(0 0 0 / .55);
+  }
+  html[data-contrast="more"].dark{
+    --ink:oklch(0.99 0.005 260);
+    --ink-soft:oklch(0.92 0.01 260);
+    --border:oklch(1 0 0 / .35);
+  }
+  html[data-contrast="more"] :focus-visible{outline-width:4px}
+
+  /* User text-scale: multiplies the browser's default size (100%), keeping
+     any user-set browser default font-size honored. All rem-based sizes scale
+     with this. Px-based chrome text doesn't, but the global zoom + OS scale
+     still works for those. */
+  html{font-size:calc(100% * var(--text-scale, 1))}
+
+  /* Readable-typography mode: swap serif + display tokens to a hyperlegible
+     stack and loosen line-height + paragraph spacing. System fonts only -
+     no web-font download. Users who have OpenDyslexic installed get it; the
+     rest fall back to Atkinson Hyperlegible / Verdana / system-ui. */
+  html[data-readable="true"]{
+    --serif: "OpenDyslexic", "Atkinson Hyperlegible", "Verdana", system-ui, sans-serif;
+    --display: "Atkinson Hyperlegible", "Verdana", system-ui, sans-serif;
+    --hand: var(--serif);
+  }
+  html[data-readable="true"] body{line-height:1.8}
+  html[data-readable="true"] p{margin-bottom:1.3em}
 
   .grain{position:fixed;inset:0;pointer-events:none;z-index:40;opacity:.4;mix-blend-mode:multiply}
   .grain svg{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -1193,4 +1223,69 @@
   @media (prefers-reduced-motion: reduce){
     .repos-toggle{transition:none}
     .repos-body{transition:none}
+  }
+
+  /* ──────────────────────────────────────────────────────────────────────
+     Accessibility panel (Phase 2). Self-built modal opened from the gear
+     button in Strip. role=dialog + aria-modal + Esc + focus-trap inside.
+     Backdrop dismisses via click. Mirrors the Lightbox a11y posture.
+     ────────────────────────────────────────────────────────────────────── */
+  .a11y-backdrop{position:fixed;inset:0;z-index:60;
+    background:oklch(0 0 0 / .55);
+    display:flex;align-items:center;justify-content:center;
+    padding:24px;padding-top:max(24px,env(safe-area-inset-top));
+    padding-bottom:max(24px,env(safe-area-inset-bottom))}
+  .a11y-panel{position:relative;width:min(440px,100%);
+    background:var(--paper);color:var(--ink);
+    border:1.5px solid var(--ink);box-shadow:8px 10px 0 var(--green);
+    padding:22px 24px;font-family:var(--serif);max-height:90vh;overflow:auto}
+  html.dark .a11y-panel{background:var(--surface-1);box-shadow:8px 10px 0 oklch(0 0 0 / .55)}
+  .a11y-panel h2{margin:0 0 4px;font-family:var(--display);font-weight:700;
+    font-size:1.4rem;letter-spacing:-.01em}
+  .a11y-panel p.dek{margin:0 0 18px;font-size:.85rem;color:var(--ink-soft)}
+  .a11y-panel .a11y-close{position:absolute;top:8px;right:8px;
+    width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;
+    background:transparent;border:0;cursor:pointer;color:var(--ink);
+    font-size:22px;line-height:1;font-family:var(--mono)}
+  .a11y-panel fieldset{border:0;padding:0;margin:0 0 16px}
+  .a11y-panel legend{font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px;padding:0}
+  .a11y-panel .opt-row{display:flex;flex-wrap:wrap;gap:6px}
+  .a11y-panel .opt{display:inline-flex;align-items:center;gap:6px;
+    padding:8px 12px;min-height:40px;
+    background:transparent;border:1.5px solid var(--ink-soft);
+    color:var(--ink);font-family:var(--mono);font-size:12px;letter-spacing:.06em;
+    cursor:pointer;transition:background .15s ease,border-color .15s ease}
+  .a11y-panel .opt:hover{border-color:var(--ink)}
+  .a11y-panel .opt[aria-pressed="true"],
+  .a11y-panel .opt[aria-checked="true"]{background:var(--ink);color:var(--paper);
+    border-color:var(--ink)}
+  .a11y-panel .opt[aria-pressed="true"]:hover,
+  .a11y-panel .opt[aria-checked="true"]:hover{background:var(--ink)}
+  html.dark .a11y-panel .opt{border-color:var(--ink-soft)}
+  html.dark .a11y-panel .opt[aria-pressed="true"],
+  html.dark .a11y-panel .opt[aria-checked="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+  .a11y-panel .a11y-toggle{display:flex;align-items:center;gap:10px;cursor:pointer;
+    padding:8px 0;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--ink)}
+  .a11y-panel .a11y-toggle input[type="checkbox"]{width:18px;height:18px;
+    accent-color:var(--green);cursor:pointer}
+  .a11y-panel .a11y-note{margin:14px 0 0;font-family:var(--mono);font-size:10px;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);
+    border-left:3px solid var(--green);padding:4px 0 4px 10px}
+
+  /* HeroSlides keyboard-accessible pause/play (Phase 2 / WCAG 2.2.2). Floats
+     in the bottom-right corner of the slide region; only visible on hover or
+     keyboard focus so it doesn't compete with the portrait. */
+  .mug{position:relative}
+  .mug-pause{position:absolute;right:8px;bottom:8px;z-index:5;
+    width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;
+    background:var(--ink);color:var(--paper);border:0;cursor:pointer;
+    font-family:var(--mono);font-size:14px;line-height:1;
+    opacity:0;transition:opacity .2s ease;
+    box-shadow:2px 2px 0 var(--green)}
+  .mug:hover .mug-pause,
+  .mug-pause:focus-visible,
+  .mug-pause[aria-pressed="true"]{opacity:1}
+  @media (prefers-reduced-motion: reduce){
+    .mug-pause{transition:none}
   }

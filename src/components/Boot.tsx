@@ -11,6 +11,7 @@ const PORTRAIT_NAMES = ['img0', 'img1', 'img2', 'img3', 'img4'];
 export default function Boot({ onGone }: Props) {
   const [leaving, setLeaving] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const enterBtnRef = useRef<HTMLButtonElement | null>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const breathRef = useRef<gsap.core.Timeline | null>(null);
   const progressSetterRef = useRef<((v: number) => void) | null>(null);
@@ -27,6 +28,49 @@ export default function Boot({ onGone }: Props) {
     if (leaving) return;
     setLeaving(true);
   };
+
+  // Focus trap: while the cover is open, focus the Enter button on mount
+  // and cycle Tab / Shift+Tab between the focusable elements *inside* the
+  // dialog. There's only one (the Enter button) plus the close-equivalent
+  // (Esc), so the trap is essentially "focus stays on Enter." This stops
+  // keyboard users from tabbing into the page behind the cover. Focus is
+  // returned to the document root on dismiss; the App-level <main> +
+  // skip-link pair takes over from there.
+  useEffect(() => {
+    enterBtnRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !leaving) {
+        e.preventDefault();
+        dismiss();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const root = rootRef.current;
+      if (!root) return;
+      const focusables = Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0]!;
+      const last = focusables[focusables.length - 1]!;
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey && (active === first || !root.contains(active))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (active === last || !root.contains(active))) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+    // `dismiss` is stable; `leaving` change re-binds the listener, which is
+    // fine because the cleanup runs first. Including dismiss would force a
+    // useCallback dance for no real benefit.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [leaving]);
 
   // Entrance choreography.
   useGSAP(
@@ -393,6 +437,7 @@ export default function Boot({ onGone }: Props) {
       className="boot"
       id="boot"
       role="dialog"
+      aria-modal="true"
       aria-label="Cover"
       ref={rootRef}
     >
@@ -420,7 +465,8 @@ export default function Boot({ onGone }: Props) {
           className="enter pulse"
           id="enter"
           type="button"
-          aria-label="Enter portfolio"
+          aria-label="Enter portfolio (closes cover)"
+          ref={enterBtnRef}
           onClick={dismiss}
         >
           Enter the portfolio

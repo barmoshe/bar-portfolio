@@ -109,5 +109,19 @@ export function useTheme() {
     });
   }, []);
 
-  return { pref, cycle, glyph: GLYPH[pref], label: LABEL[pref] };
+  // Direct setter for the accessibility panel (Phase 2). Skips the ink-wipe
+  // because the panel context is a focused settings interaction; an instant
+  // flip reads as more responsive there. Cycle still handles the dramatic
+  // top-of-page toggle.
+  const set = useCallback((next: ThemePref) => {
+    setPref((cur) => {
+      if (cur === next) return cur;
+      write(next);
+      const systemDark = matchMedia('(prefers-color-scheme: dark)').matches;
+      apply(next, systemDark);
+      return next;
+    });
+  }, []);
+
+  return { pref, cycle, set, glyph: GLYPH[pref], label: LABEL[pref] };
 }

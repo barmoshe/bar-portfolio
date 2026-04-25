@@ -1,10 +1,14 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { gsap, useGSAP, FULL_MOTION_QUERY } from '../lib/gsap';
+import AccessibilityPanel from './AccessibilityPanel';
+import type { ThemePref } from '../hooks/useTheme';
 
 type Props = {
   themeGlyph: string;
   themeLabel: string;
+  themePref: ThemePref;
   onThemeCycle: (origin?: { x: number; y: number }) => void;
+  onThemeSet: (next: ThemePref) => void;
   onSkip: () => void;
   skipRemembered: boolean;
 };
@@ -26,11 +30,21 @@ function focusSectionFromHash(href: string) {
 export default function Strip({
   themeGlyph,
   themeLabel,
+  themePref,
   onThemeCycle,
+  onThemeSet,
   onSkip,
   skipRemembered,
 }: Props) {
   const ref = useRef<HTMLElement | null>(null);
+  const a11yBtnRef = useRef<HTMLButtonElement | null>(null);
+  const [a11yOpen, setA11yOpen] = useState(false);
+
+  const closeA11y = () => {
+    setA11yOpen(false);
+    // Return focus to the gear button, per the dialog return-focus pattern.
+    requestAnimationFrame(() => a11yBtnRef.current?.focus());
+  };
 
   useGSAP(
     () => {
@@ -82,6 +96,19 @@ export default function Strip({
           {themeGlyph}
         </button>
         <button
+          ref={a11yBtnRef}
+          className="toggle"
+          id="a11yBtn"
+          type="button"
+          title="Accessibility settings"
+          aria-label="Open accessibility settings"
+          aria-haspopup="dialog"
+          aria-expanded={a11yOpen}
+          onClick={() => setA11yOpen(true)}
+        >
+          ⚙
+        </button>
+        <button
           className="toggle"
           id="skipBtn"
           type="button"
@@ -92,6 +119,13 @@ export default function Strip({
           {skipRemembered ? 'remembered ✓' : 'Remember me'}
         </button>
       </nav>
+      {a11yOpen ? (
+        <AccessibilityPanel
+          themePref={themePref}
+          onThemeChange={onThemeSet}
+          onClose={closeA11y}
+        />
+      ) : null}
     </>
   );
 }

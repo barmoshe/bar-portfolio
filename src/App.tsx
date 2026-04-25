@@ -40,7 +40,7 @@ function writeSkip(): void {
 export default function App() {
   const [showBoot, setShowBoot] = useState(() => !readSkip());
   const [skipRemembered, setSkipRemembered] = useState(() => readSkip());
-  const { cycle, glyph, label } = useTheme();
+  const { pref: themePref, cycle, set: setThemePref, glyph, label } = useTheme();
   const { openIdx, sourceRect, open, close } = useLightbox();
   useFolioScrub();
 
@@ -78,7 +78,9 @@ export default function App() {
         <Strip
           themeGlyph={glyph}
           themeLabel={label}
+          themePref={themePref}
           onThemeCycle={cycle}
+          onThemeSet={setThemePref}
           onSkip={onSkip}
           skipRemembered={skipRemembered}
         />

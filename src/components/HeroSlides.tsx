@@ -49,6 +49,10 @@ const resetSlide = (el: HTMLElement) => {
 export default function HeroSlides() {
   const [slides] = useState<Slide[]>(SLIDES);
   const [idx, setIdx] = useState(0);
+  // Mirrored as React state so the Pause/Play button can render its
+  // aria-pressed and label correctly. The ref is still authoritative for
+  // synchronous reads inside `schedule()` / `advance()`.
+  const [paused, setPaused] = useState(false);
   const idxRef = useRef(0);
   const fxCounter = useRef(0);
   const pausedRef = useRef(false);
@@ -230,12 +234,31 @@ export default function HeroSlides() {
   }, []);
 
   const onMouseEnter = () => {
+    if (paused) return;
     pausedRef.current = true;
     stop();
   };
   const onMouseLeave = () => {
+    if (paused) return;
     pausedRef.current = false;
     if (firstAdvanceDoneRef.current) schedule();
+  };
+
+  // Keyboard-accessible Pause/Play (WCAG 2.2.2 Pause-Stop-Hide). Hover-pause
+  // is a pointer affordance only; this button is what makes the auto-cycle
+  // operable for keyboard, switch, and voice-control users. While `paused`
+  // is true the button stays sticky-on regardless of pointer state.
+  const togglePause = () => {
+    setPaused((cur) => {
+      const next = !cur;
+      pausedRef.current = next;
+      if (next) {
+        stop();
+      } else if (firstAdvanceDoneRef.current) {
+        schedule();
+      }
+      return next;
+    });
   };
 
   const base = import.meta.env.BASE_URL;
@@ -246,6 +269,7 @@ export default function HeroSlides() {
       id="heroSlides"
       ref={rootRef}
       aria-label="Bar Moshe - portrait variations"
+      aria-roledescription="Auto-cycling slideshow"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
@@ -261,6 +285,16 @@ export default function HeroSlides() {
           />
         );
       })}
+      <button
+        type="button"
+        className="mug-pause"
+        aria-pressed={paused}
+        aria-label={paused ? 'Resume portrait slideshow' : 'Pause portrait slideshow'}
+        title={paused ? 'Resume slideshow' : 'Pause slideshow'}
+        onClick={togglePause}
+      >
+        {paused ? '▶' : '❚❚'}
+      </button>
     </div>
   );
 }
