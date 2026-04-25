@@ -31,7 +31,6 @@ type Card = {
   shadowColor: string;
   kickerColor: string;
   kickerLeft: string;
-  title: string;
   value: string;
   Icon: IconComponent;
   size: 'big' | 'small';
@@ -47,7 +46,6 @@ const CARDS: Card[] = [
     shadowColor: 'var(--red)',
     kickerColor: 'var(--red)',
     kickerLeft: '// email',
-    title: 'Write a proper letter.',
     value: '1barmoshe1@gmail.com',
     Icon: MailIcon,
     size: 'big',
@@ -60,7 +58,6 @@ const CARDS: Card[] = [
     shadowColor: 'var(--blue)',
     kickerColor: 'var(--blue)',
     kickerLeft: '// linkedin',
-    title: 'Roles & referrals.',
     value: 'in/barmoshe',
     Icon: LinkedInIcon,
     size: 'big',
@@ -73,7 +70,6 @@ const CARDS: Card[] = [
     shadowColor: 'var(--green)',
     kickerColor: 'var(--green)',
     kickerLeft: '// whatsapp',
-    title: 'Send a message.',
     value: 'wa.me/972546561465',
     Icon: WhatsAppIcon,
     size: 'big',
@@ -86,7 +82,6 @@ const CARDS: Card[] = [
     shadowColor: 'var(--purple)',
     kickerColor: 'var(--ink-soft)',
     kickerLeft: '// github',
-    title: 'Read the source.',
     value: 'github.com/barmoshe',
     Icon: GitHubIcon,
     size: 'big',
@@ -97,7 +92,6 @@ const CARDS: Card[] = [
     shadowColor: 'var(--yellow)',
     kickerColor: 'var(--ink-soft)',
     kickerLeft: '// phone',
-    title: 'Call or text.',
     value: '+972 54 656 1465',
     Icon: PhoneIcon,
     size: 'small',
@@ -110,7 +104,6 @@ const CARDS: Card[] = [
     shadowColor: 'var(--magenta)',
     kickerColor: 'var(--magenta)',
     kickerLeft: '// instagram',
-    title: 'Life in frames.',
     value: '@1barmoshe1',
     Icon: InstagramIcon,
     size: 'small',
@@ -123,7 +116,6 @@ const CARDS: Card[] = [
     shadowColor: 'var(--purple)',
     kickerColor: 'var(--purple)',
     kickerLeft: '// tiktok',
-    title: 'Short clips.',
     value: '@barmoshe14',
     Icon: TikTokIcon,
     size: 'small',
@@ -136,7 +128,6 @@ const CARDS: Card[] = [
     shadowColor: 'var(--blue)',
     kickerColor: 'var(--ink-soft)',
     kickerLeft: '// facebook',
-    title: 'Old-school feed.',
     value: 'Bar Moshe',
     Icon: FacebookIcon,
     size: 'small',
@@ -146,26 +137,25 @@ const CARDS: Card[] = [
 const BIG_CARDS = CARDS.filter((c) => c.size === 'big');
 const SMALL_CARDS = CARDS.filter((c) => c.size === 'small');
 
-// Big-card layout uses CSS grid with named areas so the icon, kicker,
-// title, and value have explicit slots that don't collapse or wrap into
-// each other on narrow viewports. minHeight keeps all 4 big cards the
-// same size regardless of value-text length.
+// Big-card layout uses CSS grid with named areas: icon and channel
+// kicker on the top row, value on the bottom row spanning both columns.
+// minHeight keeps all 4 big cards the same size regardless of value-text
+// length.
 function bigRestStyle(c: Card): CSSProperties {
   return {
     display: 'grid',
     gridTemplateColumns: 'auto 1fr',
-    gridTemplateRows: 'auto 1fr auto',
+    gridTemplateRows: 'auto 1fr',
     gridTemplateAreas: `
       "icon  kicker"
-      "title title"
       "value value"
     `,
     columnGap: 12,
-    rowGap: 10,
+    rowGap: 12,
     background: 'var(--paper)',
     border: '1.5px solid var(--ink)',
-    padding: 20,
-    minHeight: 168,
+    padding: 16,
+    minHeight: 104,
     transform: `rotate(${c.rotate})`,
     boxShadow: `6px 7px 0 ${c.shadowColor}`,
     textDecoration: 'none',
@@ -200,20 +190,12 @@ const bigKickerStyle = (color: string): CSSProperties => ({
   whiteSpace: 'nowrap',
 });
 
-const bigTitleStyle: CSSProperties = {
-  gridArea: 'title',
-  fontFamily: 'var(--display)',
-  fontSize: '1.3rem',
-  lineHeight: 1.15,
-  margin: 0,
-};
-
 const bigValueStyle: CSSProperties = {
   gridArea: 'value',
   margin: 0,
   alignSelf: 'end',
   fontFamily: 'var(--mono)',
-  fontSize: '.92rem',
+  fontSize: '.95rem',
   color: 'var(--ink)',
 };
 
@@ -410,9 +392,9 @@ export default function Letter() {
         ref={bigGridRef}
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))',
-          gap: 24,
-          maxWidth: 880,
+          gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))',
+          gap: 18,
+          maxWidth: 760,
           margin: '40px auto 0',
           padding: '0 4px',
         }}
@@ -433,7 +415,6 @@ export default function Letter() {
                 <Icon size={22} />
               </span>
               <span style={bigKickerStyle(c.kickerColor)}>{c.kickerLeft}</span>
-              <h3 style={bigTitleStyle}>{c.title}</h3>
               <p
                 style={{
                   ...bigValueStyle,
