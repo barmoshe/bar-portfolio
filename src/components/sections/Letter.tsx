@@ -195,8 +195,9 @@ const bigValueStyle: CSSProperties = {
   margin: 0,
   alignSelf: 'end',
   fontFamily: 'var(--mono)',
-  fontSize: '.95rem',
+  fontSize: '.9rem',
   color: 'var(--ink)',
+  overflowWrap: 'anywhere',
 };
 
 // Chip variant: same icon-left + label flex layout, but rendered in an
@@ -415,13 +416,7 @@ export default function Letter() {
                 <Icon size={22} />
               </span>
               <span style={bigKickerStyle(c.kickerColor)}>{c.kickerLeft}</span>
-              <p
-                style={{
-                  ...bigValueStyle,
-                  wordBreak: c.href.startsWith('mailto:') ? 'break-all' : 'normal',
-                }}
-              >
-                {c.value}
+              <p style={bigValueStyle}>{c.value}
               </p>
             </HoverCard>
           );
