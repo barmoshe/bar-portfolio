@@ -1,4 +1,4 @@
-import { useRef, type CSSProperties } from 'react';
+import { useRef, type CSSProperties, type ComponentType } from 'react';
 import HoverCard from '../HoverCard';
 import {
   gsap,
@@ -10,6 +10,18 @@ import {
 } from '../../lib/gsap';
 import { createReveal } from '../../lib/scrollReveal';
 import { attachInkBleed } from '../../lib/inkBleed';
+import {
+  MailIcon,
+  PhoneIcon,
+  LinkedInIcon,
+  InstagramIcon,
+  WhatsAppIcon,
+  GitHubIcon,
+  TikTokIcon,
+  FacebookIcon,
+} from '../ContactIcons';
+
+type IconComponent = ComponentType<{ size?: number }>;
 
 type Card = {
   href: string;
@@ -22,8 +34,13 @@ type Card = {
   kickerRight: string;
   title: string;
   value: string;
+  Icon: IconComponent;
+  size: 'big' | 'small';
 };
 
+// Big cards come first in source order; small chips follow. The two
+// groups render in their own containers but share this single array so
+// the keyboard tab order stays predictable.
 const CARDS: Card[] = [
   {
     href: 'mailto:1barmoshe1@gmail.com',
@@ -34,16 +51,8 @@ const CARDS: Card[] = [
     kickerRight: 'fastest',
     title: 'Write a proper letter.',
     value: '1barmoshe1@gmail.com',
-  },
-  {
-    href: 'tel:+972546561465',
-    rotate: '.7deg',
-    shadowColor: 'var(--yellow)',
-    kickerColor: 'var(--ink-soft)',
-    kickerLeft: '// phone',
-    kickerRight: 'GMT+3',
-    title: 'Call or text.',
-    value: '+972 54 656 1465',
+    Icon: MailIcon,
+    size: 'big',
   },
   {
     href: 'https://www.linkedin.com/in/barmoshe/',
@@ -56,18 +65,8 @@ const CARDS: Card[] = [
     kickerRight: 'work',
     title: 'Roles & referrals.',
     value: 'in/barmoshe',
-  },
-  {
-    href: 'https://www.instagram.com/1barmoshe1',
-    target: '_blank',
-    rel: 'noopener',
-    rotate: '-.8deg',
-    shadowColor: 'var(--magenta)',
-    kickerColor: 'var(--magenta)',
-    kickerLeft: '// instagram',
-    kickerRight: 'offstage',
-    title: 'Life in frames.',
-    value: '@1barmoshe1',
+    Icon: LinkedInIcon,
+    size: 'big',
   },
   {
     href: 'https://wa.me/972546561465',
@@ -80,6 +79,8 @@ const CARDS: Card[] = [
     kickerRight: 'instant',
     title: 'Send a message.',
     value: 'wa.me/972546561465',
+    Icon: WhatsAppIcon,
+    size: 'big',
   },
   {
     href: 'https://github.com/barmoshe',
@@ -92,32 +93,67 @@ const CARDS: Card[] = [
     kickerRight: 'code',
     title: 'Read the source.',
     value: 'github.com/barmoshe',
+    Icon: GitHubIcon,
+    size: 'big',
+  },
+  {
+    href: 'tel:+972546561465',
+    rotate: '0deg',
+    shadowColor: 'var(--yellow)',
+    kickerColor: 'var(--ink-soft)',
+    kickerLeft: '// phone',
+    kickerRight: 'GMT+3',
+    title: 'Call or text.',
+    value: '+972 54 656 1465',
+    Icon: PhoneIcon,
+    size: 'small',
+  },
+  {
+    href: 'https://www.instagram.com/1barmoshe1',
+    target: '_blank',
+    rel: 'noopener',
+    rotate: '0deg',
+    shadowColor: 'var(--magenta)',
+    kickerColor: 'var(--magenta)',
+    kickerLeft: '// instagram',
+    kickerRight: 'offstage',
+    title: 'Life in frames.',
+    value: '@1barmoshe1',
+    Icon: InstagramIcon,
+    size: 'small',
   },
   {
     href: 'https://www.tiktok.com/@barmoshe14',
     target: '_blank',
     rel: 'noopener',
-    rotate: '-.6deg',
+    rotate: '0deg',
     shadowColor: 'var(--purple)',
     kickerColor: 'var(--purple)',
     kickerLeft: '// tiktok',
     kickerRight: 'shorts',
     title: 'Short clips.',
     value: '@barmoshe14',
+    Icon: TikTokIcon,
+    size: 'small',
   },
   {
     href: 'https://www.facebook.com/share/1E89hVfhG3/?mibextid=wwXIfr',
     target: '_blank',
     rel: 'noopener',
-    rotate: '.4deg',
+    rotate: '0deg',
     shadowColor: 'var(--blue)',
     kickerColor: 'var(--ink-soft)',
     kickerLeft: '// facebook',
     kickerRight: 'social',
     title: 'Old-school feed.',
     value: 'Bar Moshe',
+    Icon: FacebookIcon,
+    size: 'small',
   },
 ];
+
+const BIG_CARDS = CARDS.filter((c) => c.size === 'big');
+const SMALL_CARDS = CARDS.filter((c) => c.size === 'small');
 
 function restStyle(c: Card): CSSProperties {
   return {
@@ -167,17 +203,47 @@ const valueStyle: CSSProperties = {
   color: 'var(--ink)',
 };
 
-// Fan-in scatter offsets per card (indexed). Desktop uses wide scatter;
-// mobile uses a paired-entry that's driven by card index (see below).
+// Compact pill variant for the secondary contact channels. No rotate, no
+// tape, just an icon + value chip with a light shadow.
+function chipRestStyle(c: Card): CSSProperties {
+  return {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 8,
+    background: 'var(--paper)',
+    border: '1.25px solid var(--ink)',
+    padding: '8px 14px',
+    borderRadius: 999,
+    boxShadow: `4px 4px 0 ${c.shadowColor}`,
+    textDecoration: 'none',
+    color: 'var(--ink)',
+    transition: 'transform .2s ease, box-shadow .2s ease',
+    transform: 'rotate(0deg)',
+  };
+}
+
+function chipHoverStyle(c: Card): CSSProperties {
+  return {
+    transform: 'rotate(0deg) translateY(-2px)',
+    boxShadow: `6px 6px 0 ${c.shadowColor}`,
+  };
+}
+
+const chipLabelStyle: CSSProperties = {
+  fontFamily: 'var(--mono)',
+  fontSize: 12,
+  letterSpacing: '.04em',
+  color: 'var(--ink)',
+};
+
+// Fan-in scatter offsets per big card (4 entries — one per big card).
+// Desktop: wide scatter into the rotated rest position.
+// Mobile: paired-row entry driven by index, see MOBILE_QUERY block.
 const DESKTOP_SCATTER = [
   { x: -120, y: -40, r: -20 },
   { x: 140, y: -50, r: 24 },
   { x: -160, y: 30, r: -14 },
   { x: 130, y: 40, r: 22 },
-  { x: -90, y: 70, r: -16 },
-  { x: 160, y: 80, r: 20 },
-  { x: -140, y: 100, r: -22 },
-  { x: 110, y: 110, r: 18 },
 ];
 
 // Letter is the final section and tends to be read for longer; stretch the
@@ -186,17 +252,20 @@ const LETTER_STALE_MS = 15000;
 
 export default function Letter() {
   const rootRef = useRef<HTMLElement | null>(null);
-  const gridRef = useRef<HTMLDivElement | null>(null);
+  const bigGridRef = useRef<HTMLDivElement | null>(null);
+  const smallRowRef = useRef<HTMLDivElement | null>(null);
 
   useGSAP(
     () => {
       const root = rootRef.current;
-      const grid = gridRef.current;
-      if (!root || !grid) return;
+      const bigGrid = bigGridRef.current;
+      const smallRow = smallRowRef.current;
+      if (!root || !bigGrid || !smallRow) return;
       const headline = root.querySelector<HTMLElement>('.headline');
       const dek = root.querySelector<HTMLElement>('.dek');
       const footer = root.querySelector<HTMLElement>('.letter-footer');
-      const cards = Array.from(grid.children) as HTMLElement[];
+      const bigCards = Array.from(bigGrid.children) as HTMLElement[];
+      const chips = Array.from(smallRow.children) as HTMLElement[];
 
       const mm = gsap.matchMedia();
       mm.add(FULL_MOTION_QUERY, () => {
@@ -232,6 +301,16 @@ export default function Letter() {
           );
         }
 
+        // Chip row reveal — same on desktop and mobile (chips don't rotate).
+        if (chips.length) {
+          createReveal(
+            chips,
+            { opacity: 0, y: 10 },
+            { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: 'power2.out' },
+            { trigger: smallRow, start: 'top 90%', staleAfterMs: LETTER_STALE_MS },
+          );
+        }
+
         return () => {
           split?.revert();
           cleanupBleed?.();
@@ -239,9 +318,9 @@ export default function Letter() {
       });
 
       mm.add(DESKTOP_QUERY, () => {
-        if (!cards.length) return;
+        if (!bigCards.length) return;
         createReveal(
-          cards,
+          bigCards,
           {
             opacity: 0,
             x: (i: number) => DESKTOP_SCATTER[i % DESKTOP_SCATTER.length]!.x,
@@ -253,24 +332,24 @@ export default function Letter() {
             opacity: 1,
             x: 0,
             y: 0,
-            rotate: (i: number) => parseFloat(CARDS[i]?.rotate ?? '0deg'),
+            rotate: (i: number) => parseFloat(BIG_CARDS[i]?.rotate ?? '0deg'),
             scale: 1,
             duration: 1,
             stagger: 0.08,
             ease: 'power4.out',
           },
-          { trigger: grid, start: 'top 80%', staleAfterMs: LETTER_STALE_MS },
+          { trigger: bigGrid, start: 'top 80%', staleAfterMs: LETTER_STALE_MS },
         );
       });
 
       mm.add(MOBILE_QUERY, () => {
-        if (!cards.length) return;
+        if (!bigCards.length) return;
         // Paired per-row entry for the 2-col mobile grid: even-index cards
         // swoop from the left, odd-index cards from the right. The grid
         // stagger with axis:'y' keeps both cards in a row in sync while
-        // rows cascade top→bottom.
+        // rows cascade top→bottom. With 4 big cards, the grid is [2, 2].
         createReveal(
-          cards,
+          bigCards,
           {
             opacity: 0,
             x: (i: number) => (i % 2 === 0 ? -64 : 64),
@@ -286,9 +365,9 @@ export default function Letter() {
             scale: 1,
             duration: 0.65,
             ease: 'back.out(1.5)',
-            stagger: { each: 0.14, grid: [4, 2], axis: 'y', from: 'start' },
+            stagger: { each: 0.14, grid: [2, 2], axis: 'y', from: 'start' },
           },
-          { trigger: grid, start: 'top 85%', staleAfterMs: LETTER_STALE_MS },
+          { trigger: bigGrid, start: 'top 85%', staleAfterMs: LETTER_STALE_MS },
         );
       });
 
@@ -313,7 +392,7 @@ export default function Letter() {
       </p>
 
       <div
-        ref={gridRef}
+        ref={bigGridRef}
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))',
@@ -323,26 +402,64 @@ export default function Letter() {
           padding: '0 4px',
         }}
       >
-        {CARDS.map((c) => (
-          <HoverCard
-            key={c.href}
-            href={c.href}
-            target={c.target}
-            rel={c.rel}
-            className="ink-taped"
-            rest={restStyle(c)}
-            hover={hoverStyle(c)}
-          >
-            <div style={kickerStyle(c.kickerColor)}>
-              <span>{c.kickerLeft}</span>
-              <span>{c.kickerRight}</span>
-            </div>
-            <h3 style={titleStyle}>{c.title}</h3>
-            <p style={{ ...valueStyle, wordBreak: c.href.startsWith('mailto:') ? 'break-all' : 'normal' }}>
-              {c.value}
-            </p>
-          </HoverCard>
-        ))}
+        {BIG_CARDS.map((c) => {
+          const Icon = c.Icon;
+          return (
+            <HoverCard
+              key={c.href}
+              href={c.href}
+              target={c.target}
+              rel={c.rel}
+              className="ink-taped"
+              rest={restStyle(c)}
+              hover={hoverStyle(c)}
+            >
+              <div style={kickerStyle(c.kickerColor)}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                  <Icon size={14} />
+                  {c.kickerLeft}
+                </span>
+                <span>{c.kickerRight}</span>
+              </div>
+              <h3 style={titleStyle}>{c.title}</h3>
+              <p style={{ ...valueStyle, wordBreak: c.href.startsWith('mailto:') ? 'break-all' : 'normal' }}>
+                {c.value}
+              </p>
+            </HoverCard>
+          );
+        })}
+      </div>
+
+      <div
+        ref={smallRowRef}
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 12,
+          justifyContent: 'center',
+          margin: '24px auto 0',
+          maxWidth: 720,
+          padding: '0 4px',
+        }}
+      >
+        {SMALL_CARDS.map((c) => {
+          const Icon = c.Icon;
+          return (
+            <HoverCard
+              key={c.href}
+              href={c.href}
+              target={c.target}
+              rel={c.rel}
+              rest={chipRestStyle(c)}
+              hover={chipHoverStyle(c)}
+            >
+              <span style={{ display: 'inline-flex', color: c.kickerColor }}>
+                <Icon size={14} />
+              </span>
+              <span style={chipLabelStyle}>{c.value}</span>
+            </HoverCard>
+          );
+        })}
       </div>
 
       <p

@@ -98,6 +98,11 @@ Same file, `contact` object. The email is consumed by `Letter.tsx` (copy-to-clip
   into balanced A/B halves (counts differ by at most 1). To re-pin a
   different track, move its literal to index 0.
 - Letter contact cards live in the inline `CARDS` array in `Letter.tsx`
-  (per-channel `kicker` + `title` + `value`).
+  with a `size: 'big' | 'small'` discriminator and an `Icon` component
+  reference. Big cards (email, LinkedIn, WhatsApp, GitHub) keep the
+  rotated/taped look; small cards (phone, Instagram, TikTok, Facebook)
+  render as a flex-wrap chip row beneath the big grid. Icons are inline
+  SVGs in `src/components/ContactIcons.tsx`, drawn with `currentColor`
+  so they theme-flip via the host element.
 
 If any of those grow past ~20 lines of static content, consider extracting them into `portfolio.ts` as typed arrays - but for now, inline JSX is fine because each lives once.
