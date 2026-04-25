@@ -104,7 +104,6 @@
   html.dark .strip a:hover{background:transparent;color:var(--green)}
   html.dark .strip .toggle{color:var(--surface-strong-fg)}
   html.dark .strip .toggle:hover{background:transparent;color:var(--green)}
-  html.dark .strip .mark{color:var(--green)}
 
   /* CTAs - keep dark button, green offset */
   html.dark .enter{background:var(--surface-strong);color:var(--surface-strong-fg);box-shadow:6px 6px 0 var(--green)}
@@ -277,9 +276,6 @@
   .cover .tape{display:none}
   .cover .barcode{display:none}
   .issue{display:none}
-  .version-tag{font-family:var(--mono);font-size:12px;letter-spacing:.3em;text-transform:lowercase;color:var(--ink-soft);margin-bottom:28px;display:inline-flex;align-items:center;gap:.4em}
-  .version-mark{width:1.6em;height:.9em;display:inline-block;flex:0 0 auto}
-  .version-mark path{stroke:var(--ink-soft);stroke-width:1;fill:var(--ink-soft);stroke-linejoin:round;vector-effect:non-scaling-stroke}
   .mast{font-family:var(--display);font-weight:700;line-height:.95;margin:0;font-size:clamp(2.4rem, 10vw, 7rem);letter-spacing:-.03em}
   .bmchar{display:inline-block}
   .mast-phrase{display:block;margin:22px auto 0;font-family:var(--mono);font-style:normal;font-weight:500;font-size:clamp(1.5rem,3.6vw,2.4rem);line-height:1.1;color:var(--ink);letter-spacing:-.01em;text-align:center;white-space:nowrap}
@@ -305,7 +301,6 @@
     padding-top:env(safe-area-inset-top);padding-left:max(22px,env(safe-area-inset-left));padding-right:max(22px,env(safe-area-inset-right));
     font-family:var(--mono);font-size:12px;letter-spacing:0;text-transform:none;
     border-bottom:1px solid oklch(1 0 0 / .08);}
-  .strip .mark{color:var(--green);font-weight:600;margin-right:6px;opacity:.95}
   .strip a{color:var(--paper);text-decoration:none;padding:0 8px;min-height:44px;height:100%;display:inline-flex;align-items:center;border:0;opacity:.72;transition:opacity .15s ease, color .15s ease}
   .strip a:hover{background:transparent;color:var(--green);opacity:1}
   .strip .grow{flex:1}
@@ -907,7 +902,6 @@
 
     /* Strip mark shrinks */
     .strip{gap:12px;padding:0 12px}
-    .strip .mark{font-size:11px;letter-spacing:0}
 
     /* Cover button/text */
     .enter{padding:14px 24px;font-size:1.15rem}

@@ -75,7 +75,6 @@ export default function Strip({
         Skip to content
       </a>
       <nav className="strip" aria-label="Primary" ref={ref}>
-        <span className="mark">bm@v1.3.7</span>
         <a className="key" href="#intro" onClick={onAnchor}>About</a>
         <a href="#background" onClick={onAnchor}>Background</a>
         <a href="#mixtape" onClick={onAnchor}>Mixtape</a>

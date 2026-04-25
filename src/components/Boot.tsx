@@ -80,11 +80,6 @@ export default function Boot({ onGone }: Props) {
       const mm = gsap.matchMedia();
 
       mm.add(FULL_MOTION_QUERY, () => {
-        const versionMark = root.querySelector<SVGSVGElement>('.version-mark');
-        const markPaths = versionMark
-          ? Array.from(versionMark.querySelectorAll<SVGPathElement>('path'))
-          : [];
-        const version = root.querySelector<HTMLElement>('.version-tag');
         const mast = root.querySelector<HTMLElement>('.mast-main');
         const phrase = root.querySelector<HTMLElement>('.mast-phrase');
         const em = phrase?.querySelector<HTMLElement>('em') ?? null;
@@ -98,43 +93,6 @@ export default function Boot({ onGone }: Props) {
 
         const tl = gsap.timeline();
         tlRef.current = tl;
-
-        // Beat 1 - "//" stroke-to-fill accent.
-        if (markPaths.length) {
-          markPaths.forEach((p) => {
-            const len = p.getTotalLength();
-            gsap.set(p, {
-              strokeDasharray: len,
-              strokeDashoffset: len,
-              fillOpacity: 0,
-            });
-          });
-          tl.to(
-            markPaths,
-            {
-              strokeDashoffset: 0,
-              duration: 0.45,
-              ease: 'power2.out',
-              stagger: 0.08,
-            },
-            0,
-          );
-          tl.to(
-            markPaths,
-            { fillOpacity: 1, duration: 0.25, ease: 'power2.out' },
-            '>-0.1',
-          );
-        }
-
-        // Beat 2 - version text slide.
-        if (version) {
-          gsap.set(version, { opacity: 0, x: -8 });
-          tl.to(
-            version,
-            { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out' },
-            0.05,
-          );
-        }
 
         // Beat 3 - masthead letterpress clip-sweep.
         if (mast) {
@@ -300,12 +258,10 @@ export default function Boot({ onGone }: Props) {
       mm.add('(prefers-reduced-motion: reduce)', () => {
         gsap.set(
           root.querySelectorAll(
-            '.mast, .mast-main, .version-tag, .mast-quote, .mast-quote-rule, .mast-quote-text, .mast-quote-attr, .sub, .enter',
+            '.mast, .mast-main, .mast-quote, .mast-quote-rule, .mast-quote-text, .mast-quote-attr, .sub, .enter',
           ),
           { clearProps: 'all' },
         );
-        const paths = root.querySelectorAll<SVGPathElement>('.version-mark path');
-        gsap.set(paths, { clearProps: 'all', fillOpacity: 1 });
       });
 
       return () => mm.revert();
@@ -423,18 +379,6 @@ export default function Boot({ onGone }: Props) {
       ref={rootRef}
     >
       <div className="cover">
-        <span className="version-tag">
-          <svg
-            className="version-mark"
-            viewBox="0 0 22 12"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path d="M4 11 L8 1 L10 1 L6 11 Z" />
-            <path d="M13 11 L17 1 L19 1 L15 11 Z" />
-          </svg>
-          v1.3.7
-        </span>
         <h1 className="mast">
           <span className="mast-main">BAR MOSHE</span>
         </h1>
