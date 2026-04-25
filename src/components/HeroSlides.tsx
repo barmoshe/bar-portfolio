@@ -28,6 +28,25 @@ export const SLIDES: Slide[] = [
   { src: 'portraits/img15.png', alt: 'Bar Moshe - portrait 15', caption: 'portrait · 15' },
 ];
 
+// Carousel always starts on this slide; the first shuffle bag excludes it.
+export const INITIAL_SLIDE_INDEX = 0;
+
+const fisherYatesShuffle = <T,>(input: readonly T[]): T[] => {
+  const out = input.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j]!, out[i]!];
+  }
+  return out;
+};
+
+// First shuffle bag, computed once per page load. Both the boot screen
+// (for preload prioritisation) and the carousel itself read from this so
+// the order images warm in matches the order the user will see them.
+export const INITIAL_BAG: readonly number[] = fisherYatesShuffle(
+  SLIDES.map((_, i) => i).filter((i) => i !== INITIAL_SLIDE_INDEX),
+);
+
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
 
 const INITIAL_HOLD_MS = 2500;
@@ -60,10 +79,12 @@ export default function HeroSlides() {
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const firstAdvanceDoneRef = useRef(false);
-  // Shuffle bag of upcoming slide indices. Refilled (Fisher-Yates, current
-  // slide excluded) when drained, so every slide is shown once before any
-  // repeats and the last-shown slide can't reappear at the bag boundary.
-  const bagRef = useRef<number[]>([]);
+  // Shuffle bag of upcoming slide indices. Pre-seeded from the module-level
+  // INITIAL_BAG (computed once per page load) so the boot screen can preload
+  // assets in this exact order. Refilled (Fisher-Yates, current slide
+  // excluded) when drained, so every slide is shown once before any repeats
+  // and the last-shown slide can't reappear at the bag boundary.
+  const bagRef = useRef<number[]>([...INITIAL_BAG]);
 
   const stop = () => {
     if (timerRef.current !== null) {

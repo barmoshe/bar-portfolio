@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAssetPreload } from '../hooks/useAssetPreload';
-import { SLIDES } from './HeroSlides';
+import { INITIAL_BAG, INITIAL_SLIDE_INDEX, SLIDES } from './HeroSlides';
 import { gsap, useGSAP, SplitText, FULL_MOTION_QUERY } from '../lib/gsap';
 
 type Props = { onGone: () => void };
@@ -13,13 +13,15 @@ export default function Boot({ onGone }: Props) {
   const breathRef = useRef<gsap.core.Timeline | null>(null);
 
   const base = import.meta.env.BASE_URL;
-  // Single source of truth: the slide list HeroSlides will render. Preload
-  // every one so the carousel behind the boot exit is hot and adding a slide
-  // to HeroSlides automatically warms it here too.
-  const assets = useMemo(
-    () => SLIDES.map((s) => `${base}${s.src}`),
-    [base],
-  );
+  // Preload in the exact order the carousel will reveal: first the visible
+  // slide (INITIAL_SLIDE_INDEX), then the rest in the same shuffle the bag
+  // will produce (INITIAL_BAG). The browser's preload-link queue prioritises
+  // requests in declaration order, so the first slide-after-boot is fetched
+  // ahead of the long tail.
+  const assets = useMemo(() => {
+    const order = [INITIAL_SLIDE_INDEX, ...INITIAL_BAG];
+    return order.map((i) => `${base}${SLIDES[i]!.src}`);
+  }, [base]);
   const { loaded, total, done } = useAssetPreload(assets);
 
   const dismiss = () => {
@@ -311,22 +313,10 @@ export default function Boot({ onGone }: Props) {
     { scope: rootRef },
   );
 
-  // Reveal the loading bar immediately on mount. Earlier behaviour gated it
-  // behind a 700ms timer so fast loads wouldn't flash the bar - but the side
-  // effect was that nothing ever appeared to confirm preload was happening.
-  // The bar is always shown while assets are in flight and fades out once
-  // they're done.
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    const bar = root.querySelector<HTMLElement>('.enter-progress');
-    if (!bar) return;
-    gsap.set(bar, { opacity: 1 });
-  }, []);
-
-  // Advance the fill bar as preload progresses, fade the bar away when done.
-  // Tween rather than snap so the bar reads as continuous progress, and run
-  // in both motion modes so reduced-motion users see the fill too.
+  // Tween the fill as preload progresses, fade the whole bar away when done.
+  // The bar is visible from CSS (opacity:1) so users see feedback immediately;
+  // `done` triggers the fade. Both motion modes drive the fill so reduced-
+  // motion users still see progress (just without the easing).
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
@@ -464,10 +454,16 @@ export default function Boot({ onGone }: Props) {
         </button>
         <div
           className="enter-progress"
-          aria-hidden="true"
+          role="status"
+          aria-live="polite"
           aria-label={`Loading assets ${loaded} of ${total}`}
         >
-          <span className="enter-progress-fill" />
+          <span className="enter-progress-track">
+            <span className="enter-progress-fill" />
+          </span>
+          <span className="enter-progress-label" aria-hidden="true">
+            {done ? 'ready' : `loading ${loaded} / ${total}`}
+          </span>
         </div>
       </div>
     </div>

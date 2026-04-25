@@ -279,9 +279,11 @@
   .enter:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--green)}
   .enter::after{content:"→";font-size:1.4rem;transition:transform .2s ease}
   .enter:hover::after{transform:translateX(4px)}
-  .enter-progress{display:block;margin:22px auto 0;width:140px;height:2px;background:oklch(0 0 0 / .1);opacity:0;overflow:hidden}
-  .enter-progress-fill{display:block;width:100%;height:100%;background:var(--ink);transform-origin:left center;transform:scaleX(0)}
-  html.dark .enter-progress{background:oklch(1 0 0 / .14)}
+  .enter-progress{display:flex;flex-direction:column;align-items:center;gap:8px;margin:24px auto 0;width:min(220px,80%);opacity:1}
+  .enter-progress-track{display:block;width:100%;height:4px;background:oklch(0 0 0 / .14);overflow:hidden;border-radius:2px}
+  .enter-progress-fill{display:block;width:100%;height:100%;background:var(--ink);transform-origin:left center;transform:scaleX(0);will-change:transform}
+  .enter-progress-label{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+  html.dark .enter-progress-track{background:oklch(1 0 0 / .18)}
   @keyframes pulse{0%,100%{box-shadow:6px 6px 0 var(--green)} 50%{box-shadow:8px 8px 0 var(--green)}}
   .enter.pulse{animation:pulse 2.2s ease-in-out infinite}
 
