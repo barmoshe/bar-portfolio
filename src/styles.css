@@ -48,35 +48,38 @@
   }
   /* ── Dark theme (applied via html.dark, set by pre-paint script) ──
      "Sumi Ink" palette: warm graphite (hue 50°) preserves the ink-on-paper
-     identity at night. Surfaces step up by lightness; shadows are warm-tinted
-     instead of pure black. Body text passes WCAG AA. */
+     identity at night. Chroma is set high enough on near-black surfaces that
+     the warmth is actually perceptible (oklch chroma < ~0.018 reads as
+     neutral gray on dark backgrounds, no matter the hue). Lightness deltas
+     between surfaces are widened for unambiguous elevation. Body text passes
+     WCAG AA. */
   html.dark{
     /* Surfaces - rising lightness = rising elevation (Material-style tonal) */
-    --paper:             oklch(0.16 0.008 50);
-    --paper-2:           oklch(0.13 0.008 50);
-    --surface-1:         oklch(0.21 0.010 50);
-    --surface-2:         oklch(0.26 0.012 50);
-    --surface-3:         oklch(0.32 0.014 50);
-    --surface-strong:    oklch(0.09 0.010 50);
-    --surface-strong-fg: oklch(0.96 0.006 80);
-    /* Text - off-white with a hint of warm paper, not pure white */
-    --ink:       oklch(0.95 0.008 80);
-    --ink-soft:  oklch(0.78 0.012 70);
-    --ink-faint: oklch(0.58 0.010 60);
-    --border:        oklch(1 0 0 / .10);
-    --border-strong: oklch(1 0 0 / .18);
-    /* Accents - chroma pulled back to avoid glow on very dark surfaces */
-    --red:      oklch(0.74 0.15 25);
-    --green:    oklch(0.82 0.15 150);
-    --blue:     oklch(0.78 0.12 240);
-    --yellow:   oklch(0.88 0.14 90);
-    --magenta:  oklch(0.78 0.15 340);
-    --purple:   oklch(0.76 0.15 295);
-    --cyan:     oklch(0.86 0.10 200);
-    --ocean:    oklch(0.78 0.12 220);
-    /* Tinted shadow - warm graphite, not pure black */
-    --shadow:        oklch(0.05 0.010 50 / .60);
-    --shadow-accent: oklch(0.50 0.10 150 / .30);
+    --paper:             oklch(0.16 0.022 50);
+    --paper-2:           oklch(0.13 0.020 50);
+    --surface-1:         oklch(0.23 0.025 50);
+    --surface-2:         oklch(0.29 0.030 50);
+    --surface-3:         oklch(0.35 0.032 50);
+    --surface-strong:    oklch(0.10 0.018 50);
+    --surface-strong-fg: oklch(0.96 0.020 85);
+    /* Text - cream-tinted off-white, warm cast is visible */
+    --ink:       oklch(0.95 0.022 85);
+    --ink-soft:  oklch(0.78 0.028 75);
+    --ink-faint: oklch(0.58 0.025 65);
+    --border:        oklch(1 0.02 80 / .14);
+    --border-strong: oklch(1 0.03 80 / .25);
+    /* Accents - lifted chroma so they read clearly on the warmer surfaces */
+    --red:      oklch(0.74 0.17 25);
+    --green:    oklch(0.82 0.17 150);
+    --blue:     oklch(0.78 0.14 240);
+    --yellow:   oklch(0.88 0.16 90);
+    --magenta:  oklch(0.78 0.17 340);
+    --purple:   oklch(0.76 0.17 295);
+    --cyan:     oklch(0.86 0.12 200);
+    --ocean:    oklch(0.78 0.14 220);
+    /* Tinted shadow - warm graphite, the tint reads as ink wash */
+    --shadow:        oklch(0.05 0.025 50 / .65);
+    --shadow-accent: oklch(0.50 0.12 150 / .30);
     /* Card-tier semantics flip here so inline styles don't need !important. */
     --card-bg:     var(--surface-1);
     --card-border: var(--ink-faint);
@@ -86,10 +89,10 @@
     --band-fg:  var(--surface-strong-fg);
   }
   html.dark body{background-image:
-    radial-gradient(oklch(0.55 0.012 50 / .14) 1px, transparent 1px),
-    radial-gradient(oklch(0.55 0.012 50 / .08) 1px, transparent 1px),
+    radial-gradient(oklch(0.55 0.040 60 / .18) 1px, transparent 1px),
+    radial-gradient(oklch(0.55 0.035 55 / .10) 1px, transparent 1px),
     linear-gradient(180deg, var(--paper), var(--paper-2))}
-  html.dark .grain{opacity:.28;mix-blend-mode:screen}
+  html.dark .grain{opacity:.32;mix-blend-mode:screen}
   html.dark .crease{background:oklch(1 0 0 / .08);box-shadow:0 -1px 2px oklch(0 0 0 / .5)}
   html.dark ::selection{background:var(--green);color:var(--band)}
 
@@ -225,10 +228,10 @@
       --border:oklch(0 0 0 / .55);
     }
     html.dark:not([data-contrast="less"]){
-      --ink:oklch(0.99 0.005 80);
-      --ink-soft:oklch(0.92 0.008 70);
-      --border:oklch(1 0 0 / .35);
-      --card-border:oklch(1 0 0 / .55);
+      --ink:oklch(0.99 0.020 85);
+      --ink-soft:oklch(0.92 0.025 75);
+      --border:oklch(1 0.02 80 / .35);
+      --card-border:oklch(1 0.03 80 / .55);
     }
     html:not([data-contrast="less"]) :focus-visible{outline-width:4px}
   }
@@ -238,10 +241,10 @@
     --border:oklch(0 0 0 / .55);
   }
   html[data-contrast="more"].dark{
-    --ink:oklch(0.99 0.005 80);
-    --ink-soft:oklch(0.92 0.008 70);
-    --border:oklch(1 0 0 / .35);
-    --card-border:oklch(1 0 0 / .55);
+    --ink:oklch(0.99 0.020 85);
+    --ink-soft:oklch(0.92 0.025 75);
+    --border:oklch(1 0.02 80 / .35);
+    --card-border:oklch(1 0.03 80 / .55);
   }
   html[data-contrast="more"] :focus-visible{outline-width:4px}
 
