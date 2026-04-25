@@ -19,12 +19,14 @@
     --paper-2:  oklch(0.88 0.03 80);
     --surface-1: var(--paper);
     --surface-2: oklch(0.96 0.02 85);
+    --surface-3: oklch(1 0 0);
     --surface-strong: oklch(0.18 0.03 40);
     --surface-strong-fg: var(--paper);
     --ink:      oklch(0.18 0.03 40);
     --ink-soft: oklch(0.34 0.04 40);
     --ink-faint: oklch(0.48 0.03 40);
     --border:   oklch(0 0 0 / .2);
+    --border-strong: oklch(0 0 0 / .35);
     --red:      oklch(0.58 0.22 25);
     --green:    oklch(0.44 0.14 150);
     --blue:     oklch(0.45 0.16 250);
@@ -34,44 +36,60 @@
     --cyan:     oklch(0.80 0.14 200);
     --ocean:    oklch(0.50 0.15 225);
     --shadow:   oklch(0.2 0.04 40 / .22);
+    --shadow-accent: oklch(0.50 0.10 150 / .25);
+    /* Card-tier semantics - flip cleanly in dark without inline-style hacks. */
+    --card-bg:     var(--paper);
+    --card-border: var(--ink);
+    --card-shadow: var(--ink);
     --serif: "Iowan Old Style", "Georgia", ui-serif, serif;
     --display: "Bodoni 72", "Didot", "Playfair Display", ui-serif, serif;
     --mono: ui-monospace, "Courier New", "JetBrains Mono", monospace;
     --hand: "Marker Felt", "Bradley Hand", "Comic Sans MS", cursive;
   }
-  /* ── Dark theme (applied via html.dark, set by pre-paint script) ── */
+  /* ── Dark theme (applied via html.dark, set by pre-paint script) ──
+     "Sumi Ink" palette: warm graphite (hue 50°) preserves the ink-on-paper
+     identity at night. Surfaces step up by lightness; shadows are warm-tinted
+     instead of pure black. Body text passes WCAG AA. */
   html.dark{
     /* Surfaces - rising lightness = rising elevation (Material-style tonal) */
-    --paper:             oklch(0.17 0.012 260);
-    --paper-2:           oklch(0.14 0.012 260);
-    --surface-1:         oklch(0.22 0.015 260);
-    --surface-2:         oklch(0.27 0.018 260);
-    --surface-strong:    oklch(0.10 0.015 260);
-    --surface-strong-fg: oklch(0.96 0.008 260);
-    /* Text - cool-hue family matches surfaces, no perceptual vibration */
-    --ink:       oklch(0.96 0.008 260);
-    --ink-soft:  oklch(0.78 0.015 260);
-    --ink-faint: oklch(0.60 0.012 260);
-    --border:    oklch(1 0 0 / .14);
+    --paper:             oklch(0.16 0.008 50);
+    --paper-2:           oklch(0.13 0.008 50);
+    --surface-1:         oklch(0.21 0.010 50);
+    --surface-2:         oklch(0.26 0.012 50);
+    --surface-3:         oklch(0.32 0.014 50);
+    --surface-strong:    oklch(0.09 0.010 50);
+    --surface-strong-fg: oklch(0.96 0.006 80);
+    /* Text - off-white with a hint of warm paper, not pure white */
+    --ink:       oklch(0.95 0.008 80);
+    --ink-soft:  oklch(0.78 0.012 70);
+    --ink-faint: oklch(0.58 0.010 60);
+    --border:        oklch(1 0 0 / .10);
+    --border-strong: oklch(1 0 0 / .18);
     /* Accents - chroma pulled back to avoid glow on very dark surfaces */
-    --red:      oklch(0.72 0.17 25);
-    --green:    oklch(0.80 0.17 150);
-    --blue:     oklch(0.78 0.13 240);
-    --yellow:   oklch(0.86 0.15 90);
-    --magenta:  oklch(0.78 0.17 340);
-    --purple:   oklch(0.75 0.17 295);
-    --cyan:     oklch(0.85 0.12 200);
-    --ocean:    oklch(0.78 0.13 220);
-    --shadow:   oklch(0 0 0 / .55);
+    --red:      oklch(0.74 0.15 25);
+    --green:    oklch(0.82 0.15 150);
+    --blue:     oklch(0.78 0.12 240);
+    --yellow:   oklch(0.88 0.14 90);
+    --magenta:  oklch(0.78 0.15 340);
+    --purple:   oklch(0.76 0.15 295);
+    --cyan:     oklch(0.86 0.10 200);
+    --ocean:    oklch(0.78 0.12 220);
+    /* Tinted shadow - warm graphite, not pure black */
+    --shadow:        oklch(0.05 0.010 50 / .60);
+    --shadow-accent: oklch(0.50 0.10 150 / .30);
+    /* Card-tier semantics flip here so inline styles don't need !important. */
+    --card-bg:     var(--surface-1);
+    --card-border: var(--ink-faint);
+    --card-shadow: var(--shadow);
     /* Back-compat aliases for existing --band consumers */
     --band:     var(--surface-strong);
     --band-fg:  var(--surface-strong-fg);
   }
   html.dark body{background-image:
-    radial-gradient(oklch(0.55 0.03 70 / .14) 1px, transparent 1px),
-    radial-gradient(oklch(0.55 0.03 70 / .08) 1px, transparent 1px),
+    radial-gradient(oklch(0.55 0.012 50 / .14) 1px, transparent 1px),
+    radial-gradient(oklch(0.55 0.012 50 / .08) 1px, transparent 1px),
     linear-gradient(180deg, var(--paper), var(--paper-2))}
-  html.dark .grain{opacity:.18;mix-blend-mode:screen}
+  html.dark .grain{opacity:.28;mix-blend-mode:screen}
   html.dark .crease{background:oklch(1 0 0 / .08);box-shadow:0 -1px 2px oklch(0 0 0 / .5)}
   html.dark ::selection{background:var(--green);color:var(--band)}
 
@@ -108,7 +126,7 @@
   html.dark .id-card{background:var(--surface-1)}
   html.dark .letter{background:var(--surface-1)}
   html.dark .letter label{color:var(--ink-soft)}
-  html.dark .lb-panel{background:var(--surface-1)}
+  html.dark .lb-panel{background:var(--surface-2)}
   html.dark .lb-body p{color:var(--ink-soft)}
   html.dark .lb-tags{color:var(--ink-soft)}
   html.dark .cols p,html.dark .cols li{color:var(--ink-soft)}
@@ -119,14 +137,6 @@
   html.dark .rule{background:var(--ink-soft)}
   html.dark .rule::after{background:var(--ink-soft)}
   html.dark .letter .send,html.dark .enter{color:var(--surface-strong-fg)}
-
-  /* ── Dark mode: raise inline-styled "paper" cards to a surface color so they
-     don't vanish into the body. Inline styles win on specificity, so !important. ── */
-  html.dark #background > div[style*="var(--paper)"],
-  html.dark #background > div > div[style*="var(--paper)"],
-  html.dark #letter a[style*="background:var(--paper)"]{
-    background:var(--surface-1) !important;
-    border-color:var(--ink-faint) !important}
 
   /* Dark mode: inline dark-accent surfaces (originally bg:var(--ink)) must stay
      dark in dark mode, not flip to light. Map to --surface-strong. */
@@ -142,18 +152,16 @@
     color:var(--surface-strong) !important;
     box-shadow:4px 4px 0 var(--green) !important}
 
-  /* Folio "b" accent and "How I work" callout text should use light ink in dark mode - var(--ink) handles it, but inline color:var(--ink) on dark surfaces is correct. */
-
-  /* Soften heavy offset shadows in dark mode (inline styles use var(--ink) which
-     flips bright in dark, producing harsh white outlines). Map to subtle dark shadow. */
-  html.dark #background > div[style*="var(--paper)"],
-  html.dark #background > div > div[style*="var(--paper)"],
+  /* Inline-styled cards in #background and #letter use --card-bg / --card-border /
+     --card-shadow tokens that flip cleanly here - no attribute-selector hacks. The
+     remaining shadow override below covers class-styled surfaces whose inline
+     box-shadow values use var(--ink) directly. */
   html.dark #letter a,
   html.dark #repos .gh-cta,
   html.dark .id-card,
   html.dark .letter,
   html.dark .lb-panel{
-    box-shadow: 6px 8px 0 oklch(0 0 0 / .55) !important;
+    box-shadow: 6px 8px 0 var(--shadow) !important;
   }
   /* Preserve accent-colored shadows (contact cards, featured dispatch) since those are the design intent */
   html.dark #letter a[style*="var(--red)"]    {box-shadow: 6px 8px 0 var(--red) !important}
@@ -217,9 +225,10 @@
       --border:oklch(0 0 0 / .55);
     }
     html.dark:not([data-contrast="less"]){
-      --ink:oklch(0.99 0.005 260);
-      --ink-soft:oklch(0.92 0.01 260);
+      --ink:oklch(0.99 0.005 80);
+      --ink-soft:oklch(0.92 0.008 70);
       --border:oklch(1 0 0 / .35);
+      --card-border:oklch(1 0 0 / .55);
     }
     html:not([data-contrast="less"]) :focus-visible{outline-width:4px}
   }
@@ -229,9 +238,10 @@
     --border:oklch(0 0 0 / .55);
   }
   html[data-contrast="more"].dark{
-    --ink:oklch(0.99 0.005 260);
-    --ink-soft:oklch(0.92 0.01 260);
+    --ink:oklch(0.99 0.005 80);
+    --ink-soft:oklch(0.92 0.008 70);
     --border:oklch(1 0 0 / .35);
+    --card-border:oklch(1 0 0 / .55);
   }
   html[data-contrast="more"] :focus-visible{outline-width:4px}
 

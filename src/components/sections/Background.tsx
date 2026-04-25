@@ -11,19 +11,19 @@ import { createReveal } from '../../lib/scrollReveal';
 import { attachInkBleed } from '../../lib/inkBleed';
 
 const bigCard = (rotate: string): CSSProperties => ({
-  background: 'var(--paper)',
-  border: '1.5px solid var(--ink)',
+  background: 'var(--card-bg)',
+  border: '1.5px solid var(--card-border)',
   padding: 24,
   transform: `rotate(${rotate})`,
-  boxShadow: '6px 7px 0 var(--ink)',
+  boxShadow: '6px 7px 0 var(--card-shadow)',
 });
 
 const smallCard = (rotate: string): CSSProperties => ({
-  background: 'var(--paper)',
-  border: '1.25px solid var(--ink)',
+  background: 'var(--card-bg)',
+  border: '1.25px solid var(--card-border)',
   padding: '14px 16px',
   transform: `rotate(${rotate})`,
-  boxShadow: '4px 5px 0 var(--ink)',
+  boxShadow: '4px 5px 0 var(--card-shadow)',
 });
 
 const row: CSSProperties = {
