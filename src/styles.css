@@ -182,6 +182,47 @@
   a:hover{background:var(--yellow)}
   :focus-visible{outline:3px solid var(--green);outline-offset:2px}
 
+  /* WCAG 2.2 / 2.4.11 Focus Not Obscured: keep anchored sections below the
+     sticky strip when hash navigation jumps to them. Strip is 44px (see
+     `.strip { height:44px }`); pad a little extra for breathing room. */
+  html{scroll-padding-top:60px}
+
+  /* Visually-hidden utility - reusable for screen-reader-only content. The
+     skip link uses this until it receives focus. */
+  .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+    overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+  /* Skip-to-content link - hidden until focused. WCAG 2.4.1 Bypass Blocks.
+     Lands at z-index above .strip (z-30) and the bottom tabbar (z-35). */
+  .skip-link{position:fixed;top:0;left:0;z-index:50;
+    background:var(--ink);color:var(--paper);
+    padding:10px 18px;font-family:var(--mono);font-size:12px;letter-spacing:.12em;
+    text-decoration:none;
+    transform:translateY(-110%);transition:transform .15s ease}
+  .skip-link:focus,.skip-link:focus-visible{transform:translateY(0);
+    outline:3px solid var(--green);outline-offset:2px}
+  /* The skip target is <main id="main" tabIndex=-1>; suppress the default
+     focus ring on it because the user just teleported there - the visible
+     focus belongs on whatever they Tab to next, not on the container. */
+  main:focus,main:focus-visible{outline:none}
+
+  /* Higher-contrast branch (WCAG 2.2 1.4.6 / OS-level "increase contrast").
+     Tightens body-text pairs and bumps focus rings to ensure 3:1 against any
+     adjacent surface. */
+  @media (prefers-contrast: more){
+    :root{
+      --ink:oklch(0.10 0.03 40);
+      --ink-soft:oklch(0.20 0.03 40);
+      --border:oklch(0 0 0 / .55);
+    }
+    html.dark{
+      --ink:oklch(0.99 0.005 260);
+      --ink-soft:oklch(0.92 0.01 260);
+      --border:oklch(1 0 0 / .35);
+    }
+    :focus-visible{outline-width:4px}
+  }
+
   .grain{position:fixed;inset:0;pointer-events:none;z-index:40;opacity:.4;mix-blend-mode:multiply}
   .grain svg{position:absolute;inset:0;width:100%;height:100%;display:block}
   .crease{display:none}
@@ -244,9 +285,10 @@
       background:transparent;
       -webkit-tap-highlight-color:transparent;
       -webkit-touch-callout:none}
-    .tabbar a:active,.tabbar a:focus,.tabbar a:focus-visible,.tabbar a:hover{background:transparent;outline:none}
+    .tabbar a:active,.tabbar a:hover{background:transparent}
     .tabbar a svg{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
-    .tabbar a:focus-visible{opacity:1;color:var(--paper)}
+    .tabbar a:focus-visible{opacity:1;color:var(--paper);
+      outline:2px solid var(--green);outline-offset:-4px}
     @media (hover:hover){.tabbar a:hover{opacity:1;color:var(--paper)}}
     .tabbar a:focus-visible{outline:1px solid oklch(1 0 0 / .35);outline-offset:-6px;border-radius:8px}
     .tabbar a[aria-current="true"]{opacity:1;color:var(--paper);background:transparent}
@@ -439,8 +481,8 @@
     .clip article .t{font-size:1.15rem}
   }
   .clip article:hover,
-  .clip article:focus-visible{transform:translate(-3px,-4px);box-shadow:10px 12px 0 var(--green);border-color:var(--green)}
-  .clip article:focus-visible{outline:2px solid var(--green);outline-offset:4px}
+  .clip article:focus-within{transform:translate(-3px,-4px);box-shadow:10px 12px 0 var(--green);border-color:var(--green)}
+  .clip article:focus-within{outline:2px solid var(--green);outline-offset:4px}
   .clip article:active{transform:translate(-1px,-1px);box-shadow:4px 5px 0 var(--green);transition-duration:.08s}
   .clip article .head{position:relative;overflow:hidden;display:flex;align-items:center;gap:10px;padding:8px 12px;
     border-bottom:1px solid var(--ink);background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:11px}
@@ -448,7 +490,7 @@
     background:var(--green);transform:scaleY(0);transform-origin:50% 100%;
     transition:transform .28s cubic-bezier(.2,.7,.2,1)}
   .clip article:hover .head::before,
-  .clip article:focus-visible .head::before{transform:scaleY(1)}
+  .clip article:focus-within .head::before{transform:scaleY(1)}
   .clip article .dots{display:inline-flex;gap:5px}
   .clip article .dots i{width:9px;height:9px;border-radius:50%;background:var(--paper);opacity:.55}
   .clip article .path{letter-spacing:.04em;opacity:.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -459,11 +501,19 @@
   .clip article .lang{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;color:var(--ink-soft);text-transform:uppercase}
   .clip article .t{margin:0;font-family:var(--display);font-weight:700;font-size:1.35rem;line-height:1.1;letter-spacing:-.01em;color:var(--ink);transition:color .25s ease}
   .clip article:hover .t,
-  .clip article:focus-visible .t{color:var(--green)}
+  .clip article:focus-within .t{color:var(--green)}
+  /* Block-link card pattern: the button is the keyboard/SR target, but the
+     entire article surface is clickable via the ::before overlay. The
+     visible focus ring lives on the article via :focus-within above. */
+  .card-button{background:none;border:0;padding:0;margin:0;font:inherit;
+    color:inherit;letter-spacing:inherit;text-align:left;cursor:pointer}
+  .card-button:focus{outline:none}
+  .card-button:focus-visible{outline:none}
+  .card-button::before{content:"";position:absolute;inset:0;border-radius:inherit}
   .clip article .d{margin:0;font-family:var(--serif);font-size:.95rem;line-height:1.45;color:var(--ink-soft)}
   .clip article .go{position:relative;margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--green);padding-top:8px;border-top:1px dashed var(--ink-soft);transition:color .25s ease, letter-spacing .25s ease}
   .clip article:hover .go,
-  .clip article:focus-visible .go{color:var(--ink);letter-spacing:.24em}
+  .clip article:focus-within .go{color:var(--ink);letter-spacing:.24em}
 
   .letter{position:relative;background:var(--paper);border:1.5px solid var(--ink);
     padding:clamp(16px,4vw,32px);max-width:680px;margin:30px auto;transform:rotate(-.6deg);
@@ -973,8 +1023,8 @@
      @keyframes vinyl-spin for an optional hover spin. */
   .track-vinyl{width:min(42%,120px);aspect-ratio:1;margin:10px auto 4px;
     cursor:pointer;-webkit-tap-highlight-color:transparent;
+    background:none;border:0;padding:0;
     filter:drop-shadow(0 2px 6px oklch(0 0 0 / .35))}
-  .track-vinyl:focus{outline:none}
   .track-vinyl:focus-visible{outline:2px solid var(--green);outline-offset:6px;border-radius:50%}
   .track-vinyl:active{transform:scale(.985)}
   .track-vinyl svg{width:100%;height:100%;display:block;overflow:visible;border-radius:50%}
@@ -1029,9 +1079,9 @@
   .vinyl-volume input[type="range"]:focus-visible{box-shadow:0 0 0 2px var(--green)}
   .vinyl-volume-readout{flex:0 0 28px;text-align:right;color:var(--ink);font-weight:700}
 
-  /* Visually-hidden aria-live region — the screen reader still picks it up. */
+  /* Visually-hidden aria-live region - inherits the .visually-hidden utility. */
   .vinyl-live{position:absolute;width:1px;height:1px;padding:0;margin:-1px;
-    overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
   .placeholder-note{margin-top:14px;font-family:var(--mono);font-size:11px;
     letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);

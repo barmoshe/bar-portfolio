@@ -16,6 +16,7 @@ You are assisting inside the `bar-portfolio` repo - a React 19 + Vite 6 + TypeSc
 - Customize colors / new palette                         →  `recipes/customize-theme.md` (+ `prompts/customize-colors.md`)
 - Edit a section                                         →  `recipes/edit-section.md` (+ `prompts/add-section-block.md`)
 - Deploy / verify live                                   →  `recipes/deploy.md`
+- Accessibility check (run after design changes)         →  `recipes/a11y-check.md`
 - Design critique                                        →  `prompts/design-critique.md`
 - Skill bundle that routes intents                       →  `skills/portfolio-curator/SKILL.md`
 
@@ -28,6 +29,7 @@ Slash commands: `/new-project`, `/theme-preview`, `/deploy-check`, `/typecheck` 
 3. **`base: '/bar-portfolio/'`** in `vite.config.ts` - if the repo is renamed, update this in lockstep.
 4. **`public/.nojekyll`** - must land in `dist/`. Keeps GitHub Pages' Jekyll from stripping underscore folders.
 5. **Mixtape audio engine lives at `src/lib/mixtapeAudio.ts`** - small flat WebAudio engine backed by pre-rendered MP3s listed in `src/lib/mixtapeTracks.ts`. `AudioContext` is only constructed inside `unlock()`, invoked from the Start-button click; do not add any other unlock path. See `knowledge/07-mixtape-audio.md`. Do not restore the Tone.js build or the previous procedural zero-dep engine verbatim.
+6. **Accessibility floor (WCAG 2.2 AA)** - `npm run lint` (jsx-a11y/recommended) runs in CI and blocks the deploy. `@axe-core/react` runs in dev only via `src/main.tsx`. Skip link, `<main id="main" tabIndex={-1}>`, hash-nav focus handoff, and `:focus-within` on the Repos card pattern are intentional - don't unwind. Run `recipes/a11y-check.md` after any change to navigation, focus, semantic structure, animation, color tokens, or audio controls.
 
 Full rationale and anti-patterns: `knowledge/99-caveats.md`.
 

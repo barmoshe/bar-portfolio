@@ -122,10 +122,6 @@ export default function Repos({ onOpen }: Props) {
             key={p.name}
             data-idx={i}
             data-flip-id={`repo-${i}`}
-            tabIndex={0}
-            role="button"
-            aria-label={p.name}
-            onClick={() => onOpen(i)}
           >
             <header className="head">
               <span className="dots" aria-hidden="true">
@@ -142,9 +138,20 @@ export default function Repos({ onOpen }: Props) {
                 </span>
                 <span className="lang">{p.language}</span>
               </div>
-              <h3 className="t">{p.name}</h3>
+              {/* Block-link pattern: the button's ::before pseudo expands to fill
+                  the card, so the entire surface remains clickable while the
+                  accessible name and keyboard target stay on a real <button>. */}
+              <h3 className="t">
+                <button
+                  type="button"
+                  className="card-button"
+                  onClick={() => onOpen(i)}
+                >
+                  {p.name}
+                </button>
+              </h3>
               <p className="d">{shortDesc(p.description)}</p>
-              <div className="go">View repo →</div>
+              <div className="go" aria-hidden="true">View repo →</div>
             </div>
           </article>
         ))}

@@ -204,6 +204,10 @@ export default function Lightbox({ project, idx, sourceRect, onClose }: Props) {
   };
 
   return (
+    // Backdrop click is a redundant pointer convenience; keyboard users close
+    // via Escape (handled in the open-effect above) or the visible close
+    // button at top-right. The dialog itself is already keyboard-accessible.
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
     <div
       className="lb open"
       id="lb"

@@ -243,6 +243,16 @@ export default function Mixtape() {
     setAnnounce(msg + '​'.repeat(announceRef.current % 2));
   };
 
+  // Volume slider fires `input` events at every tick of a drag; without a
+  // debounce, screen readers chant "Volume 47 percent. Volume 48 percent..."
+  // through the entire drag. Coalesce to the trailing value.
+  const volumeAnnounceTimer = useRef<number | undefined>(undefined);
+  useEffect(() => () => {
+    if (volumeAnnounceTimer.current !== undefined) {
+      window.clearTimeout(volumeAnnounceTimer.current);
+    }
+  }, []);
+
   const rpmMounted = useRef(false);
   useEffect(() => {
     audio.setRpm(RPM_RATE[rpm]);
@@ -256,6 +266,9 @@ export default function Mixtape() {
     } catch {
       /* ignore */
     }
+    // Intentionally only re-runs when `rpm` changes; `audioOn` and `side` are
+    // read for their latest value but should not trigger this side-effect.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rpm]);
 
   useEffect(() => {
@@ -314,7 +327,12 @@ export default function Mixtape() {
 
   const onVolumeChange = (v: number) => {
     setVolume(v);
-    announceMessage(`Volume ${Math.round(v * 100)} percent.`);
+    if (volumeAnnounceTimer.current !== undefined) {
+      window.clearTimeout(volumeAnnounceTimer.current);
+    }
+    volumeAnnounceTimer.current = window.setTimeout(() => {
+      announceMessage(`Volume ${Math.round(v * 100)} percent.`);
+    }, 350);
   };
 
   const toggleMute = () => {
@@ -511,23 +529,14 @@ function TrackVinyl({ track }: { track: Track }) {
     );
   };
 
-  const onKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      spin();
-    }
-  };
-
   const displayTitle = track.title.replace(/\.$/, '').split(' - ')[0];
 
   return (
-    <div
+    <button
+      type="button"
       className="track-vinyl"
-      role="button"
-      tabIndex={0}
       aria-label={`Spin ${displayTitle}`}
       onClick={spin}
-      onKeyDown={onKey}
     >
       <svg viewBox="0 0 200 200" aria-hidden="true">
         <defs>
@@ -577,7 +586,7 @@ function TrackVinyl({ track }: { track: Track }) {
         </g>
         <circle cx="100" cy="100" r="2.5" className="spindle" />
       </svg>
-    </div>
+    </button>
   );
 }
 

@@ -45,7 +45,7 @@ export default function App() {
   useFolioScrub();
 
   const openFromCard = (idx: number) => {
-    const card = document.querySelector<HTMLElement>(`.clip article[data-idx="${idx}"]`);
+    const card = document.querySelector<HTMLElement>(`.clip [data-idx="${idx}"]`);
     if (card) {
       const r = card.getBoundingClientRect();
       open(idx, { left: r.left, top: r.top, width: r.width, height: r.height });
@@ -53,21 +53,6 @@ export default function App() {
       open(idx);
     }
   };
-
-  // Keyboard shortcut: open lightbox on Enter/Space when a project card is focused.
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Enter' && e.key !== ' ') return;
-      const t = (document.activeElement as HTMLElement | null)?.closest('.clip article');
-      if (t instanceof HTMLElement && t.dataset['idx']) {
-        e.preventDefault();
-        openFromCard(Number(t.dataset['idx']));
-      }
-    };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
 
   useEffect(() => {
     if (showBoot) return;
@@ -97,7 +82,7 @@ export default function App() {
           onSkip={onSkip}
           skipRemembered={skipRemembered}
         />
-        <main>
+        <main id="main" tabIndex={-1}>
           <Intro />
           <Background />
           <Suspense fallback={<section id="mixtape" aria-hidden="true" style={{ minHeight: 600 }} />}>

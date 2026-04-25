@@ -9,6 +9,20 @@ type Props = {
   skipRemembered: boolean;
 };
 
+// Move keyboard focus to the section a hash link points at, so that the next
+// Tab continues from inside the section instead of from the nav. Targets must
+// have tabIndex={-1} (each <article class="page"> does, set in App.tsx and
+// section components). Scrolling is left to the browser's default anchor
+// handling; we only nudge focus.
+function focusSectionFromHash(href: string) {
+  const id = href.startsWith('#') ? href.slice(1) : '';
+  if (!id) return;
+  const target = document.getElementById(id);
+  if (target instanceof HTMLElement) {
+    target.focus({ preventScroll: true });
+  }
+}
+
 export default function Strip({
   themeGlyph,
   themeLabel,
@@ -37,37 +51,47 @@ export default function Strip({
     { scope: ref },
   );
 
+  const onAnchor = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    focusSectionFromHash(e.currentTarget.getAttribute('href') ?? '');
+  };
+
   return (
-    <nav className="strip" aria-label="Primary" ref={ref}>
-      <span className="mark">bm@v1.3.7</span>
-      <a className="key" href="#intro">About</a>
-      <a href="#background">Background</a>
-      <a href="#mixtape">Mixtape</a>
-      <a href="#repos">Open Source</a>
-      <a href="#letter">Contact</a>
-      <span className="grow" />
-      <button
-        className="toggle theme-btn"
-        id="themeBtn"
-        type="button"
-        title={themeLabel}
-        aria-label={themeLabel}
-        onClick={(e) => {
-          const r = e.currentTarget.getBoundingClientRect();
-          onThemeCycle({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
-        }}
-      >
-        {themeGlyph}
-      </button>
-      <button
-        className="toggle"
-        id="skipBtn"
-        title="Remember: skip cover"
-        onClick={onSkip}
-        disabled={skipRemembered}
-      >
-        {skipRemembered ? 'remembered ✓' : 'Remember me'}
-      </button>
-    </nav>
+    <>
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
+      <nav className="strip" aria-label="Primary" ref={ref}>
+        <span className="mark">bm@v1.3.7</span>
+        <a className="key" href="#intro" onClick={onAnchor}>About</a>
+        <a href="#background" onClick={onAnchor}>Background</a>
+        <a href="#mixtape" onClick={onAnchor}>Mixtape</a>
+        <a href="#repos" onClick={onAnchor}>Open Source</a>
+        <a href="#letter" onClick={onAnchor}>Contact</a>
+        <span className="grow" />
+        <button
+          className="toggle theme-btn"
+          id="themeBtn"
+          type="button"
+          title={themeLabel}
+          aria-label={themeLabel}
+          onClick={(e) => {
+            const r = e.currentTarget.getBoundingClientRect();
+            onThemeCycle({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
+          }}
+        >
+          {themeGlyph}
+        </button>
+        <button
+          className="toggle"
+          id="skipBtn"
+          type="button"
+          title="Remember: skip cover"
+          onClick={onSkip}
+          disabled={skipRemembered}
+        >
+          {skipRemembered ? 'remembered ✓' : 'Remember me'}
+        </button>
+      </nav>
+    </>
   );
 }
