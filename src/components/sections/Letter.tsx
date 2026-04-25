@@ -31,7 +31,6 @@ type Card = {
   shadowColor: string;
   kickerColor: string;
   kickerLeft: string;
-  kickerRight: string;
   title: string;
   value: string;
   Icon: IconComponent;
@@ -48,7 +47,6 @@ const CARDS: Card[] = [
     shadowColor: 'var(--red)',
     kickerColor: 'var(--red)',
     kickerLeft: '// email',
-    kickerRight: 'fastest',
     title: 'Write a proper letter.',
     value: '1barmoshe1@gmail.com',
     Icon: MailIcon,
@@ -62,7 +60,6 @@ const CARDS: Card[] = [
     shadowColor: 'var(--blue)',
     kickerColor: 'var(--blue)',
     kickerLeft: '// linkedin',
-    kickerRight: 'work',
     title: 'Roles & referrals.',
     value: 'in/barmoshe',
     Icon: LinkedInIcon,
@@ -76,7 +73,6 @@ const CARDS: Card[] = [
     shadowColor: 'var(--green)',
     kickerColor: 'var(--green)',
     kickerLeft: '// whatsapp',
-    kickerRight: 'instant',
     title: 'Send a message.',
     value: 'wa.me/972546561465',
     Icon: WhatsAppIcon,
@@ -90,7 +86,6 @@ const CARDS: Card[] = [
     shadowColor: 'var(--purple)',
     kickerColor: 'var(--ink-soft)',
     kickerLeft: '// github',
-    kickerRight: 'code',
     title: 'Read the source.',
     value: 'github.com/barmoshe',
     Icon: GitHubIcon,
@@ -102,7 +97,6 @@ const CARDS: Card[] = [
     shadowColor: 'var(--yellow)',
     kickerColor: 'var(--ink-soft)',
     kickerLeft: '// phone',
-    kickerRight: 'GMT+3',
     title: 'Call or text.',
     value: '+972 54 656 1465',
     Icon: PhoneIcon,
@@ -116,7 +110,6 @@ const CARDS: Card[] = [
     shadowColor: 'var(--magenta)',
     kickerColor: 'var(--magenta)',
     kickerLeft: '// instagram',
-    kickerRight: 'offstage',
     title: 'Life in frames.',
     value: '@1barmoshe1',
     Icon: InstagramIcon,
@@ -130,7 +123,6 @@ const CARDS: Card[] = [
     shadowColor: 'var(--purple)',
     kickerColor: 'var(--purple)',
     kickerLeft: '// tiktok',
-    kickerRight: 'shorts',
     title: 'Short clips.',
     value: '@barmoshe14',
     Icon: TikTokIcon,
@@ -144,7 +136,6 @@ const CARDS: Card[] = [
     shadowColor: 'var(--blue)',
     kickerColor: 'var(--ink-soft)',
     kickerLeft: '// facebook',
-    kickerRight: 'social',
     title: 'Old-school feed.',
     value: 'Bar Moshe',
     Icon: FacebookIcon,
@@ -155,14 +146,26 @@ const CARDS: Card[] = [
 const BIG_CARDS = CARDS.filter((c) => c.size === 'big');
 const SMALL_CARDS = CARDS.filter((c) => c.size === 'small');
 
-function restStyle(c: Card): CSSProperties {
+// Big-card layout uses CSS grid with named areas so the icon, kicker,
+// title, and value have explicit slots that don't collapse or wrap into
+// each other on narrow viewports. minHeight keeps all 4 big cards the
+// same size regardless of value-text length.
+function bigRestStyle(c: Card): CSSProperties {
   return {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 10,
+    display: 'grid',
+    gridTemplateColumns: 'auto 1fr',
+    gridTemplateRows: 'auto 1fr auto',
+    gridTemplateAreas: `
+      "icon  kicker"
+      "title title"
+      "value value"
+    `,
+    columnGap: 12,
+    rowGap: 10,
     background: 'var(--paper)',
     border: '1.5px solid var(--ink)',
-    padding: 22,
+    padding: 20,
+    minHeight: 168,
     transform: `rotate(${c.rotate})`,
     boxShadow: `6px 7px 0 ${c.shadowColor}`,
     textDecoration: 'none',
@@ -171,54 +174,68 @@ function restStyle(c: Card): CSSProperties {
   };
 }
 
-function hoverStyle(c: Card): CSSProperties {
+function bigHoverStyle(c: Card): CSSProperties {
   return {
     transform: 'rotate(0deg) translateY(-3px)',
     boxShadow: `9px 11px 0 ${c.shadowColor}`,
   };
 }
 
-const kickerStyle = (color: string): CSSProperties => ({
+const bigIconCellStyle = (color: string): CSSProperties => ({
+  gridArea: 'icon',
+  display: 'inline-flex',
+  alignItems: 'center',
+  color,
+});
+
+const bigKickerStyle = (color: string): CSSProperties => ({
+  gridArea: 'kicker',
+  alignSelf: 'center',
+  justifySelf: 'end',
   fontFamily: 'var(--mono)',
   fontSize: 11,
   letterSpacing: '.22em',
   textTransform: 'uppercase',
   color,
-  display: 'flex',
-  justifyContent: 'space-between',
-  gap: 10,
+  whiteSpace: 'nowrap',
 });
 
-const titleStyle: CSSProperties = {
+const bigTitleStyle: CSSProperties = {
+  gridArea: 'title',
   fontFamily: 'var(--display)',
-  fontSize: '1.35rem',
-  lineHeight: 1.1,
+  fontSize: '1.3rem',
+  lineHeight: 1.15,
   margin: 0,
 };
 
-const valueStyle: CSSProperties = {
+const bigValueStyle: CSSProperties = {
+  gridArea: 'value',
   margin: 0,
+  alignSelf: 'end',
   fontFamily: 'var(--mono)',
-  fontSize: '.95rem',
+  fontSize: '.92rem',
   color: 'var(--ink)',
 };
 
-// Compact pill variant for the secondary contact channels. No rotate, no
-// tape, just an icon + value chip with a light shadow.
+// Chip variant: same icon-left + label flex layout, but rendered in an
+// equal-cell grid container so the row stays aligned regardless of
+// label length (the previous flex-wrap version went ragged on mobile).
 function chipRestStyle(c: Card): CSSProperties {
   return {
-    display: 'inline-flex',
+    display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 8,
     background: 'var(--paper)',
     border: '1.25px solid var(--ink)',
-    padding: '8px 14px',
+    padding: '9px 14px',
     borderRadius: 999,
     boxShadow: `4px 4px 0 ${c.shadowColor}`,
     textDecoration: 'none',
     color: 'var(--ink)',
     transition: 'transform .2s ease, box-shadow .2s ease',
     transform: 'rotate(0deg)',
+    minWidth: 0,
   };
 }
 
@@ -234,11 +251,12 @@ const chipLabelStyle: CSSProperties = {
   fontSize: 12,
   letterSpacing: '.04em',
   color: 'var(--ink)',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
 };
 
 // Fan-in scatter offsets per big card (4 entries — one per big card).
-// Desktop: wide scatter into the rotated rest position.
-// Mobile: paired-row entry driven by index, see MOBILE_QUERY block.
 const DESKTOP_SCATTER = [
   { x: -120, y: -40, r: -20 },
   { x: 140, y: -50, r: 24 },
@@ -301,7 +319,6 @@ export default function Letter() {
           );
         }
 
-        // Chip row reveal — same on desktop and mobile (chips don't rotate).
         if (chips.length) {
           createReveal(
             chips,
@@ -345,9 +362,7 @@ export default function Letter() {
       mm.add(MOBILE_QUERY, () => {
         if (!bigCards.length) return;
         // Paired per-row entry for the 2-col mobile grid: even-index cards
-        // swoop from the left, odd-index cards from the right. The grid
-        // stagger with axis:'y' keeps both cards in a row in sync while
-        // rows cascade top→bottom. With 4 big cards, the grid is [2, 2].
+        // swoop from the left, odd-index cards from the right.
         createReveal(
           bigCards,
           {
@@ -395,8 +410,8 @@ export default function Letter() {
         ref={bigGridRef}
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))',
-          gap: 40,
+          gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))',
+          gap: 24,
           maxWidth: 880,
           margin: '40px auto 0',
           padding: '0 4px',
@@ -411,18 +426,20 @@ export default function Letter() {
               target={c.target}
               rel={c.rel}
               className="ink-taped"
-              rest={restStyle(c)}
-              hover={hoverStyle(c)}
+              rest={bigRestStyle(c)}
+              hover={bigHoverStyle(c)}
             >
-              <div style={kickerStyle(c.kickerColor)}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                  <Icon size={14} />
-                  {c.kickerLeft}
-                </span>
-                <span>{c.kickerRight}</span>
-              </div>
-              <h3 style={titleStyle}>{c.title}</h3>
-              <p style={{ ...valueStyle, wordBreak: c.href.startsWith('mailto:') ? 'break-all' : 'normal' }}>
+              <span style={bigIconCellStyle(c.kickerColor)}>
+                <Icon size={22} />
+              </span>
+              <span style={bigKickerStyle(c.kickerColor)}>{c.kickerLeft}</span>
+              <h3 style={bigTitleStyle}>{c.title}</h3>
+              <p
+                style={{
+                  ...bigValueStyle,
+                  wordBreak: c.href.startsWith('mailto:') ? 'break-all' : 'normal',
+                }}
+              >
                 {c.value}
               </p>
             </HoverCard>
@@ -433,10 +450,9 @@ export default function Letter() {
       <div
         ref={smallRowRef}
         style={{
-          display: 'flex',
-          flexWrap: 'wrap',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
           gap: 12,
-          justifyContent: 'center',
           margin: '24px auto 0',
           maxWidth: 720,
           padding: '0 4px',
@@ -453,8 +469,8 @@ export default function Letter() {
               rest={chipRestStyle(c)}
               hover={chipHoverStyle(c)}
             >
-              <span style={{ display: 'inline-flex', color: c.kickerColor }}>
-                <Icon size={14} />
+              <span style={{ display: 'inline-flex', flex: '0 0 auto', color: c.kickerColor }}>
+                <Icon size={16} />
               </span>
               <span style={chipLabelStyle}>{c.value}</span>
             </HoverCard>
