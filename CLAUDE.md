@@ -38,7 +38,7 @@ Full rationale and anti-patterns: `knowledge/99-caveats.md`.
 - Styling: CSS custom properties in `src/styles.css`. Tailwind is intentionally rejected - see `knowledge/01-stack.md`.
 - No new runtime deps for cosmetic changes. Current deps: `react`, `react-dom`, `gsap`, `@gsap/react`.
 - Audio: engine at `src/lib/mixtapeAudio.ts`, manifest at `src/lib/mixtapeTracks.ts`, MP3 assets under `public/audio/{sideA,sideB,sfx}/`. Side A is lofi hip hop, Side B is house/techno. `AudioContext` is gated behind the Start button click. See `knowledge/07-mixtape-audio.md`.
-- Routing: single page + hash links (`#intro`, `#background`, `#mixtape`, `#repos`, `#letter`). Do not add React Router. Note that `#repos` auto-expands the collapsed Repos section.
+- Routing: single page + hash links (`#intro`, `#background`, `#mixtape`, `#repos`, `#letter`). Do not add React Router. Repos always starts collapsed; the toggle button in the section is the only way to expand it (the `#repos` hash does not auto-expand).
 
 ## Scripts
 
