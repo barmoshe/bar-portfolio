@@ -10,7 +10,7 @@ type Slide = { src: string; alt: string; caption: string };
 const FX = ['bloom', 'brush', 'tear', 'crumple'] as const;
 type Fx = (typeof FX)[number];
 
-const SLIDES: Slide[] = [
+export const SLIDES: Slide[] = [
   { src: 'portraits/img0.png', alt: 'Bar Moshe - portrait 0', caption: 'portrait · 0' },
   { src: 'portraits/img1.png', alt: 'Bar Moshe - portrait 1', caption: 'portrait · 1' },
   { src: 'portraits/img2.png', alt: 'Bar Moshe - portrait 2', caption: 'portrait · 2' },

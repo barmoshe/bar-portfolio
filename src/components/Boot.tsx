@@ -1,29 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAssetPreload } from '../hooks/useAssetPreload';
+import { SLIDES } from './HeroSlides';
 import { gsap, useGSAP, SplitText, FULL_MOTION_QUERY } from '../lib/gsap';
 
 type Props = { onGone: () => void };
-
-// Portrait paths mirror HeroSlides.tsx so the browser cache is warm by the
-// time the portfolio mounts behind the boot exit. Note img8 is intentionally
-// missing from the slide set, matching HeroSlides.
-const PORTRAIT_NAMES = [
-  'img0',
-  'img1',
-  'img2',
-  'img3',
-  'img4',
-  'img5',
-  'img6',
-  'img7',
-  'img9',
-  'img10',
-  'img11',
-  'img12',
-  'img13',
-  'img14',
-  'img15',
-];
 
 export default function Boot({ onGone }: Props) {
   const [leaving, setLeaving] = useState(false);
@@ -31,11 +11,13 @@ export default function Boot({ onGone }: Props) {
   const enterBtnRef = useRef<HTMLButtonElement | null>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const breathRef = useRef<gsap.core.Timeline | null>(null);
-  const progressVisibleRef = useRef(false);
 
   const base = import.meta.env.BASE_URL;
+  // Single source of truth: the slide list HeroSlides will render. Preload
+  // every one so the carousel behind the boot exit is hot and adding a slide
+  // to HeroSlides automatically warms it here too.
   const assets = useMemo(
-    () => PORTRAIT_NAMES.map((n) => `${base}portraits/${n}.png`),
+    () => SLIDES.map((s) => `${base}${s.src}`),
     [base],
   );
   const { loaded, total, done } = useAssetPreload(assets);
@@ -329,39 +311,22 @@ export default function Boot({ onGone }: Props) {
     { scope: rootRef },
   );
 
-  // Loading bar: reveal after 700ms only if preload is still in-flight.
+  // Reveal the loading bar immediately on mount. Earlier behaviour gated it
+  // behind a 700ms timer so fast loads wouldn't flash the bar - but the side
+  // effect was that nothing ever appeared to confirm preload was happening.
+  // The bar is always shown while assets are in flight and fades out once
+  // they're done.
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
-    const progressBar = root.querySelector<HTMLElement>('.enter-progress');
-    if (!progressBar) return;
+    const bar = root.querySelector<HTMLElement>('.enter-progress');
+    if (!bar) return;
+    gsap.set(bar, { opacity: 1 });
+  }, []);
 
-    const prefersReduced = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
-
-    const id = window.setTimeout(() => {
-      if (done || leaving) return;
-      progressVisibleRef.current = true;
-      if (prefersReduced) {
-        gsap.set(progressBar, { opacity: 1 });
-      } else {
-        gsap.to(progressBar, {
-          opacity: 1,
-          duration: 0.3,
-          ease: 'power2.out',
-        });
-      }
-    }, 700);
-
-    return () => window.clearTimeout(id);
-  }, [done, leaving]);
-
-  // Advance the fill bar as preload progresses, hide on completion.
-  // Tween rather than snap so the bar reads as continuous progress, and
-  // run in both motion modes so reduced-motion users see the fill too
-  // (the previous quickSetter wiring lived inside the full-motion
-  // matchMedia branch and never ran for reduced motion).
+  // Advance the fill bar as preload progresses, fade the bar away when done.
+  // Tween rather than snap so the bar reads as continuous progress, and run
+  // in both motion modes so reduced-motion users see the fill too.
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
@@ -379,18 +344,18 @@ export default function Boot({ onGone }: Props) {
     } else {
       gsap.to(fill, {
         scaleX: progress,
-        duration: 0.45,
+        duration: 0.4,
         ease: 'power2.out',
         overwrite: 'auto',
       });
     }
 
-    if (done && progressVisibleRef.current) {
+    if (done) {
       gsap.to(bar, {
         opacity: 0,
-        duration: 0.25,
+        duration: 0.35,
         ease: 'power2.out',
-        delay: 0.4,
+        delay: 0.5,
       });
     }
   }, [loaded, total, done]);
