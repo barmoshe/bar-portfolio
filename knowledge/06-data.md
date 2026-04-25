@@ -26,6 +26,7 @@ export const contact: {
   linkedin: string;
   phone: string;
   tiktok: string;
+  facebook: string;
 };
 export function iconFor(lang: string): string;
 export function shortDesc(d: string): string;

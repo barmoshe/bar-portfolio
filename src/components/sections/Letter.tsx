@@ -105,6 +105,18 @@ const CARDS: Card[] = [
     title: 'Short clips.',
     value: '@barmoshe14',
   },
+  {
+    href: 'https://www.facebook.com/share/1E89hVfhG3/?mibextid=wwXIfr',
+    target: '_blank',
+    rel: 'noopener',
+    rotate: '.4deg',
+    shadowColor: 'var(--blue)',
+    kickerColor: 'var(--ink-soft)',
+    kickerLeft: '// facebook',
+    kickerRight: 'social',
+    title: 'Old-school feed.',
+    value: 'Bar Moshe',
+  },
 ];
 
 function restStyle(c: Card): CSSProperties {
@@ -165,6 +177,7 @@ const DESKTOP_SCATTER = [
   { x: -90, y: 70, r: -16 },
   { x: 160, y: 80, r: 20 },
   { x: -140, y: 100, r: -22 },
+  { x: 110, y: 110, r: 18 },
 ];
 
 // Letter is the final section and tends to be read for longer; stretch the
