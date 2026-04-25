@@ -55,7 +55,7 @@ Defined in `src/components/InkDefs.tsx` alongside the `#ink-bleed-*` family. Sin
 
 ### Auto-advance
 
-Random interval between 1.5–5s (progressively slower as `fxCounter` grows). Pauses on:
+Random interval between 1.2–4s (progressively slower as `fxCounter` grows). Pauses on:
 
 - `mouseenter` on the slideshow container (resumes on `mouseleave`).
 - `document.hidden === true` (tab switch; resumes on visibility).

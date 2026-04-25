@@ -60,6 +60,10 @@ export default function HeroSlides() {
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const firstAdvanceDoneRef = useRef(false);
+  // Shuffle bag of upcoming slide indices. Refilled (Fisher-Yates, current
+  // slide excluded) when drained, so every slide is shown once before any
+  // repeats and the last-shown slide can't reappear at the bag boundary.
+  const bagRef = useRef<number[]>([]);
 
   const stop = () => {
     if (timerRef.current !== null) {
@@ -68,23 +72,31 @@ export default function HeroSlides() {
     }
   };
 
-  const pickRandom = (): number => {
-    const prev = idxRef.current;
-    let next: number;
-    do {
-      next = Math.floor(Math.random() * slides.length);
-    } while (next === prev);
-    return next;
+  const refillBag = (avoid: number) => {
+    const bag: number[] = [];
+    for (let i = 0; i < slides.length; i++) {
+      if (i !== avoid) bag.push(i);
+    }
+    for (let i = bag.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [bag[i], bag[j]] = [bag[j]!, bag[i]!];
+    }
+    bagRef.current = bag;
+  };
+
+  const pickNext = (): number => {
+    if (bagRef.current.length === 0) refillBag(idxRef.current);
+    return bagRef.current.shift()!;
   };
 
   const schedule = () => {
     if (pausedRef.current) return;
     if (timerRef.current !== null) return;
-    const maxMs = Math.min(2500 + fxCounter.current * 200, 5000);
+    const maxMs = Math.min(2000 + fxCounter.current * 160, 4000);
     timerRef.current = window.setTimeout(() => {
       timerRef.current = null;
       advance();
-    }, rand(1500, maxMs));
+    }, rand(1200, maxMs));
   };
 
   const advance = () => {
@@ -96,7 +108,7 @@ export default function HeroSlides() {
     if (!els.length) return;
 
     const prev = idxRef.current;
-    const next = pickRandom();
+    const next = pickNext();
     const fx = FX[fxCounter.current % FX.length]!;
     fxCounter.current += 1;
 
