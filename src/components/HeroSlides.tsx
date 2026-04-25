@@ -88,11 +88,11 @@ export default function HeroSlides() {
   const schedule = () => {
     if (pausedRef.current) return;
     if (timerRef.current !== null) return;
-    const maxMs = Math.min(2500 + fxCounter.current * 200, 5000);
+    const maxMs = Math.min(2000 + fxCounter.current * 160, 4000);
     timerRef.current = window.setTimeout(() => {
       timerRef.current = null;
       advance();
-    }, rand(1500, maxMs));
+    }, rand(1200, maxMs));
   };
 
   const advance = () => {
