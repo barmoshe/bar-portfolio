@@ -25,6 +25,7 @@ export const contact: {
   github: string;
   linkedin: string;
   phone: string;
+  tiktok: string;
 };
 export function iconFor(lang: string): string;
 export function shortDesc(d: string): string;

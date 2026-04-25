@@ -93,6 +93,18 @@ const CARDS: Card[] = [
     title: 'Read the source.',
     value: 'github.com/barmoshe',
   },
+  {
+    href: 'https://www.tiktok.com/@barmoshe14',
+    target: '_blank',
+    rel: 'noopener',
+    rotate: '-.6deg',
+    shadowColor: 'var(--purple)',
+    kickerColor: 'var(--purple)',
+    kickerLeft: '// tiktok',
+    kickerRight: 'shorts',
+    title: 'Short clips.',
+    value: '@barmoshe14',
+  },
 ];
 
 function restStyle(c: Card): CSSProperties {
@@ -152,6 +164,7 @@ const DESKTOP_SCATTER = [
   { x: 130, y: 40, r: 22 },
   { x: -90, y: 70, r: -16 },
   { x: 160, y: 80, r: 20 },
+  { x: -140, y: 100, r: -22 },
 ];
 
 // Letter is the final section and tends to be read for longer; stretch the
@@ -260,7 +273,7 @@ export default function Letter() {
             scale: 1,
             duration: 0.65,
             ease: 'back.out(1.5)',
-            stagger: { each: 0.14, grid: [3, 2], axis: 'y', from: 'start' },
+            stagger: { each: 0.14, grid: [4, 2], axis: 'y', from: 'start' },
           },
           { trigger: grid, start: 'top 85%', staleAfterMs: LETTER_STALE_MS },
         );

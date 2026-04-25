@@ -78,6 +78,7 @@ export const contact = {
   github: 'https://github.com/barmoshe',
   linkedin: 'https://www.linkedin.com/in/barmoshe/',
   phone: '+972546561465',
+  tiktok: 'https://www.tiktok.com/@barmoshe14',
 };
 
 /** Language → glyph map used by `iconFor`. Extend only for languages expected to recur. */
