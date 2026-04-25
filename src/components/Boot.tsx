@@ -23,9 +23,14 @@ export default function Boot({ onGone }: Props) {
     return order.map((i) => `${base}${SLIDES[i]!.src}`);
   }, [base]);
   const { loaded, total, done } = useAssetPreload(assets);
+  const percent = total > 0 ? Math.round((loaded / total) * 100) : 100;
+  // Gate the Enter button until preload reaches 30%. We don't wait for full
+  // completion - once the first slide-after-boot and a few followers have
+  // landed, the carousel can carry the rest while the user reads the cover.
+  const canEnter = percent >= 30;
 
   const dismiss = () => {
-    if (leaving) return;
+    if (leaving || !canEnter) return;
     setLeaving(true);
   };
 
@@ -144,9 +149,10 @@ export default function Boot({ onGone }: Props) {
           tl.to(sub, { scaleX: 1, duration: 0.4, ease: 'power2.out' }, 1.15);
         }
 
-        // Beat 6 - Enter button pen-down settle, then pulse restart.
+        // Beat 6 - Enter button pen-down settle. The `.pulse` class is driven
+        // by the React render (only added once `done`), so the GSAP onComplete
+        // does not need to toggle it.
         if (btn) {
-          btn.classList.remove('pulse');
           gsap.set(btn, { opacity: 0, y: 16, rotate: -1.5, scale: 0.94 });
           tl.to(
             btn,
@@ -157,11 +163,6 @@ export default function Boot({ onGone }: Props) {
               scale: 1,
               duration: 0.5,
               ease: 'back.out(2.2)',
-              onComplete: () => {
-                btn.classList.remove('pulse');
-                void btn.offsetWidth;
-                btn.classList.add('pulse');
-              },
             },
             1.4,
           );
@@ -387,10 +388,14 @@ export default function Boot({ onGone }: Props) {
         </p>
         <p className="sub">Full-Stack · AI · Builder</p>
         <button
-          className="enter pulse"
+          className={`enter${canEnter ? ' pulse' : ''}`}
           id="enter"
           type="button"
-          aria-label="Enter portfolio (closes cover)"
+          aria-label={
+            canEnter ? 'Enter portfolio (closes cover)' : 'Loading, please wait'
+          }
+          aria-disabled={!canEnter}
+          disabled={!canEnter}
           ref={enterBtnRef}
           onClick={dismiss}
         >
@@ -400,13 +405,13 @@ export default function Boot({ onGone }: Props) {
           className="enter-progress"
           role="status"
           aria-live="polite"
-          aria-label={`Loading assets ${loaded} of ${total}`}
+          aria-label={`Loading assets ${percent}%`}
         >
           <span className="enter-progress-track">
             <span className="enter-progress-fill" />
           </span>
           <span className="enter-progress-label" aria-hidden="true">
-            {done ? 'ready' : `loading ${loaded} / ${total}`}
+            {done ? 'ready' : `loading ${percent}%`}
           </span>
         </div>
       </div>
