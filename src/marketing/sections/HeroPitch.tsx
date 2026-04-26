@@ -1,73 +1,156 @@
+import { useRef } from 'react';
+import {
+  gsap,
+  useGSAP,
+  SplitText,
+  FULL_MOTION_QUERY,
+} from '../../lib/gsap';
+import { createReveal } from '../../lib/scrollReveal';
+import { attachInkBleed } from '../../lib/inkBleed';
 import MarketingHeroSlides from '../MarketingHeroSlides';
 import { buildWhatsAppHref, mailtoHref } from '../contact';
+
+const HERO_STALE_MS = 15000;
 
 const HERO_WHATSAPP =
   'שלום בר, ראיתי את הסטודיו ואני מעוניין/ת לשמוע על השירותים שלך.';
 
-const STATS = [
-  { num: '5+', label: 'שנים מפתח' },
-  { num: '20+', label: 'פרויקטים שוגרו' },
-  { num: '∞', label: 'קפה במהלך' },
-];
-
 export default function HeroPitch() {
-  return (
-    <section
-      className="mp-section mp-section--hero mp-hero"
-      id="top"
-      aria-labelledby="hero-headline"
-    >
-      <div className="mp-hero__grid">
-        <div className="mp-hero__copy">
-          <span className="mp-hero__sticker" aria-hidden="true">
-            🎯 פתוח לפרויקטים חדשים
-          </span>
-          <h1 className="mp-h1 mp-hero__title" id="hero-headline">
-            בונה. מלמד.<br />
-            <mark>מוציא רעיונות לאוויר.</mark>
-          </h1>
-          <p className="mp-lead">
-            אני בר. סטודיו פיתוח עצמאי לאנשים פרטיים, יזמים וחברות. שיעורים אחד על אחד,
-            ליווי טכני, ובנייה מקצה לקצה. בלי באזוורדס, בלי הפתעות.
-          </p>
+  const rootRef = useRef<HTMLElement | null>(null);
 
-          <div className="mp-cta-row">
+  useGSAP(
+    () => {
+      const root = rootRef.current;
+      if (!root) return;
+      const headline = root.querySelector<HTMLElement>('.headline');
+      const dek = root.querySelector<HTMLElement>('.dek');
+      const cta = root.querySelector<HTMLElement>('.hero-cta-row');
+      const questions = Array.from(
+        root.querySelectorAll<HTMLElement>('.hero-questions li'),
+      );
+
+      const mm = gsap.matchMedia();
+      mm.add(FULL_MOTION_QUERY, () => {
+        let split: SplitText | null = null;
+        let cleanupBleed: (() => void) | null = null;
+
+        if (headline) {
+          split = new SplitText(headline, { type: 'chars,words' });
+          createReveal(
+            split.chars,
+            { opacity: 0, yPercent: 80, rotate: -6 },
+            {
+              opacity: 1,
+              yPercent: 0,
+              rotate: 0,
+              duration: 0.7,
+              stagger: 0.03,
+              ease: 'back.out(1.8)',
+            },
+            { trigger: headline, start: 'top 85%', staleAfterMs: HERO_STALE_MS },
+          );
+          cleanupBleed = attachInkBleed(headline, 'letter');
+        }
+
+        if (questions.length) {
+          createReveal(
+            questions,
+            { opacity: 0, x: 24 },
+            { opacity: 1, x: 0, duration: 0.55, stagger: 0.12 },
+            { trigger: questions[0]!, start: 'top 90%', staleAfterMs: HERO_STALE_MS },
+          );
+        }
+
+        if (dek) {
+          createReveal(
+            dek,
+            { opacity: 0, y: 12 },
+            { opacity: 1, y: 0, duration: 0.6, delay: 0.15 },
+            { trigger: dek, start: 'top 90%', staleAfterMs: HERO_STALE_MS },
+          );
+        }
+
+        if (cta) {
+          createReveal(
+            cta,
+            { opacity: 0, y: 18 },
+            { opacity: 1, y: 0, duration: 0.55 },
+            { trigger: cta, start: 'top 95%', staleAfterMs: HERO_STALE_MS },
+          );
+        }
+
+        return () => {
+          split?.revert();
+          cleanupBleed?.();
+        };
+      });
+
+      return () => mm.revert();
+    },
+    { scope: rootRef },
+  );
+
+  return (
+    <article className="page hero-pitch" id="about" ref={rootRef} tabIndex={-1}>
+      <div className="folio">
+        <b>00</b> // אודות
+      </div>
+
+      <div className="hero-pitch__layout">
+        <div className="hero-pitch__copy">
+          <p
+            className="byline"
+            style={{ fontFamily: 'var(--mono)', color: 'var(--ink-soft)' }}
+          >
+            // בר משה — מפתח עצמאי
+          </p>
+          <h1 className="headline">
+            רעיון בראש,<br />
+            ואין מושג מאיפה{' '}
+            <em style={{ color: 'var(--green)', fontStyle: 'italic' }}>מתחילים?</em>
+          </h1>
+          <ul
+            className="hero-questions"
+            style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: '28px 0 0',
+              display: 'grid',
+              gap: 10,
+              fontFamily: 'var(--serif)',
+              fontSize: 'clamp(1.05rem, 1.8vw, 1.3rem)',
+              color: 'var(--ink-soft)',
+              maxWidth: '52ch',
+            }}
+          >
+            <li>· רוצה ללמוד לבנות בלי לדעת איך מתחילים?</li>
+            <li>· יש לך מוצר בראש ואת.ה צריך.ה מישהו שינווט אותו לאוויר?</li>
+            <li>· צוות קטן שמחפש מנטור או בילדר חיצוני?</li>
+          </ul>
+          <p className="dek" style={{ marginTop: 22 }}>
+            זה בדיוק מה שאני עושה — מלמד, מלווה, ובונה. אפליקציות, אתרים, ורעיונות
+            יצירתיים — מהסקיצה ועד הלייב.
+          </p>
+          <div className="hero-cta-row">
             <a
-              className="mp-cta mp-cta--whatsapp"
+              className="enter"
               href={buildWhatsAppHref(HERO_WHATSAPP)}
               target="_blank"
               rel="noreferrer noopener"
               aria-label="פתח שיחה ב-WhatsApp עם בר משה"
             >
-              <span className="mp-cta__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="20" height="20" focusable="false">
-                  <path
-                    fill="currentColor"
-                    d="M20.5 3.5A11 11 0 0 0 3.6 17.6L2 22l4.5-1.5a11 11 0 0 0 13.9-13A10.9 10.9 0 0 0 20.5 3.5Zm-8.5 17a9 9 0 0 1-4.6-1.3l-.3-.2-2.7.9.9-2.6-.2-.3a9 9 0 1 1 6.9 3.5Zm5-6.7c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1a7.3 7.3 0 0 1-3.7-3.2c-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5L9 6.6c-.2-.4-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3c-.2.3-.9.9-.9 2.2 0 1.3.9 2.6 1 2.8.1.2 1.8 2.8 4.4 3.9 2.6 1 2.6.7 3.1.7s1.6-.6 1.8-1.3c.2-.7.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3Z"
-                  />
-                </svg>
-              </span>
               דברו איתי בוואטסאפ
             </a>
-            <a className="mp-cta mp-cta--ghost" href={mailtoHref}>
-              <span aria-hidden="true">✉</span> שלחו מייל
+            <a className="enter enter--ghost" href={mailtoHref}>
+              שלחו מייל
             </a>
           </div>
-
-          <dl className="mp-proof" aria-label="במספרים">
-            {STATS.map((s) => (
-              <div className="mp-proof__item" key={s.label}>
-                <dt className="mp-proof__num">{s.num}</dt>
-                <dd className="mp-proof__label">{s.label}</dd>
-              </div>
-            ))}
-          </dl>
         </div>
 
-        <div className="mp-hero__slides" aria-hidden="false">
+        <aside className="hero-pitch__slides" aria-hidden="false">
           <MarketingHeroSlides />
-        </div>
+        </aside>
       </div>
-    </section>
+    </article>
   );
 }
