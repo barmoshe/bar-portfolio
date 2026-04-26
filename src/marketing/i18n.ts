@@ -28,6 +28,7 @@ export type Dict = {
     headlineLead: string;
     headlineMark: string;
     lead: string;
+    pullQuote: { quote: string; cite: string };
     questionsLabel: string;
     questions: string[];
     ctaWhatsapp: string;
@@ -50,6 +51,8 @@ export type Dict = {
       cta: string;
       ariaLabel: string;
       whatsappMessage: string;
+      span: 'wide' | 'half' | 'tall';
+      accent: 'primary' | 'accent2' | 'accent3';
     }[];
   };
   services: {
@@ -128,6 +131,10 @@ const HE: Dict = {
     headlineLead: 'רעיון בראש,\nואין מושג מאיפה ',
     headlineMark: 'מתחילים?',
     lead: 'אני בר. מלמד, מלווה, ובונה — אפליקציות, אתרים, ורעיונות יצירתיים מהסקיצה ועד הלייב. בלי הפתעות, ובלי באזוורדס.',
+    pullQuote: {
+      quote: 'תפס את הצורך מהשיחה הראשונה.',
+      cite: 'מ. ק., מייסדת סטארטאפ',
+    },
     questionsLabel: 'מתאים אם...',
     questions: [
       'רוצה ללמוד לבנות בלי לדעת איך מתחילים',
@@ -154,41 +161,49 @@ const HE: Dict = {
         slug: 'learners',
         emoji: '🎓',
         kicker: 'לומדים',
-        title: 'רוצה ללמוד לפתח',
+        title: 'תצא משיעור אחד עם פרויקט שאת.ה מבין.ה',
         summary: 'שיעורים פרטיים מאפס, ליווי למטלות, והדרכה לפרויקט גמר. מתחילים ראשון ללא התחייבות.',
         cta: 'בואו נדבר על שיעור',
         ariaLabel: 'פתח שיחה ב-WhatsApp - לומדים',
         whatsappMessage: 'שלום בר, אני מעוניין/ת ללמוד פיתוח ולקבל ליווי. אשמח לשמוע איך מתחילים.',
+        span: 'wide',
+        accent: 'accent2',
       },
       {
         slug: 'builders',
         emoji: '🛠',
         kicker: 'בילדרים',
-        title: 'יש לי רעיון לבנות',
+        title: 'ה-MVP בידיים שלך תוך 6 שבועות',
         summary: 'מ-MVP לאתר תדמית. מתכננים יחד, בונים בקצב צפוי, ומשגרים בלי הפתעות.',
         cta: 'נדבר על הרעיון',
         ariaLabel: 'פתח שיחה ב-WhatsApp - בילדרים',
         whatsappMessage: 'שלום בר, יש לי רעיון לפרויקט ואני צריך/ה הכוונה ובנייה. בא לי לשמוע איך אתה עובד.',
+        span: 'half',
+        accent: 'primary',
       },
       {
         slug: 'startups',
         emoji: '🚀',
         kicker: 'סטארטאפים',
-        title: 'צוות קטן שזקוק למנטור',
+        title: 'מנטור קבוע שמכיר את הקוד שלכם',
         summary: 'מנטורינג, סקירות קוד, בחירת מחסנית טכנולוגית, ועזרה במעבר מ-MVP למוצר חי.',
         cta: 'נתאם שיחת ייעוץ',
         ariaLabel: 'פתח שיחה ב-WhatsApp - סטארטאפים',
         whatsappMessage: 'שלום בר, אני מסטארטאפ/צוות פיתוח קטן ואנחנו מחפשים מנטור או יועץ טכני. אפשר לתאם שיחה?',
+        span: 'half',
+        accent: 'accent3',
       },
       {
         slug: 'companies',
         emoji: '🏢',
         kicker: 'חברות',
-        title: 'חברה שצריכה בילדר חיצוני',
+        title: 'פרויקט מסונכרן מול הצוות, עם מסירה נקייה',
         summary: 'בנייה מקצה לקצה: אתרי תדמית, אפליקציות, כלי AI פנימיים, ואינטגרציות. עם תיעוד ומסירה מסודרת.',
         cta: 'נתאם שיחה ראשונה',
         ariaLabel: 'פתח שיחה ב-WhatsApp - חברות',
         whatsappMessage: 'שלום, אנחנו חברה שמעוניינת לשכור אותך לפרויקט. אשמח להציג בקצרה את הצורך ולתאם שיחה.',
+        span: 'wide',
+        accent: 'accent3',
       },
     ],
   },
@@ -358,6 +373,10 @@ const EN: Dict = {
     headlineLead: "Got an idea\nbut no clue where to ",
     headlineMark: 'start?',
     lead: "I'm Bar. I teach, mentor, and build - apps, websites, and creative ideas from sketch to live. No surprises, no buzzwords.",
+    pullQuote: {
+      quote: 'Grasped the need from the first call.',
+      cite: 'M. K., startup founder',
+    },
     questionsLabel: 'For you if...',
     questions: [
       'You want to learn to build but don\'t know how to start',
@@ -384,41 +403,49 @@ const EN: Dict = {
         slug: 'learners',
         emoji: '🎓',
         kicker: 'Learners',
-        title: 'I want to learn to code',
+        title: 'Walk out of one lesson with a project you understand',
         summary: 'Private lessons from zero, homework support, and final-project guidance. First session - no commitment.',
         cta: "Let's talk lessons",
         ariaLabel: 'Open WhatsApp chat - Learners',
         whatsappMessage: "Hi Bar, I'd like to learn coding and get some guidance. Would love to hear how to get started.",
+        span: 'wide',
+        accent: 'accent2',
       },
       {
         slug: 'builders',
         emoji: '🛠',
         kicker: 'Builders',
-        title: 'I have an idea to build',
+        title: 'Your MVP in your hands within 6 weeks',
         summary: 'From MVP to landing page. We plan together, build at a predictable pace, and ship without surprises.',
         cta: "Let's talk about the idea",
         ariaLabel: 'Open WhatsApp chat - Builders',
         whatsappMessage: 'Hi Bar, I have a project idea and need direction and a builder. Curious to hear how you work.',
+        span: 'half',
+        accent: 'primary',
       },
       {
         slug: 'startups',
         emoji: '🚀',
         kicker: 'Startups',
-        title: 'A small team that needs a mentor',
+        title: 'A regular mentor who knows your codebase',
         summary: 'Mentoring, code reviews, tech-stack picks, and help moving from MVP to a live product.',
         cta: "Let's set up a call",
         ariaLabel: 'Open WhatsApp chat - Startups',
         whatsappMessage: "Hi Bar, I'm from a startup / small dev team and we're looking for a mentor or technical advisor. Can we schedule a call?",
+        span: 'half',
+        accent: 'accent3',
       },
       {
         slug: 'companies',
         emoji: '🏢',
         kicker: 'Companies',
-        title: 'A company that needs an external builder',
+        title: 'A delivered project, in sync with your team',
         summary: 'End-to-end builds: marketing sites, apps, internal AI tools, and integrations. With docs and a clean handoff.',
         cta: "Let's schedule a first call",
         ariaLabel: 'Open WhatsApp chat - Companies',
         whatsappMessage: "Hi, we're a company interested in hiring you for a project. Happy to brief you and schedule a call.",
+        span: 'wide',
+        accent: 'accent3',
       },
     ],
   },

@@ -24,6 +24,11 @@ export default function HeroPitch() {
           </h1>
           <p className="mp-lead">{hero.lead}</p>
 
+          <figure className="mp-hero__pull">
+            <blockquote>“{hero.pullQuote.quote}”</blockquote>
+            <figcaption>— {hero.pullQuote.cite}</figcaption>
+          </figure>
+
           <ul className="mp-hero__questions" aria-label={hero.questionsLabel}>
             {hero.questions.map((q) => (
               <li key={q}>{q}</li>

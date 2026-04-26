@@ -76,3 +76,17 @@ Known tight pairings to retest when changing tokens:
 2. If you genuinely need a new hue, add it as a primitive `--<name>` in both `:root` and `html.dark` (dark-mode variant with reduced chroma).
 3. If it's a role-based addition (e.g. `--warn-surface`), add a semantic alias on top of the primitive.
 4. Don't introduce hex or hsl - stay in oklch. For a guided generation, use `prompts/customize-colors.md`.
+
+## Marketing color-meaning system (`/business/`)
+
+The marketing route at `/business/` uses its own scoped palette (`.mp-root`, defined in `src/marketing/marketing.css`). Three accents, each with a fixed semantic role — pick the accent that matches the role; do not introduce a fourth.
+
+| Token | Role | Example use |
+|---|---|---|
+| `--mp-primary` (magenta) | Primary CTA, emphasis, build/maker energy | `.mp-cta--primary`, `<mark>`, builder audience tile, FAQ open accent, process timeline |
+| `--mp-accent-2` (orange) | Human / personality / first contact | Hero sticker, learner audience tile, hero pull-quote edge, first sticker-tape divider |
+| `--mp-accent-3` (blue) | Technical / link / advisory | Startups + companies audience tiles, every-other sticker-tape divider |
+
+Audience tiles consume this via the `accent: 'primary' | 'accent2' | 'accent3'` field on `Dict.audience.items` in `src/marketing/i18n.ts`. The class wired on each tile (`.mp-audience--<accent>`) controls box-shadow, kicker color, and CTA underline together so the variant reads as one decision.
+
+Orange `--mp-accent-2 = oklch(0.78 0.17 65)` does not pass 4.5:1 as body text on cream — kicker text uses a darkened `oklch(0.45 0.17 65)` in light mode and `oklch(0.78 0.15 65)` on the elevated dark surface. Re-verify in `#showcase` if either is changed.
