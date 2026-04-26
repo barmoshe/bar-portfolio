@@ -81,7 +81,37 @@
 </script>
 </head>
 <body>
-<div id="root"></div>
+<div id="root">
+  <!-- Static SEO fallback. React replaces this on mount via createRoot().render().
+       Mirrors the rendered page so crawlers (and JS-disabled clients) see real content. -->
+  <main>
+    <p>Builder by default. Stack and field are negotiable.</p>
+    <h1>Bar Moshe, full-stack builder.</h1>
+    <p>I'm Bar. I build software, mostly. Web apps, hardware experiments, game-jam soundtracks, weekend scripts that turn into daily tools.</p>
+    <p>Day job is full-stack. Off-hours, whatever I'm curious about. Side projects keep skills sharp; the day job keeps the side projects practical.</p>
+    <section>
+      <h2>Background</h2>
+      <p>Web, DevOps, AI-native tooling. Builder, full-stack, happy shipping things.</p>
+    </section>
+    <section>
+      <h2>Mixtape</h2>
+      <p>A two-side mixtape. Side A: lofi hip hop. Side B: house and techno.</p>
+    </section>
+    <section>
+      <h2>Repos</h2>
+      <p>Projects and code at <a href="https://github.com/barmoshe">github.com/barmoshe</a>.</p>
+    </section>
+    <section>
+      <h2>Letter</h2>
+      <p>Reach me at <a href="mailto:1barmoshe1@gmail.com">1barmoshe1@gmail.com</a>.</p>
+      <p>
+        <a href="https://github.com/barmoshe">GitHub</a> ·
+        <a href="https://www.linkedin.com/in/barmoshe/">LinkedIn</a> ·
+        <a href="https://www.tiktok.com/@barmoshe14">TikTok</a>
+      </p>
+    </section>
+  </main>
+</div>
 <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
