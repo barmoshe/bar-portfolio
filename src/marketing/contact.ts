@@ -12,6 +12,7 @@ export const mailtoHref = `mailto:${contact.email}?subject=${encodeURIComponent(
 // wa.me wants the international number with no '+'.
 const WHATSAPP_NUMBER = contact.phone.replace(/[^\d]/g, '');
 
-export const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-  WHATSAPP_TEXT,
-)}`;
+export const buildWhatsAppHref = (text: string = WHATSAPP_TEXT) =>
+  `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+
+export const whatsappHref = buildWhatsAppHref();
