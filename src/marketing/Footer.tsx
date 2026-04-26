@@ -1,8 +1,14 @@
+import { useLang } from './LangContext';
+
 export default function Footer() {
+  const { t } = useLang();
+  const { footer } = t;
+
   return (
     <footer className="mp-footer">
       <p>
-        בר משה · <a href={import.meta.env.BASE_URL}>חזרה לפורטפוליו</a>
+        {footer.text}
+        <a href={import.meta.env.BASE_URL}>{footer.portfolioLink}</a>
       </p>
     </footer>
   );
