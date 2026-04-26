@@ -1,4 +1,11 @@
 import { services } from '../../data/services';
+import { buildWhatsAppHref } from '../contact';
+
+const SERVICE_MESSAGES: Record<string, string> = {
+  tutoring: 'שלום בר, אני מעוניין/ת בשיעורים פרטיים בתכנות. אשמח לתאם שיחת היכרות.',
+  guiding: 'שלום בר, אני מחפש/ת ליווי וייעוץ טכני לפרויקט/צוות. אפשר לתאם שיחה?',
+  building: 'שלום בר, יש לי פרויקט שאני רוצה לבנות מקצה לקצה. אשמח לתאם שיחה.',
+};
 
 export default function Services() {
   return (
@@ -21,7 +28,14 @@ export default function Services() {
             <ul className="mp-service__bullets">
               {s.bullets.map((b) => <li key={b}>{b}</li>)}
             </ul>
-            <a className="mp-service__cta" href="#contact">לפרטים ולתיאום</a>
+            <a
+              className="mp-service__cta"
+              href={buildWhatsAppHref(SERVICE_MESSAGES[s.slug])}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              לפרטים ולתיאום
+            </a>
           </article>
         ))}
       </div>
