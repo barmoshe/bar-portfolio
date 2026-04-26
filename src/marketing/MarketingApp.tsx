@@ -10,8 +10,10 @@ import Process from './sections/Process';
 import Proof from './sections/Proof';
 import FAQ from './sections/FAQ';
 import ContactCTA from './sections/ContactCTA';
+import { useReveal } from './hooks/useReveal';
 
 export default function MarketingApp() {
+  useReveal();
   return (
     <LangProvider>
       <div className="mp-root">

@@ -122,6 +122,26 @@ html.dark .mp-root {
   max-width: 760px; margin: 0 auto;
   padding-inline: clamp(20px, 6vw, 32px);
 }
+/* Sticker-tape dividers between consecutive sections. Small rotated
+   bar with offset shadow; alternates accent colors so the rhythm
+   reads as deliberate, not noise. Skip when an .mp-section--alt is
+   adjacent — it has its own band borders. */
+.mp-section + .mp-section::before {
+  content: '';
+  display: block;
+  width: clamp(60px, 12vw, 96px);
+  height: 14px;
+  margin: 0 auto clamp(24px, 4vw, 40px);
+  background: var(--mp-accent-2);
+  border: 2px solid var(--mp-ink);
+  border-radius: 4px;
+  transform: rotate(-1deg);
+  box-shadow: 3px 3px 0 var(--mp-ink);
+}
+.mp-section:nth-of-type(2n) + .mp-section::before { background: var(--mp-accent-3); transform: rotate(1deg); }
+.mp-section:nth-of-type(3n) + .mp-section::before { background: var(--mp-primary); }
+.mp-section--alt + .mp-section::before,
+.mp-section + .mp-section--alt::before { display: none; }
 .mp-eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
   background: var(--mp-ink); color: var(--mp-bg);
@@ -246,6 +266,31 @@ html.dark .mp-root {
   content: '✦'; color: var(--mp-primary);
   margin-inline-end: 10px; font-weight: 900;
 }
+/* Above-the-fold trust signal — short pull-quote sourced from a real
+   testimonial (full Proof section keeps the others). Soft surface,
+   accent-orange edge so it reads as "human" not "CTA". */
+.mp-hero__pull {
+  margin: 22px 0 0;
+  padding: 14px 18px;
+  background: var(--mp-surface);
+  border: 2px solid var(--mp-ink);
+  border-inline-start-width: 4px;
+  border-inline-start-color: var(--mp-accent-2);
+  border-radius: var(--mp-radius-sm);
+}
+.mp-hero__pull blockquote {
+  margin: 0;
+  font-family: 'Heebo', sans-serif;
+  font-style: italic;
+  color: var(--mp-ink);
+  line-height: 1.45;
+}
+.mp-hero__pull figcaption {
+  margin-top: 6px;
+  font-family: 'Heebo', sans-serif;
+  font-size: .82rem;
+  color: var(--mp-ink-soft);
+}
 
 /* ── Social proof strip ────────────────────────────────────── */
 .mp-proof {
@@ -270,7 +315,13 @@ html.dark .mp-root {
 }
 
 /* ── Service tiles ─────────────────────────────────────────── */
-.mp-services { display: grid; gap: 22px; margin-top: 36px; }
+.mp-services {
+  display: grid; gap: 22px; margin-top: 36px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 821px) {
+  .mp-services { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+}
 .mp-service {
   position: relative;
   background: var(--mp-surface);
@@ -372,6 +423,31 @@ html.dark .mp-root {
   margin: 6px 0 0; color: var(--mp-ink-soft); line-height: 1.55;
   font-size: .98rem;
 }
+/* Connecting line behind the numbered circles. Center column 40px ≈
+   inset-inline-start(18px) + half num-circle(22px). Static dashed
+   line by default; scroll-driven draws it where supported. */
+.mp-process-wrap { position: relative; margin-top: 36px; }
+.mp-process-line {
+  position: absolute;
+  top: 22px; bottom: 22px;
+  inset-inline-start: 40px;
+  width: 4px; height: auto;
+  color: var(--mp-primary);
+  pointer-events: none;
+}
+.mp-process-line line { stroke-dashoffset: 0; }
+@supports (animation-timeline: view()) {
+  .mp-process-line line {
+    stroke-dashoffset: 100;
+    animation: mp-draw linear both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 60%;
+  }
+  @keyframes mp-draw { to { stroke-dashoffset: 0; } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mp-process-line line { stroke-dashoffset: 0 !important; }
+}
 
 /* ── FAQ ───────────────────────────────────────────────────── */
 .mp-faq { margin-top: 28px; display: grid; gap: 14px; }
@@ -397,7 +473,12 @@ html.dark .mp-root {
   transition: transform .2s;
 }
 .mp-faq details[open] summary::after { content: '−'; transform: rotate(180deg); }
-.mp-faq details[open] summary { border-bottom: 2px solid var(--mp-ink); }
+.mp-faq details[open] summary { border-bottom: 2px solid var(--mp-ink); color: var(--mp-primary); }
+.mp-faq details[open] {
+  border-inline-start-width: 4px;
+  border-inline-start-color: var(--mp-primary);
+  background: color-mix(in oklch, var(--mp-primary) 6%, var(--mp-surface));
+}
 .mp-faq__a { padding: 16px 22px 22px; color: var(--mp-ink-soft); line-height: 1.55; }
 
 /* ── Final CTA banner ──────────────────────────────────────── */
@@ -451,6 +532,11 @@ html.dark .mp-root {
   border-top: 2px solid var(--mp-ink);
   box-shadow: 0 -4px 14px oklch(0 0 0 / .12);
   display: flex; gap: 8px; align-items: center;
+  transition: transform .25s ease;
+}
+.mp-sticky[data-hidden] { transform: translateY(120%); }
+@media (prefers-reduced-motion: reduce) {
+  .mp-sticky { transform: none !important; }
 }
 .mp-sticky .mp-cta {
   flex: 1; padding: 12px 16px; min-height: 48px;
@@ -469,6 +555,27 @@ html.dark .mp-root {
   border-radius: 6px;
 }
 
+/* ── Section reveals ──────────────────────────────────────── */
+/* Primary: CSS scroll-driven animation. Compositor-thread, zero JS.
+   Chrome 115+, Safari 18+. Fallback below targets Firefox via the
+   useReveal hook in src/marketing/hooks/useReveal.ts. The global
+   reduced-motion strip a few rules down nukes both paths. */
+@supports (animation-timeline: view()) {
+  .mp-section {
+    animation: mp-reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 60%;
+  }
+  @keyframes mp-reveal {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
+@supports not (animation-timeline: view()) {
+  .mp-section { opacity: 0; transform: translateY(12px); transition: opacity .5s ease, transform .5s ease; }
+  .mp-section.is-in { opacity: 1; transform: translateY(0); }
+}
+
 /* Reduced motion: kill transforms / hovers */
 @media (prefers-reduced-motion: reduce) {
   .mp-root *, .mp-root *::before, .mp-root *::after {
@@ -478,6 +585,8 @@ html.dark .mp-root {
   .mp-service:hover, .mp-cta:hover {
     transform: none !important;
   }
+  /* Keep sections visible if reveal animation never runs */
+  .mp-section { opacity: 1 !important; transform: none !important; }
 }
 
 /* ── Hero slides (smaller, sticker-framed) ────────────────── */
@@ -524,10 +633,21 @@ html.dark .mp-root {
 }
 
 /* ── Audience tiles ───────────────────────────────────────── */
+/* Mobile stacks; ≥821px becomes a real bento driven by data-span on
+   each tile. Logical track lines stay RTL-safe automatically. */
 .mp-audiences {
   margin-top: 36px;
   display: grid; gap: 22px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: 1fr;
+}
+@media (min-width: 821px) {
+  .mp-audiences {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-auto-flow: dense;
+  }
+  .mp-audience[data-span="wide"] { grid-column: span 3; }
+  .mp-audience[data-span="half"] { grid-column: span 2; }
+  .mp-audience[data-span="tall"] { grid-column: span 2; grid-row: span 2; }
 }
 .mp-audience {
   position: relative;
@@ -578,6 +698,22 @@ html.dark .mp-root {
   padding-bottom: 2px;
 }
 .mp-audience__cta::after { content: ' ←'; }
+/* Color-meaning system: see knowledge/02-design-system.md "Marketing
+   color-meaning system". Each variant pairs the box-shadow, kicker
+   color, and CTA underline to one of three accents. */
+.mp-audience--primary { box-shadow: 5px 5px 0 var(--mp-primary); }
+.mp-audience--accent2 { box-shadow: 5px 5px 0 var(--mp-accent-2); }
+.mp-audience--accent3 { box-shadow: 5px 5px 0 var(--mp-accent-3); }
+.mp-audience--primary .mp-audience__kicker { color: var(--mp-primary); }
+/* AA-safe darkened orange for kicker text on light surface. */
+.mp-audience--accent2 .mp-audience__kicker { color: oklch(0.45 0.17 65); }
+.mp-audience--accent3 .mp-audience__kicker { color: var(--mp-accent-3); }
+.mp-audience--primary .mp-audience__cta { border-bottom-color: var(--mp-primary); }
+.mp-audience--accent2 .mp-audience__cta { border-bottom-color: var(--mp-accent-2); }
+.mp-audience--accent3 .mp-audience__cta { border-bottom-color: var(--mp-accent-3); }
+/* Dark-mode kicker tweak: orange already pulls back chroma; nudge
+   lightness up so it stays AA on the elevated surface. */
+html.dark .mp-audience--accent2 .mp-audience__kicker { color: oklch(0.78 0.15 65); }
 
 /* ── Testimonials ─────────────────────────────────────────── */
 .mp-testimonials {
@@ -596,6 +732,14 @@ html.dark .mp-root {
 .mp-testimonial--primary { box-shadow: 6px 6px 0 var(--mp-primary); }
 .mp-testimonial--accent2 { box-shadow: 6px 6px 0 var(--mp-accent-2); }
 .mp-testimonial--accent3 { box-shadow: 6px 6px 0 var(--mp-accent-3); }
+@media (min-width: 821px) {
+  .mp-testimonial:nth-child(1) { transform: rotate(-1deg); }
+  .mp-testimonial:nth-child(2) { transform: rotate(0.5deg); margin-top: 28px; }
+  .mp-testimonial:nth-child(3) { transform: rotate(-0.5deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mp-testimonial { transform: none !important; margin-top: 0 !important; }
+}
 .mp-testimonial__mark {
   font-family: 'Rubik', sans-serif; font-weight: 900;
   font-size: 3.2rem; line-height: 0.7;
@@ -619,4 +763,18 @@ html.dark .mp-root {
 .mp-testimonial__name {
   font-family: 'Rubik', sans-serif; font-weight: 700;
   font-size: .96rem; color: var(--mp-ink);
+}
+
+/* ── Mobile shadow scaling ────────────────────────────────── */
+/* Heavy 6–8px offsets crowd small layouts. Pull everything in. */
+@media (max-width: 640px) {
+  .mp-root { --mp-shadow: 4px 4px 0 var(--mp-ink); }
+  html.dark .mp-root { --mp-shadow: 4px 4px 0 oklch(0 0 0 / .55); }
+  .mp-service, .mp-audience { box-shadow: 4px 4px 0 var(--mp-ink); }
+  .mp-process__step, .mp-faq details { box-shadow: 3px 3px 0 var(--mp-ink); }
+  .mp-cta--primary { box-shadow: 4px 4px 0 var(--mp-ink); }
+  .mp-cta--secondary { box-shadow: 4px 4px 0 var(--mp-primary); }
+  .mp-testimonial--primary { box-shadow: 4px 4px 0 var(--mp-primary); }
+  .mp-testimonial--accent2 { box-shadow: 4px 4px 0 var(--mp-accent-2); }
+  .mp-testimonial--accent3 { box-shadow: 4px 4px 0 var(--mp-accent-3); }
 }

@@ -29,10 +29,15 @@ export default function MarketingHeroSlides() {
   const [paused, setPaused] = useState(false);
   const pausedRef = useRef(false);
   const timerRef = useRef<number | null>(null);
+  // Frozen at mount to keep hook order stable across resize.
+  const [isDesktop] = useState(
+    () => typeof window !== 'undefined' && matchMedia('(min-width: 821px)').matches
+  );
 
   useEffect(() => { pausedRef.current = paused; }, [paused]);
 
   useEffect(() => {
+    if (!isDesktop) return;
     if (slides.length < 2) return;
     const reduced = matchMedia(PREFERS_REDUCED);
     if (reduced.matches) return;
@@ -53,9 +58,24 @@ export default function MarketingHeroSlides() {
         timerRef.current = null;
       }
     };
-  }, [slides.length]);
+  }, [slides.length, isDesktop]);
 
   const base = import.meta.env.BASE_URL;
+
+  if (!isDesktop) {
+    const first = slides[0];
+    return (
+      <div className="mp-slides mp-slides--static">
+        <img
+          className="mp-slide is-active"
+          src={`${base}${first.src}`}
+          alt={first.alt}
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+    );
+  }
 
   return (
     <div

@@ -18,7 +18,8 @@ export default function AudienceBento() {
         {audience.items.map((a) => (
           <a
             key={a.slug}
-            className="mp-audience"
+            className={`mp-audience mp-audience--${a.accent}`}
+            data-span={a.span}
             href={buildWhatsAppHref(a.whatsappMessage)}
             target="_blank"
             rel="noreferrer noopener"

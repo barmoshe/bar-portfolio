@@ -72,12 +72,14 @@ One component per section id. The section id is set on the **outermost element**
 
 ## Marketing site (`/business/`)
 
-Hebrew-first marketing landing at `/business/` lives in `src/marketing/`. It is a **separate Vite entry** (`business/index.html` -> `src/marketing/main.tsx`) styled by `src/marketing/marketing.css` (scoped to `.mp-root`). Visual idiom: bold sticker geometry, magenta primary accent, thick borders, offset shadows. Theme is shared with the portfolio via `bm:theme`.
+Hebrew-first marketing landing at `/business/` lives in `src/marketing/`. It is a **separate Vite entry** (`business/index.html` -> `src/marketing/main.tsx`) styled by `src/marketing/marketing.css` (scoped to `.mp-root`). Visual idiom: bold sticker geometry, magenta primary accent, thick borders, offset shadows. Theme is shared with the portfolio via `bm:theme`. Language is **bilingual (HE default, EN opt-in)**, persisted in `bm:marketing-lang`, with a pre-paint script in `business/index.html` that mirrors the read so `<html lang>` / `<html dir>` are correct on first paint (no FOUC).
 
 | File | Role |
 |---|---|
-| `MarketingApp.tsx` | Page shell. Mounts `MarketingHeader`, `<main>` with sections, `Footer`, `StickyCTA`, `ink-wipe`. |
-| `MarketingHeader.tsx` | Sticky bar: brand wordmark, back-to-portfolio link, theme toggle, a11y panel button. Uses shared `useTheme` + `AccessibilityPanel`. |
+| `i18n.ts` | Source of truth for HE + EN dictionaries. Strings are organized by section so a new locale only requires duplicating the matching keys. `Lang = 'he' \| 'en'`, `DEFAULT_LANG = 'he'`. |
+| `LangContext.tsx` | `LangProvider` + `useLang()` hook. Provider reads `bm:marketing-lang`, applies `html.lang` / `html.dir`, updates `<title>` and the `meta[name="description"]` content. Exposes `{ lang, setLang, toggle, t }` where `t` is the active dictionary. |
+| `MarketingApp.tsx` | Page shell. Wraps everything in `LangProvider` and mounts `MarketingHeader`, `<main>` with sections, `Footer`, `StickyCTA`, `ink-wipe`. |
+| `MarketingHeader.tsx` | Sticky bar: brand wordmark, back-to-portfolio link, **language toggle** (`.mp-bar__btn--lang` shows `EN` when current lang is HE, `עב` when EN), a11y panel button. Theme controls live exclusively inside `AccessibilityPanel` (no theme cycle button in the header). Uses shared `useTheme` + `useLang`. |
 | `MarketingHeroSlides.tsx` | Standalone slideshow. Random 1-2s opacity crossfade. Pause button is visually hidden but keyboard-focusable to satisfy WCAG 2.2.2. Distinct from the portfolio's `HeroSlides` (no GSAP, no ink fx). |
 | `StickyCTA.tsx` | Mobile-only fixed bottom row: WhatsApp + email. Hidden ≥ 821px. |
 | `Footer.tsx` | Compact footer. |

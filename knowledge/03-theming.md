@@ -81,3 +81,7 @@ The overlay `<div class="ink-wipe" />` is rendered in `App.tsx` and left invisib
 - `src/App.tsx` - renders `<div className="ink-wipe" aria-hidden="true" />` and wires `<Strip onThemeCycle={cycle} />`.
 - `src/styles.css` - `.ink-wipe` styles (positioning, pointer-events, mix-blend-mode); `html.dark` overrides.
 - `knowledge/02-design-system.md` - the token values that flip when `html.dark` toggles.
+
+## Marketing site language pre-paint (`/business/`)
+
+`business/index.html` carries an extra inline `<script>` that mirrors `localStorage["bm:marketing-lang"]` (`"he" | "en"`, default `"he"`) onto `<html lang>` and `<html dir>` before paint, the same way the theme resolver does. The runtime hook is `LangProvider` / `useLang` in `src/marketing/LangContext.tsx`. If you add a new locale, update both the inline script and `i18n.ts` in lockstep - otherwise the first paint and the React tree will disagree on direction.
