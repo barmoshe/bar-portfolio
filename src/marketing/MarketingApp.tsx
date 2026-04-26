@@ -1,33 +1,27 @@
-import Grain from '../components/Grain';
-import InkDefs from '../components/InkDefs';
-import { useTheme } from '../hooks/useTheme';
-import MarketingStrip from './MarketingStrip';
+import './marketing.css';
+import MarketingHeader from './MarketingHeader';
+import StickyCTA from './StickyCTA';
+import Footer from './Footer';
 import HeroPitch from './sections/HeroPitch';
 import Services from './sections/Services';
 import Process from './sections/Process';
+import FAQ from './sections/FAQ';
 import ContactCTA from './sections/ContactCTA';
 
 export default function MarketingApp() {
-  const { pref: themePref, cycle, set: setThemePref, glyph, label } = useTheme();
-
   return (
-    <>
-      <InkDefs />
-      <Grain />
-      <MarketingStrip
-        themeGlyph={glyph}
-        themeLabel={label}
-        themePref={themePref}
-        onThemeCycle={cycle}
-        onThemeSet={setThemePref}
-      />
+    <div className="mp-root">
+      <MarketingHeader />
       <main id="main" tabIndex={-1}>
         <HeroPitch />
         <Services />
         <Process />
+        <FAQ />
         <ContactCTA />
       </main>
+      <Footer />
+      <StickyCTA />
       <div className="ink-wipe" aria-hidden="true" />
-    </>
+    </div>
   );
 }
