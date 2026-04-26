@@ -12,6 +12,7 @@ export default defineConfig({
       input: {
         main: 'index.html',
         business: 'business/index.html',
+        backoffice: 'backoffice/index.html',
       },
     },
   },

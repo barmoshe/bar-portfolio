@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>בק־אופיס · דמו פיקטיבי — בר משה</title>
+<meta name="description" content="בק־אופיס פיקטיבי לניהול לידים, פרויקטים וחשבוניות. דמו UI עם בקאנד מדומה ושמירה מקומית בלבד.">
+<meta name="robots" content="noindex,nofollow">
+<script>
+  /* Pre-paint theme + a11y. RTL is hard-coded for the back office UI; data
+     stays Hebrew regardless of the marketing-lang preference. */
+  (function(){
+    try{
+      var html = document.documentElement;
+      var saved = localStorage.getItem("bm:theme");
+      var mq = matchMedia("(prefers-color-scheme: dark)");
+      var dark = saved === "dark" || (saved !== "light" && mq.matches);
+      if (dark) html.classList.add("dark");
+      html.dataset.themePref = saved || "auto";
+
+      var contrast = localStorage.getItem("bm:contrast");
+      if (contrast === "more" || contrast === "less") html.dataset.contrast = contrast;
+      var scale = parseFloat(localStorage.getItem("bm:text-scale"));
+      if (scale && scale !== 1) html.style.setProperty("--text-scale", String(scale));
+      if (localStorage.getItem("bm:readable") === "1") html.dataset.readable = "true";
+    }catch(e){}
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Rubik:wght@400;500;600;700&display=swap">
+</head>
+<body>
+<div id="root"></div>
+<script type="module" src="/src/backoffice/main.tsx"></script>
+</body>
+</html>
