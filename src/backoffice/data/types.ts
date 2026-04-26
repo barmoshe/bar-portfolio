@@ -28,6 +28,8 @@ export interface Task {
   title: string;
   done: boolean;
   dueDate?: string;
+  createdAt?: string;
+  completedAt?: string;
 }
 
 export interface Note {

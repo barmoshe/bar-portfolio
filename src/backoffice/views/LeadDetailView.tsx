@@ -7,6 +7,8 @@ import SegmentedControl from '../components/SegmentedControl';
 import Tabs from '../components/Tabs';
 import EmptyState from '../components/EmptyState';
 import Skeleton from '../components/Skeleton';
+import DatePresetField from '../components/DatePresetField';
+import NewInvoiceModal from '../components/NewInvoiceModal';
 import {
   addNote,
   addTask,
@@ -40,6 +42,12 @@ export default function LeadDetailView({ leadId, tab, navigate }: Props) {
   const [taskInput, setTaskInput] = useState('');
   const [taskDue, setTaskDue] = useState('');
   const [noteInput, setNoteInput] = useState('');
+  const [retroOpen, setRetroOpen] = useState(false);
+  const [taskCreatedAt, setTaskCreatedAt] = useState<string>('');
+  const [taskAlreadyDone, setTaskAlreadyDone] = useState(false);
+  const [taskCompletedAt, setTaskCompletedAt] = useState<string>('');
+  const [noteAt, setNoteAt] = useState<string>(() => new Date().toISOString());
+  const [invoiceOpen, setInvoiceOpen] = useState(false);
 
   if (loading) {
     return (
@@ -92,9 +100,18 @@ export default function LeadDetailView({ leadId, tab, navigate }: Props) {
     e.preventDefault();
     if (!taskInput.trim()) return;
     try {
-      await addTask(lead.id, { title: taskInput, dueDate: taskDue || undefined });
+      await addTask(lead.id, {
+        title: taskInput,
+        dueDate: taskDue || undefined,
+        createdAt: retroOpen && taskCreatedAt ? taskCreatedAt : undefined,
+        done: retroOpen && taskAlreadyDone,
+        completedAt: retroOpen && taskAlreadyDone && taskCompletedAt ? taskCompletedAt : undefined,
+      });
       setTaskInput('');
       setTaskDue('');
+      setTaskCreatedAt('');
+      setTaskCompletedAt('');
+      setTaskAlreadyDone(false);
       pushToast('success', 'משימה נוספה');
     } catch (err) {
       pushToast('error', (err as Error).message);
@@ -122,8 +139,9 @@ export default function LeadDetailView({ leadId, tab, navigate }: Props) {
     e.preventDefault();
     if (!noteInput.trim()) return;
     try {
-      await addNote(lead.id, noteInput);
+      await addNote(lead.id, noteInput, noteAt || undefined);
       setNoteInput('');
+      setNoteAt(new Date().toISOString());
       pushToast('success', 'הערה נוספה');
     } catch (err) {
       pushToast('error', (err as Error).message);
@@ -228,7 +246,41 @@ export default function LeadDetailView({ leadId, tab, navigate }: Props) {
                 <button type="submit" className="bo-btn">
                   הוספה
                 </button>
+                <button
+                  type="button"
+                  className="bo-link bo-task-add__retro"
+                  aria-expanded={retroOpen}
+                  onClick={() => setRetroOpen((o) => !o)}
+                >
+                  {retroOpen ? '− רטרואקטיבית' : '+ פותחים רטרואקטיבית'}
+                </button>
               </form>
+
+              {retroOpen && (
+                <div className="bo-retro-panel">
+                  <DatePresetField
+                    legend="תאריך פתיחת המשימה"
+                    value={taskCreatedAt}
+                    onChange={setTaskCreatedAt}
+                    optional
+                  />
+                  <label className="bo-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={taskAlreadyDone}
+                      onChange={(e) => setTaskAlreadyDone(e.target.checked)}
+                    />
+                    <span>כבר הושלמה</span>
+                  </label>
+                  {taskAlreadyDone && (
+                    <DatePresetField
+                      legend="הושלמה ב־"
+                      value={taskCompletedAt}
+                      onChange={setTaskCompletedAt}
+                    />
+                  )}
+                </div>
+              )}
 
               {lead.tasks.length === 0 ? (
                 <EmptyState title="אין עדיין משימות" body="התחילי בהוספה למעלה." />
@@ -279,6 +331,7 @@ export default function LeadDetailView({ leadId, tab, navigate }: Props) {
                     required
                   />
                 </label>
+                <DatePresetField legend="תאריך ההערה" value={noteAt} onChange={setNoteAt} />
                 <button type="submit" className="bo-btn">
                   הוסיפי הערה
                 </button>
@@ -306,8 +359,17 @@ export default function LeadDetailView({ leadId, tab, navigate }: Props) {
 
           {tab === 'invoices' && (
             <article className="bo-card" role="tabpanel" aria-label="חשבוניות">
+              <header className="bo-card__head">
+                <h2 className="bo-vh">חשבוניות</h2>
+                <button type="button" className="bo-btn bo-btn--small" onClick={() => setInvoiceOpen(true)}>
+                  + חשבונית חדשה
+                </button>
+              </header>
               {lead.invoices.length === 0 ? (
-                <EmptyState title="אין עדיין חשבוניות" body="חשבוניות יופיעו כאן ברגע שיופקו." />
+                <EmptyState
+                  title="אין עדיין חשבוניות"
+                  body="לחצי + חשבונית חדשה כדי להוסיף — אפשר גם רטרואקטיבית."
+                />
               ) : (
                 <ul className="bo-inv-list">
                   {lead.invoices.map((inv) => {
@@ -450,6 +512,14 @@ export default function LeadDetailView({ leadId, tab, navigate }: Props) {
           </article>
         </aside>
       </div>
+
+      {invoiceOpen && (
+        <NewInvoiceModal
+          leadId={lead.id}
+          defaultCurrency={lead.budget.currency}
+          onClose={() => setInvoiceOpen(false)}
+        />
+      )}
     </section>
   );
 }

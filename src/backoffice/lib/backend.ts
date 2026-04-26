@@ -3,10 +3,16 @@ import type {
   ActivityEntry,
   ActivityKind,
   BackofficeState,
+  Client,
+  Currency,
   Invoice,
+  InvoiceItem,
+  InvoiceStatus,
   Lead,
   LeadStatus,
+  LeadType,
   Note,
+  Priority,
   Task,
 } from '../data/types';
 import { nid } from './ids';
@@ -65,17 +71,26 @@ async function simulate<T>(fn: () => T, errorChance = 0.05): Promise<T> {
   return fn();
 }
 
-function pushActivity(leadId: string, kind: ActivityKind, summary: string): void {
+function pushActivity(
+  leadId: string,
+  kind: ActivityKind,
+  summary: string,
+  at?: string,
+): void {
   const entry: ActivityEntry = {
     id: nid('act'),
     leadId,
     kind,
     summary,
-    createdAt: new Date().toISOString(),
+    createdAt: at ?? new Date().toISOString(),
   };
-  state.activity = [entry, ...state.activity].slice(0, ACTIVITY_CAP);
+  // Insert + sort newest-first by createdAt so backdated entries land in
+  // their correct historical slot rather than at the top of the feed.
+  const sorter = (a: ActivityEntry, b: ActivityEntry) =>
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  state.activity = [...state.activity, entry].sort(sorter).slice(0, ACTIVITY_CAP);
   const lead = state.leads.find((l) => l.id === leadId);
-  if (lead) lead.activity = [entry, ...lead.activity].slice(0, ACTIVITY_CAP);
+  if (lead) lead.activity = [...lead.activity, entry].sort(sorter).slice(0, ACTIVITY_CAP);
 }
 
 function leadById(id: string): Lead {
@@ -143,28 +158,46 @@ export function setProgress(id: string, progress: number): Promise<Lead> {
 
 export function addTask(
   leadId: string,
-  input: { title: string; dueDate?: string },
+  input: {
+    title: string;
+    dueDate?: string;
+    createdAt?: string;
+    done?: boolean;
+    completedAt?: string;
+  },
 ): Promise<Task> {
   return simulate(() => {
     const lead = leadById(leadId);
-    const task: Task = { id: nid('tsk'), title: input.title.trim(), done: false };
+    const task: Task = {
+      id: nid('tsk'),
+      title: input.title.trim(),
+      done: !!input.done,
+      createdAt: input.createdAt ?? new Date().toISOString(),
+    };
     if (input.dueDate) task.dueDate = input.dueDate;
+    if (input.done && input.completedAt) task.completedAt = input.completedAt;
     lead.tasks = [...lead.tasks, task];
-    pushActivity(leadId, 'task_added', `משימה נוספה: ${task.title}`);
+    pushActivity(leadId, 'task_added', `משימה נוספה: ${task.title}`, task.createdAt);
+    if (task.done && task.completedAt) {
+      pushActivity(leadId, 'task_completed', `משימה הושלמה: ${task.title}`, task.completedAt);
+    }
     persist();
     notify();
     return clone(task);
   });
 }
 
-export function toggleTask(leadId: string, taskId: string): Promise<Task> {
+export function toggleTask(leadId: string, taskId: string, at?: string): Promise<Task> {
   return simulate(() => {
     const lead = leadById(leadId);
     const task = lead.tasks.find((t) => t.id === taskId);
     if (!task) throw new Error('משימה לא נמצאה');
     task.done = !task.done;
     if (task.done) {
-      pushActivity(leadId, 'task_completed', `משימה הושלמה: ${task.title}`);
+      task.completedAt = at ?? new Date().toISOString();
+      pushActivity(leadId, 'task_completed', `משימה הושלמה: ${task.title}`, task.completedAt);
+    } else {
+      delete task.completedAt;
     }
     persist();
     notify();
@@ -181,17 +214,20 @@ export function removeTask(leadId: string, taskId: string): Promise<void> {
   });
 }
 
-export function addNote(leadId: string, body: string): Promise<Note> {
+export function addNote(leadId: string, body: string, at?: string): Promise<Note> {
   return simulate(() => {
     const lead = leadById(leadId);
     const note: Note = {
       id: nid('nt'),
       body: body.trim(),
       author: 'בר',
-      createdAt: new Date().toISOString(),
+      createdAt: at ?? new Date().toISOString(),
     };
-    lead.notes = [note, ...lead.notes];
-    pushActivity(leadId, 'note_added', `הערה חדשה נוספה — ${lead.client.company}`);
+    // Keep notes sorted newest-first by createdAt for predictable display.
+    lead.notes = [...lead.notes, note].sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+    pushActivity(leadId, 'note_added', `הערה חדשה נוספה — ${lead.client.company}`, note.createdAt);
     persist();
     notify();
     return clone(note);
@@ -218,6 +254,139 @@ export function sendInvoice(leadId: string, invoiceId: string): Promise<Invoice>
     if (!inv) throw new Error('חשבונית לא נמצאה');
     inv.status = 'sent';
     pushActivity(leadId, 'invoice_sent', `חשבונית ${inv.number} נשלחה — ${lead.client.company}`);
+    persist();
+    notify();
+    return clone(inv);
+  });
+}
+
+export type NewLeadInput = {
+  client: Omit<Client, 'initials'> & { initials?: string };
+  type: LeadType;
+  title: string;
+  summary: string;
+  status: LeadStatus;
+  priority: Priority;
+  createdAt: string;
+  dueDate?: string;
+  budget: { amount: number; currency: Currency };
+  hourlyRate?: number;
+  tags: string[];
+};
+
+function deriveInitials(name: string, company: string): string {
+  const words = `${name} ${company}`.trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return '··';
+  if (words.length === 1) return words[0]!.slice(0, 2);
+  return `${words[0]![0]}${words[1]![0]}`;
+}
+
+export function createLead(input: NewLeadInput): Promise<Lead> {
+  return simulate(() => {
+    const requiredErrors: string[] = [];
+    if (!input.client.name.trim()) requiredErrors.push('שם איש קשר');
+    if (!input.client.company.trim()) requiredErrors.push('שם עסק');
+    if (!input.title.trim()) requiredErrors.push('כותרת הפרויקט');
+    if (!(input.budget.amount > 0)) requiredErrors.push('תקציב');
+    if (requiredErrors.length > 0) {
+      throw new Error(`חסר: ${requiredErrors.join(', ')}`);
+    }
+    const lead: Lead = {
+      id: nid('lead'),
+      client: {
+        ...input.client,
+        initials:
+          (input.client.initials && input.client.initials.trim()) ||
+          deriveInitials(input.client.name, input.client.company),
+      },
+      type: input.type,
+      title: input.title.trim(),
+      summary: input.summary.trim(),
+      status: input.status,
+      priority: input.priority,
+      createdAt: input.createdAt,
+      ...(input.dueDate ? { dueDate: input.dueDate } : {}),
+      progress: 0,
+      budget: input.budget,
+      ...(input.hourlyRate ? { hourlyRate: input.hourlyRate } : {}),
+      hoursLogged: 0,
+      tags: input.tags.filter((t) => t.trim().length > 0),
+      tasks: [],
+      notes: [],
+      invoices: [],
+      activity: [],
+    };
+    state.leads = [...state.leads, lead];
+    pushActivity(
+      lead.id,
+      'lead_created',
+      `ליד חדש: ${lead.client.name} — ${lead.client.company}`,
+      lead.createdAt,
+    );
+    persist();
+    notify();
+    return clone(lead);
+  });
+}
+
+export type NewInvoiceInput = {
+  number: string;
+  amount: number;
+  currency: Currency;
+  status: InvoiceStatus;
+  issuedAt: string;
+  dueAt: string;
+  items: Array<Omit<InvoiceItem, 'id'>>;
+};
+
+export function nextInvoiceNumber(now: Date = new Date()): string {
+  const year = now.getFullYear();
+  const prefix = `${year}-`;
+  let max = 0;
+  state.leads.forEach((l) =>
+    l.invoices.forEach((inv) => {
+      if (inv.number.startsWith(prefix)) {
+        const n = parseInt(inv.number.slice(prefix.length), 10);
+        if (Number.isFinite(n) && n > max) max = n;
+      }
+    }),
+  );
+  return `${prefix}${String(max + 1).padStart(4, '0')}`;
+}
+
+export function addInvoice(leadId: string, draft: NewInvoiceInput): Promise<Invoice> {
+  return simulate(() => {
+    const lead = leadById(leadId);
+    if (!(draft.amount > 0)) throw new Error('סכום החשבונית חייב להיות גדול מאפס');
+    if (new Date(draft.dueAt).getTime() < new Date(draft.issuedAt).getTime()) {
+      throw new Error('"לתשלום עד" לא יכול להיות לפני "הופקה"');
+    }
+    const inv: Invoice = {
+      id: nid('inv'),
+      number: draft.number.trim() || nextInvoiceNumber(new Date(draft.issuedAt)),
+      amount: draft.amount,
+      currency: draft.currency,
+      issuedAt: draft.issuedAt,
+      dueAt: draft.dueAt,
+      status: draft.status,
+      items: draft.items.map((it) => ({ ...it, id: nid('it') })),
+    };
+    lead.invoices = [...lead.invoices, inv];
+    if (draft.status === 'paid') {
+      pushActivity(
+        leadId,
+        'invoice_paid',
+        `חשבונית ${inv.number} סומנה כשולמה — ${lead.client.company}`,
+        inv.issuedAt,
+      );
+    } else if (draft.status === 'sent') {
+      pushActivity(
+        leadId,
+        'invoice_sent',
+        `חשבונית ${inv.number} נשלחה — ${lead.client.company}`,
+        inv.issuedAt,
+      );
+    }
     persist();
     notify();
     return clone(inv);

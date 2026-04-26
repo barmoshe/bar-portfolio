@@ -6,6 +6,7 @@ import ProgressBar from '../components/ProgressBar';
 import FilterChips from '../components/FilterChips';
 import EmptyState from '../components/EmptyState';
 import Skeleton from '../components/Skeleton';
+import NewLeadModal from '../components/NewLeadModal';
 import { useLeads } from '../lib/hooks';
 import type { LeadStatus, LeadType } from '../data/types';
 import { STATUS_LABEL, STATUS_ORDER, TYPE_LABEL, TYPE_ORDER } from '../components/labels';
@@ -26,6 +27,7 @@ export default function LeadsView({
   const [statusFilter, setStatusFilter] = useState<LeadStatus | 'all'>('all');
   const [sortKey, setSortKey] = useState<SortKey>('due');
   const [sortAsc, setSortAsc] = useState(true);
+  const [addOpen, setAddOpen] = useState(false);
 
   const rows = useMemo(() => {
     if (!leads) return [];
@@ -94,11 +96,16 @@ export default function LeadsView({
 
   return (
     <section className="bo-view">
-      <header className="bo-view__head">
-        <h1>לידים</h1>
-        <p className="bo-view__sub">
-          {leads?.length ?? 0} לידים בסך הכול · מציג {rows.length}
-        </p>
+      <header className="bo-view__head bo-view__head--with-action">
+        <div>
+          <h1>לידים</h1>
+          <p className="bo-view__sub">
+            {leads?.length ?? 0} לידים בסך הכול · מציג {rows.length}
+          </p>
+        </div>
+        <button type="button" className="bo-btn" onClick={() => setAddOpen(true)}>
+          + ליד חדש
+        </button>
       </header>
 
       <div className="bo-filters">
@@ -118,7 +125,21 @@ export default function LeadsView({
 
       {rows.length === 0 ? (
         <div className="bo-card">
-          <EmptyState title="אין לידים מתאימים" body="נסי להסיר חלק מהמסננים או לחפש מילה אחרת." />
+          <EmptyState
+            title={leads?.length === 0 ? 'אין עדיין לידים' : 'אין לידים מתאימים'}
+            body={
+              leads?.length === 0
+                ? 'הוסיפי את הליד הראשון כדי להתחיל לעבוד.'
+                : 'נסי להסיר חלק מהמסננים או לחפש מילה אחרת.'
+            }
+            action={
+              leads?.length === 0 ? (
+                <button type="button" className="bo-btn" onClick={() => setAddOpen(true)}>
+                  + ליד חדש
+                </button>
+              ) : undefined
+            }
+          />
         </div>
       ) : (
         <div className="bo-card bo-table-wrap">
@@ -177,6 +198,14 @@ export default function LeadsView({
             </tbody>
           </table>
         </div>
+      )}
+
+      {addOpen && (
+        <NewLeadModal
+          onClose={() => setAddOpen(false)}
+          navigate={navigate}
+          paletteOffset={leads?.length ?? 0}
+        />
       )}
     </section>
   );

@@ -590,6 +590,236 @@
 .bo-cal__dot { inline-size: 7px; block-size: 7px; border-radius: 50%; display: inline-block; }
 .bo-cal__more { font-size: 10px; color: var(--ink-soft); }
 
+/* ── Forms (new-lead, new-invoice modals) ─────────────────────────────── */
+.bo-view__head--with-action {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.bo-form { display: flex; flex-direction: column; gap: 18px; }
+.bo-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+  align-items: end;
+}
+.bo-fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 0;
+  padding: 0 0 14px;
+  border-block-end: 1px solid var(--border);
+  margin: 0;
+}
+.bo-fieldset:last-of-type { border-block-end: 0; padding-block-end: 0; }
+.bo-fieldset > legend {
+  padding: 0;
+  margin: 0 0 4px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+.bo-field > span:first-child:not(.bo-vh) {
+  display: block;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-block-end: 4px;
+}
+.bo-form__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-block-start: 6px;
+  border-block-start: 1px solid var(--border);
+}
+.bo-form__total {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border-radius: 6px;
+  font-size: 14px;
+  flex-wrap: wrap;
+}
+.bo-form__total > span:nth-child(2) { font-size: 16px; font-weight: 700; }
+.bo-form__override { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-soft); margin-inline-start: auto; }
+.bo-form__total input[type="number"] {
+  inline-size: 120px;
+  padding: 4px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  background: var(--paper);
+  font: inherit;
+}
+
+/* Color swatch palette */
+.bo-color-swatches { display: flex; flex-wrap: wrap; gap: 6px; padding-block-start: 4px; }
+.bo-swatch {
+  inline-size: 28px;
+  block-size: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.1s ease;
+}
+.bo-swatch:hover { transform: scale(1.1); }
+.bo-swatch[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--ink); }
+.bo-swatch:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+
+/* Date preset field */
+.bo-date-preset { border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.bo-date-preset__legend {
+  padding: 0;
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.bo-date-preset__chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.bo-date-preset__custom { padding-block-start: 6px; }
+.bo-date-preset__custom input[type="date"] {
+  padding: 6px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--ink);
+  font: inherit;
+}
+.bo-date-preset__custom input[type="date"]:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+.bo-date-preset__caption { margin: 0; font-size: 11px; color: var(--ink-faint); }
+
+/* Tag input */
+.bo-tag-input { border: 0; padding: 0; margin: 0; }
+.bo-tag-input__legend {
+  padding: 0;
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-weight: 600;
+  margin-block-end: 6px;
+}
+.bo-tag-input__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  min-block-size: 44px;
+  align-items: center;
+}
+.bo-tag-input__row input {
+  flex: 1;
+  min-inline-size: 120px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  padding: 4px;
+  outline: none;
+}
+.bo-tag--editable {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-strong);
+  padding: 2px 4px 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+.bo-tag__remove {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 4px;
+  color: var(--ink-soft);
+}
+.bo-tag__remove:hover { color: var(--red); }
+.bo-tag__remove:focus-visible { outline: 2px solid var(--green); outline-offset: 1px; border-radius: 2px; }
+
+/* Retroactive task panel */
+.bo-task-add__retro {
+  flex-basis: 100%;
+  text-align: start;
+  font-size: 12px;
+  padding-block-start: 4px;
+}
+.bo-retro-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  margin-block-end: 14px;
+  background: var(--surface-2);
+  border: 1px dashed var(--border-strong);
+  border-radius: 6px;
+}
+.bo-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* Invoice item editor */
+.bo-inv-items-edit { display: flex; flex-direction: column; gap: 6px; }
+.bo-inv-items-edit__head,
+.bo-inv-items-edit__row {
+  display: grid;
+  grid-template-columns: 1fr 64px 100px 32px;
+  gap: 6px;
+  align-items: center;
+}
+.bo-inv-items-edit__head {
+  font-size: 11px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding-inline: 4px;
+}
+.bo-inv-items-edit__row input {
+  padding: 6px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  inline-size: 100%;
+}
+.bo-inv-items-edit__row input:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 1px;
+}
+
+@media (max-width: 640px) {
+  .bo-form-grid { grid-template-columns: 1fr; }
+  .bo-inv-items-edit__head { display: none; }
+  .bo-inv-items-edit__row {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 8px;
+    background: var(--surface-2);
+    border-radius: 6px;
+  }
+  .bo-inv-items-edit__row input:first-child { grid-column: 1 / -1; }
+  .bo-form__total { flex-direction: column; align-items: stretch; gap: 8px; }
+  .bo-form__override { margin-inline-start: 0; }
+}
+
 /* ── Responsive ─────────────────────────────────────────────────────────
    Tablet/mobile collapses the desktop sidebar into a fixed bottom tab bar
    (mobile-app idiom). Topbar stays sticky at top, main scrolls between.
