@@ -1362,3 +1362,150 @@
 
   /* Hero pitch headline tweak so the "מתחילים?" italic em reads cleanly */
   [dir="rtl"] .hero-pitch .headline em{font-family:inherit}
+
+  /* ── Marketing-only additions (used only by /business/) ──────────
+     These rules are tiny and intentionally co-located with portfolio
+     styles so the marketing page can drop its own stylesheet. They
+     reuse portfolio tokens (--card-bg, --card-border, --green, etc.)
+     and follow the same offset-shadow card idiom. */
+
+  /* Hero layout: copy on one side, small slide column on the other.
+     Slide column is intentionally constrained so it never dominates
+     the headline. */
+  [dir="rtl"] .hero-pitch__layout{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) clamp(220px, 22vw, 320px);
+    gap:clamp(20px, 4vw, 48px);
+    align-items:start;
+    margin-top:8px;
+  }
+  [dir="rtl"] .hero-pitch__copy{min-width:0}
+  [dir="rtl"] .hero-pitch__slides{
+    position:relative;
+    width:100%;
+    max-inline-size:clamp(220px, 22vw, 320px);
+    aspect-ratio:1/1;
+    align-self:start;
+    margin-top:8px;
+  }
+  @media (max-width:820px){
+    [dir="rtl"] .hero-pitch__layout{grid-template-columns:1fr}
+    [dir="rtl"] .hero-pitch__slides{
+      max-inline-size:min(60vw, 240px);
+      margin:0 auto 8px;
+    }
+  }
+
+  /* Slide stack: opacity crossfade. Square portrait, ink border, soft
+     offset shadow in green so it reads as the same designer's hand. */
+  [dir="rtl"] .mp-slides{
+    position:relative;
+    width:100%;
+    aspect-ratio:1/1;
+    border:1.5px solid var(--card-border);
+    box-shadow:6px 8px 0 var(--green);
+    overflow:hidden;
+    background:var(--card-bg);
+  }
+  [dir="rtl"] .mp-slide{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:opacity .45s ease;
+    filter:grayscale(20%) contrast(1.02);
+  }
+  [dir="rtl"] .mp-slide.is-active{opacity:1}
+
+  /* Pause button is visually hidden but stays in the focus order
+     so keyboard / screen-reader users still satisfy WCAG 2.2.2. */
+  [dir="rtl"] .mp-slides__pause{
+    position:absolute;
+    inset-block-end:8px;
+    inset-inline-end:8px;
+    width:1px; height:1px;
+    padding:0; margin:-1px;
+    overflow:hidden;
+    clip:rect(0 0 0 0);
+    clip-path:inset(50%);
+    white-space:nowrap;
+    border:0; background:transparent; color:transparent;
+    cursor:pointer;
+  }
+  [dir="rtl"] .mp-slides__pause:focus-visible{
+    width:auto; height:auto;
+    padding:6px 10px; margin:0;
+    overflow:visible;
+    clip:auto;
+    clip-path:none;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--mono);
+    font-size:12px;
+    box-shadow:3px 3px 0 var(--green);
+    outline:3px solid var(--green);
+    outline-offset:2px;
+  }
+
+  /* Ghost variant of the .enter CTA - same shape, lighter weight, used
+     for secondary actions (mailto next to WhatsApp). */
+  [dir="rtl"] .enter--ghost{
+    background:transparent;
+    color:var(--ink);
+    box-shadow:6px 6px 0 var(--blue);
+  }
+  [dir="rtl"] .enter--ghost:hover{
+    background:var(--blue);
+    color:var(--paper);
+    box-shadow:8px 8px 0 var(--ink);
+  }
+  [dir="rtl"] .enter--ghost:active{box-shadow:2px 2px 0 var(--blue)}
+
+  /* Sticky WhatsApp pill - fixed bottom-inline-end. Mobile primary CTA
+     after the user scrolls past the hero. */
+  [dir="rtl"] .bm-pill-wrap{
+    position:fixed;
+    inset-block-end:clamp(16px, 4vw, 28px);
+    inset-inline-end:clamp(16px, 4vw, 28px);
+    z-index:40;
+    pointer-events:none;
+  }
+  [dir="rtl"] .bm-pill{
+    pointer-events:auto;
+    display:inline-flex; align-items:center; gap:10px;
+    padding:12px 18px;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--display);
+    font-weight:700;
+    font-size:.95rem;
+    text-decoration:none;
+    border:1.5px solid var(--ink);
+    box-shadow:5px 6px 0 var(--green);
+    min-height:48px;
+    transition:transform .2s, box-shadow .2s;
+  }
+  [dir="rtl"] .bm-pill:hover{
+    transform:translate(-2px,-2px);
+    box-shadow:7px 8px 0 var(--green);
+  }
+  [dir="rtl"] .bm-pill:active{
+    transform:translate(2px,2px);
+    box-shadow:2px 2px 0 var(--green);
+  }
+  [dir="rtl"] .bm-pill__icon{display:inline-flex; color:var(--green)}
+  @media (max-width:560px){
+    [dir="rtl"] .bm-pill__label{
+      position:absolute; width:1px; height:1px;
+      padding:0; margin:-1px; overflow:hidden;
+      clip:rect(0 0 0 0); clip-path:inset(50%);
+      white-space:nowrap;
+    }
+    [dir="rtl"] .bm-pill{
+      width:56px; height:56px;
+      min-height:56px;
+      padding:0;
+      border-radius:50%;
+      justify-content:center;
+    }
+  }
