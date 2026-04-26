@@ -1,27 +1,29 @@
-import { testimonials } from '../../data/proof';
+import { useLang } from '../LangContext';
 
 export default function Proof() {
+  const { t } = useLang();
+  const { proof } = t;
+
   return (
     <section className="mp-section" id="proof" aria-labelledby="proof-headline">
-      <span className="mp-eyebrow">עדויות</span>
+      <span className="mp-eyebrow">{proof.eyebrow}</span>
       <h2 className="mp-h2" id="proof-headline">
-        קולות שיצאו <mark>לאוויר.</mark>
+        {proof.headlineLead}
+        <mark>{proof.headlineMark}</mark>
       </h2>
-      <p className="mp-lead">
-        שורות ממי שלמד.ה איתי, בנה.ה איתי, או שיגרנו ביחד משהו לאוויר.
-      </p>
+      <p className="mp-lead">{proof.lead}</p>
 
       <div className="mp-testimonials">
-        {testimonials.map((t) => (
+        {proof.items.map((tm) => (
           <figure
-            key={t.id}
-            className={`mp-testimonial mp-testimonial--${t.accent}`}
+            key={tm.id}
+            className={`mp-testimonial mp-testimonial--${tm.accent}`}
           >
             <span className="mp-testimonial__mark" aria-hidden="true">&ldquo;</span>
-            <blockquote className="mp-testimonial__quote">{t.quote}</blockquote>
+            <blockquote className="mp-testimonial__quote">{tm.quote}</blockquote>
             <figcaption className="mp-testimonial__cite">
-              <span className="mp-testimonial__name">{t.name}</span>
-              <span className="mp-testimonial__role">{t.role}</span>
+              <span className="mp-testimonial__name">{tm.name}</span>
+              <span className="mp-testimonial__role">{tm.role}</span>
             </figcaption>
           </figure>
         ))}

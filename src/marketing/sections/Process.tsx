@@ -1,37 +1,21 @@
-type Step = { num: string; title: string; body: string };
-
-const STEPS: Step[] = [
-  {
-    num: '01',
-    title: 'בריף',
-    body: 'שיחת היכרות קצרה. מציפים את הצורך, מי המשתמש.ת, ואיך מודדים הצלחה. יוצאים עם תוכנית קונקרטית.',
-  },
-  {
-    num: '02',
-    title: 'בנייה',
-    body: 'אני בונה בקצב צפוי, עם אבני דרך שבועיות. את.ה רואה התקדמות, נותן.ת פידבק, וכיוון משתנה כשצריך.',
-  },
-  {
-    num: '03',
-    title: 'מסירה',
-    body: 'משגרים, מתעדים, ומשאירים אותך עם משהו שאת.ה יכול.ה לתחזק. ליווי שבועיים אחרי הלייב — כלול.',
-  },
-];
+import { useLang } from '../LangContext';
 
 export default function Process() {
+  const { t } = useLang();
+  const { process } = t;
+
   return (
     <section className="mp-section mp-section--alt" id="process" aria-labelledby="process-headline">
       <div className="mp-section__inner">
-        <span className="mp-eyebrow">איך עובדים</span>
+        <span className="mp-eyebrow">{process.eyebrow}</span>
         <h2 className="mp-h2" id="process-headline">
-          שלושה שלבים, <mark>בלי הפתעות.</mark>
+          {process.headlineLead}
+          <mark>{process.headlineMark}</mark>
         </h2>
-        <p className="mp-lead">
-          בלי תהליכים מסובכים. שיחה ראשונה, בנייה שקופה, ומסירה עם ליווי קצר אחרי שעולים לאוויר.
-        </p>
+        <p className="mp-lead">{process.lead}</p>
 
-        <ol className="mp-process" aria-label="שלבים">
-          {STEPS.map((s) => (
+        <ol className="mp-process" aria-label={process.stepsLabel}>
+          {process.steps.map((s) => (
             <li className="mp-process__step" key={s.num}>
               <span className="mp-process__num" aria-hidden="true">{s.num}</span>
               <h3 className="mp-process__title">{s.title}</h3>

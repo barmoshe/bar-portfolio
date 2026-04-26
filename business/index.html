@@ -6,8 +6,8 @@
 <title>בר משה — שירותים: לימוד, ליווי, ובנייה</title>
 <meta name="description" content="בר משה — מפתח עצמאי. שיעורים פרטיים, ליווי טכני, ובניית אפליקציות, אתרים ורעיונות יצירתיים.">
 <script>
-  /* Pre-paint theme + a11y resolver - mirrors index.html so the same prefs apply
-     to the marketing page with no FOUC. Keep in sync with index.html:8-29. */
+  /* Pre-paint theme + a11y + lang resolver - mirrors index.html so the same
+     prefs apply to the marketing page with no FOUC. Default lang is Hebrew. */
   (function(){
     try{
       var html = document.documentElement;
@@ -22,6 +22,12 @@
       var scale = parseFloat(localStorage.getItem("bm:text-scale"));
       if (scale && scale !== 1) html.style.setProperty("--text-scale", String(scale));
       if (localStorage.getItem("bm:readable") === "1") html.dataset.readable = "true";
+
+      var lang = localStorage.getItem("bm:marketing-lang");
+      if (lang === "en") {
+        html.lang = "en";
+        html.dir = "ltr";
+      }
     }catch(e){}
   })();
 </script>

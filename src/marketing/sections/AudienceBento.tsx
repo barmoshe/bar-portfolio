@@ -1,30 +1,28 @@
-import { audiences } from '../../data/audiences';
+import { useLang } from '../LangContext';
 import { buildWhatsAppHref } from '../contact';
 
 export default function AudienceBento() {
+  const { t } = useLang();
+  const { audience } = t;
+
   return (
-    <section
-      className="mp-section"
-      id="audience"
-      aria-labelledby="audience-headline"
-    >
-      <span className="mp-eyebrow">למי זה מתאים</span>
+    <section className="mp-section" id="audience" aria-labelledby="audience-headline">
+      <span className="mp-eyebrow">{audience.eyebrow}</span>
       <h2 className="mp-h2" id="audience-headline">
-        אם אחד מאלה מוכר — <mark>בואו נדבר.</mark>
+        {audience.headlineLead}
+        <mark>{audience.headlineMark}</mark>
       </h2>
-      <p className="mp-lead">
-        ארבעה כיוונים, כל אחד עם נקודת התחלה משלו. בחר.י את שלך וההודעה תיפתח עם ההקשר הנכון.
-      </p>
+      <p className="mp-lead">{audience.lead}</p>
 
       <div className="mp-audiences">
-        {audiences.map((a) => (
+        {audience.items.map((a) => (
           <a
             key={a.slug}
             className="mp-audience"
             href={buildWhatsAppHref(a.whatsappMessage)}
             target="_blank"
             rel="noreferrer noopener"
-            aria-label={`פתח שיחה ב-WhatsApp עם בר משה - ${a.title}`}
+            aria-label={a.ariaLabel}
           >
             <span className="mp-audience__emoji" aria-hidden="true">{a.emoji}</span>
             <p className="mp-audience__kicker">{a.kicker}</p>

@@ -1,4 +1,5 @@
 import './marketing.css';
+import { LangProvider } from './LangContext';
 import MarketingHeader from './MarketingHeader';
 import StickyCTA from './StickyCTA';
 import Footer from './Footer';
@@ -12,20 +13,22 @@ import ContactCTA from './sections/ContactCTA';
 
 export default function MarketingApp() {
   return (
-    <div className="mp-root">
-      <MarketingHeader />
-      <main id="main" tabIndex={-1}>
-        <HeroPitch />
-        <AudienceBento />
-        <Services />
-        <Process />
-        <Proof />
-        <FAQ />
-        <ContactCTA />
-      </main>
-      <Footer />
-      <StickyCTA />
-      <div className="ink-wipe" aria-hidden="true" />
-    </div>
+    <LangProvider>
+      <div className="mp-root">
+        <MarketingHeader />
+        <main id="main" tabIndex={-1}>
+          <HeroPitch />
+          <AudienceBento />
+          <Services />
+          <Process />
+          <Proof />
+          <FAQ />
+          <ContactCTA />
+        </main>
+        <Footer />
+        <StickyCTA />
+        <div className="ink-wipe" aria-hidden="true" />
+      </div>
+    </LangProvider>
   );
 }

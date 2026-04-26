@@ -3,7 +3,7 @@
 ## Runtime
 
 - **React 19** with `StrictMode`, rendered from `src/main.tsx` into `#root` in `index.html`.
-- **Vite 6** for dev server, build, and preview.
+- **Vite 6** for dev server, build, and preview. Multi-entry: `index.html` (portfolio) + `business/index.html` (Hebrew marketing site under `src/marketing/`).
 - **TypeScript 5** with project references (`tsconfig.json` → `tsconfig.app.json` + `tsconfig.node.json`).
 - **GSAP 3** + `@gsap/react` for animations. Registered plugins: `ScrollTrigger`, `SplitText`, `Flip`, `useGSAP`. See `src/lib/gsap.ts`.
 - **No UI library, no Tailwind, no styled-components.** All styling lives in a single `src/styles.css` (~700 lines) using CSS custom properties as design tokens. This is deliberate - see `99-caveats.md`.

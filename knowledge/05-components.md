@@ -70,6 +70,28 @@ One component per section id. The section id is set on the **outermost element**
 | Asset preload progress | `useAssetPreload` | `src/hooks/useAssetPreload.ts` |
 | Scroll-driven folio fades | `useFolioScrub` | `src/hooks/useFolioScrub.ts` (GSAP ScrollTrigger) |
 
+## Marketing site (`/business/`)
+
+Hebrew-first marketing landing at `/business/` lives in `src/marketing/`. It is a **separate Vite entry** (`business/index.html` -> `src/marketing/main.tsx`) styled by `src/marketing/marketing.css` (scoped to `.mp-root`). Visual idiom: bold sticker geometry, magenta primary accent, thick borders, offset shadows. Theme is shared with the portfolio via `bm:theme`.
+
+| File | Role |
+|---|---|
+| `MarketingApp.tsx` | Page shell. Mounts `MarketingHeader`, `<main>` with sections, `Footer`, `StickyCTA`, `ink-wipe`. |
+| `MarketingHeader.tsx` | Sticky bar: brand wordmark, back-to-portfolio link, theme toggle, a11y panel button. Uses shared `useTheme` + `AccessibilityPanel`. |
+| `MarketingHeroSlides.tsx` | Standalone slideshow. Random 1-2s opacity crossfade. Pause button is visually hidden but keyboard-focusable to satisfy WCAG 2.2.2. Distinct from the portfolio's `HeroSlides` (no GSAP, no ink fx). |
+| `StickyCTA.tsx` | Mobile-only fixed bottom row: WhatsApp + email. Hidden ≥ 821px. |
+| `Footer.tsx` | Compact footer. |
+| `contact.ts` | `mailtoHref`, `whatsappHref`, and `buildWhatsAppHref(text)` for audience-specific pre-filled messages. |
+| `sections/HeroPitch.tsx` | id `top`. Sticker badge, headline, lead, "questions" list, WhatsApp + mail CTAs, smaller `MarketingHeroSlides` column on desktop, stats strip. |
+| `sections/AudienceBento.tsx` | id `audience`. Four sticker tiles linking directly to WhatsApp with audience-specific pre-filled messages from `data/audiences.ts`. |
+| `sections/Services.tsx` | id `services`. Three service tiles (`tutoring`, `guiding`, `building`) from `data/services.ts`. |
+| `sections/Process.tsx` | id `process`. Numbered three-step timeline. |
+| `sections/Proof.tsx` | id `proof`. Testimonials with rotating accent (`primary`/`accent2`/`accent3`) from `data/proof.ts`. |
+| `sections/FAQ.tsx` | id `faq`. Native `<details>`/`<summary>` accordion. |
+| `sections/ContactCTA.tsx` | id `contact`. Final magenta CTA banner. |
+
+Marketing data lives in `src/data/` next to portfolio data: `services.ts`, `audiences.ts`, `proof.ts`, `marketingHeroSlides.ts`.
+
 ## Adding a new section
 
 1. Create `src/components/sections/<Name>.tsx`.

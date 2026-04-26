@@ -1,25 +1,21 @@
-import { services } from '../../data/services';
+import { useLang } from '../LangContext';
 import { buildWhatsAppHref } from '../contact';
 
-const SERVICE_MESSAGES: Record<string, string> = {
-  tutoring: 'שלום בר, אני מעוניין/ת בשיעורים פרטיים בתכנות. אשמח לתאם שיחת היכרות.',
-  guiding: 'שלום בר, אני מחפש/ת ליווי וייעוץ טכני לפרויקט/צוות. אפשר לתאם שיחה?',
-  building: 'שלום בר, יש לי פרויקט שאני רוצה לבנות מקצה לקצה. אשמח לתאם שיחה.',
-};
-
 export default function Services() {
+  const { t } = useLang();
+  const { services } = t;
+
   return (
     <section className="mp-section" id="services" aria-labelledby="services-headline">
-      <span className="mp-eyebrow">השירותים</span>
+      <span className="mp-eyebrow">{services.eyebrow}</span>
       <h2 className="mp-h2" id="services-headline">
-        שלושה <mark>שערים</mark> להתחיל איתם.
+        {services.headlineLead}
+        <mark>{services.headlineMark}</mark>
       </h2>
-      <p className="mp-lead">
-        כל שירות עומד בפני עצמו — בחר.י מה שמתאים, או נשלב כמה לפי השלב שלך.
-      </p>
+      <p className="mp-lead">{services.lead}</p>
 
       <div className="mp-services">
-        {services.map((s) => (
+        {services.items.map((s) => (
           <article className="mp-service" key={s.slug} aria-labelledby={`s-${s.slug}`}>
             <span className="mp-service__emoji" aria-hidden="true">{s.emoji}</span>
             <p className="mp-service__kicker">{s.kicker}</p>
@@ -30,11 +26,11 @@ export default function Services() {
             </ul>
             <a
               className="mp-service__cta"
-              href={buildWhatsAppHref(SERVICE_MESSAGES[s.slug])}
+              href={buildWhatsAppHref(s.whatsappMessage)}
               target="_blank"
               rel="noreferrer noopener"
             >
-              לפרטים ולתיאום
+              {services.ctaLabel}
             </a>
           </article>
         ))}

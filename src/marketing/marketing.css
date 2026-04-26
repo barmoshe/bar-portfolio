@@ -18,11 +18,11 @@
   --mp-surface:      oklch(1.00 0.01 80);    /* pure card surface */
   --mp-ink:          oklch(0.18 0.04 40);    /* same as --ink */
   --mp-ink-soft:     oklch(0.36 0.04 40);
-  --mp-primary:      oklch(0.62 0.22 340);   /* magenta — primary brand accent */
+  --mp-primary:      oklch(0.55 0.23 340);   /* magenta - primary brand accent (darkened for AA) */
   --mp-primary-ink:  oklch(0.99 0.02 340);   /* on-primary text */
-  --mp-accent-2:     oklch(0.78 0.17 65);    /* warm orange — sticker accent */
-  --mp-accent-3:     oklch(0.55 0.20 250);   /* electric blue — link accent */
-  --mp-whatsapp:     oklch(0.62 0.16 155);   /* WhatsApp-ish green */
+  --mp-accent-2:     oklch(0.78 0.17 65);    /* warm orange - sticker accent */
+  --mp-accent-3:     oklch(0.45 0.20 250);   /* electric blue - link accent (darkened for AA) */
+  --mp-whatsapp:     oklch(0.50 0.16 155);   /* WhatsApp-ish green (darkened for AA) */
   --mp-whatsapp-ink: oklch(0.99 0.02 155);
   --mp-radius-sm: 10px;
   --mp-radius:    18px;
@@ -97,6 +97,14 @@ html.dark .mp-root {
 .mp-bar__btn:hover, .mp-bar__btn:focus-visible {
   background: var(--mp-ink); color: var(--mp-bg);
   outline: none;
+}
+.mp-bar__btn--lang {
+  width: auto; min-width: 44px;
+  padding: 0 10px;
+  font-family: 'Rubik', sans-serif; font-weight: 800;
+  font-size: 13px; letter-spacing: .04em;
+  border: 2px solid var(--mp-ink);
+  text-transform: uppercase;
 }
 
 /* ── Section base ──────────────────────────────────────────── */
@@ -201,12 +209,12 @@ html.dark .mp-root {
 .mp-hero__visual {
   justify-self: center;
   width: 100%;
-  max-inline-size: min(60vw, 280px);
+  max-inline-size: min(50vw, 220px);
 }
 @media (min-width: 720px) {
   .mp-hero__visual {
     justify-self: end;
-    width: clamp(220px, 22vw, 320px);
+    width: clamp(180px, 18vw, 240px);
     max-inline-size: none;
   }
 }
