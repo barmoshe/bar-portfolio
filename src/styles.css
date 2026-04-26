@@ -1303,3 +1303,62 @@
   @media (prefers-reduced-motion: reduce){
     .mug-pause{transition:none}
   }
+
+  /* ──────────────────────────────────────────────────────────────────────
+     Marketing page (hire.html) — RTL + Hebrew typography.
+     Scoped to [dir="rtl"] so nothing here affects the English portfolio.
+     The page reuses .page, .headline, .dek, .enter, .strip, etc. and only
+     needs (a) Hebrew web fonts, (b) a few logical-property fixes, and
+     (c) a mobile nav rule so the marketing strip doesn't hide its links.
+     ────────────────────────────────────────────────────────────────────── */
+  [dir="rtl"]{font-family:"Heebo", var(--serif)}
+  [dir="rtl"] .headline,
+  [dir="rtl"] h1,
+  [dir="rtl"] h2,
+  [dir="rtl"] h3{
+    font-family:"Frank Ruhl Libre", "David Libre", var(--display);
+    letter-spacing:0;
+  }
+  [dir="rtl"] .dek{font-family:"Heebo", var(--serif);font-style:normal}
+  [dir="rtl"] .folio{left:24px;right:auto}
+
+  /* The shared .enter CTA arrow points right (→) for LTR; flip it for RTL
+     so it visually leads the reader forward. */
+  [dir="rtl"] .enter::after{content:"←"}
+  [dir="rtl"] .enter:hover::after{transform:translateX(-4px)}
+
+  /* Strip on the marketing page: keep nav links visible at every width
+     because the marketing page has no separate TabBar. The links are short
+     and Hebrew, so they fit in a horizontal scroll on phones. */
+  [dir="rtl"] .strip{overflow-x:auto;scrollbar-width:none}
+  [dir="rtl"] .strip::-webkit-scrollbar{display:none}
+  @media (max-width:820px){
+    [dir="rtl"] .strip a{display:inline-flex;white-space:nowrap;font-size:11px;padding:0 6px}
+    [dir="rtl"] .strip{gap:14px}
+  }
+
+  /* Service / process / contact card hover - subtle lift, mirrors the .clip
+     pattern but works without per-card class complexity. */
+  [dir="rtl"] .service-card,
+  [dir="rtl"] .process-strip > li,
+  [dir="rtl"] .contact-card{
+    transition:transform .25s cubic-bezier(.2,.7,.2,1),
+               box-shadow .25s cubic-bezier(.2,.7,.2,1);
+  }
+  [dir="rtl"] .service-card:hover,
+  [dir="rtl"] .process-strip > li:hover,
+  [dir="rtl"] .contact-card:hover{
+    transform:translate(2px,-2px);
+  }
+  [dir="rtl"] .contact-card:focus-visible{
+    outline:3px solid var(--green);outline-offset:3px;
+  }
+
+  /* Hebrew-page hero questions — give them a green prefix instead of bullet */
+  [dir="rtl"] .hero-questions li{
+    border-inline-start:3px solid var(--green);
+    padding-inline-start:14px;
+  }
+
+  /* Hero pitch headline tweak so the "מתחילים?" italic em reads cleanly */
+  [dir="rtl"] .hero-pitch .headline em{font-family:inherit}

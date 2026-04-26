@@ -4,4 +4,14 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   base: '/bar-portfolio/',
+  build: {
+    rollupOptions: {
+      // Multi-page: index.html is the portfolio app, hire.html is the
+      // separate Hebrew marketing page (src/marketing/*).
+      input: {
+        main: 'index.html',
+        hire: 'hire.html',
+      },
+    },
+  },
 });

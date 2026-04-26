@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { gsap, useGSAP, FULL_MOTION_QUERY } from '../lib/gsap';
-import AccessibilityPanel from './AccessibilityPanel';
+import AccessibilityPanel from '../components/AccessibilityPanel';
 import type { ThemePref } from '../hooks/useTheme';
 
 type Props = {
@@ -9,15 +9,8 @@ type Props = {
   themePref: ThemePref;
   onThemeCycle: (origin?: { x: number; y: number }) => void;
   onThemeSet: (next: ThemePref) => void;
-  onSkip: () => void;
-  skipRemembered: boolean;
 };
 
-// Move keyboard focus to the section a hash link points at, so that the next
-// Tab continues from inside the section instead of from the nav. Targets must
-// have tabIndex={-1} (each <article class="page"> does, set in App.tsx and
-// section components). Scrolling is left to the browser's default anchor
-// handling; we only nudge focus.
 function focusSectionFromHash(href: string) {
   const id = href.startsWith('#') ? href.slice(1) : '';
   if (!id) return;
@@ -27,14 +20,12 @@ function focusSectionFromHash(href: string) {
   }
 }
 
-export default function Strip({
+export default function MarketingStrip({
   themeGlyph,
   themeLabel,
   themePref,
   onThemeCycle,
   onThemeSet,
-  onSkip,
-  skipRemembered,
 }: Props) {
   const ref = useRef<HTMLElement | null>(null);
   const a11yBtnRef = useRef<HTMLButtonElement | null>(null);
@@ -42,7 +33,6 @@ export default function Strip({
 
   const closeA11y = () => {
     setA11yOpen(false);
-    // Return focus to the gear button, per the dialog return-focus pattern.
     requestAnimationFrame(() => a11yBtnRef.current?.focus());
   };
 
@@ -72,15 +62,14 @@ export default function Strip({
   return (
     <>
       <a className="skip-link" href="#main">
-        Skip to content
+        דלג לתוכן
       </a>
-      <nav className="strip" aria-label="Primary" ref={ref}>
-        <a className="key" href="#intro" onClick={onAnchor}>About</a>
-        <a href="#background" onClick={onAnchor}>Background</a>
-        <a href="#mixtape" onClick={onAnchor}>Mixtape</a>
-        <a href="#repos" onClick={onAnchor}>Open Source</a>
-        <a href="./hire.html" lang="he" dir="rtl">שירותים</a>
-        <a href="#letter" onClick={onAnchor}>Contact</a>
+      <nav className="strip" aria-label="ניווט ראשי" ref={ref}>
+        <a className="key" href="./" lang="he">← חזרה לפורטפוליו</a>
+        <a href="#about" onClick={onAnchor}>אודות</a>
+        <a href="#services" onClick={onAnchor}>שירותים</a>
+        <a href="#process" onClick={onAnchor}>תהליך</a>
+        <a href="#contact" onClick={onAnchor}>יצירת קשר</a>
         <span className="grow" />
         <button
           className="toggle theme-btn"
@@ -100,23 +89,13 @@ export default function Strip({
           className="toggle"
           id="a11yBtn"
           type="button"
-          title="Accessibility settings"
-          aria-label="Open accessibility settings"
+          title="הגדרות נגישות"
+          aria-label="פתיחת הגדרות נגישות"
           aria-haspopup="dialog"
           aria-expanded={a11yOpen}
           onClick={() => setA11yOpen(true)}
         >
           ⚙
-        </button>
-        <button
-          className="toggle"
-          id="skipBtn"
-          type="button"
-          title="Remember: skip cover"
-          onClick={onSkip}
-          disabled={skipRemembered}
-        >
-          {skipRemembered ? 'remembered ✓' : 'Remember me'}
         </button>
       </nav>
       {a11yOpen ? (
