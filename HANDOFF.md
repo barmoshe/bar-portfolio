@@ -43,10 +43,10 @@ Pulled from `src/data/portfolio.ts:75-83` (contact) and `src/components/sections
 
 ## Known follow-ups (not yet done — pick up here)
 
-1. **Google Search Console verification meta tag.** The user has not provided a token. If they do, add inside `<head>` in `index.html`:
-   `<meta name="google-site-verification" content="<TOKEN>">`
-   (Alternative: DNS / file-upload verification — file-upload may not work cleanly under the `/bar-portfolio/` subpath; meta-tag is simplest.)
-2. **Landscape OG image.** Currently using `portraits/img0.png` which is portrait orientation (928×1152). LinkedIn / Twitter / WhatsApp will letterbox it. Ideal: commit a 1200×630 image to `public/og-cover.png` and swap the `og:image` and `twitter:image` URLs.
+1. ~~**Google Search Console verification meta tag.**~~ DONE. Token `J14SUFNrS5ecDD25pC3JGPK-fDgpXOPxOdMRkJV4Sqs` lives in `index.html`. HTML-file fallback at `public/google934215264611e5f3.html` also present. Verified.
+2. ~~**Landscape OG image.**~~ DONE. 1200×630 JPG at `public/og-cover.jpg` (76 KB). Generated from `public/og-cover.svg` via `npx --yes @resvg/resvg-js-cli` then JPG-encoded with `sips`. All three refs in `index.html` (og:image, twitter:image, JSON-LD `image`) now point to it. Add `og:image:width`/`og:image:height`/updated `og:image:alt` were also added. To regenerate: edit the SVG, run the same npx + sips chain.
+
+**Sitemap namespace bug (post-deploy fix, 2026-04-26):** Initial commit `b03570a` shipped `public/sitemap.xml` with `xmlns="http://www.sitemap.org/..."` (singular). Google Search Console rejected it as "Sitemap could not be read." Corrected to `http://www.sitemaps.org/...` (plural). After the deploy lands, **resubmit the sitemap in Search Console**.
 3. **Backlinks.** No code change — user needs to add `https://barmoshe.github.io/bar-portfolio/` to GitHub profile README, LinkedIn "Websites" section, and any dev.to/Medium bio. Backlinks are the dominant signal for ranking against existing LinkedIn/GitHub results on a name query.
 4. **Custom domain (optional, larger lift).** Buying e.g. `barmoshe.dev` and pointing it at GitHub Pages would lift the site off the `github.io` subpath. Steps: A/AAAA DNS records → Settings → Pages → Custom domain → enable HTTPS → change `base: '/bar-portfolio/'` to `base: '/'` in `vite.config.ts` → update every absolute URL in `index.html` (canonical, og:url, og:image, twitter:image, JSON-LD `url`/`image`/`@id`) and in `public/sitemap.xml` and `public/robots.txt`. Also update the GitHub Actions deploy + the `barmoshe.github.io` URLs in any docs under `knowledge/`.
 5. **Indexing wait time.** Google typically takes 3–14 days after sitemap submission to crawl + index. Ranking against entrenched LinkedIn/GitHub results for "Bar Moshe" will take ongoing backlink effort; the schema work just makes it possible.
