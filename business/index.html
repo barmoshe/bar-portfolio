@@ -6,16 +6,19 @@
 <title>בר משה — שירותים: לימוד, ליווי, ובנייה</title>
 <meta name="description" content="בר משה — מפתח עצמאי. שיעורים פרטיים, ליווי טכני, ובניית אפליקציות, אתרים ורעיונות יצירתיים.">
 <script>
-  /* Pre-paint theme + a11y resolver - mirrors index.html so the same prefs apply
-     to the marketing page with no FOUC. Keep in sync with index.html:8-29. */
+  /* Marketing pre-paint resolver. Light by default; ignores portfolio's
+     bm:theme and prefers-color-scheme. Dark only opts in if the user
+     explicitly toggles via MarketingThemeToggle, which writes
+     bm:marketing-theme. Accessibility prefs (contrast, scale, readable)
+     stay in sync with the portfolio so user choices carry over. */
   (function(){
     try{
       var html = document.documentElement;
-      var saved = localStorage.getItem("bm:theme");
-      var mq = matchMedia("(prefers-color-scheme: dark)");
-      var dark = saved === "dark" || (saved !== "light" && mq.matches);
-      if (dark) html.classList.add("dark");
-      html.dataset.themePref = saved || "auto";
+      html.classList.remove("dark");
+      var marketingTheme = localStorage.getItem("bm:marketing-theme");
+      if (marketingTheme === "dark") html.classList.add("dark");
+      html.dataset.themePref = marketingTheme === "dark" ? "dark" : "light";
+      html.dataset.marketingTheme = marketingTheme === "dark" ? "dark" : "light";
 
       var contrast = localStorage.getItem("bm:contrast");
       if (contrast === "more" || contrast === "less") html.dataset.contrast = contrast;

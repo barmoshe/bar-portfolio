@@ -1,0 +1,25 @@
+/**
+ * Portfolio hero slides. The portrait set rendered by HeroSlides.tsx.
+ * Centralized here so non-portfolio surfaces (e.g. the marketing page)
+ * can import a different list and pass it into the same component.
+ */
+
+export type Slide = { src: string; alt: string; caption: string };
+
+export const portfolioHeroSlides: Slide[] = [
+  { src: 'portraits/img0.png', alt: 'Bar Moshe - portrait 0', caption: 'portrait · 0' },
+  { src: 'portraits/img1.png', alt: 'Bar Moshe - portrait 1', caption: 'portrait · 1' },
+  { src: 'portraits/img2.png', alt: 'Bar Moshe - portrait 2', caption: 'portrait · 2' },
+  { src: 'portraits/img3.png', alt: 'Bar Moshe - portrait 3', caption: 'portrait · 3' },
+  { src: 'portraits/img4.png', alt: 'Bar Moshe - portrait 4', caption: 'portrait · 4' },
+  { src: 'portraits/img5.png', alt: 'Bar Moshe - portrait 5', caption: 'portrait · 5' },
+  { src: 'portraits/img6.png', alt: 'Bar Moshe - portrait 6', caption: 'portrait · 6' },
+  { src: 'portraits/img7.png', alt: 'Bar Moshe - portrait 7', caption: 'portrait · 7' },
+  { src: 'portraits/img9.png', alt: 'Bar Moshe - portrait 9', caption: 'portrait · 9' },
+  { src: 'portraits/img10.png', alt: 'Bar Moshe - portrait 10', caption: 'portrait · 10' },
+  { src: 'portraits/img11.png', alt: 'Bar Moshe - portrait 11', caption: 'portrait · 11' },
+  { src: 'portraits/img12.png', alt: 'Bar Moshe - portrait 12', caption: 'portrait · 12' },
+  { src: 'portraits/img13.png', alt: 'Bar Moshe - portrait 13', caption: 'portrait · 13' },
+  { src: 'portraits/img14.png', alt: 'Bar Moshe - portrait 14', caption: 'portrait · 14' },
+  { src: 'portraits/img15.png', alt: 'Bar Moshe - portrait 15', caption: 'portrait · 15' },
+];

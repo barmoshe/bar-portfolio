@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { gsap, FULL_MOTION_QUERY } from '../lib/gsap';
-
-type Slide = { src: string; alt: string; caption: string };
+import { portfolioHeroSlides, type Slide } from '../data/heroSlides';
 
 // Four ink-native transitions, cycled round-robin. Each is implemented as a
 // GSAP timeline that tweens either CSS mask stops (bloom/brush/tear) or an
@@ -10,23 +9,8 @@ type Slide = { src: string; alt: string; caption: string };
 const FX = ['bloom', 'brush', 'tear', 'crumple'] as const;
 type Fx = (typeof FX)[number];
 
-export const SLIDES: Slide[] = [
-  { src: 'portraits/img0.png', alt: 'Bar Moshe - portrait 0', caption: 'portrait · 0' },
-  { src: 'portraits/img1.png', alt: 'Bar Moshe - portrait 1', caption: 'portrait · 1' },
-  { src: 'portraits/img2.png', alt: 'Bar Moshe - portrait 2', caption: 'portrait · 2' },
-  { src: 'portraits/img3.png', alt: 'Bar Moshe - portrait 3', caption: 'portrait · 3' },
-  { src: 'portraits/img4.png', alt: 'Bar Moshe - portrait 4', caption: 'portrait · 4' },
-  { src: 'portraits/img5.png', alt: 'Bar Moshe - portrait 5', caption: 'portrait · 5' },
-  { src: 'portraits/img6.png', alt: 'Bar Moshe - portrait 6', caption: 'portrait · 6' },
-  { src: 'portraits/img7.png', alt: 'Bar Moshe - portrait 7', caption: 'portrait · 7' },
-  { src: 'portraits/img9.png', alt: 'Bar Moshe - portrait 9', caption: 'portrait · 9' },
-  { src: 'portraits/img10.png', alt: 'Bar Moshe - portrait 10', caption: 'portrait · 10' },
-  { src: 'portraits/img11.png', alt: 'Bar Moshe - portrait 11', caption: 'portrait · 11' },
-  { src: 'portraits/img12.png', alt: 'Bar Moshe - portrait 12', caption: 'portrait · 12' },
-  { src: 'portraits/img13.png', alt: 'Bar Moshe - portrait 13', caption: 'portrait · 13' },
-  { src: 'portraits/img14.png', alt: 'Bar Moshe - portrait 14', caption: 'portrait · 14' },
-  { src: 'portraits/img15.png', alt: 'Bar Moshe - portrait 15', caption: 'portrait · 15' },
-];
+// Re-export so existing portfolio imports (boot screen preload) keep working.
+export const SLIDES: Slide[] = portfolioHeroSlides;
 
 // Carousel always starts on this slide; the first shuffle bag excludes it.
 export const INITIAL_SLIDE_INDEX = 0;
@@ -40,9 +24,10 @@ const fisherYatesShuffle = <T,>(input: readonly T[]): T[] => {
   return out;
 };
 
-// First shuffle bag, computed once per page load. Both the boot screen
-// (for preload prioritisation) and the carousel itself read from this so
-// the order images warm in matches the order the user will see them.
+// First shuffle bag for the portfolio, computed once per page load. Both the
+// boot screen (for preload prioritisation) and the carousel itself read from
+// this so the order images warm in matches the order the user will see them.
+// Surfaces that pass a custom `slides` prop compute their own bag.
 export const INITIAL_BAG: readonly number[] = fisherYatesShuffle(
   SLIDES.map((_, i) => i).filter((i) => i !== INITIAL_SLIDE_INDEX),
 );
@@ -65,8 +50,24 @@ const resetSlide = (el: HTMLElement) => {
   delete el.dataset.fx;
 };
 
-export default function HeroSlides() {
-  const [slides] = useState<Slide[]>(SLIDES);
+type HeroSlidesProps = {
+  /** Override the slide list. Defaults to the portfolio portraits. */
+  slides?: Slide[];
+  /** Localized aria-label for the slideshow region. */
+  ariaLabel?: string;
+  /** Localized labels for the pause / resume button states. */
+  pauseLabel?: { paused: string; playing: string };
+};
+
+export default function HeroSlides({
+  slides: slidesProp,
+  ariaLabel = 'Bar Moshe - portrait variations',
+  pauseLabel = {
+    paused: 'Resume portrait slideshow',
+    playing: 'Pause portrait slideshow',
+  },
+}: HeroSlidesProps = {}) {
+  const [slides] = useState<Slide[]>(() => slidesProp ?? SLIDES);
   const [idx, setIdx] = useState(0);
   // Mirrored as React state so the Pause/Play button can render its
   // aria-pressed and label correctly. The ref is still authoritative for
@@ -79,12 +80,17 @@ export default function HeroSlides() {
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const firstAdvanceDoneRef = useRef(false);
-  // Shuffle bag of upcoming slide indices. Pre-seeded from the module-level
-  // INITIAL_BAG (computed once per page load) so the boot screen can preload
-  // assets in this exact order. Refilled (Fisher-Yates, current slide
-  // excluded) when drained, so every slide is shown once before any repeats
-  // and the last-shown slide can't reappear at the bag boundary.
-  const bagRef = useRef<number[]>([...INITIAL_BAG]);
+  // Initial shuffle bag. Portfolio default reuses INITIAL_BAG so the boot
+  // screen's preload order matches what the carousel renders. Custom slide
+  // sets compute a fresh shuffle excluding INITIAL_SLIDE_INDEX.
+  const initialBag = useMemo(() => {
+    if (!slidesProp) return [...INITIAL_BAG];
+    return fisherYatesShuffle(
+      slidesProp.map((_, i) => i).filter((i) => i !== INITIAL_SLIDE_INDEX),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const bagRef = useRef<number[]>(initialBag);
 
   const stop = () => {
     if (timerRef.current !== null) {
@@ -301,7 +307,7 @@ export default function HeroSlides() {
       className="mug"
       id="heroSlides"
       ref={rootRef}
-      aria-label="Bar Moshe - portrait variations"
+      aria-label={ariaLabel}
       aria-roledescription="Auto-cycling slideshow"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -322,8 +328,8 @@ export default function HeroSlides() {
         type="button"
         className="mug-pause"
         aria-pressed={paused}
-        aria-label={paused ? 'Resume portrait slideshow' : 'Pause portrait slideshow'}
-        title={paused ? 'Resume slideshow' : 'Pause slideshow'}
+        aria-label={paused ? pauseLabel.paused : pauseLabel.playing}
+        title={paused ? pauseLabel.paused : pauseLabel.playing}
         onClick={togglePause}
       >
         {paused ? '▶' : '❚❚'}
