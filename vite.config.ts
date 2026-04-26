@@ -6,11 +6,12 @@ export default defineConfig({
   base: '/bar-portfolio/',
   build: {
     rollupOptions: {
-      // Multi-page: index.html is the portfolio app, business.html is the
-      // separate Hebrew marketing page (src/marketing/*).
+      // Multi-page: index.html is the portfolio app; business/index.html is
+      // the separate Hebrew marketing page (src/marketing/*). Folder layout
+      // gives a clean /business/ URL on GitHub Pages instead of /business.html.
       input: {
         main: 'index.html',
-        business: 'business.html',
+        business: 'business/index.html',
       },
     },
   },

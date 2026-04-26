@@ -65,7 +65,7 @@ export default function MarketingStrip({
         דלג לתוכן
       </a>
       <nav className="strip" aria-label="ניווט ראשי" ref={ref}>
-        <a className="key" href="./" lang="he">← חזרה לפורטפוליו</a>
+        <a className="key" href={import.meta.env.BASE_URL} lang="he">← חזרה לפורטפוליו</a>
         <a href="#about" onClick={onAnchor}>אודות</a>
         <a href="#services" onClick={onAnchor}>שירותים</a>
         <a href="#process" onClick={onAnchor}>תהליך</a>

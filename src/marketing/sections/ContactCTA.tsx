@@ -248,8 +248,11 @@ export default function ContactCTA() {
           fontSize: '.95rem',
         }}
       >
-        או בואו <a href="./" style={{ color: 'var(--green)' }}>חזרה לפורטפוליו</a> לראות עבודות
-        קודמות.
+        או בואו{' '}
+        <a href={import.meta.env.BASE_URL} style={{ color: 'var(--green)' }}>
+          חזרה לפורטפוליו
+        </a>{' '}
+        לראות עבודות קודמות.
       </p>
     </article>
   );

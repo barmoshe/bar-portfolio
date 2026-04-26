@@ -79,7 +79,7 @@ export default function Strip({
         <a href="#background" onClick={onAnchor}>Background</a>
         <a href="#mixtape" onClick={onAnchor}>Mixtape</a>
         <a href="#repos" onClick={onAnchor}>Open Source</a>
-        <a href="./business.html" lang="he" dir="rtl">שירותים</a>
+        <a href={`${import.meta.env.BASE_URL}business/`} lang="he" dir="rtl">שירותים</a>
         <a href="#letter" onClick={onAnchor}>Contact</a>
         <span className="grow" />
         <button
