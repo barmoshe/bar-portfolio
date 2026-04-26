@@ -6,11 +6,11 @@ export default defineConfig({
   base: '/bar-portfolio/',
   build: {
     rollupOptions: {
-      // Multi-page: index.html is the portfolio app, hire.html is the
+      // Multi-page: index.html is the portfolio app, business.html is the
       // separate Hebrew marketing page (src/marketing/*).
       input: {
         main: 'index.html',
-        hire: 'hire.html',
+        business: 'business.html',
       },
     },
   },

@@ -1,5 +1,5 @@
 /**
- * Marketing services - the three offerings advertised on hire.html.
+ * Marketing services - the three offerings advertised on business.html.
  * Hebrew copy lives here so it is reviewable in diffs and easy to tweak
  * without touching component code.
  */

@@ -1305,7 +1305,7 @@
   }
 
   /* ──────────────────────────────────────────────────────────────────────
-     Marketing page (hire.html) — RTL + Hebrew typography.
+     Marketing page (business.html) — RTL + Hebrew typography.
      Scoped to [dir="rtl"] so nothing here affects the English portfolio.
      The page reuses .page, .headline, .dek, .enter, .strip, etc. and only
      needs (a) Hebrew web fonts, (b) a few logical-property fixes, and
