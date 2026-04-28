@@ -8,6 +8,10 @@
 <meta name="author" content="Bar Moshe">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://barmoshe.github.io/bar-portfolio/">
+<!-- Preload the first hero portrait the moment HTML parses, so the carousel's
+     visible slide is in cache before React mounts. Keeps the base path in
+     lockstep with vite.config.ts; rename both together if the repo is renamed. -->
+<link rel="preload" as="image" href="/bar-portfolio/portraits/img0.png" fetchpriority="high">
 <meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0f0f10" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="website">
