@@ -28,4 +28,5 @@ export const portfolioHeroSlides: Slide[] = [
   { src: 'portraits/img19.png', alt: 'Bar Moshe - blue-only variation of portrait 18', caption: 'portrait · 19 · blue' },
   { src: 'portraits/img20.png', alt: 'Bar Moshe - fiery portrait', caption: 'portrait · 20 · fire' },
   { src: 'portraits/img21.png', alt: 'Bar Moshe - cosmic blue lightning portrait', caption: 'portrait · 21 · cosmic' },
+  { src: 'portraits/img22.png', alt: 'Bar Moshe - Simpsons-style portrait in a verdant forest', caption: 'portrait · 22 · forest' },
 ];
