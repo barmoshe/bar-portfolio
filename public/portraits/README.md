@@ -4,7 +4,7 @@ Source images for the `HeroSlides` portrait slideshow on the `#intro` section.
 
 ## Contents
 
-`img0.png` … `img20.png` - portrait variations across multiple media (oil, sketch, photo, cubist, 3d render, painterly, cartoon, stained-glass, monochrome blue, fiery, etc.). The captions and order are defined in `src/data/heroSlides.ts`; `HeroSlides.tsx` reads that list.
+`img0.png` … `img21.png` - portrait variations across multiple media (oil, sketch, photo, cubist, 3d render, painterly, cartoon, stained-glass, monochrome blue, fiery, cosmic-lightning, etc.). The captions and order are defined in `src/data/heroSlides.ts`; `HeroSlides.tsx` reads that list.
 
 `img8.png` is intentionally absent - the index is non-contiguous. New entries should append fresh indices rather than backfill the gap.
 

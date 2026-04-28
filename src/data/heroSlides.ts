@@ -27,4 +27,5 @@ export const portfolioHeroSlides: Slide[] = [
   { src: 'portraits/img18.png', alt: 'Bar Moshe - stained-glass cubist portrait', caption: 'portrait · 18 · stained-glass' },
   { src: 'portraits/img19.png', alt: 'Bar Moshe - blue-only variation of portrait 18', caption: 'portrait · 19 · blue' },
   { src: 'portraits/img20.png', alt: 'Bar Moshe - fiery portrait', caption: 'portrait · 20 · fire' },
+  { src: 'portraits/img21.png', alt: 'Bar Moshe - cosmic blue lightning portrait', caption: 'portrait · 21 · cosmic' },
 ];
