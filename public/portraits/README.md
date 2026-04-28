@@ -4,11 +4,15 @@ Source images for the `HeroSlides` portrait slideshow on the `#intro` section.
 
 ## Contents
 
-`img0.png` … `img4.png` - five portrait variations, each in a different medium (oil, sketch, photo, cubist, 3d render). The captions are defined in `src/components/HeroSlides.tsx`.
+`img0.png` … `img20.png` - portrait variations across multiple media (oil, sketch, photo, cubist, 3d render, painterly, cartoon, stained-glass, monochrome blue, fiery, etc.). The captions and order are defined in `src/data/heroSlides.ts`; `HeroSlides.tsx` reads that list.
+
+`img8.png` is intentionally absent - the index is non-contiguous. New entries should append fresh indices rather than backfill the gap.
+
+`img19.png` is a luminance-mapped blue-only variation derived from `img18.png` (navy → cyan LUT). Treat it as a derived asset: re-running the LUT on a different source updates it.
 
 ## Naming
 
-Zero-indexed, `imgN.png`, contiguous. Adding a sixth requires editing the `SLIDES` array in `HeroSlides.tsx` - see `knowledge/04-animation.md` and `knowledge/05-components.md`.
+`imgN.png`, mostly contiguous (gap at `img8`). Adding another portrait means dropping `imgN.png` here **and** appending an entry to `portfolioHeroSlides` in `src/data/heroSlides.ts` - see `knowledge/04-animation.md` and `knowledge/05-components.md`.
 
 ## Path resolution
 
