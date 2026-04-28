@@ -13,21 +13,16 @@ export default function Boot({ onGone }: Props) {
   const breathRef = useRef<gsap.core.Timeline | null>(null);
 
   const base = import.meta.env.BASE_URL;
-  // Preload in the exact order the carousel will reveal: first the visible
-  // slide (INITIAL_SLIDE_INDEX), then the rest in the same shuffle the bag
-  // will produce (INITIAL_BAG). The browser's preload-link queue prioritises
-  // requests in declaration order, so the first slide-after-boot is fetched
-  // ahead of the long tail.
+  // Preload in carousel order: visible slide first, then the rest of the
+  // shuffle bag. Only the visible slide is critical - it gates the Enter
+  // button via `ready`. The rest warm in the background.
   const assets = useMemo(() => {
     const order = [INITIAL_SLIDE_INDEX, ...INITIAL_BAG];
     return order.map((i) => `${base}${SLIDES[i]!.src}`);
   }, [base]);
-  const { loaded, total, done } = useAssetPreload(assets);
+  const { loaded, total, done, ready } = useAssetPreload(assets);
   const percent = total > 0 ? Math.round((loaded / total) * 100) : 100;
-  // Gate the Enter button until preload reaches 30%. We don't wait for full
-  // completion - once the first slide-after-boot and a few followers have
-  // landed, the carousel can carry the rest while the user reads the cover.
-  const canEnter = percent >= 30;
+  const canEnter = ready;
 
   const dismiss = () => {
     if (leaving || !canEnter) return;
