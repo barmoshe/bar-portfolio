@@ -22,12 +22,14 @@ export default function Boot({ onGone }: Props) {
     const order = [INITIAL_SLIDE_INDEX, ...INITIAL_BAG];
     return order.map((i) => `${base}${SLIDES[i]!.src}`);
   }, [base]);
-  const { loaded, total, done } = useAssetPreload(assets);
+  const { loaded, total, done, ready } = useAssetPreload(assets);
   const percent = total > 0 ? Math.round((loaded / total) * 100) : 100;
-  // Gate the Enter button until preload reaches 30%. We don't wait for full
-  // completion - once the first slide-after-boot and a few followers have
-  // landed, the carousel can carry the rest while the user reads the cover.
-  const canEnter = percent >= 30;
+  // Gate Enter on the visible slide being paintable, not on aggregate
+  // percent. Smaller assets deeper in the bag can land before the
+  // (large) first slide, so a percent threshold can unlock the cover
+  // while img0 is still pending and produce a broken-image flash on
+  // dismiss. See useAssetPreload.ts for the critical-vs-background split.
+  const canEnter = ready;
 
   const dismiss = () => {
     if (leaving || !canEnter) return;
