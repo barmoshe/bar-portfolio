@@ -78,7 +78,7 @@ export const contact = {
   github: 'https://github.com/barmoshe',
   linkedin: 'https://www.linkedin.com/in/barmoshe/',
   phone: '+972546561465',
-  tiktok: 'https://www.tiktok.com/@barmoshe14',
+  medium: 'https://medium.com/@barmoshe',
   facebook: 'https://www.facebook.com/share/1E89hVfhG3/?mibextid=wwXIfr',
 };
 

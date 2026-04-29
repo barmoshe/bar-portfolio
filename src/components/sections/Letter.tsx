@@ -17,7 +17,7 @@ import {
   InstagramIcon,
   WhatsAppIcon,
   GitHubIcon,
-  TikTokIcon,
+  MediumIcon,
   FacebookIcon,
 } from '../ContactIcons';
 
@@ -109,15 +109,15 @@ const CARDS: Card[] = [
     size: 'small',
   },
   {
-    href: 'https://www.tiktok.com/@barmoshe14',
+    href: 'https://medium.com/@barmoshe',
     target: '_blank',
     rel: 'noopener',
     rotate: '0deg',
     shadowColor: 'var(--purple)',
     kickerColor: 'var(--purple)',
-    kickerLeft: '// tiktok',
-    value: '@barmoshe14',
-    Icon: TikTokIcon,
+    kickerLeft: '// medium',
+    value: '@barmoshe',
+    Icon: MediumIcon,
     size: 'small',
   },
   {
