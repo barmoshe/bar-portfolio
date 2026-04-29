@@ -14,11 +14,25 @@ const MAX_MS = 2000;
 const FADE_MS = 450;
 const PREFERS_REDUCED = '(prefers-reduced-motion: reduce)';
 
-const pickNext = (current: number, total: number): number => {
-  if (total < 2) return 0;
-  let next = current;
-  while (next === current) next = Math.floor(Math.random() * total);
-  return next;
+const fisherYatesShuffle = <T,>(input: readonly T[]): T[] => {
+  const out = input.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j]!, out[i]!];
+  }
+  return out;
+};
+
+// Build a fresh shuffle of all slide indices except `avoid`, so the next
+// pick is never the slide that's already on screen. Once the bag empties,
+// the caller refills it — this guarantees every image appears once before
+// any repeat.
+const refillBag = (total: number, avoid: number): number[] => {
+  const indices: number[] = [];
+  for (let i = 0; i < total; i++) {
+    if (i !== avoid) indices.push(i);
+  }
+  return fisherYatesShuffle(indices);
 };
 
 const randInterval = () => MIN_MS + Math.random() * (MAX_MS - MIN_MS);
@@ -29,6 +43,7 @@ export default function MarketingHeroSlides() {
   const [paused, setPaused] = useState(false);
   const pausedRef = useRef(false);
   const timerRef = useRef<number | null>(null);
+  const bagRef = useRef<number[]>([]);
   // Frozen at mount to keep hook order stable across resize.
   const [isDesktop] = useState(
     () => typeof window !== 'undefined' && matchMedia('(min-width: 821px)').matches
@@ -47,7 +62,10 @@ export default function MarketingHeroSlides() {
         timerRef.current = window.setTimeout(tick, 600);
         return;
       }
-      setActive((cur) => pickNext(cur, slides.length));
+      setActive((cur) => {
+        if (bagRef.current.length === 0) bagRef.current = refillBag(slides.length, cur);
+        return bagRef.current.shift()!;
+      });
       timerRef.current = window.setTimeout(tick, randInterval());
     };
     timerRef.current = window.setTimeout(tick, randInterval());

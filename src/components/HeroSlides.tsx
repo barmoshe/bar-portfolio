@@ -43,7 +43,9 @@ const resetSlide = (el: HTMLElement) => {
   el.style.removeProperty('--bloom-y');
   el.style.removeProperty('--bloom-r');
   el.style.removeProperty('--wipe-p');
+  el.style.removeProperty('--wipe-a');
   el.style.removeProperty('--tear-p');
+  el.style.removeProperty('--tear-a');
   el.style.removeProperty('filter');
   el.style.removeProperty('z-index');
   el.style.removeProperty('opacity');
@@ -74,7 +76,6 @@ export default function HeroSlides({
   // synchronous reads inside `schedule()` / `advance()`.
   const [paused, setPaused] = useState(false);
   const idxRef = useRef(0);
-  const fxCounter = useRef(0);
   const pausedRef = useRef(false);
   const timerRef = useRef<number | null>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
@@ -91,6 +92,12 @@ export default function HeroSlides({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const bagRef = useRef<number[]>(initialBag);
+  // FX selection mirrors the slide bag: a Fisher-Yates shuffle of the four
+  // transitions, refilled when empty. `lastFxRef` lets the refill avoid
+  // starting with the fx that just played, so the same fx never plays twice
+  // in a row across bag boundaries.
+  const fxBagRef = useRef<Fx[]>(fisherYatesShuffle(FX));
+  const lastFxRef = useRef<Fx | null>(null);
 
   const stop = () => {
     if (timerRef.current !== null) {
@@ -116,14 +123,27 @@ export default function HeroSlides({
     return bagRef.current.shift()!;
   };
 
+  const pickNextFx = (): Fx => {
+    if (fxBagRef.current.length === 0) {
+      const bag = fisherYatesShuffle(FX);
+      if (lastFxRef.current && bag[0] === lastFxRef.current && bag.length > 1) {
+        const swap = 1 + Math.floor(Math.random() * (bag.length - 1));
+        [bag[0], bag[swap]] = [bag[swap]!, bag[0]!];
+      }
+      fxBagRef.current = bag;
+    }
+    const fx = fxBagRef.current.shift()!;
+    lastFxRef.current = fx;
+    return fx;
+  };
+
   const schedule = () => {
     if (pausedRef.current) return;
     if (timerRef.current !== null) return;
-    const maxMs = Math.min(2000 + fxCounter.current * 160, 4000);
     timerRef.current = window.setTimeout(() => {
       timerRef.current = null;
       advance();
-    }, rand(1200, maxMs));
+    }, rand(2200, 3600));
   };
 
   const advance = () => {
@@ -136,8 +156,7 @@ export default function HeroSlides({
 
     const prev = idxRef.current;
     const next = pickNext();
-    const fx = FX[fxCounter.current % FX.length]!;
-    fxCounter.current += 1;
+    const fx = pickNextFx();
 
     const outEl = els[prev]!;
     const inEl = els[next]!;
@@ -160,11 +179,36 @@ export default function HeroSlides({
       return;
     }
 
-    // Seed the fx-specific starting state.
+    // Seed the fx-specific starting state. Each fx randomizes whatever knobs
+    // it has (center, angle, direction, intensity, duration) so consecutive
+    // plays of the same fx don't look identical.
     inEl.dataset.fx = fx;
+    let bloomEnd = '170%';
+    let bloomDur = 1.05;
+    let brushFrom = '-8%';
+    let brushTo = '110%';
+    let brushDur = 0.9;
+    let tearDur = 0.8;
+    let crumpleStart = 40;
+    let crumpleDur = 1.05;
     if (fx === 'bloom') {
       inEl.style.setProperty('--bloom-x', `${rand(32, 68)}%`);
       inEl.style.setProperty('--bloom-y', `${rand(32, 68)}%`);
+      bloomEnd = `${rand(155, 185)}%`;
+      bloomDur = rand(0.95, 1.15);
+    } else if (fx === 'brush') {
+      inEl.style.setProperty('--wipe-a', `${rand(75, 115)}deg`);
+      if (Math.random() < 0.5) {
+        brushFrom = '110%';
+        brushTo = '-8%';
+      }
+      brushDur = rand(0.85, 1.0);
+    } else if (fx === 'tear') {
+      inEl.style.setProperty('--tear-a', Math.random() < 0.5 ? '180deg' : '0deg');
+      tearDur = rand(0.75, 0.95);
+    } else if (fx === 'crumple') {
+      crumpleStart = rand(28, 48);
+      crumpleDur = rand(0.9, 1.25);
     }
 
     const feCrumple = document.querySelector<SVGFEDisplacementMapElement>(
@@ -197,31 +241,34 @@ export default function HeroSlides({
       tl.fromTo(
         inEl,
         { '--bloom-r': '0%' },
-        { '--bloom-r': '170%', duration: 1.05, ease: 'power2.out' },
+        { '--bloom-r': bloomEnd, duration: bloomDur, ease: 'power2.out' },
       );
     } else if (fx === 'brush') {
-      // Diagonal brush-stroke wipe with a soft trailing edge.
+      // Diagonal brush-stroke wipe with a soft trailing edge. Angle and
+      // direction jitter; CSS reads `--wipe-a` for the gradient angle.
       tl.fromTo(
         inEl,
-        { '--wipe-p': '-8%' },
-        { '--wipe-p': '110%', duration: 0.9, ease: 'power2.inOut' },
+        { '--wipe-p': brushFrom },
+        { '--wipe-p': brushTo, duration: brushDur, ease: 'power2.inOut' },
       );
     } else if (fx === 'tear') {
-      // Paper-tear sweep top-to-bottom. Short duration, firmer easing.
+      // Paper-tear sweep. CSS reads `--tear-a` so the sweep can run either
+      // top→bottom (180deg) or bottom→up (0deg) without rewriting stops.
       tl.fromTo(
         inEl,
         { '--tear-p': '-4%' },
-        { '--tear-p': '108%', duration: 0.8, ease: 'power3.inOut' },
+        { '--tear-p': '108%', duration: tearDur, ease: 'power3.inOut' },
       );
     } else if (fx === 'crumple') {
-      // Turbulent ink dissolve: displacement scale 40 → 0 while opacity 0 → 1.
+      // Turbulent ink dissolve: displacement scale (jittered) → 0 while
+      // opacity 0 → 1. Opacity tween shortened proportionally to duration.
       inEl.style.filter = 'url(#ink-crumple)';
       gsap.set(inEl, { opacity: 0 });
       if (feCrumple) {
-        gsap.set(feCrumple, { attr: { scale: 40 } });
-        tl.to(feCrumple, { attr: { scale: 0 }, duration: 1.05, ease: 'power3.out' }, 0);
+        gsap.set(feCrumple, { attr: { scale: crumpleStart } });
+        tl.to(feCrumple, { attr: { scale: 0 }, duration: crumpleDur, ease: 'power3.out' }, 0);
       }
-      tl.to(inEl, { opacity: 1, duration: 0.75, ease: 'power2.out' }, 0);
+      tl.to(inEl, { opacity: 1, duration: crumpleDur * 0.72, ease: 'power2.out' }, 0);
     }
   };
 

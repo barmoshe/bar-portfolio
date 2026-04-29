@@ -402,29 +402,32 @@
       oklch(0 0 0) var(--bloom-r),
       oklch(0 0 0 / 0) calc(var(--bloom-r) + 9%))}
 
-  /* brush: diagonal brush-stroke wipe with a soft trailing edge. */
+  /* brush: diagonal brush-stroke wipe with a soft trailing edge. Angle
+     jitters per cycle via --wipe-a (set inline by HeroSlides); falls back
+     to 95deg if no inline value is present. */
   .mug .slide[data-fx="brush"]{
-    --wipe-p:0%;
-    -webkit-mask-image:linear-gradient(95deg,
+    --wipe-p:0%;--wipe-a:95deg;
+    -webkit-mask-image:linear-gradient(var(--wipe-a),
       oklch(0 0 0) calc(var(--wipe-p) - 4%),
       oklch(0 0 0) var(--wipe-p),
       oklch(0 0 0 / .55) calc(var(--wipe-p) + 2%),
       oklch(0 0 0 / 0) calc(var(--wipe-p) + 7%));
-    mask-image:linear-gradient(95deg,
+    mask-image:linear-gradient(var(--wipe-a),
       oklch(0 0 0) calc(var(--wipe-p) - 4%),
       oklch(0 0 0) var(--wipe-p),
       oklch(0 0 0 / .55) calc(var(--wipe-p) + 2%),
       oklch(0 0 0 / 0) calc(var(--wipe-p) + 7%))}
 
-  /* tear: vertical paper-tear sweep with a narrow frayed band. */
+  /* tear: paper-tear sweep with a narrow frayed band. --tear-a flips the
+     direction between top→bottom (180deg) and bottom→up (0deg). */
   .mug .slide[data-fx="tear"]{
-    --tear-p:0%;
-    -webkit-mask-image:linear-gradient(to bottom,
+    --tear-p:0%;--tear-a:180deg;
+    -webkit-mask-image:linear-gradient(var(--tear-a),
       oklch(0 0 0) calc(var(--tear-p) - 2%),
       oklch(0 0 0) var(--tear-p),
       oklch(0 0 0 / .4) calc(var(--tear-p) + 1%),
       oklch(0 0 0 / 0) calc(var(--tear-p) + 3%));
-    mask-image:linear-gradient(to bottom,
+    mask-image:linear-gradient(var(--tear-a),
       oklch(0 0 0) calc(var(--tear-p) - 2%),
       oklch(0 0 0) var(--tear-p),
       oklch(0 0 0 / .4) calc(var(--tear-p) + 1%),

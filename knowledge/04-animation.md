@@ -6,18 +6,20 @@ The site has three animation layers: **HeroSlides ink-native fx cycle**, **GSAP 
 
 File: `src/components/HeroSlides.tsx`.
 
-Four transitions, cycled round-robin. All are driven imperatively by a single GSAP timeline per advance; React owns only the resting `.is-active` class and the shuffle order.
+Four transitions, drawn from a Fisher-Yates shuffle bag. The bag holds the four fx names; `pickNextFx` shifts from the front and refills with a fresh shuffle when empty. On refill, if the new bag's first item equals the fx that just played, it swaps with a random later index — so the same fx never plays twice in a row across bag boundaries. All are driven imperatively by a single GSAP timeline per advance; React owns only the resting `.is-active` class and the shuffle order.
 
 ```ts
 const FX = ['bloom', 'brush', 'tear', 'crumple'] as const;
 ```
 
+Each fx randomizes its own knobs (center, angle, direction, intensity, duration) so consecutive plays of the same fx don't look identical:
+
 | Fx        | How it's animated                                              |
 |-----------|----------------------------------------------------------------|
-| `bloom`   | CSS `mask-image: radial-gradient(...)`, tween `--bloom-r` 0 → 170%. Center jitters per cycle (`--bloom-x/y`). |
-| `brush`   | CSS `mask-image: linear-gradient(95deg, ...)`, tween `--wipe-p` -8% → 110%. Wide soft trailing band reads as brush edge. |
-| `tear`    | CSS `mask-image: linear-gradient(to bottom, ...)`, tween `--tear-p` -4% → 108%. Narrow band for a sharper paper-tear. |
-| `crumple` | SVG `#ink-crumple` filter applied inline; tween `feDisplacementMap` scale 40 → 0 while opacity 0 → 1. |
+| `bloom`   | CSS `mask-image: radial-gradient(...)`, tween `--bloom-r` 0 → `rand(155, 185)%` over `rand(0.95, 1.15)s`. Center jitters per cycle (`--bloom-x/y`). |
+| `brush`   | CSS `mask-image: linear-gradient(var(--wipe-a), ...)`. `--wipe-a` jitters in `rand(75, 115)deg`; 50% of the time the wipe direction is reversed (`110%` → `-8%`). Duration `rand(0.85, 1.0)s`. |
+| `tear`    | CSS `mask-image: linear-gradient(var(--tear-a), ...)`. `--tear-a` flips between `180deg` (top→bottom) and `0deg` (bottom→up). Duration `rand(0.75, 0.95)s`. |
+| `crumple` | SVG `#ink-crumple` filter applied inline; tween `feDisplacementMap` scale `rand(28, 48)` → 0 while opacity 0 → 1. Duration `rand(0.9, 1.25)s`; opacity tween shortened proportionally. |
 
 ### Why GSAP and not CSS transitions
 
@@ -55,7 +57,7 @@ Defined in `src/components/InkDefs.tsx` alongside the `#ink-bleed-*` family. Sin
 
 ### Auto-advance
 
-Random interval between 1.2–4s (progressively slower as `fxCounter` grows). Pauses on:
+Uniform random interval `rand(2200, 3600)ms` between transitions. Pauses on:
 
 - `mouseenter` on the slideshow container (resumes on `mouseleave`).
 - `document.hidden === true` (tab switch; resumes on visibility).
