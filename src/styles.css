@@ -1167,6 +1167,14 @@
   .rig .sk-button[data-on="true"] .sk-button-glyph{fill:var(--paper)}
   .rig .sk-button:focus-visible{outline:none}
   .rig .sk-button:focus-visible .sk-button-rim{stroke:var(--green);stroke-width:2}
+  /* Loading state: spinning dashed ring while the bed buffer is fetching. */
+  .rig .sk-button[data-loading="true"] .sk-button-cap{fill:var(--paper-2)}
+  .rig .sk-button-spinner{stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;
+    transform-origin:120px 232px;animation:sk-button-spin .9s linear infinite}
+  @keyframes sk-button-spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){
+    .rig .sk-button-spinner{animation:none;stroke-dasharray:none}
+  }
 
   /* A/B side rocker. Sliding cap transitions across the body when side
      flips; letters tint to match the active side's accent color. */

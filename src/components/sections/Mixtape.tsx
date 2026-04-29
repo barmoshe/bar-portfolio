@@ -10,7 +10,6 @@ import { attachInkBleed } from '../../lib/inkBleed';
 import { inkBleedUrl } from '../InkDefs';
 import * as audio from '../../lib/mixtapeAudio';
 
-const AUDIO_KEY = 'bm:vinyl-audio';
 const RPM_KEY = 'bm:vinyl-rpm';
 const VOLUME_KEY = 'bm:vinyl-volume';
 const MUTE_KEY = 'bm:vinyl-mute';
@@ -205,6 +204,9 @@ export default function Mixtape() {
   // persisted "on" combined with the old auto-unlock-on-any-click listener
   // let audio start without the user pressing Start; that felt like autoplay.
   const [audioOn, setAudioOn] = useState<boolean>(false);
+  // True from the moment the user clicks START until the bed actually plays
+  // (fetch + decode of the ~3–4 MB MP3 can take seconds on slow networks).
+  const [audioLoading, setAudioLoading] = useState<boolean>(false);
 
   const [rpm, setRpm] = useState<Rpm>(() => {
     try {
@@ -297,25 +299,99 @@ export default function Mixtape() {
     return () => mql.removeEventListener('change', apply);
   }, []);
 
-  const toggleAudio = () => {
-    const next = !audioOn;
-    if (next) {
-      audio.unlock();
-      audio.setEnabled(true);
+  const stopAudio = () => {
+    audio.setEnabled(false);
+    setAudioOn(false);
+    setAudioLoading(false);
+  };
+
+  const startAudio = async () => {
+    audio.unlock();
+    audio.setEnabled(true);
+    setAudioOn(true);
+    setAudioLoading(true);
+    const started = await audio.startBed(side);
+    setAudioLoading(false);
+    if (started) {
+      // Needle drop fires only after the bed actually starts so the audio
+      // cue lines up with the visual cue (matters most on slow networks).
       audio.playNeedleDrop(side);
-      audio.startBed(side);
     } else {
-      audio.stopBed();
-      audio.setEnabled(false);
-    }
-    setAudioOn(next);
-    announceMessage(next ? `Mixtape playing side ${side}.` : 'Mixtape stopped.');
-    try {
-      localStorage.setItem(AUDIO_KEY, next ? '1' : '0');
-    } catch {
-      /* ignore */
+      // Aborted (user pressed STOP, fetch failed, or context died). Engine
+      // already cleaned up via setEnabled(false); just unwind the UI.
+      setAudioOn(false);
     }
   };
+
+  const toggleAudio = () => {
+    if (audioOn || audioLoading) {
+      stopAudio();
+      announceMessage('Mixtape stopped.');
+    } else {
+      void startAudio();
+      announceMessage(`Mixtape playing side ${side}.`);
+    }
+  };
+
+  // Keep MediaSession + visibility handlers on the latest toggle without
+  // re-binding listeners every render.
+  const stopAudioRef = useRef(stopAudio);
+  stopAudioRef.current = stopAudio;
+  const toggleAudioRef = useRef(toggleAudio);
+  toggleAudioRef.current = toggleAudio;
+
+  // Stop playback when the user leaves the page (tab switch, external link,
+  // bfcache restore). Matches the documented session-only intent: the next
+  // interaction must again be an explicit Start gesture.
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.hidden) stopAudioRef.current();
+    };
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) stopAudioRef.current();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pageshow', onPageShow);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('pageshow', onPageShow);
+    };
+  }, []);
+
+  // MediaSession metadata + handlers. Setting `audioSession: 'playback'` on
+  // the AudioContext (in mixtapeAudio.ts) is what actually claims media
+  // focus on iOS; this block populates the lock-screen / OS controls and
+  // wires their Play/Pause buttons to the same toggle.
+  useEffect(() => {
+    if (typeof navigator === 'undefined' || !('mediaSession' in navigator)) return;
+    const ms = navigator.mediaSession;
+    try {
+      ms.metadata = new MediaMetadata({
+        title: `Bar's Mixtape — Side ${side}`,
+        artist: 'Bar Moshe',
+        album: 'bar-portfolio',
+        artwork: [{ src: `${import.meta.env.BASE_URL}og-cover.jpg`, sizes: '1200x630', type: 'image/jpeg' }],
+      });
+    } catch {
+      /* metadata is best-effort */
+    }
+    const safeSet = (action: MediaSessionAction, handler: (() => void) | null) => {
+      try { ms.setActionHandler(action, handler); } catch { /* unsupported action */ }
+    };
+    safeSet('play', () => toggleAudioRef.current());
+    safeSet('pause', () => toggleAudioRef.current());
+    safeSet('stop', () => stopAudioRef.current());
+    return () => {
+      safeSet('play', null);
+      safeSet('pause', null);
+      safeSet('stop', null);
+    };
+  }, [side]);
+
+  useEffect(() => {
+    if (typeof navigator === 'undefined' || !('mediaSession' in navigator)) return;
+    navigator.mediaSession.playbackState = audioOn ? 'playing' : 'paused';
+  }, [audioOn]);
 
   const flipSide = () => {
     const next = side === 'A' ? 'B' : 'A';
@@ -458,6 +534,7 @@ export default function Mixtape() {
           ref={rigRef}
           side={side}
           audioOn={audioOn}
+          audioLoading={audioLoading}
           rpm={rpm}
           volume={volume}
           muted={muted}
@@ -594,6 +671,7 @@ type RigProps = {
   ref: React.RefObject<HTMLDivElement | null>;
   side: 'A' | 'B';
   audioOn: boolean;
+  audioLoading: boolean;
   rpm: Rpm;
   volume: number;
   muted: boolean;
@@ -611,6 +689,7 @@ const Rig = ({
   ref,
   side,
   audioOn,
+  audioLoading,
   rpm,
   volume,
   muted,
@@ -765,13 +844,17 @@ const Rig = ({
           className="sk-button"
           role="button"
           aria-pressed={audioOn}
+          aria-busy={audioLoading}
           aria-label={
-            audioOn
-              ? `Stop mixtape (Side ${side})`
-              : `Start mixtape (Side ${side})`
+            audioLoading
+              ? `Loading mixtape (Side ${side})`
+              : audioOn
+                ? `Stop mixtape (Side ${side})`
+                : `Start mixtape (Side ${side})`
           }
           tabIndex={0}
           data-on={audioOn ? 'true' : 'false'}
+          data-loading={audioLoading ? 'true' : 'false'}
           onClick={onAudioToggle}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -782,7 +865,17 @@ const Rig = ({
         >
           <circle cx="120" cy="232" r="16" className="sk-button-rim" />
           <circle cx="120" cy="232" r="12" className="sk-button-cap" />
-          {audioOn ? (
+          {audioLoading ? (
+            <circle
+              cx="120"
+              cy="232"
+              r="7"
+              className="sk-button-spinner"
+              fill="none"
+              pathLength={1}
+              strokeDasharray="0.25 0.75"
+            />
+          ) : audioOn ? (
             <rect
               x="115"
               y="227"
@@ -798,7 +891,7 @@ const Rig = ({
             />
           )}
           <text x="120" y="257" className="sk-ctrl-label">
-            {audioOn ? 'STOP' : 'START'}
+            {audioLoading ? '…' : audioOn ? 'STOP' : 'START'}
           </text>
         </g>
 

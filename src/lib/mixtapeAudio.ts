@@ -182,7 +182,14 @@ function duckBedFor(durationSec: number) {
 export function unlock() {
   if (!ctx) {
     const Ctor = (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext);
-    ctx = new Ctor();
+    // `audioSession: 'playback'` (Safari 16.4+) makes the page claim media
+    // focus on iOS so other apps (Spotify, Apple Music) pause when the
+    // mixtape starts. Other browsers ignore unknown options.
+    try {
+      ctx = new Ctor({ audioSession: 'playback' } as AudioContextOptions);
+    } catch {
+      ctx = new Ctor();
+    }
 
     master = ctx.createGain();
     master.gain.value = volume * 0.6;
@@ -259,12 +266,12 @@ function fadeSideOut(side: MixtapeSide, seconds = FADE_OUT_S) {
   g.linearRampToValueAtTime(0, now + seconds);
 }
 
-async function launchBedFor(side: MixtapeSide) {
-  if (!ctx || !sideBus || !enabled) return;
+async function launchBedFor(side: MixtapeSide): Promise<boolean> {
+  if (!ctx || !sideBus || !enabled) return false;
   const track = MIXTAPE_TRACKS.find((t) => t.side === side);
-  if (!track) return;
+  if (!track) return false;
   const buffer = await fetchBuffer(track.src);
-  if (!buffer || !ctx || !sideBus || !enabled) return;
+  if (!buffer || !ctx || !sideBus || !enabled) return false;
   if (bedSource) {
     try { bedSource.stop(); } catch { /* already stopped */ }
     bedSource.disconnect();
@@ -281,7 +288,7 @@ async function launchBedFor(side: MixtapeSide) {
   try {
     src.start(0, bounds.loopStart);
   } catch {
-    return;
+    return false;
   }
   bedSource = src;
   activeSide = side;
@@ -291,17 +298,22 @@ async function launchBedFor(side: MixtapeSide) {
     fadeSideIn(side);
   }
   fadeHissTo(reducedMotion ? 0 : HISS_GAIN_DEFAULT, HISS_FADE_S);
+  return true;
 }
 
-export function startBed(side: MixtapeSide) {
-  if (!ctx) return;
+export function startBed(side: MixtapeSide): Promise<boolean> {
+  if (!ctx) return Promise.resolve(false);
   pendingSide = side;
   activeSide = side;
-  void launchBedFor(side);
+  return launchBedFor(side);
 }
 
 export function stopBed() {
   if (!ctx || !sideBus) return;
+  if (relaunchTimer !== null) {
+    clearTimeout(relaunchTimer);
+    relaunchTimer = null;
+  }
   fadeSideOut('A');
   fadeSideOut('B');
   fadeHissTo(0, HISS_FADE_S);
