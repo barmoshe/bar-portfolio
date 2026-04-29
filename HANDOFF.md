@@ -19,7 +19,7 @@ Pre-existing `public/.nojekyll` preserved in `dist/`. Vite default `publicDir` c
 Pulled from `src/data/portfolio.ts:75-83` (contact) and `src/components/sections/Intro.tsx:184-185` (bio). If those change, **also update `index.html`** — there is no runtime templating; the values are static.
 
 - `name`: "Bar Moshe"
-- `jobTitle`: "Full-stack Builder"
+- `jobTitle`: "Builder, Full-stack"
 - `image` / `og:image`: `https://barmoshe.github.io/bar-portfolio/portraits/img0.png` (928×1152 portrait — see "Known follow-ups" #2)
 - `email`: `mailto:1barmoshe1@gmail.com`
 - `sameAs`: github, linkedin, tiktok, facebook URLs
