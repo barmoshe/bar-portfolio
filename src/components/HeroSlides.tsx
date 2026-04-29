@@ -2,10 +2,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { gsap, FULL_MOTION_QUERY } from '../lib/gsap';
 import { portfolioHeroSlides, type Slide } from '../data/heroSlides';
 
-// Four ink-native transitions, cycled round-robin. Each is implemented as a
-// GSAP timeline that tweens either CSS mask stops (bloom/brush/tear) or an
-// SVG feDisplacementMap scale (crumple). The old reflow → rAF → flip dance
-// is gone: GSAP owns frame scheduling, so there's no CSS-transition hazard.
+// Four ink-native transitions, drawn from a Fisher-Yates shuffle bag (see
+// `pickNextFx` below) so the order varies and no fx plays twice in a row.
+// Each is implemented as a GSAP timeline that tweens either CSS mask stops
+// (bloom/brush/tear) or an SVG feDisplacementMap scale (crumple). The old
+// reflow → rAF → flip dance is gone: GSAP owns frame scheduling, so there's
+// no CSS-transition hazard.
 const FX = ['bloom', 'brush', 'tear', 'crumple'] as const;
 type Fx = (typeof FX)[number];
 
