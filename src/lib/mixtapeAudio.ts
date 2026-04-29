@@ -34,6 +34,8 @@ const HISS_FADE_S = 0.6;
 const FADE_IN_S = 0.35;
 const FADE_OUT_S = 0.35;
 const PAUSE_ON_CHANGE_MS = 780;
+const LOOP_SILENCE_THRESHOLD = 0.001;
+const LOOP_MIN_RUN = 32;
 
 const url = (rel: string) => `${import.meta.env.BASE_URL}${rel}`;
 
@@ -75,6 +77,54 @@ async function fetchBuffer(rel: string): Promise<AudioBuffer | null> {
   })();
   buffers.set(absolute, promise);
   return promise;
+}
+
+const loopBoundsCache = new WeakMap<AudioBuffer, { loopStart: number; loopEnd: number }>();
+
+function getLoopBounds(buffer: AudioBuffer): { loopStart: number; loopEnd: number } {
+  const cached = loopBoundsCache.get(buffer);
+  if (cached) return cached;
+
+  const len = buffer.length;
+  const sr = buffer.sampleRate;
+  const ch0 = buffer.getChannelData(0);
+  const ch1 = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : null;
+  const sampleAt = ch1
+    ? (i: number) => (Math.abs(ch0[i]) + Math.abs(ch1[i])) * 0.5
+    : (i: number) => Math.abs(ch0[i]);
+
+  let firstAudio = -1;
+  let run = 0;
+  for (let i = 0; i < len; i++) {
+    if (sampleAt(i) > LOOP_SILENCE_THRESHOLD) {
+      if (++run >= LOOP_MIN_RUN) {
+        firstAudio = i - LOOP_MIN_RUN + 1;
+        break;
+      }
+    } else {
+      run = 0;
+    }
+  }
+
+  let lastAudio = -1;
+  run = 0;
+  for (let i = len - 1; i >= 0; i--) {
+    if (sampleAt(i) > LOOP_SILENCE_THRESHOLD) {
+      if (++run >= LOOP_MIN_RUN) {
+        lastAudio = i + LOOP_MIN_RUN - 1;
+        break;
+      }
+    } else {
+      run = 0;
+    }
+  }
+
+  const bounds = (firstAudio < 0 || lastAudio <= firstAudio)
+    ? { loopStart: 0, loopEnd: buffer.duration }
+    : { loopStart: firstAudio / sr, loopEnd: (lastAudio + 1) / sr };
+
+  loopBoundsCache.set(buffer, bounds);
+  return bounds;
 }
 
 function preloadSfx() {
@@ -223,10 +273,13 @@ async function launchBedFor(side: MixtapeSide) {
   const src = ctx.createBufferSource();
   src.buffer = buffer;
   src.loop = true;
+  const bounds = getLoopBounds(buffer);
+  src.loopStart = bounds.loopStart;
+  src.loopEnd = bounds.loopEnd;
   src.playbackRate.value = bedPlaybackRate;
   src.connect(sideBus[side]);
   try {
-    src.start(0);
+    src.start(0, bounds.loopStart);
   } catch {
     return;
   }
