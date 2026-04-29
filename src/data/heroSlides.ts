@@ -22,4 +22,9 @@ export const portfolioHeroSlides: Slide[] = [
   { src: 'portraits/img13.png', alt: 'Bar Moshe - portrait 13', caption: 'portrait · 13' },
   { src: 'portraits/img14.png', alt: 'Bar Moshe - portrait 14', caption: 'portrait · 14' },
   { src: 'portraits/img15.png', alt: 'Bar Moshe - portrait 15', caption: 'portrait · 15' },
+  { src: 'portraits/img16.png', alt: 'Bar Moshe - portrait 16, forest cartoon variant', caption: 'portrait · 16 · forest' },
+  { src: 'portraits/img17.png', alt: 'Bar Moshe - portrait 17, fire stained-glass variant', caption: 'portrait · 17 · fire' },
+  { src: 'portraits/img18.png', alt: 'Bar Moshe - portrait 18, earthy painterly variant', caption: 'portrait · 18 · painterly' },
+  { src: 'portraits/img19.png', alt: 'Bar Moshe - portrait 19, cubist colorful variant', caption: 'portrait · 19 · cubist' },
+  { src: 'portraits/img20.png', alt: 'Bar Moshe - portrait 20, cartoon variant', caption: 'portrait · 20 · cartoon' },
 ];

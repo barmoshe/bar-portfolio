@@ -4,7 +4,7 @@ Source images for the `HeroSlides` portrait slideshow on the `#intro` section.
 
 ## Contents
 
-`img0.png` … `img4.png` - five portrait variations, each in a different medium (oil, sketch, photo, cubist, 3d render). The captions are defined in `src/components/HeroSlides.tsx`.
+`img0.png` … `img20.png` - portrait variations across multiple mediums (oil, sketch, photo, cubist, painterly, cartoon, stained-glass, etc.). Note: `img8.png` is intentionally absent (gap kept; do not renumber). The slide list is the source of truth in `src/data/heroSlides.ts`; captions/alt text live there.
 
 ## Naming
 
