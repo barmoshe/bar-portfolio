@@ -165,7 +165,7 @@ export default function Intro() {
           <span>Full-stack · AI-native · makes things</span>
           <b>REACH</b>
           <span>
-            <a href="https://github.com/barmoshe" target="_blank" rel="noopener">
+            <a href="https://github.com/barmoshe" target="_blank" rel="me noopener">
               github.com/barmoshe
             </a>
           </span>

@@ -53,7 +53,7 @@ const CARDS: Card[] = [
   {
     href: 'https://www.linkedin.com/in/barmoshe/',
     target: '_blank',
-    rel: 'noopener',
+    rel: 'me noopener',
     rotate: '-.5deg',
     shadowColor: 'var(--blue)',
     kickerColor: 'var(--blue)',
@@ -77,7 +77,7 @@ const CARDS: Card[] = [
   {
     href: 'https://github.com/barmoshe',
     target: '_blank',
-    rel: 'noopener',
+    rel: 'me noopener',
     rotate: '1deg',
     shadowColor: 'var(--purple)',
     kickerColor: 'var(--ink-soft)',
@@ -99,7 +99,7 @@ const CARDS: Card[] = [
   {
     href: 'https://www.instagram.com/1barmoshe1',
     target: '_blank',
-    rel: 'noopener',
+    rel: 'me noopener',
     rotate: '0deg',
     shadowColor: 'var(--magenta)',
     kickerColor: 'var(--magenta)',
@@ -111,7 +111,7 @@ const CARDS: Card[] = [
   {
     href: 'https://www.tiktok.com/@barmoshe14',
     target: '_blank',
-    rel: 'noopener',
+    rel: 'me noopener',
     rotate: '0deg',
     shadowColor: 'var(--purple)',
     kickerColor: 'var(--purple)',
@@ -123,7 +123,7 @@ const CARDS: Card[] = [
   {
     href: 'https://www.facebook.com/share/1E89hVfhG3/?mibextid=wwXIfr',
     target: '_blank',
-    rel: 'noopener',
+    rel: 'me noopener',
     rotate: '0deg',
     shadowColor: 'var(--blue)',
     kickerColor: 'var(--ink-soft)',
