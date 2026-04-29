@@ -41,13 +41,15 @@ type Card = {
 // the keyboard tab order stays predictable.
 const CARDS: Card[] = [
   {
-    href: 'mailto:1barmoshe1@gmail.com',
+    href: 'https://medium.com/@barmoshe',
+    target: '_blank',
+    rel: 'noopener',
     rotate: '-.9deg',
-    shadowColor: 'var(--red)',
-    kickerColor: 'var(--red)',
-    kickerLeft: '// email',
-    value: '1barmoshe1@gmail.com',
-    Icon: MailIcon,
+    shadowColor: 'var(--purple)',
+    kickerColor: 'var(--purple)',
+    kickerLeft: '// medium',
+    value: 'medium.com/@barmoshe',
+    Icon: MediumIcon,
     size: 'big',
   },
   {
@@ -109,15 +111,13 @@ const CARDS: Card[] = [
     size: 'small',
   },
   {
-    href: 'https://medium.com/@barmoshe',
-    target: '_blank',
-    rel: 'noopener',
+    href: 'mailto:1barmoshe1@gmail.com',
     rotate: '0deg',
-    shadowColor: 'var(--purple)',
-    kickerColor: 'var(--purple)',
-    kickerLeft: '// medium',
-    value: '@barmoshe',
-    Icon: MediumIcon,
+    shadowColor: 'var(--red)',
+    kickerColor: 'var(--red)',
+    kickerLeft: '// email',
+    value: '1barmoshe1@gmail.com',
+    Icon: MailIcon,
     size: 'small',
   },
   {
