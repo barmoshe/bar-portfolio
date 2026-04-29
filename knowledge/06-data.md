@@ -25,7 +25,7 @@ export const contact: {
   github: string;
   linkedin: string;
   phone: string;
-  tiktok: string;
+  medium: string;
   facebook: string;
 };
 export function iconFor(lang: string): string;
@@ -100,7 +100,7 @@ Same file, `contact` object. The email is consumed by `Letter.tsx` (copy-to-clip
 - Letter contact cards live in the inline `CARDS` array in `Letter.tsx`
   with a `size: 'big' | 'small'` discriminator and an `Icon` component
   reference. Big cards (email, LinkedIn, WhatsApp, GitHub) keep the
-  rotated/taped look; small cards (phone, Instagram, TikTok, Facebook)
+  rotated/taped look; small cards (phone, Instagram, Medium, Facebook)
   render as a flex-wrap chip row beneath the big grid. Icons are inline
   SVGs in `src/components/ContactIcons.tsx`, drawn with `currentColor`
   so they theme-flip via the host element.

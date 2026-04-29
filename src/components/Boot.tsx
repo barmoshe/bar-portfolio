@@ -388,7 +388,7 @@ export default function Boot({ onGone }: Props) {
         <p className="mast-phrase">
           it's only one <em>prompt</em> away.
         </p>
-        <p className="sub">Full-Stack · AI · Builder</p>
+        <p className="sub">Builder · Full-Stack · AI</p>
         <button
           className={`enter${canEnter ? ' pulse' : ''}`}
           id="enter"

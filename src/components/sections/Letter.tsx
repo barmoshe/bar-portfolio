@@ -17,7 +17,7 @@ import {
   InstagramIcon,
   WhatsAppIcon,
   GitHubIcon,
-  TikTokIcon,
+  MediumIcon,
   FacebookIcon,
 } from '../ContactIcons';
 
@@ -41,13 +41,15 @@ type Card = {
 // the keyboard tab order stays predictable.
 const CARDS: Card[] = [
   {
-    href: 'mailto:1barmoshe1@gmail.com',
+    href: 'https://medium.com/@barmoshe',
+    target: '_blank',
+    rel: 'me noopener',
     rotate: '-.9deg',
-    shadowColor: 'var(--red)',
-    kickerColor: 'var(--red)',
-    kickerLeft: '// email',
-    value: '1barmoshe1@gmail.com',
-    Icon: MailIcon,
+    shadowColor: 'var(--cyan)',
+    kickerColor: 'var(--ink-soft)',
+    kickerLeft: '// medium',
+    value: 'medium.com/@barmoshe',
+    Icon: MediumIcon,
     size: 'big',
   },
   {
@@ -109,15 +111,13 @@ const CARDS: Card[] = [
     size: 'small',
   },
   {
-    href: 'https://www.tiktok.com/@barmoshe14',
-    target: '_blank',
-    rel: 'me noopener',
+    href: 'mailto:1barmoshe1@gmail.com',
     rotate: '0deg',
-    shadowColor: 'var(--purple)',
-    kickerColor: 'var(--purple)',
-    kickerLeft: '// tiktok',
-    value: '@barmoshe14',
-    Icon: TikTokIcon,
+    shadowColor: 'var(--red)',
+    kickerColor: 'var(--red)',
+    kickerLeft: '// email',
+    value: '1barmoshe1@gmail.com',
+    Icon: MailIcon,
     size: 'small',
   },
   {
