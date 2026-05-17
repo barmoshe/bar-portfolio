@@ -16,6 +16,17 @@ export const DIR: Record<Lang, 'ltr' | 'rtl'> = {
   he: 'rtl',
 };
 
+// Weight for the first-visit random pick. Must be kept in sync with the
+// inline pre-paint script in `business/index.html` (it can't import this
+// module since it runs before module evaluation).
+export const HE_RANDOM_WEIGHT = 0.7;
+
+declare global {
+  interface Window {
+    __bmLang?: Lang;
+  }
+}
+
 export type Dict = {
   meta: { title: string; description: string };
   masthead: {
@@ -704,14 +715,5 @@ const EN: Dict = {
 const DICTS: Record<Lang, Dict> = { en: EN, he: HE };
 
 export function getDict(lang: Lang): Dict {
-  return DICTS[lang] ?? HE;
-}
-
-// Back-compat exports. Older callers can still `import { t }`; the value
-// is the default-language dictionary at module load. Stateful callers
-// should use `useLang()` from LangContext instead.
-export const t: Dict = DICTS[DEFAULT_LANG];
-
-export function tFor(lang: Lang = DEFAULT_LANG): Dict {
-  return getDict(lang);
+  return DICTS[lang];
 }
