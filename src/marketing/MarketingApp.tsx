@@ -2,16 +2,14 @@ import { useState } from 'react';
 import './marketing.css';
 import { LangProvider } from './LangContext';
 import MarketingHeader from './MarketingHeader';
-import StickyCTA from './StickyCTA';
-import Footer from './Footer';
-import HeroPitch from './sections/HeroPitch';
+import Cover from './sections/Cover';
 import ProjectTemplates from './sections/ProjectTemplates';
 import Intake from './sections/Intake';
-import Services from './sections/Services';
 import Process from './sections/Process';
 import Proof from './sections/Proof';
 import FAQ from './sections/FAQ';
 import ContactCTA from './sections/ContactCTA';
+import PaperGrain from './components/PaperGrain';
 import { useReveal } from './hooks/useReveal';
 
 export default function MarketingApp() {
@@ -21,19 +19,17 @@ export default function MarketingApp() {
   return (
     <LangProvider>
       <div className="mp-root">
+        <PaperGrain />
         <MarketingHeader />
         <main id="main" tabIndex={-1}>
-          <HeroPitch />
+          <Cover />
           <ProjectTemplates selected={selectedTemplate} onPick={setSelectedTemplate} />
-          <Intake selectedTemplate={selectedTemplate} />
           <Process />
-          <Services />
+          <Intake selectedTemplate={selectedTemplate} />
           <Proof />
           <FAQ />
           <ContactCTA />
         </main>
-        <Footer />
-        <StickyCTA />
         <div className="ink-wipe" aria-hidden="true" />
       </div>
     </LangProvider>

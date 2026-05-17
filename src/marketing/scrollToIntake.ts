@@ -1,4 +1,4 @@
-export const INTAKE_ID = 'intake';
+export const INTAKE_ID = 'brief';
 
 export function scrollToIntake() {
   const target = document.getElementById(INTAKE_ID);

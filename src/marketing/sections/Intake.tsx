@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useLang } from '../LangContext';
 import { buildMailtoHref, buildWhatsAppHref } from '../contact';
 import { INTAKE_ID } from '../scrollToIntake';
+import SectionHeading from '../components/SectionHeading';
 
 type ContactMethod = 'whatsapp' | 'email';
 
@@ -39,7 +40,7 @@ type Props = {
 
 export default function Intake({ selectedTemplate }: Props) {
   const { t } = useLang();
-  const { intake, templates } = t;
+  const { brief, contents } = t;
   const [form, setForm] = useState<FormState>(INITIAL);
   const [status, setStatus] = useState<string>('');
   const [submitAttempted, setSubmitAttempted] = useState(false);
@@ -66,28 +67,28 @@ export default function Intake({ selectedTemplate }: Props) {
     }));
   };
 
-  const brief = useMemo(() => {
+  const builtBrief = useMemo(() => {
     const lookup = <T extends { id?: string; slug?: string }>(
       list: readonly T[],
       id: string,
     ): T | undefined => list.find((it) => it.id === id || it.slug === id);
 
-    const tpl = lookup(templates.items, form.template);
+    const tpl = lookup(contents.items, form.template);
     const templateLabel = tpl ? tpl.title : '—';
-    const timelineLabel = lookup(intake.timelines, form.timeline)?.label ?? '';
-    const budgetLabel = lookup(intake.budgets, form.budget)?.label ?? '';
-    const featureLines = intake.features
+    const timelineLabel = lookup(brief.timelines, form.timeline)?.label ?? '';
+    const budgetLabel = lookup(brief.budgets, form.budget)?.label ?? '';
+    const featureLines = brief.features
       .filter((f) => form.features.includes(f.id))
       .map((f) => `• ${f.label}`)
       .join('\n');
     const contactKind =
       form.contactMethod === 'whatsapp'
-        ? intake.fields.contactMethod.whatsapp
-        : intake.fields.contactMethod.email;
-    const s = intake.briefSections;
+        ? brief.fields.contactMethod.whatsapp
+        : brief.fields.contactMethod.email;
+    const s = brief.briefSections;
 
     const blocks: string[][] = [
-      [intake.briefHeading],
+      [brief.briefHeading],
       [s.type, templateLabel],
       [s.idea, form.idea.trim()],
     ];
@@ -102,13 +103,13 @@ export default function Intake({ selectedTemplate }: Props) {
       `שם: ${form.name.trim()}`,
       `יצירת קשר (${contactKind}): ${form.contactValue.trim()}`,
     ]);
-    blocks.push([intake.briefFooter]);
+    blocks.push([brief.briefFooter]);
     return blocks.map((b) => b.join('\n')).join('\n\n');
-  }, [form, intake, templates]);
+  }, [form, brief, contents]);
 
   const mailHref = useMemo(
-    () => buildMailtoHref(intake.mailSubject, brief),
-    [intake.mailSubject, brief],
+    () => buildMailtoHref(brief.mailSubject, builtBrief),
+    [brief.mailSubject, builtBrief],
   );
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -117,309 +118,299 @@ export default function Intake({ selectedTemplate }: Props) {
     const node = formRef.current;
     if (!node) return;
     if (!node.checkValidity()) {
-      setStatus(intake.liveError);
+      setStatus(brief.liveError);
       const firstInvalid = node.querySelector<HTMLElement>(':invalid');
       firstInvalid?.focus();
       return;
     }
-    window.open(buildWhatsAppHref(brief), '_blank', 'noopener,noreferrer');
-    setStatus(intake.liveSuccess);
+    window.open(buildWhatsAppHref(builtBrief), '_blank', 'noopener,noreferrer');
+    setStatus(brief.liveSuccess);
   };
 
   return (
     <section
-      className="mp-section mp-section--wide"
+      className="mp-section mp-brief"
       id={INTAKE_ID}
-      aria-labelledby="intake-headline"
+      aria-labelledby="brief-headline"
     >
-      <span className="mp-eyebrow">{intake.eyebrow}</span>
-      <h2 className="mp-h2" id="intake-headline">
-        {intake.headlineLead}
-        <mark>{intake.headlineMark}</mark>
-      </h2>
-      <p className="mp-lead">{intake.lead}</p>
+      <SectionHeading
+        number={brief.number}
+        kicker={brief.kicker}
+        title={brief.title}
+        id="brief-headline"
+      />
+
+      <p className="mp-standfirst">{brief.standfirst}</p>
 
       <form
         ref={formRef}
-        className="mp-intake"
+        className="mp-form"
         onSubmit={onSubmit}
         noValidate
-        aria-describedby="intake-required-hint"
+        aria-describedby="brief-required-hint"
       >
-        <p className="mp-intake__hint" id="intake-required-hint">
-          {intake.requiredHint}
+        <p className="mp-form__hint" id="brief-required-hint">
+          {brief.requiredHint}
         </p>
 
         <fieldset
-            className="mp-field mp-field--group"
-            aria-invalid={submitAttempted && !form.template}
-          >
-            <legend className="mp-field__label">
-              {intake.fields.template.label}{' '}
-              <span className="mp-field__required" aria-hidden="true">
-                *
-              </span>
-            </legend>
-            <p className="mp-field__hint">{intake.fields.template.placeholder}</p>
-            <div className="mp-chip-group" role="radiogroup">
-              {templates.items.map((tpl) => {
-                const checked = form.template === tpl.slug;
-                return (
-                  <label
-                    key={tpl.slug}
-                    className="mp-chip mp-chip--radio"
-                    data-selected={checked || undefined}
-                  >
-                    <input
-                      type="radio"
-                      name="template"
-                      value={tpl.slug}
-                      checked={checked}
-                      onChange={() => update('template', tpl.slug)}
-                      required
-                    />
-                    <span>{tpl.title}</span>
-                  </label>
-                );
-              })}
-            </div>
-          </fieldset>
-
-          <div className="mp-field">
-            <label className="mp-field__label" htmlFor="intake-idea">
-              {intake.fields.idea.label}{' '}
-              <span className="mp-field__required" aria-hidden="true">
-                *
-              </span>
-            </label>
-            <p className="mp-field__hint" id="intake-idea-hint">
-              {intake.fields.idea.hint}
-            </p>
-            <textarea
-              id="intake-idea"
-              className="mp-textarea"
-              value={form.idea}
-              onChange={(e) => update('idea', e.target.value)}
-              placeholder={intake.fields.idea.placeholder}
-              rows={3}
-              required
-              aria-required="true"
-              aria-describedby="intake-idea-hint"
-              aria-invalid={submitAttempted && !form.idea.trim()}
-            />
+          className="mp-field mp-field--group"
+          aria-invalid={submitAttempted && !form.template}
+        >
+          <legend className="mp-field__label">
+            {brief.fields.template.label}
+            <span className="mp-field__required" aria-hidden="true">*</span>
+          </legend>
+          <p className="mp-field__hint">{brief.fields.template.placeholder}</p>
+          <div className="mp-chip-group" role="radiogroup">
+            {contents.items.map((tpl) => {
+              const checked = form.template === tpl.slug;
+              return (
+                <label
+                  key={tpl.slug}
+                  className="mp-chip mp-chip--radio"
+                  data-selected={checked || undefined}
+                >
+                  <input
+                    type="radio"
+                    name="template"
+                    value={tpl.slug}
+                    checked={checked}
+                    onChange={() => update('template', tpl.slug)}
+                    required
+                  />
+                  <span>{tpl.title}</span>
+                </label>
+              );
+            })}
           </div>
+        </fieldset>
 
-          <div className="mp-field">
-            <label className="mp-field__label" htmlFor="intake-name">
-              {intake.fields.name.label}{' '}
-              <span className="mp-field__required" aria-hidden="true">
-                *
-              </span>
+        <div className="mp-field">
+          <label className="mp-field__label" htmlFor="brief-idea">
+            {brief.fields.idea.label}
+            <span className="mp-field__required" aria-hidden="true">*</span>
+          </label>
+          <p className="mp-field__hint" id="brief-idea-hint">
+            {brief.fields.idea.hint}
+          </p>
+          <textarea
+            id="brief-idea"
+            className="mp-textarea"
+            value={form.idea}
+            onChange={(e) => update('idea', e.target.value)}
+            placeholder={brief.fields.idea.placeholder}
+            rows={3}
+            required
+            aria-required="true"
+            aria-describedby="brief-idea-hint"
+            aria-invalid={submitAttempted && !form.idea.trim()}
+          />
+        </div>
+
+        <div className="mp-field">
+          <label className="mp-field__label" htmlFor="brief-name">
+            {brief.fields.name.label}
+            <span className="mp-field__required" aria-hidden="true">*</span>
+          </label>
+          <input
+            id="brief-name"
+            className="mp-input"
+            type="text"
+            value={form.name}
+            onChange={(e) => update('name', e.target.value)}
+            placeholder={brief.fields.name.placeholder}
+            autoComplete="given-name"
+            required
+            aria-required="true"
+            aria-invalid={submitAttempted && !form.name.trim()}
+          />
+        </div>
+
+        <fieldset className="mp-field mp-field--group">
+          <legend className="mp-field__label">
+            {brief.fields.contactMethod.label}
+            <span className="mp-field__required" aria-hidden="true">*</span>
+          </legend>
+          <div className="mp-chip-group mp-chip-group--inline" role="radiogroup">
+            <label
+              className="mp-chip mp-chip--radio"
+              data-selected={form.contactMethod === 'whatsapp' || undefined}
+            >
+              <input
+                type="radio"
+                name="contactMethod"
+                value="whatsapp"
+                checked={form.contactMethod === 'whatsapp'}
+                onChange={() => update('contactMethod', 'whatsapp')}
+              />
+              <span>{brief.fields.contactMethod.whatsapp}</span>
             </label>
-            <input
-              id="intake-name"
-              className="mp-input"
-              type="text"
-              value={form.name}
-              onChange={(e) => update('name', e.target.value)}
-              placeholder={intake.fields.name.placeholder}
-              autoComplete="given-name"
-              required
-              aria-required="true"
-              aria-invalid={submitAttempted && !form.name.trim()}
-            />
-          </div>
-
-          <fieldset className="mp-field mp-field--group">
-            <legend className="mp-field__label">
-              {intake.fields.contactMethod.label}{' '}
-              <span className="mp-field__required" aria-hidden="true">
-                *
-              </span>
-            </legend>
-            <div className="mp-chip-group mp-chip-group--inline" role="radiogroup">
-              <label
-                className="mp-chip mp-chip--radio"
-                data-selected={form.contactMethod === 'whatsapp' || undefined}
-              >
-                <input
-                  type="radio"
-                  name="contactMethod"
-                  value="whatsapp"
-                  checked={form.contactMethod === 'whatsapp'}
-                  onChange={() => update('contactMethod', 'whatsapp')}
-                />
-                <span>{intake.fields.contactMethod.whatsapp}</span>
-              </label>
-              <label
-                className="mp-chip mp-chip--radio"
-                data-selected={form.contactMethod === 'email' || undefined}
-              >
-                <input
-                  type="radio"
-                  name="contactMethod"
-                  value="email"
-                  checked={form.contactMethod === 'email'}
-                  onChange={() => update('contactMethod', 'email')}
-                />
-                <span>{intake.fields.contactMethod.email}</span>
-              </label>
-            </div>
-          </fieldset>
-
-          <div className="mp-field">
-            <label className="mp-field__label" htmlFor="intake-contact-value">
-              {form.contactMethod === 'whatsapp'
-                ? intake.fields.contactValue.labelWhatsapp
-                : intake.fields.contactValue.labelEmail}{' '}
-              <span className="mp-field__required" aria-hidden="true">
-                *
-              </span>
+            <label
+              className="mp-chip mp-chip--radio"
+              data-selected={form.contactMethod === 'email' || undefined}
+            >
+              <input
+                type="radio"
+                name="contactMethod"
+                value="email"
+                checked={form.contactMethod === 'email'}
+                onChange={() => update('contactMethod', 'email')}
+              />
+              <span>{brief.fields.contactMethod.email}</span>
             </label>
-            <input
-              id="intake-contact-value"
-              className="mp-input"
-              type={form.contactMethod === 'email' ? 'email' : 'tel'}
-              inputMode={form.contactMethod === 'email' ? 'email' : 'tel'}
-              dir="ltr"
-              value={form.contactValue}
-              onChange={(e) => update('contactValue', e.target.value)}
-              placeholder={
-                form.contactMethod === 'email'
-                  ? intake.fields.contactValue.placeholderEmail
-                  : intake.fields.contactValue.placeholderWhatsapp
-              }
-              autoComplete={form.contactMethod === 'email' ? 'email' : 'tel'}
-              required
-              aria-required="true"
-              aria-invalid={submitAttempted && !form.contactValue.trim()}
-            />
           </div>
+        </fieldset>
 
-        <h3 className="mp-intake__optional-heading">{intake.optionalHeading}</h3>
+        <div className="mp-field">
+          <label className="mp-field__label" htmlFor="brief-contact-value">
+            {form.contactMethod === 'whatsapp'
+              ? brief.fields.contactValue.labelWhatsapp
+              : brief.fields.contactValue.labelEmail}
+            <span className="mp-field__required" aria-hidden="true">*</span>
+          </label>
+          <input
+            id="brief-contact-value"
+            className="mp-input"
+            type={form.contactMethod === 'email' ? 'email' : 'tel'}
+            value={form.contactValue}
+            onChange={(e) => update('contactValue', e.target.value)}
+            placeholder={
+              form.contactMethod === 'whatsapp'
+                ? brief.fields.contactValue.placeholderWhatsapp
+                : brief.fields.contactValue.placeholderEmail
+            }
+            autoComplete={form.contactMethod === 'email' ? 'email' : 'tel'}
+            required
+            aria-required="true"
+            aria-invalid={submitAttempted && !form.contactValue.trim()}
+          />
+        </div>
 
-          <div className="mp-field">
-            <label className="mp-field__label" htmlFor="intake-audience">
-              {intake.fields.audience.label}
-            </label>
-            <input
-              id="intake-audience"
-              className="mp-input"
-              type="text"
-              value={form.audience}
-              onChange={(e) => update('audience', e.target.value)}
-              placeholder={intake.fields.audience.placeholder}
-            />
+        <h3 className="mp-form__optional">{brief.optionalHeading}</h3>
+
+        <div className="mp-field">
+          <label className="mp-field__label" htmlFor="brief-audience">
+            {brief.fields.audience.label}
+          </label>
+          <input
+            id="brief-audience"
+            className="mp-input"
+            type="text"
+            value={form.audience}
+            onChange={(e) => update('audience', e.target.value)}
+            placeholder={brief.fields.audience.placeholder}
+          />
+        </div>
+
+        <div className="mp-field">
+          <label className="mp-field__label" htmlFor="brief-problem">
+            {brief.fields.problem.label}
+          </label>
+          <textarea
+            id="brief-problem"
+            className="mp-textarea"
+            value={form.problem}
+            onChange={(e) => update('problem', e.target.value)}
+            placeholder={brief.fields.problem.placeholder}
+            rows={2}
+          />
+        </div>
+
+        <fieldset className="mp-field mp-field--group">
+          <legend className="mp-field__label">{brief.fields.features.label}</legend>
+          <p className="mp-field__hint">{brief.fields.features.hint}</p>
+          <div className="mp-chip-group" role="group">
+            {brief.features.map((feat) => {
+              const checked = form.features.includes(feat.id);
+              return (
+                <button
+                  key={feat.id}
+                  type="button"
+                  className="mp-chip mp-chip--toggle"
+                  aria-pressed={checked}
+                  data-selected={checked || undefined}
+                  onClick={() => toggleFeature(feat.id)}
+                >
+                  <span>{feat.label}</span>
+                </button>
+              );
+            })}
           </div>
+        </fieldset>
 
-          <div className="mp-field">
-            <label className="mp-field__label" htmlFor="intake-problem">
-              {intake.fields.problem.label}
-            </label>
-            <textarea
-              id="intake-problem"
-              className="mp-textarea"
-              value={form.problem}
-              onChange={(e) => update('problem', e.target.value)}
-              placeholder={intake.fields.problem.placeholder}
-              rows={2}
-            />
+        <div className="mp-field">
+          <label className="mp-field__label" htmlFor="brief-references">
+            {brief.fields.references.label}
+          </label>
+          <textarea
+            id="brief-references"
+            className="mp-textarea"
+            value={form.references}
+            onChange={(e) => update('references', e.target.value)}
+            placeholder={brief.fields.references.placeholder}
+            rows={2}
+          />
+        </div>
+
+        <fieldset className="mp-field mp-field--group">
+          <legend className="mp-field__label">{brief.fields.timeline.label}</legend>
+          <div className="mp-chip-group mp-chip-group--inline" role="radiogroup">
+            {brief.timelines.map((tl) => {
+              const checked = form.timeline === tl.id;
+              return (
+                <label
+                  key={tl.id}
+                  className="mp-chip mp-chip--radio"
+                  data-selected={checked || undefined}
+                >
+                  <input
+                    type="radio"
+                    name="timeline"
+                    value={tl.id}
+                    checked={checked}
+                    onChange={() => update('timeline', tl.id)}
+                  />
+                  <span>{tl.label}</span>
+                </label>
+              );
+            })}
           </div>
+        </fieldset>
 
-          <fieldset className="mp-field mp-field--group">
-            <legend className="mp-field__label">{intake.fields.features.label}</legend>
-            <p className="mp-field__hint">{intake.fields.features.hint}</p>
-            <div className="mp-chip-group" role="group">
-              {intake.features.map((feat) => {
-                const checked = form.features.includes(feat.id);
-                return (
-                  <button
-                    key={feat.id}
-                    type="button"
-                    className="mp-chip mp-chip--toggle"
-                    aria-pressed={checked}
-                    data-selected={checked || undefined}
-                    onClick={() => toggleFeature(feat.id)}
-                  >
-                    <span>{feat.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </fieldset>
-
-          <div className="mp-field">
-            <label className="mp-field__label" htmlFor="intake-references">
-              {intake.fields.references.label}
-            </label>
-            <textarea
-              id="intake-references"
-              className="mp-textarea"
-              value={form.references}
-              onChange={(e) => update('references', e.target.value)}
-              placeholder={intake.fields.references.placeholder}
-              rows={2}
-            />
+        <fieldset className="mp-field mp-field--group">
+          <legend className="mp-field__label">{brief.fields.budget.label}</legend>
+          <p className="mp-field__hint">{brief.fields.budget.hint}</p>
+          <div className="mp-chip-group mp-chip-group--inline" role="radiogroup">
+            {brief.budgets.map((b) => {
+              const checked = form.budget === b.id;
+              return (
+                <label
+                  key={b.id}
+                  className="mp-chip mp-chip--radio"
+                  data-selected={checked || undefined}
+                >
+                  <input
+                    type="radio"
+                    name="budget"
+                    value={b.id}
+                    checked={checked}
+                    onChange={() => update('budget', b.id)}
+                  />
+                  <span>{b.label}</span>
+                </label>
+              );
+            })}
           </div>
+        </fieldset>
 
-          <fieldset className="mp-field mp-field--group">
-            <legend className="mp-field__label">{intake.fields.timeline.label}</legend>
-            <div className="mp-chip-group mp-chip-group--inline" role="radiogroup">
-              {intake.timelines.map((tl) => {
-                const checked = form.timeline === tl.id;
-                return (
-                  <label
-                    key={tl.id}
-                    className="mp-chip mp-chip--radio"
-                    data-selected={checked || undefined}
-                  >
-                    <input
-                      type="radio"
-                      name="timeline"
-                      value={tl.id}
-                      checked={checked}
-                      onChange={() => update('timeline', tl.id)}
-                    />
-                    <span>{tl.label}</span>
-                  </label>
-                );
-              })}
-            </div>
-          </fieldset>
-
-          <fieldset className="mp-field mp-field--group">
-            <legend className="mp-field__label">{intake.fields.budget.label}</legend>
-            <p className="mp-field__hint">{intake.fields.budget.hint}</p>
-            <div className="mp-chip-group mp-chip-group--inline" role="radiogroup">
-              {intake.budgets.map((b) => {
-                const checked = form.budget === b.id;
-                return (
-                  <label
-                    key={b.id}
-                    className="mp-chip mp-chip--radio"
-                    data-selected={checked || undefined}
-                  >
-                    <input
-                      type="radio"
-                      name="budget"
-                      value={b.id}
-                      checked={checked}
-                      onChange={() => update('budget', b.id)}
-                    />
-                    <span>{b.label}</span>
-                  </label>
-                );
-              })}
-            </div>
-          </fieldset>
-
-        <div className="mp-intake__actions">
-          <button type="submit" className="mp-cta mp-cta--primary">
-            {intake.submit}
+        <div className="mp-form__actions">
+          <button type="submit" className="mp-form__submit">
+            {brief.submit} →
           </button>
-          <p className="mp-intake__action-hint">{intake.submitHint}</p>
-          <a className="mp-intake__mail-fallback" href={mailHref}>
-            {intake.mailFallback}
+          <p className="mp-form__action-hint">{brief.submitHint}</p>
+          <a className="mp-form__mail" href={mailHref}>
+            {brief.mailFallback}
           </a>
         </div>
 

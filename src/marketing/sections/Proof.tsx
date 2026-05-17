@@ -1,33 +1,36 @@
 import { useLang } from '../LangContext';
+import SectionHeading from '../components/SectionHeading';
 
 export default function Proof() {
   const { t } = useLang();
-  const { proof } = t;
+  const { letters } = t;
 
   return (
-    <section className="mp-section" id="proof" aria-labelledby="proof-headline">
-      <span className="mp-eyebrow">{proof.eyebrow}</span>
-      <h2 className="mp-h2" id="proof-headline">
-        {proof.headlineLead}
-        <mark>{proof.headlineMark}</mark>
-      </h2>
-      <p className="mp-lead">{proof.lead}</p>
+    <section
+      className="mp-section mp-letters"
+      id="letters"
+      aria-labelledby="letters-headline"
+    >
+      <SectionHeading
+        number={letters.number}
+        kicker={letters.kicker}
+        title={letters.title}
+        id="letters-headline"
+      />
 
-      <div className="mp-testimonials">
-        {proof.items.map((tm) => (
-          <figure
-            key={tm.id}
-            className={`mp-testimonial mp-testimonial--${tm.accent}`}
-          >
-            <span className="mp-testimonial__mark" aria-hidden="true">&ldquo;</span>
-            <blockquote className="mp-testimonial__quote">{tm.quote}</blockquote>
-            <figcaption className="mp-testimonial__cite">
-              <span className="mp-testimonial__name">{tm.name}</span>
-              <span className="mp-testimonial__role">{tm.role}</span>
-            </figcaption>
-          </figure>
+      <p className="mp-standfirst">{letters.standfirst}</p>
+
+      <ul className="mp-letter-list">
+        {letters.items.map((it) => (
+          <li className="mp-letter" key={it.id}>
+            <blockquote className="mp-letter__quote">{it.quote}</blockquote>
+            <p className="mp-letter__cite">
+              <span className="mp-letter__name">{it.name}</span>
+              <span className="mp-letter__role">{it.role}</span>
+            </p>
+          </li>
         ))}
-      </div>
+      </ul>
     </section>
   );
 }

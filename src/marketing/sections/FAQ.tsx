@@ -1,25 +1,36 @@
 import { useLang } from '../LangContext';
+import SectionHeading from '../components/SectionHeading';
 
 export default function FAQ() {
   const { t } = useLang();
-  const { faq } = t;
+  const { qa } = t;
 
   return (
-    <section className="mp-section" id="faq" aria-labelledby="faq-headline">
-      <span className="mp-eyebrow">{faq.eyebrow}</span>
-      <h2 className="mp-h2" id="faq-headline">
-        {faq.headlineLead}
-        <mark>{faq.headlineMark}</mark>
-      </h2>
+    <section
+      className="mp-section mp-qa"
+      id="qa"
+      aria-labelledby="qa-headline"
+    >
+      <SectionHeading
+        number={qa.number}
+        kicker={qa.kicker}
+        title={qa.title}
+        id="qa-headline"
+      />
 
-      <div className="mp-faq">
-        {faq.items.map((it, i) => (
-          <details key={it.q} {...(i === 0 ? { open: true } : {})}>
-            <summary>{it.q}</summary>
-            <p className="mp-faq__a">{it.a}</p>
-          </details>
+      <dl className="mp-qa-list">
+        {qa.items.map((it, i) => (
+          <div className="mp-qa__row" key={it.q}>
+            <dt className="mp-qa__q">
+              <span className="mp-qa__q-num" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span>{it.q}</span>
+            </dt>
+            <dd className="mp-qa__a">{it.a}</dd>
+          </div>
         ))}
-      </div>
+      </dl>
     </section>
   );
 }

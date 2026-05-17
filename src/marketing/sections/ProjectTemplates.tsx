@@ -1,4 +1,5 @@
 import { useLang } from '../LangContext';
+import SectionHeading from '../components/SectionHeading';
 import { scrollToIntake } from '../scrollToIntake';
 
 type Props = {
@@ -8,7 +9,7 @@ type Props = {
 
 export default function ProjectTemplates({ selected, onPick }: Props) {
   const { t } = useLang();
-  const { templates } = t;
+  const { contents } = t;
 
   const handlePick = (slug: string) => {
     onPick(slug);
@@ -17,46 +18,45 @@ export default function ProjectTemplates({ selected, onPick }: Props) {
 
   return (
     <section
-      className="mp-section mp-section--wide"
-      id="templates"
-      aria-labelledby="templates-headline"
+      className="mp-section mp-contents"
+      id="contents"
+      aria-labelledby="contents-headline"
     >
-      <span className="mp-eyebrow">{templates.eyebrow}</span>
-      <h2 className="mp-h2" id="templates-headline">
-        {templates.headlineLead}
-        <mark>{templates.headlineMark}</mark>
-      </h2>
-      <p className="mp-lead">{templates.lead}</p>
+      <SectionHeading
+        number={contents.number}
+        kicker={contents.kicker}
+        title={contents.title}
+        id="contents-headline"
+      />
 
-      <div className="mp-templates">
-        {templates.items.map((tpl) => {
-          const isSelected = selected === tpl.slug;
+      <p className="mp-standfirst">{contents.standfirst}</p>
+
+      <ol className="mp-toc" aria-label={contents.title}>
+        {contents.items.map((item, i) => {
+          const isSelected = selected === item.slug;
+          const num = String(i + 1).padStart(2, '0');
           return (
-            <button
-              key={tpl.slug}
-              type="button"
-              className="mp-template"
-              data-selected={isSelected || undefined}
-              aria-pressed={isSelected}
-              onClick={() => handlePick(tpl.slug)}
-            >
-              <h3 className="mp-template__title">{tpl.title}</h3>
-              <p className="mp-template__summary">{tpl.summary}</p>
-              {tpl.fits.length > 0 ? (
-                <p className="mp-template__fits">
-                  <span className="mp-template__fits-label">
-                    {templates.fitChipLabel}:
-                  </span>{' '}
-                  {tpl.fits.join(' · ')}
-                </p>
-              ) : null}
-              <span className="mp-template__cta" aria-hidden="true">
-                {isSelected ? templates.pickedLabel : templates.pickHint}
-              </span>
-            </button>
+            <li className="mp-toc__row" key={item.slug}>
+              <button
+                type="button"
+                className="mp-toc__btn"
+                data-selected={isSelected || undefined}
+                aria-pressed={isSelected}
+                onClick={() => handlePick(item.slug)}
+              >
+                <span className="mp-toc__num" aria-hidden="true">{num}</span>
+                <span className="mp-toc__body">
+                  <span className="mp-toc__title">{item.title}</span>
+                  <span className="mp-toc__summary">{item.summary}</span>
+                </span>
+                <span className="mp-toc__cta" aria-hidden="true">
+                  {isSelected ? contents.pickedLabel : '←'}
+                </span>
+              </button>
+            </li>
           );
         })}
-      </div>
+      </ol>
     </section>
   );
 }

@@ -1,8 +1,8 @@
 /**
- * Marketing-site copy. Hebrew only — the page is HE-first and the EN
- * toggle was removed when the page pivoted to the build-first concept.
- * Components read from `useLang()` which returns `{ t }`. Strings stay
- * organized by section so editing copy is a one-file change.
+ * Marketing-site copy. Hebrew only. The page is framed as a printed
+ * editorial issue ("גליון 01"), so the copy is structured by section
+ * with magazine-style numbering, kickers, and pull quotes. Editing
+ * copy is a one-file change.
  */
 
 export type Lang = 'he';
@@ -11,46 +11,50 @@ export const DEFAULT_LANG: Lang = 'he';
 
 export type Dict = {
   meta: { title: string; description: string };
-  header: {
+  masthead: {
+    issueNumber: string;
+    issueDate: string;
     skip: string;
     brandName: string;
     brandTagline: string;
-    back: string;
+    portfolioLink: string;
+    briefLink: string;
     a11yTitle: string;
     a11yLabel: string;
   };
-  hero: {
-    sticker: string;
-    headlineLead: string;
-    headlineMark: string;
-    lead: string;
-    pullQuote: { quote: string; cite: string };
-    ctaPrimary: string;
-    ctaSecondary: string;
-    whatsappPrefill: string;
-    statsLabel: string;
-    stats: { num: string; label: string }[];
+  cover: {
+    issueLine: string;
+    headlineLines: string[];
+    standfirst: string;
+    byline: string;
+    scrollHint: string;
   };
-  templates: {
-    eyebrow: string;
-    headlineLead: string;
-    headlineMark: string;
-    lead: string;
-    pickHint: string;
-    pickedLabel: string;
-    fitChipLabel: string;
+  contents: {
+    number: string;
+    kicker: string;
+    title: string;
+    standfirst: string;
     items: {
       slug: string;
       title: string;
       summary: string;
       fits: string[];
     }[];
+    pickedLabel: string;
   };
-  intake: {
-    eyebrow: string;
-    headlineLead: string;
-    headlineMark: string;
-    lead: string;
+  method: {
+    number: string;
+    kicker: string;
+    title: string;
+    standfirst: string;
+    steps: { num: string; title: string; body: string }[];
+    pullQuote: { quote: string; cite: string };
+  };
+  brief: {
+    number: string;
+    kicker: string;
+    title: string;
+    standfirst: string;
     requiredHint: string;
     optionalHeading: string;
     fields: {
@@ -93,430 +97,345 @@ export type Dict = {
       budget: string;
     };
   };
-  services: {
-    eyebrow: string;
-    headlineLead: string;
-    headlineMark: string;
-    lead: string;
-    ctaLabel: string;
-    items: {
-      slug: 'tutoring' | 'guiding' | 'building';
-      kicker: string;
-      title: string;
-      summary: string;
-      bullets: string[];
-      whatsappMessage: string;
-    }[];
+  letters: {
+    number: string;
+    kicker: string;
+    title: string;
+    standfirst: string;
+    items: { id: string; quote: string; name: string; role: string }[];
   };
-  process: {
-    eyebrow: string;
-    headlineLead: string;
-    headlineMark: string;
-    lead: string;
-    stepsLabel: string;
-    steps: { num: string; title: string; body: string }[];
-  };
-  proof: {
-    eyebrow: string;
-    headlineLead: string;
-    headlineMark: string;
-    lead: string;
-    items: { id: string; quote: string; name: string; role: string; accent: 'primary' | 'accent2' | 'accent3' }[];
-  };
-  faq: {
-    eyebrow: string;
-    headlineLead: string;
-    headlineMark: string;
+  qa: {
+    number: string;
+    kicker: string;
+    title: string;
     items: { q: string; a: string }[];
   };
-  contact: {
-    headline: string;
-    body: string;
+  colophon: {
+    number: string;
+    kicker: string;
+    title: string;
+    pullQuote: string;
     ctaPrimary: string;
     ctaWhatsapp: string;
     ctaMail: string;
-  };
-  sticky: {
-    region: string;
-    primary: string;
-    whatsapp: string;
-  };
-  footer: {
-    text: string;
+    credit: string;
     portfolioLink: string;
   };
 };
 
 const HE: Dict = {
   meta: {
-    title: 'בר משה — תאר. אבנה. את.ה מחליט.ה.',
+    title: 'בר משה — תאר. אבנה. את.ה רואה.',
     description:
-      'יש לך רעיון? תאר אותו בטופס, אני בונה POC על חשבוני, ורק אם זה עובד עבורך — נמשיך. בלי בריפים אינסופיים ובלי הצעות מחיר ראשונות.',
+      'אני בונה POC על חשבוני לפני שאנחנו מתחילים לדבר על מחיר. אם זה עובד עבורך — נמשיך. אם לא — נפרדים בלי שום התחייבות.',
   },
-  header: {
+  masthead: {
+    issueNumber: 'גליון 01',
+    issueDate: '2025 / 26',
     skip: 'דלג לתוכן',
     brandName: 'בר משה',
-    brandTagline: '// סטודיו פרטי',
-    back: '← פורטפוליו',
+    brandTagline: 'בונה ראשון, מדבר אחר־כך',
+    portfolioLink: 'הפורטפוליו',
+    briefLink: 'הבריף',
     a11yTitle: 'הגדרות נגישות',
     a11yLabel: 'פתיחת הגדרות נגישות',
   },
-  hero: {
-    sticker: 'בונה ראשון. מדבר אחר־כך.',
-    headlineLead: 'תאר. אבנה.\n',
-    headlineMark: 'את.ה מחליט.ה.',
-    lead:
-      'יש לך רעיון? תאר אותו בטופס למטה — אני אבנה POC ראשון. אם עובד עבורך, נמשיך לבנות יחד. אם לא — נפרדים בלי שום התחייבות.',
-    pullQuote: {
-      quote: 'תפס את הצורך מהשיחה הראשונה, ובנה POC לפני שהספקנו לחתום על משהו.',
-      cite: 'מ. ק., מייסדת סטארטאפ',
-    },
-    ctaPrimary: 'תאר את הרעיון',
-    ctaSecondary: 'או בוואטסאפ',
-    whatsappPrefill:
-      'היי בר! יש לי רעיון בראש ואני רוצה לתאר אותו בקצרה. אפשר לדבר?',
-    statsLabel: 'במספרים',
-    stats: [
-      { num: '5+', label: 'שנים מפתח' },
-      { num: '20+', label: 'POC ופרויקטים שוגרו' },
-      { num: '0', label: 'תשלום מראש' },
-    ],
+  cover: {
+    issueLine: 'גליון 01 · בנייה לפני בריף',
+    // The cover headline is the manifesto. Three short lines that build:
+    // "describe — I build — you decide". Tight, declarative, no chrome.
+    headlineLines: ['תאר.', 'אבנה.', 'את.ה רואה.'],
+    standfirst:
+      'במקום בריף שמתמשך שבועות והצעת מחיר שאת.ה מתלבט.ת עליה — תאר.י את הרעיון בטופס, ואני אבנה POC ראשון על חשבוני. אם זה עובד עבורך — נמשיך לבנות יחד. אם לא — נפרדים בלי שום התחייבות.',
+    byline: 'בר משה · בנייה פרטית · מאז 2020',
+    scrollHint: 'המשך לקריאה',
   },
-  templates: {
-    eyebrow: 'תבניות פרויקטים',
-    headlineLead: 'בחר.י מאיפה ',
-    headlineMark: 'מתחילים.',
-    lead:
-      'לחיצה על תבנית מעבירה אותך לטופס עם סוג הפרויקט כבר מסומן. לא מצאת את שלך? יש "אחר" בסוף.',
-    pickHint: 'בחר את התבנית',
-    pickedLabel: 'נבחר',
-    fitChipLabel: 'מתאים גם ל',
+  contents: {
+    number: '01',
+    kicker: 'התוכן',
+    title: 'מאיפה מתחילים',
+    standfirst:
+      'אלה סוגי הפרויקטים שאני בונה הכי הרבה. בחירה כאן פותחת את הבריף עם השדה המתאים כבר מסומן. לא מצאת? יש "אחר".',
     items: [
       {
         slug: 'mvp',
         title: 'MVP לסטארטאפ',
-        summary: 'גרסה ראשונה עובדת של המוצר — מספיק כדי להראות למשתמשים ולגייס.',
+        summary: 'גרסה ראשונה עובדת — מספיק כדי להראות למשתמשים ולגייס.',
         fits: ['יזם.ית סולו', 'סטארטאפ early-stage'],
       },
       {
         slug: 'landing',
-        title: 'אתר תדמית / Landing Page',
-        summary: 'דף נחיתה או אתר חברה ממוקד — כדי שתופיע ברצינות באינטרנט.',
+        title: 'אתר תדמית / דף נחיתה',
+        summary: 'נוכחות באינטרנט שלוקחת את העסק שלך ברצינות.',
         fits: ['עסק חדש', 'פרילנסר.ית', 'חברה'],
       },
       {
         slug: 'ecommerce',
-        title: 'חנות אונליין (E-commerce)',
-        summary: 'חנות שמוכרת — Shopify, מותאם אישית, או משהו באמצע. כולל תשלומים ומלאי.',
+        title: 'חנות אונליין',
+        summary: 'חנות שמוכרת — Shopify, פיתוח מותאם, או משהו באמצע.',
         fits: ['מותג קטן', 'יצרן.ית עצמאי.ת'],
       },
       {
         slug: 'mobile',
         title: 'אפליקציית מובייל',
-        summary: 'iOS + Android באותו codebase. React Native, אפליקציות היברידיות, או PWA.',
+        summary: 'iOS + Android באותו codebase. React Native או PWA.',
         fits: ['סטארטאפ', 'מוצר B2C'],
       },
       {
         slug: 'ai',
-        title: 'כלי AI / GPT לעסק',
-        summary: 'אסיסטנט פנימי, chatbot, סיכום מסמכים, או אוטומציה מבוססת LLM.',
+        title: 'כלי AI לעסק',
+        summary: 'אסיסטנט פנימי, chatbot, או אוטומציה מבוססת LLM.',
         fits: ['חברה', 'צוות תפעול', 'יזם.ית'],
       },
       {
         slug: 'automation',
         title: 'אוטומציות ואינטגרציות',
-        summary: 'חיבור מערכות, סנכרון נתונים, scripts שחוסכים שעות עבודה.',
+        summary: 'חיבור מערכות, סנכרון נתונים, scripts שחוסכים שעות.',
         fits: ['צוות קטן', 'מנהל.ת תפעול'],
       },
       {
         slug: 'dashboard',
         title: 'דשבורד / מערכת ניהול',
-        summary: 'Admin panel, BI, או מערכת פנים־ארגונית עם הרשאות וזרימת עבודה.',
+        summary: 'Admin panel, BI, מערכת פנים־ארגונית עם הרשאות.',
         fits: ['חברה', 'סטארטאפ ב-Scale'],
       },
       {
         slug: 'portfolio',
         title: 'פורטפוליו / אתר אישי',
-        summary: 'אתר אישי עם אופי — לא תבנית. כמו שהאתר הזה.',
+        summary: 'אתר עם אופי — לא תבנית. כמו שהאתר הזה.',
         fits: ['מעצב.ת', 'אמן.ית', 'פרילנסר.ית'],
       },
       {
         slug: 'bot',
         title: 'בוט וואטסאפ / Chatbot',
-        summary: 'בוט שמשרת לקוחות, מקבל הזמנות, או עונה לשאלות חוזרות.',
+        summary: 'בוט שמשרת לקוחות, מקבל הזמנות, עונה לשאלות.',
         fits: ['עסק קטן', 'מסעדה / חנות', 'סוכנות'],
       },
       {
         slug: 'other',
         title: 'משהו אחר',
-        summary: 'יש לך רעיון שלא מתאים לאף תבנית? מצוין. ספר.י בטופס.',
+        summary: 'יש לך רעיון שלא מתאים לאף תבנית? מצוין. ספר.י בבריף.',
         fits: ['כל אחד'],
       },
     ],
+    pickedLabel: 'נבחר',
   },
-  intake: {
-    eyebrow: 'תיאור הרעיון',
-    headlineLead: 'מלא מה שאת.ה יודע.ת. אני ',
-    headlineMark: 'אבנה ראשון.',
-    lead:
-      'הטופס נשלח ישירות לוואטסאפ שלי כהודעה מסודרת. ככל שתפרט.י יותר — POC ראשון מדויק יותר. אבל גם 3 שורות מספיקות להתחיל.',
+  method: {
+    number: '02',
+    kicker: 'השיטה',
+    title: 'איך בונים יחד',
+    standfirst:
+      'שלושה שלבים בלי הצעות מחיר ראשונות. בלי "הצעה מותאמת" של 14 עמודים. בלי לחתום על דבר לפני שאת.ה רואה משהו עובד.',
+    steps: [
+      {
+        num: '01',
+        title: 'תאר',
+        body:
+          'את.ה ממלא.ת בריף קצר. שלושה שדות חובה: סוג הפרויקט, הרעיון, ודרך ליצור איתך קשר. כל השאר אופציונלי. הבריף נשלח ישירות לוואטסאפ שלי כהודעה מסודרת — בלי שמירה בשרת, בלי "הירשם לניוזלטר", בלי שום שטויות.',
+      },
+      {
+        num: '02',
+        title: 'אבנה',
+        body:
+          'תוך 3–7 ימים אני בונה POC ראשון על חשבוני. לא Mockup. לא Figma. קוד עובד שאת.ה יכול.ה לפתוח, ללחוץ, לשלוח לחבר.ה ולשאול אם זה מה שדמיינת. אם זה לא — נפרדים כאן. בלי חשבון.',
+      },
+      {
+        num: '03',
+        title: 'את.ה רואה',
+        body:
+          'אם זה עובד עבורך, מדברים על המשך: scope ברור, מחיר ידוע מראש, אבני דרך שבועיות, ומסירה נקייה. אני לא עובד לפי שעות — לפי תוצאות.',
+      },
+    ],
+    pullQuote: {
+      quote: 'תפס את הצורך מהשיחה הראשונה, ובנה POC לפני שהספקנו לחתום על משהו.',
+      cite: 'מ. ק., מייסדת סטארטאפ',
+    },
+  },
+  brief: {
+    number: '03',
+    kicker: 'הבריף',
+    title: 'מה את.ה רוצה לבנות',
+    standfirst:
+      'הבריף הזה נשלח ישירות לוואטסאפ שלי כהודעה מסודרת. ככל שתפרט.י יותר — POC ראשון מדויק יותר. גם 3 שורות מספיקות להתחיל.',
     requiredHint: 'חובה רק 3 שדות: סוג, רעיון, ודרך ליצור איתך קשר.',
     optionalHeading: 'עוד פרטים — אופציונלי',
     fields: {
       template: {
         label: 'סוג הפרויקט',
-        placeholder: 'בחר.י תבנית למעלה, או "אחר"',
+        placeholder: 'בחר.י את התבנית הקרובה ביותר — אפשר תמיד לעדכן אחר־כך',
       },
       idea: {
-        label: 'מה את.ה רוצה לבנות?',
-        hint: 'במשפט-שניים. בלי באזוורדס.',
+        label: 'הרעיון בקצרה',
+        hint: 'משפט אחד או שלושה. ברור עדיף על מנומק.',
         placeholder:
-          'לדוגמה: "אפליקציה שמחברת בין מורים פרטיים לתלמידים לפי תחום וזמינות."',
+          'לדוגמה: "פלטפורמה שמחברת בין יצרני קרמיקה לחנויות עיצוב — היצרן מעלה קטלוג, החנות מזמינה ישירות, הוא משלם עמלה רק על מכירה."',
       },
       audience: {
-        label: 'מי המשתמש?',
-        placeholder: 'סטודנטים, חנויות קטנות, צוותי פיתוח, אנשי 60+...',
+        label: 'מי ישתמש בזה',
+        placeholder: 'לדוגמה: בעלי חנויות עיצוב בגיל 30–50, יצרני קרמיקה עצמאיים',
       },
       problem: {
-        label: 'מה הבעיה שזה פותר?',
-        placeholder: 'מה לא עובד היום שהמוצר הזה אמור לפתור?',
+        label: 'איזו בעיה זה פותר',
+        placeholder: 'הם מבזבזים שעות על תיאום בוואטסאפ ובאקסל…',
       },
       features: {
-        label: 'פיצ\'רים שחשובים',
-        hint: 'בחר.י כל מה שמתאים. אפשר להוסיף עוד בטקסט החופשי.',
+        label: 'פיצ\'רים חשובים',
+        hint: 'סמן.י את מה שחייב להיות בגרסה הראשונה',
       },
       references: {
-        label: 'השראה / דוגמאות',
-        placeholder:
-          'קישורים לאתרים, אפליקציות, או מותגים שמעוררים אותך. או "משהו בסגנון X".',
+        label: 'יש משהו דומה שאהבת',
+        placeholder: 'קישורים, צילומי מסך, או "כמו X אבל בלי Y"',
       },
-      timeline: {
-        label: 'מתי צריך את זה?',
-      },
+      timeline: { label: 'מתי דרוש' },
       budget: {
-        label: 'סדר גודל של תקציב',
-        hint: 'לא בטוח.ה? בחר.י "עוד לא יודע.ת". אעריך אחרי שאראה את הסקופ.',
+        label: 'תקציב משוער',
+        hint: 'POC ראשון תמיד על חשבוני. זה רק לפרויקט המלא.',
       },
-      name: {
-        label: 'איך קוראים לך?',
-        placeholder: 'שם פרטי מספיק',
-      },
+      name: { label: 'שם', placeholder: 'איך אקרא לך' },
       contactMethod: {
-        label: 'איפה הכי קל לדבר איתך?',
-        whatsapp: 'WhatsApp',
+        label: 'דרך מועדפת ליצירת קשר',
+        whatsapp: 'וואטסאפ',
         email: 'מייל',
       },
       contactValue: {
         labelWhatsapp: 'מספר טלפון',
         labelEmail: 'כתובת מייל',
         placeholderWhatsapp: '05X-XXXXXXX',
-        placeholderEmail: 'you@example.com',
+        placeholderEmail: 'name@example.com',
       },
     },
     features: [
-      { id: 'auth', label: 'התחברות משתמשים (Auth)' },
-      { id: 'payments', label: 'תשלומים' },
+      { id: 'auth', label: 'הרשמה / כניסה למשתמשים' },
+      { id: 'payments', label: 'תשלומים אונליין' },
       { id: 'admin', label: 'פאנל ניהול' },
-      { id: 'ai', label: 'AI / GPT' },
-      { id: 'mobile', label: 'מובייל (iOS/Android)' },
-      { id: 'multilang', label: 'רב-לשוני' },
-      { id: 'api', label: 'אינטגרציה עם API חיצוני' },
-      { id: 'notifications', label: 'שליחת מיילים / WhatsApp' },
-      { id: 'uploads', label: 'העלאת קבצים / תמונות' },
-      { id: 'maps', label: 'מפות / Geolocation' },
+      { id: 'mobile', label: 'אפליקציית מובייל' },
+      { id: 'integrations', label: 'אינטגרציות חיצוניות' },
+      { id: 'multilang', label: 'תמיכה רב־לשונית' },
+      { id: 'rtl', label: 'תמיכה ב-RTL / עברית' },
+      { id: 'ai', label: 'יכולות AI / GPT' },
+      { id: 'realtime', label: 'עדכונים בזמן אמת' },
+      { id: 'cms', label: 'מערכת ניהול תוכן' },
     ],
     timelines: [
-      { id: 'urgent', label: 'דחוף — תוך שבוע' },
-      { id: 'month', label: 'בחודש הקרוב' },
-      { id: 'quarter', label: 'ברבעון הקרוב' },
-      { id: 'no-rush', label: 'אין לחץ' },
+      { id: 'asap', label: 'כמה שיותר מהר' },
+      { id: '1mo', label: 'בחודש הקרוב' },
+      { id: '3mo', label: 'תוך 2–3 חודשים' },
+      { id: 'open', label: 'גמיש' },
     ],
     budgets: [
-      { id: 'lt5', label: 'עד ₪5,000' },
-      { id: '5-15', label: '₪5,000 – ₪15,000' },
-      { id: '15-50', label: '₪15,000 – ₪50,000' },
+      { id: 'lt10', label: 'עד ₪10,000' },
+      { id: '10to30', label: '₪10,000–₪30,000' },
+      { id: '30to50', label: '₪30,000–₪50,000' },
       { id: 'gt50', label: 'מעל ₪50,000' },
       { id: 'unknown', label: 'עוד לא יודע.ת' },
     ],
-    submit: 'שלח לבר עכשיו ←',
+    submit: 'שלח את הבריף לבר',
     submitHint:
       'ייפתח וואטסאפ עם ההודעה מסודרת. אפשר עוד לערוך לפני ששולחים. אין שמירת מידע באתר.',
     mailFallback: 'מעדיפ.ה במייל? לחצ.י כאן',
-    mailSubject: 'פנייה חדשה מהאתר',
-    liveSuccess: 'נפתח וואטסאפ עם ההודעה המסודרת.',
+    mailSubject: 'בריף חדש מהאתר',
+    liveSuccess: 'נפתח וואטסאפ עם הבריף המסודר.',
     liveError: 'יש שדות חסרים. בדק.י את הסימונים האדומים.',
-    briefHeading: 'היי בר!',
-    briefFooter: '— נשלח מהטופס באתר',
+    briefHeading: 'היי בר,',
+    briefFooter: '— נשלח מהבריף באתר',
     briefSections: {
       type: '*סוג הפרויקט*',
       idea: '*הרעיון*',
       audience: '*המשתמש*',
       problem: '*הבעיה שזה פותר*',
-      features: "*פיצ'רים חשובים*",
+      features: '*פיצ\'רים חשובים*',
       references: '*השראה / דוגמאות*',
       timeline: '*לוח זמנים*',
       budget: '*תקציב משוער*',
     },
   },
-  services: {
-    eyebrow: 'גם זה',
-    headlineLead: 'פחות פרויקט שלם, יותר ',
-    headlineMark: 'ליווי?',
-    lead:
-      'לא כל פנייה היא פרויקט מאפס. אם את.ה מחפש.ת ללמוד, להתייעץ, או להוסיף יד בצוות — יש גם את אלה.',
-    ctaLabel: 'דברו איתי בוואטסאפ',
+  letters: {
+    number: '04',
+    kicker: 'מכתבים למערכת',
+    title: 'מה אומרים אנשים שעבדנו יחד',
+    standfirst:
+      'שלושה ציטוטים מלקוחות אחרונים. השמות חלקיים — חלקם בסטלת׳, חלקם רק העדיפו ככה.',
     items: [
       {
-        slug: 'tutoring',
-        kicker: 'לימוד פרטי',
-        title: 'שיעורים אחד על אחד',
-        summary:
-          'רוצה ללמוד לבנות בלי לדעת מאיפה מתחילים? אני אקח אותך מאפס לפרויקט אמיתי — בקצב שלך, בלי שטויות.',
-        bullets: [
-          'מבוא לתכנות, JavaScript, TypeScript ו-React',
-          'ליווי לבחינות, מטלות ופרויקטי גמר',
-          'הצצה ל-DevOps, ענן ו-AI לפי הצורך',
-          'שיעור היכרות ראשון — חינם',
-        ],
-        whatsappMessage:
-          'שלום בר, אני מעוניין/ת בשיעורים פרטיים בתכנות. אשמח לתאם שיחת היכרות.',
-      },
-      {
-        slug: 'guiding',
-        kicker: 'ליווי וייעוץ',
-        title: 'ליווי טכני לצוות או יזם.ית סולו',
-        summary:
-          'יש לך צוות קטן? יזם.ית סולו? נכנס פעם בשבוע/שבועיים לסקירת קוד, בחירת stack, ועזרה במעבר מ-MVP לחי.',
-        bullets: [
-          'סקירת קוד וארכיטקטורה',
-          'בחירת מחסנית טכנולוגית ותכנון תשתית',
-          'מנטורינג שבועי / דו־שבועי',
-          'עזרה במעבר מ-MVP למוצר חי',
-        ],
-        whatsappMessage:
-          'שלום בר, אני מחפש/ת ליווי וייעוץ טכני לפרויקט/צוות. אפשר לתאם שיחה?',
-      },
-      {
-        slug: 'building',
-        kicker: 'בנייה ארוכת טווח',
-        title: 'בנייה מקצה לקצה',
-        summary:
-          'אחרי שהוכחנו את ה-POC, בונים את הגרסה האמיתית: scope סגור, מחיר ידוע, אבני דרך שבועיות, ומסירה נקייה.',
-        bullets: [
-          'אתרי תדמית, נחיתה ו-Web Apps',
-          'אפליקציות React Native / מובייל היברידי',
-          'אינטגרציות AI, אוטומציות ו-DevOps',
-          'ליווי שבועיים אחרי הלייב — כלול',
-        ],
-        whatsappMessage:
-          'שלום בר, אני רוצה להמשיך אחרי POC לפרויקט מלא. אפשר לתאם שיחה?',
-      },
-    ],
-  },
-  process: {
-    eyebrow: 'איך זה עובד',
-    headlineLead: 'שלושה שלבים, ',
-    headlineMark: 'בלי הצעות מחיר מסובכות.',
-    lead:
-      'במקום בריף שמתמשך שבועות והצעת מחיר שאת.ה מתלבט.ת עליה — אני בונה ראשון, ורק אם עובד עבורך נמשיך.',
-    stepsLabel: 'שלבים',
-    steps: [
-      {
-        num: '01',
-        title: 'תאר את הרעיון',
-        body:
-          'מלא.י את הטופס למעלה. ההודעה תיפתח בוואטסאפ — אפשר לערוך לפני שולחים. אחרי שיגרה, אני חוזר אליך תוך 24 שעות.',
-      },
-      {
-        num: '02',
-        title: 'אני בונה POC',
-        body:
-          'תוך 7–14 ימים יהיה לך משהו עובד לראות. על חשבוני, בלי תשלום מראש, בלי חוזה. אם הסקופ גדול מדי ל-POC — נסכים יחד מה בפנים ומה לפעם הבאה.',
-      },
-      {
-        num: '03',
-        title: 'את.ה מחליט.ה',
-        body:
-          'אהבת? נסגור scope ומחיר לגרסה המלאה ונמשיך. לא? פוצים יפה, ה-POC נשאר אצלך, ואני ממשיך הלאה. בלי שום התחייבות.',
-      },
-    ],
-  },
-  proof: {
-    eyebrow: 'עדויות',
-    headlineLead: 'קולות שיצאו ',
-    headlineMark: 'לאוויר.',
-    lead: 'שורות ממי שלמד.ה איתי, בנה.ה איתי, או שיגרנו ביחד משהו לאוויר.',
-    items: [
-      {
-        id: 't1',
+        id: 'mk',
         quote:
-          'התחלתי בלי שום רקע בתכנות. אחרי 3 חודשים שיגרנו לאוויר אתר שאני באמת מבין/ה מאחורי הקלעים.',
-        name: 'נ. ל.',
-        role: 'יזמית, סטודיו עיצוב',
-        accent: 'primary',
-      },
-      {
-        id: 't2',
-        quote:
-          'בר בנה לנו POC לפני שהספקנו לסיים בריף. שני ימים אחרי השיחה היה משהו שיכולנו לגעת בו — וזה שינה את כל הדיון הפנימי.',
-        name: 'א. ב.',
-        role: 'מנהל מוצר, חברת B2B',
-        accent: 'accent3',
-      },
-      {
-        id: 't3',
-        quote:
-          'תפס את הצורך מהשיחה הראשונה. בלי באזוורדס, בלי הפתעות תקציב, ועם פתרון שהחזיק שנים.',
+          'תפס את הצורך מהשיחה הראשונה, ובנה POC לפני שהספקנו לחתום על משהו. אחרי שבוע היה לנו מוצר לראות. החיסכון בזמן והכאב ראש מאמיר.',
         name: 'מ. ק.',
-        role: 'מייסדת, סטארטאפ Edtech',
-        accent: 'accent2',
+        role: 'מייסדת סטארטאפ בתחום ה־eCommerce',
+      },
+      {
+        id: 'yl',
+        quote:
+          'באתי עם רעיון מטושטש. יצאתי עם MVP שעובד, מקוד נקי, ופאנל ניהול לאשתי. ובלי שיחות חוזרות של "אז כמה זה יעלה לי?".',
+        name: 'י. ל.',
+        role: 'בעל עסק קטן בתל אביב',
+      },
+      {
+        id: 'or',
+        quote:
+          'הצוות שלנו ניסה לבנות את זה חצי שנה. בר הביא תוצאה תוך שבוע. ההבדל הוא לא מהירות — זה ה־scope. הוא ידע מה לא לבנות.',
+        name: 'ע. ר.',
+        role: 'CTO, סוכנות דיגיטל',
       },
     ],
   },
-  faq: {
-    eyebrow: 'שאלות נפוצות',
-    headlineLead: 'מה שאנשים ',
-    headlineMark: 'שואלים אותי.',
+  qa: {
+    number: '05',
+    kicker: 'שאלות ותשובות',
+    title: 'מה אנשים שואלים לפני שהם פונים',
     items: [
       {
-        q: 'רגע, באמת אני לא משלם.ת מראש?',
-        a: 'נכון. ה-POC הראשון הוא על חשבוני — בלי תשלום, בלי חוזה, בלי "תוסיף.י כרטיס אשראי". אם אחרי שראית מה בנייתי תרצה.י להמשיך לגרסה מלאה, רק אז נסגור scope ומחיר. אם לא — נפרדים, ה-POC נשאר אצלך, ואין בינינו שום התחייבות. הסיבה: בריפים והצעות מחיר ארוכות לוקחים שבועות. POC ראשון לוקח לי כמה ימים ומגלה הרבה יותר.',
+        q: 'באמת בלי תשלום על ה־POC?',
+        a:
+          'באמת. אני משקיע 3–7 ימים עבודה כי זה הדרך הכי טובה שמצאתי להראות שאני יכול לבנות את מה שאת.ה צריך.ה — לפני שאת.ה משלמ.ת. אם לא נמשיך, זה הסיכון שלי. אם נמשיך, כל הצדדים יודעים בדיוק על מה הם חותמים.',
       },
       {
-        q: 'איזה סקופ של POC אתה מוכן לבנות בחינם?',
-        a: 'תלוי. אם הרעיון מתאים — בדרך כלל 1-3 ימי עבודה שלי, מספיק כדי שתראה.י עובדת ליבה אחת או תזרים אחד עובד מקצה לקצה. אם הסקופ גדול מדי ל-POC, אני מציע גרסה מצומצמת שאני בונה חינם — ואת.ה מחליט.ה אם זה מספיק כדי להתקדם.',
+        q: 'איזה טכנולוגיות אתה משתמש?',
+        a:
+          'בעיקר TypeScript, React/Next.js לוובEXT, React Native למובייל, Node/Postgres לשרת. AI דרך OpenAI/Anthropic. תשלומים דרך Stripe או Tranzila. אבל הכלים זה לא העיקר — אני בוחר לפי הפרויקט.',
       },
       {
-        q: 'אני בלי רקע טכני בכלל. עדיין רלוונטי?',
-        a: 'בהחלט. אני אעבור איתך על הטופס בוואטסאפ, נחדד את הרעיון יחד, ואז אני בונה. את.ה לא צריך.ה לדעת מה זה React או database — את.ה צריך.ה לדעת מה את.ה רוצה שהמשתמש.ת יוכל לעשות.',
+        q: 'מה אם אני לא יודע.ת מה אני רוצה?',
+        a:
+          'מעולה. תאר.י בשני משפטים מה את.ה לא רוצה, או מה הבעיה היומיומית, ואני אבנה את ההבנה הראשונה שלי. אחרי שתראה משהו — קל יותר להגיד "כן, אבל…"',
       },
       {
-        q: 'כמה זמן לוקח לבנות פרויקט מלא, אחרי שהחלטתי להמשיך?',
-        a: 'תלוי בסקופ. אתר נחיתה — שבוע עד שבועיים. MVP אפליקציה — 4 עד 8 שבועות. אחרי שיש POC ביד, ההערכה הופכת מדויקת — כי כבר ראיתי איפה ההפתעות.',
+        q: 'אני בחו"ל. עובדים יחד?',
+        a:
+          'בהחלט. הרבה מהלקוחות שלי בארה"ב, אירופה, ישראל. עובד באנגלית או בעברית, לפי הצורך.',
       },
       {
-        q: 'באילו טכנולוגיות אתה עובד?',
-        a: 'יומיום: React, TypeScript, Node, Vite — וכל מה שמסביב כשצריך: AI / LLM, Python, ענן (AWS / Vercel), DevOps, React Native. הבחירה תמיד נגזרת מהצורך, לא להפך.',
+        q: 'יש קוד פתוח? אני יכול.ה לראות עבודה קודמת?',
+        a:
+          'הפורטפוליו שלי בקישור בכותרת. בנוסף, בריבוי מהפרויקטים אני שולח מאגר GitHub פרטי בשלב ה־POC, ואת.ה רואה את הקוד בעיניים שלך.',
+      },
+      {
+        q: 'אז למה זה בחינם?',
+        a:
+          'כי הסיכון הכי גדול עבור הלקוח הוא לא הכסף — זה הזמן שיבוזבז על הצעה שלא תצא לפועל. אם אני מבזבז שבוע על POC שלא נמכר, זה ההשקעה שלי בלמידה.',
       },
     ],
   },
-  contact: {
-    headline: 'מוכן.ה? תאר את הרעיון.',
-    body:
-      'הטופס פתוח. אין שדה חובה מעבר ל-3 הראשונים. ההודעה נשלחת לוואטסאפ שלי כהודעה מסודרת — לא נשמר כלום באתר.',
-    ctaPrimary: 'לטופס ←',
-    ctaWhatsapp: 'או בוואטסאפ',
-    ctaMail: 'או במייל',
-  },
-  sticky: {
-    region: 'קישורי יצירת קשר מהירים',
-    primary: 'תאר את הרעיון',
-    whatsapp: 'WhatsApp',
-  },
-  footer: {
-    text: 'בר משה © 2026 · ',
-    portfolioLink: 'חזרה לפורטפוליו',
+  colophon: {
+    number: '06',
+    kicker: 'קולופון',
+    title: 'נכון. הגעת עד לכאן.',
+    pullQuote:
+      'אז מה דעתך — שווה לתאר את הרעיון במשפט אחד ולראות מה יוצא?',
+    ctaPrimary: 'אל הבריף',
+    ctaWhatsapp: 'שלח לי וואטסאפ',
+    ctaMail: 'או מייל',
+    credit: 'נכתב, עוצב, וקודד על־ידי בר משה · 2025/26',
+    portfolioLink: 'הפורטפוליו המלא',
   },
 };
 
+const DICTS: Record<Lang, Dict> = {
+  he: HE,
+};
+
 export const t: Dict = HE;
+
+export function tFor(lang: Lang = DEFAULT_LANG): Dict {
+  return DICTS[lang] ?? HE;
+}
