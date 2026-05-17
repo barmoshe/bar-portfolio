@@ -2,19 +2,11 @@ import { useRef, type KeyboardEvent } from 'react';
 import { useLang } from '../LangContext';
 import { LANGS, type Lang } from '../i18n';
 
-/**
- * EN/HE segmented pill. Two buttons in a single `role="group"`, with
- * `aria-pressed` on each so screen readers announce the active option.
- * Left/Right arrow keys (handled per-button so the wrapper stays a
- * plain group, not an interactive element) cycle between the two;
- * Enter/Space activates (handled natively by <button>). A visually-
- * hidden live region speaks the change announcement after a flip.
- *
- * Labels are each language's endonym ("English" / "עברית") per WCAG
- * 2.2 (3.1.2 Language of Parts) — each button carries its own
- * `lang` attribute so AT pronounces it correctly even when the
- * surrounding page is in the other language.
- */
+// Each button carries its own `lang` attribute (its endonym per WCAG
+// 3.1.2 Language of Parts) so AT pronounces "עברית" correctly even
+// when the surrounding page is English, and vice versa. Arrow keys
+// live on the buttons rather than the wrapping group so the wrapper
+// stays a non-interactive role="group" (jsx-a11y enforces this).
 
 const OTHER: Record<Lang, Lang> = { en: 'he', he: 'en' };
 
