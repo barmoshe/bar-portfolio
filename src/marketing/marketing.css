@@ -745,50 +745,7 @@ html.dark .mp-cover__glyph { opacity: 0.16; }
 }
 
 /* =============================================================
-   Section 04 — Letters (testimonials as editorial citations)
-   ============================================================= */
-.mp-letter-list {
-  list-style: none;
-  margin: 0; padding: 0;
-  display: grid;
-  gap: clamp(40px, 6vw, 64px);
-}
-@media (min-width: 920px) {
-  .mp-letter-list { grid-template-columns: repeat(3, 1fr); }
-}
-.mp-letter {
-  display: grid;
-  gap: 18px;
-  padding-top: 18px;
-  border-top: 2px solid var(--mp-ink);
-}
-.mp-letter__quote {
-  margin: 0;
-  font-family: var(--mp-serif);
-  font-weight: 500;
-  font-style: italic;
-  font-size: clamp(1.05rem, 1.8vw, 1.2rem);
-  line-height: 1.5;
-  color: var(--mp-ink);
-}
-.mp-letter__quote::before { content: '\201E'; color: var(--mp-accent); margin-inline-end: 2px; }
-.mp-letter__quote::after  { content: '\201D'; color: var(--mp-accent); margin-inline-start: 2px; }
-.mp-letter__cite {
-  margin: 0;
-  display: grid; gap: 2px;
-  font-family: var(--mp-sans);
-  font-size: .85rem;
-  color: var(--mp-ink-soft);
-}
-.mp-letter__name {
-  font-weight: 700;
-  color: var(--mp-ink);
-  font-size: .95rem;
-}
-.mp-letter__role { font-weight: 400; }
-
-/* =============================================================
-   Section 05 — Q&A
+   Section 04 — Q&A
    ============================================================= */
 .mp-qa-list {
   margin: 0;
@@ -837,7 +794,7 @@ html.dark .mp-cover__glyph { opacity: 0.16; }
 }
 
 /* =============================================================
-   Section 06 — Colophon (final masthead-style CTA)
+   Section 05 — Colophon (final masthead-style CTA)
    ============================================================= */
 .mp-colophon {
   position: relative;

@@ -6,7 +6,6 @@ import Cover from './sections/Cover';
 import ProjectTemplates from './sections/ProjectTemplates';
 import Intake from './sections/Intake';
 import Process from './sections/Process';
-import Proof from './sections/Proof';
 import FAQ from './sections/FAQ';
 import ContactCTA from './sections/ContactCTA';
 import PaperGrain from './components/PaperGrain';
@@ -24,7 +23,6 @@ export default function MarketingApp() {
           <ProjectTemplates selected={selectedTemplate} onPick={setSelectedTemplate} />
           <Process />
           <Intake selectedTemplate={selectedTemplate} />
-          <Proof />
           <FAQ />
           <ContactCTA />
         </main>
