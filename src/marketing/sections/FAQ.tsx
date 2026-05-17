@@ -1,5 +1,6 @@
 import { useLang } from '../LangContext';
 import SectionHeading from '../components/SectionHeading';
+import RunningFoot from '../components/RunningFoot';
 
 export default function FAQ() {
   const { t } = useLang();
@@ -31,6 +32,8 @@ export default function FAQ() {
           </div>
         ))}
       </dl>
+
+      <RunningFoot sectionNumber={qa.number} />
     </section>
   );
 }

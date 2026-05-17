@@ -3,6 +3,7 @@ import { useLang } from '../LangContext';
 import { buildMailtoHref, buildWhatsAppHref } from '../contact';
 import { INTAKE_ID } from '../scrollToIntake';
 import SectionHeading from '../components/SectionHeading';
+import RunningFoot from '../components/RunningFoot';
 
 type ContactMethod = 'whatsapp' | 'email';
 
@@ -127,6 +128,11 @@ export default function Intake({ selectedTemplate }: Props) {
       />
 
       <p className="mp-standfirst">{brief.standfirst}</p>
+
+      <div className="mp-brief__layout">
+        <aside className="mp-brief__note" aria-hidden="true">
+          <p>{brief.marginalNote}</p>
+        </aside>
 
       <form
         ref={formRef}
@@ -393,6 +399,9 @@ export default function Intake({ selectedTemplate }: Props) {
           {status}
         </div>
       </form>
+      </div>
+
+      <RunningFoot sectionNumber={brief.number} />
     </section>
   );
 }

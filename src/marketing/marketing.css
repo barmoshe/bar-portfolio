@@ -530,6 +530,24 @@ html.dark .mp-cover__glyph { opacity: 0.16; }
   max-width: 64ch;
 }
 
+/* Illuminated drop-cap ב on the first paragraph of Method.
+   Floats inline-start so text wraps around it like an editorial
+   opening initial. Saffron, scaled to ~5 lines of body text. */
+.mp-dropcap {
+  float: inline-start;
+  width: auto;
+  height: 4.6em;
+  color: var(--mp-accent);
+  margin-inline-end: 14px;
+  margin-block-start: 0.08em;
+  margin-block-end: 0;
+  shape-outside: margin-box;
+  shape-margin: 4px;
+}
+@media (max-width: 559px) {
+  .mp-dropcap { height: 3.6em; margin-inline-end: 10px; }
+}
+
 .mp-pull {
   margin: clamp(36px, 6vw, 56px) 0 0;
   padding: clamp(28px, 5vw, 48px) 0;
@@ -562,8 +580,111 @@ html.dark .mp-cover__glyph { opacity: 0.16; }
 }
 
 /* =============================================================
-   Section 03 — Brief (editorial questionnaire form)
+   Section 03 — About / מי אני
    ============================================================= */
+.mp-about__body {
+  max-width: 64ch;
+  margin-inline: 0;
+  display: grid;
+  gap: clamp(16px, 2.5vw, 22px);
+}
+.mp-about__p {
+  margin: 0;
+  font-family: var(--mp-serif);
+  font-weight: 500;
+  font-size: clamp(1.05rem, 1.9vw, 1.25rem);
+  line-height: 1.55;
+  color: var(--mp-ink);
+}
+.mp-about__p:first-child::first-letter {
+  font-family: var(--mp-serif);
+  font-weight: 900;
+  font-size: 3em;
+  line-height: 0.85;
+  float: inline-start;
+  color: var(--mp-accent);
+  margin-inline-end: 6px;
+  margin-block-start: 0.05em;
+}
+.mp-about__stats {
+  margin: clamp(24px, 4vw, 40px) 0 0;
+  padding-top: clamp(20px, 3vw, 28px);
+  border-top: 1px solid var(--mp-rule-strong);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(16px, 3vw, 32px);
+}
+.mp-about__stat {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+.mp-about__stat-value {
+  margin: 0;
+  font-family: var(--mp-serif);
+  font-weight: 900;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--mp-accent);
+  font-feature-settings: 'lnum' 1, 'tnum' 1;
+}
+.mp-about__stat-label {
+  margin: 0;
+  font-family: var(--mp-sans);
+  font-weight: 500;
+  font-size: .82rem;
+  color: var(--mp-ink-soft);
+  letter-spacing: .04em;
+}
+
+/* =============================================================
+   Section 04 — Brief (editorial questionnaire form)
+   ============================================================= */
+.mp-brief__layout {
+  display: grid;
+  gap: clamp(20px, 4vw, 40px);
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 920px) {
+  .mp-brief__layout {
+    grid-template-columns: minmax(220px, 1fr) minmax(0, 3fr);
+    align-items: start;
+  }
+}
+.mp-brief__note {
+  padding: 16px 0 0;
+  border-top: 1px solid var(--mp-rule);
+  font-family: var(--mp-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: .98rem;
+  line-height: 1.55;
+  color: var(--mp-ink-soft);
+  max-width: 36ch;
+}
+.mp-brief__note p {
+  margin: 0;
+}
+.mp-brief__note::before {
+  content: '✒';
+  display: block;
+  font-style: normal;
+  font-size: 1.1rem;
+  color: var(--mp-accent);
+  margin-bottom: 8px;
+  opacity: 0.75;
+}
+@media (min-width: 920px) {
+  .mp-brief__note {
+    position: sticky;
+    top: 24px;
+    border-top: 0;
+    padding-top: 0;
+    padding-inline-end: 24px;
+    border-inline-end: 1px solid var(--mp-rule);
+  }
+}
 .mp-form {
   display: grid;
   gap: clamp(28px, 4vw, 40px);
@@ -754,7 +875,59 @@ html.dark .mp-cover__glyph { opacity: 0.16; }
 }
 
 /* =============================================================
-   Section 04 — Q&A
+   Running footer — magazine-style hairline strip at the bottom
+   of each section. Section number on one side, issue tag in the
+   middle, contacts on the other. Small + low-contrast. Doesn't
+   undermine the editorial flow the way a sticky CTA bar would.
+   ============================================================= */
+.mp-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 18px;
+  margin-top: clamp(40px, 6vw, 56px);
+  padding-top: 14px;
+  border-top: 1px solid var(--mp-rule);
+  font-family: var(--mp-sans);
+  font-weight: 500;
+  font-size: .72rem;
+  color: var(--mp-ink-soft);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.mp-foot__section {
+  font-feature-settings: 'lnum' 1, 'tnum' 1;
+  color: var(--mp-accent);
+  font-weight: 700;
+}
+.mp-foot__issue {
+  display: none;
+}
+@media (min-width: 720px) {
+  .mp-foot__issue { display: inline; }
+}
+.mp-foot__contacts {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.mp-foot__link {
+  color: var(--mp-ink-soft);
+  text-decoration: none;
+  border-bottom: 1px solid var(--mp-rule);
+  padding-bottom: 1px;
+  transition: color .15s, border-color .15s;
+}
+.mp-foot__link:hover,
+.mp-foot__link:focus-visible {
+  color: var(--mp-accent);
+  border-bottom-color: var(--mp-accent);
+  outline: none;
+}
+
+/* =============================================================
+   Section 05 — Q&A
    ============================================================= */
 .mp-qa-list {
   margin: 0;
@@ -803,7 +976,7 @@ html.dark .mp-cover__glyph { opacity: 0.16; }
 }
 
 /* =============================================================
-   Section 05 — Colophon (final masthead-style CTA)
+   Section 06 — Colophon (final masthead-style CTA)
    ============================================================= */
 .mp-colophon {
   position: relative;

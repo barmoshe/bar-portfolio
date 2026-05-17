@@ -50,6 +50,13 @@ export type Dict = {
     steps: { num: string; title: string; body: string }[];
     pullQuote: { quote: string; cite: string };
   };
+  about: {
+    number: string;
+    kicker: string;
+    title: string;
+    paragraphs: string[];
+    stats: { value: string; label: string }[];
+  };
   brief: {
     number: string;
     kicker: string;
@@ -78,6 +85,7 @@ export type Dict = {
     timelines: { id: string; label: string }[];
     submit: string;
     submitHint: string;
+    marginalNote: string;
     mailFallback: string;
     mailSubject: string;
     liveSuccess: string;
@@ -111,6 +119,12 @@ export type Dict = {
     ctaMail: string;
     credit: string;
     portfolioLink: string;
+  };
+  runningFoot: {
+    backToTop: string;
+    whatsapp: string;
+    mail: string;
+    issueLabel: string;
   };
 };
 
@@ -252,8 +266,23 @@ const HE: Dict = {
       cite: 'בר משה',
     },
   },
-  brief: {
+  about: {
     number: '03',
+    kicker: 'מי אני',
+    title: 'בר משה',
+    paragraphs: [
+      'מתכנת full-stack מאז 2020. עיקר העבודה ב-TypeScript, React ו-Node, אבל הסעיף השני בקורות החיים שלי הוא תמיד שונה: WebAudio, GSAP, Three.js, ולאחרונה הרבה אסיסטנטים מבוססי-LLM. כל פרויקט הוא הזדמנות ללמוד משהו חדש — וזו הסיבה שאני עוד פה.',
+      'אני בונה כי זה היה התחביב לפני שזו הייתה פרנסה. אני מקבל החלטות מהירות כי הכי קל לתקן קוד שאיכשהו עובד, והרבה יותר קשה לתקן בריף שאף פעם לא הפך לקוד. זו הסיבה שאני עובד POC-first: ככה אני יודע מה לבנות, ואת.ה יודע מה את.ה מקבל.',
+      'מבוסס בישראל, עובד עם לקוחות בכל העולם, בעברית ובאנגלית. כתב.י לפני שאת.ה בודק.ת חברות תוכנה — אם זה לא מתאים, אעדכן אותך.',
+    ],
+    stats: [
+      { value: '5+', label: 'שנים בפיתוח' },
+      { value: '20+', label: 'POCs שנבנו' },
+      { value: '0', label: 'תשלום מראש' },
+    ],
+  },
+  brief: {
+    number: '04',
     kicker: 'הבריף',
     title: 'מה את.ה רוצה לבנות',
     standfirst:
@@ -315,6 +344,8 @@ const HE: Dict = {
     submit: 'שלח את הבריף לבר',
     submitHint:
       'ייפתח וואטסאפ עם ההודעה מסודרת. אפשר עוד לערוך לפני ששולחים. אין שמירת מידע באתר.',
+    marginalNote:
+      'לא חובה למלא הכל. שלושה שדות מספיקים להתחיל. כותב.ת בעברית? יופי. באנגלית? גם בסדר. רוצה לצרף קישור או צילום מסך? אפשר לשלוח בוואטסאפ אחרי שתשלח.י את הבריף.',
     mailFallback: 'מעדיפ.ה במייל? לחצ.י כאן',
     mailSubject: 'בריף חדש מהאתר',
     liveSuccess: 'נפתח וואטסאפ עם הבריף המסודר.',
@@ -333,7 +364,7 @@ const HE: Dict = {
     },
   },
   qa: {
-    number: '04',
+    number: '05',
     kicker: 'שאלות ותשובות',
     title: 'מה אנשים שואלים לפני שהם פונים',
     items: [
@@ -355,7 +386,7 @@ const HE: Dict = {
     ],
   },
   colophon: {
-    number: '05',
+    number: '06',
     kicker: 'קולופון',
     title: 'נכון. הגעת עד לכאן.',
     pullQuote:
@@ -365,6 +396,12 @@ const HE: Dict = {
     ctaMail: 'או מייל',
     credit: 'נכתב, עוצב, וקודד על־ידי בר משה · 2025/26',
     portfolioLink: 'הפורטפוליו המלא',
+  },
+  runningFoot: {
+    backToTop: '↑ למעלה',
+    whatsapp: 'וואטסאפ',
+    mail: 'מייל',
+    issueLabel: 'גליון 01',
   },
 };
 

@@ -1,5 +1,6 @@
 import { useLang } from '../LangContext';
 import SectionHeading from '../components/SectionHeading';
+import RunningFoot from '../components/RunningFoot';
 import { scrollToIntake } from '../scrollToIntake';
 
 type Props = {
@@ -57,6 +58,8 @@ export default function ProjectTemplates({ selected, onPick }: Props) {
           );
         })}
       </ol>
+
+      <RunningFoot sectionNumber={contents.number} />
     </section>
   );
 }

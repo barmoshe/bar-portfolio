@@ -1,5 +1,7 @@
 import { useLang } from '../LangContext';
 import SectionHeading from '../components/SectionHeading';
+import HebrewBet from '../components/HebrewBet';
+import RunningFoot from '../components/RunningFoot';
 
 export default function Process() {
   const { t } = useLang();
@@ -21,12 +23,19 @@ export default function Process() {
       <p className="mp-standfirst">{method.standfirst}</p>
 
       <ol className="mp-steps">
-        {method.steps.map((s) => (
+        {method.steps.map((s, i) => (
           <li className="mp-step" key={s.num}>
             <span className="mp-step__num" aria-hidden="true">{s.num}</span>
             <div className="mp-step__body">
               <h3 className="mp-step__title">{s.title}</h3>
-              <p className="mp-step__text">{s.body}</p>
+              {/* Illuminated drop-cap ב on the very first paragraph of the
+                  Method section. Acts as the magazine's opening initial. */}
+              <p className="mp-step__text">
+                {i === 0 ? (
+                  <HebrewBet className="mp-dropcap" />
+                ) : null}
+                {s.body}
+              </p>
             </div>
           </li>
         ))}
@@ -36,6 +45,8 @@ export default function Process() {
         <blockquote>{method.pullQuote.quote}</blockquote>
         <figcaption>— {method.pullQuote.cite}</figcaption>
       </figure>
+
+      <RunningFoot sectionNumber={method.number} />
     </section>
   );
 }
