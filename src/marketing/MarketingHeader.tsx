@@ -5,7 +5,7 @@ import { useLang } from './LangContext';
 
 export default function MarketingHeader() {
   const { pref, set } = useTheme();
-  const { lang, toggle, t } = useLang();
+  const { t } = useLang();
   const a11yBtnRef = useRef<HTMLButtonElement | null>(null);
   const [a11yOpen, setA11yOpen] = useState(false);
 
@@ -13,9 +13,6 @@ export default function MarketingHeader() {
     setA11yOpen(false);
     requestAnimationFrame(() => a11yBtnRef.current?.focus());
   };
-
-  const langTitle = lang === 'he' ? t.header.langTitleEn : t.header.langTitleHe;
-  const langGlyph = lang === 'he' ? t.header.langGlyphHe : t.header.langGlyphEn;
 
   return (
     <>
@@ -30,15 +27,6 @@ export default function MarketingHeader() {
         <a className="mp-bar__back" href={import.meta.env.BASE_URL}>
           {t.header.back}
         </a>
-        <button
-          className="mp-bar__btn mp-bar__btn--lang"
-          type="button"
-          title={langTitle}
-          aria-label={langTitle}
-          onClick={toggle}
-        >
-          {langGlyph}
-        </button>
         <button
           ref={a11yBtnRef}
           className="mp-bar__btn"

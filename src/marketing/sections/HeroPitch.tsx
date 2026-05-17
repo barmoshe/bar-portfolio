@@ -1,10 +1,20 @@
 import MarketingHeroSlides from '../MarketingHeroSlides';
 import { useLang } from '../LangContext';
-import { buildWhatsAppHref, mailtoHref } from '../contact';
+import { buildWhatsAppHref } from '../contact';
 
 export default function HeroPitch() {
   const { t } = useLang();
   const { hero } = t;
+
+  const onPrimary = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const target = document.getElementById('intake');
+    if (!target) return;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    const firstField = target.querySelector<HTMLElement>('textarea, input');
+    firstField?.focus({ preventScroll: true });
+  };
 
   return (
     <section className="mp-section mp-hero" id="top" aria-labelledby="hero-headline">
@@ -29,23 +39,21 @@ export default function HeroPitch() {
             <figcaption>— {hero.pullQuote.cite}</figcaption>
           </figure>
 
-          <ul className="mp-hero__questions" aria-label={hero.questionsLabel}>
-            {hero.questions.map((q) => (
-              <li key={q}>{q}</li>
-            ))}
-          </ul>
-
           <div className="mp-cta-row">
             <a
               className="mp-cta mp-cta--primary"
+              href="#intake"
+              onClick={onPrimary}
+            >
+              <span aria-hidden="true">→</span> {hero.ctaPrimary}
+            </a>
+            <a
+              className="mp-cta mp-cta--secondary"
               href={buildWhatsAppHref(hero.whatsappPrefill)}
               target="_blank"
               rel="noreferrer noopener"
             >
-              <span aria-hidden="true">💬</span> {hero.ctaWhatsapp}
-            </a>
-            <a className="mp-cta mp-cta--secondary" href={mailtoHref}>
-              <span aria-hidden="true">✉</span> {hero.ctaMail}
+              <span aria-hidden="true">💬</span> {hero.ctaSecondary}
             </a>
           </div>
         </div>

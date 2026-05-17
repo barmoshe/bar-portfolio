@@ -770,11 +770,298 @@ html.dark .mp-audience--accent2 .mp-audience__kicker { color: oklch(0.78 0.15 65
 @media (max-width: 640px) {
   .mp-root { --mp-shadow: 4px 4px 0 var(--mp-ink); }
   html.dark .mp-root { --mp-shadow: 4px 4px 0 oklch(0 0 0 / .55); }
-  .mp-service, .mp-audience { box-shadow: 4px 4px 0 var(--mp-ink); }
+  .mp-service, .mp-audience, .mp-template { box-shadow: 4px 4px 0 var(--mp-ink); }
   .mp-process__step, .mp-faq details { box-shadow: 3px 3px 0 var(--mp-ink); }
   .mp-cta--primary { box-shadow: 4px 4px 0 var(--mp-ink); }
   .mp-cta--secondary { box-shadow: 4px 4px 0 var(--mp-primary); }
   .mp-testimonial--primary { box-shadow: 4px 4px 0 var(--mp-primary); }
   .mp-testimonial--accent2 { box-shadow: 4px 4px 0 var(--mp-accent-2); }
   .mp-testimonial--accent3 { box-shadow: 4px 4px 0 var(--mp-accent-3); }
+  .mp-intake { box-shadow: 4px 4px 0 var(--mp-ink); }
+}
+
+/* ── Project templates grid ───────────────────────────────── */
+.mp-templates {
+  margin-top: 36px;
+  display: grid; gap: 18px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 560px) {
+  .mp-templates { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 900px) {
+  .mp-templates { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.mp-template {
+  appearance: none;
+  font: inherit; color: inherit;
+  text-align: start;
+  background: var(--mp-surface);
+  border: var(--mp-border); border-radius: var(--mp-radius);
+  padding: clamp(18px, 3.5vw, 24px);
+  display: flex; flex-direction: column; gap: 10px;
+  box-shadow: 5px 5px 0 var(--mp-ink);
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.mp-template:hover,
+.mp-template:focus-visible {
+  transform: translate(2px, -3px);
+  box-shadow: 8px 10px 0 var(--mp-primary);
+  outline: none;
+}
+.mp-template[data-selected] {
+  background: color-mix(in oklch, var(--mp-primary) 8%, var(--mp-surface));
+  box-shadow: 8px 10px 0 var(--mp-primary);
+  transform: translate(2px, -3px);
+}
+.mp-template--primary { box-shadow: 5px 5px 0 var(--mp-primary); }
+.mp-template--accent2 { box-shadow: 5px 5px 0 var(--mp-accent-2); }
+.mp-template--accent3 { box-shadow: 5px 5px 0 var(--mp-accent-3); }
+.mp-template__emoji {
+  display: inline-grid; place-items: center;
+  width: 44px; height: 44px;
+  background: var(--mp-bg);
+  border: var(--mp-border); border-radius: 12px;
+  font-size: 24px; line-height: 1;
+  transform: rotate(-3deg);
+}
+.mp-template:nth-child(2n) .mp-template__emoji { transform: rotate(2deg); }
+.mp-template:nth-child(3n) .mp-template__emoji { transform: rotate(-2deg); }
+.mp-template__title {
+  margin: 0;
+  font-family: 'Rubik', sans-serif; font-weight: 800;
+  font-size: clamp(1.05rem, 2.2vw, 1.2rem);
+  line-height: 1.25; color: var(--mp-ink);
+}
+.mp-template__summary {
+  margin: 0;
+  font-family: 'Heebo', sans-serif;
+  font-size: .92rem; line-height: 1.5;
+  color: var(--mp-ink-soft);
+}
+.mp-template__fits {
+  margin: 0;
+  font-family: 'Heebo', sans-serif;
+  font-size: .78rem; line-height: 1.4;
+  color: var(--mp-ink-soft);
+}
+.mp-template__fits-label {
+  font-family: 'Rubik', sans-serif; font-weight: 700;
+  font-size: .72rem; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--mp-ink);
+}
+.mp-template__cta {
+  margin-top: auto;
+  font-family: 'Rubik', sans-serif; font-weight: 700;
+  font-size: .85rem; color: var(--mp-primary);
+}
+.mp-template[data-selected] .mp-template__cta { color: var(--mp-ink); }
+
+/* ── Intake form ──────────────────────────────────────────── */
+.mp-intake {
+  margin-top: 36px;
+  background: var(--mp-surface);
+  border: var(--mp-border); border-radius: var(--mp-radius-lg);
+  padding: clamp(22px, 5vw, 36px);
+  box-shadow: 6px 6px 0 var(--mp-ink);
+  display: flex; flex-direction: column; gap: 22px;
+}
+/* UA reset for form controls inside the intake — iOS otherwise reverts
+   to system sans / blue tint. */
+.mp-intake input,
+.mp-intake textarea,
+.mp-intake button,
+.mp-intake select {
+  font: inherit;
+  color: var(--mp-ink);
+  background: var(--mp-bg);
+  border: 0;
+}
+.mp-intake__hint {
+  margin: 0;
+  font-family: 'Heebo', sans-serif;
+  font-size: .92rem; color: var(--mp-ink-soft);
+  padding: 12px 14px;
+  background: var(--mp-bg);
+  border: 2px dashed var(--mp-ink);
+  border-radius: var(--mp-radius-sm);
+}
+.mp-intake__block {
+  display: flex; flex-direction: column; gap: 22px;
+}
+.mp-intake__optional-heading {
+  margin: 12px 0 -4px;
+  font-family: 'Rubik', sans-serif; font-weight: 800;
+  font-size: 1.05rem; letter-spacing: .02em;
+  color: var(--mp-ink);
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--mp-ink);
+}
+.mp-field {
+  display: flex; flex-direction: column; gap: 8px;
+  margin: 0; padding: 0; border: 0;
+}
+.mp-field--group { gap: 10px; }
+.mp-field__label {
+  display: block; padding: 0;
+  font-family: 'Rubik', sans-serif; font-weight: 700;
+  font-size: .98rem; color: var(--mp-ink);
+}
+.mp-field__required {
+  color: var(--mp-primary);
+  font-weight: 900;
+}
+.mp-field__hint {
+  margin: 0;
+  font-family: 'Heebo', sans-serif;
+  font-size: .85rem; color: var(--mp-ink-soft);
+  line-height: 1.45;
+}
+.mp-input,
+.mp-textarea {
+  width: 100%;
+  padding: 12px 14px; min-height: 48px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 1rem; line-height: 1.5;
+  color: var(--mp-ink);
+  background: var(--mp-bg);
+  border: 2.5px solid var(--mp-ink);
+  border-radius: var(--mp-radius-sm);
+  transition: border-color .15s, box-shadow .15s;
+}
+.mp-textarea {
+  resize: vertical;
+  min-height: 96px;
+  font-family: 'Heebo', sans-serif;
+}
+.mp-input::placeholder,
+.mp-textarea::placeholder {
+  color: var(--mp-ink-soft);
+  opacity: .7;
+}
+.mp-input:hover,
+.mp-textarea:hover { border-color: var(--mp-primary); }
+.mp-input:focus,
+.mp-textarea:focus {
+  outline: none;
+  border-color: var(--mp-primary);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--mp-primary) 35%, transparent);
+}
+.mp-input[aria-invalid="true"],
+.mp-textarea[aria-invalid="true"] {
+  border-color: oklch(0.52 0.22 25);
+  box-shadow: 0 0 0 3px color-mix(in oklch, oklch(0.52 0.22 25) 30%, transparent);
+}
+
+/* ── Chip groups (radio + toggle) ─────────────────────────── */
+.mp-chip-group {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin: 0; padding: 0;
+}
+.mp-chip-group--inline { gap: 8px; }
+.mp-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 14px; min-height: 44px;
+  font-family: 'Heebo', sans-serif;
+  font-weight: 500; font-size: .92rem;
+  color: var(--mp-ink);
+  background: var(--mp-bg);
+  border: 2px solid var(--mp-ink);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .12s, color .12s, transform .12s, box-shadow .12s;
+  text-align: start;
+}
+.mp-chip:hover {
+  background: var(--mp-ink); color: var(--mp-bg);
+}
+.mp-chip:focus-within,
+.mp-chip:focus-visible {
+  outline: 3px solid var(--mp-primary);
+  outline-offset: 2px;
+}
+/* Hide the native radio input but keep it focusable for keyboard /AT.
+   The chip label IS the visible affordance. */
+.mp-chip input[type="radio"] {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+/* When the hidden radio is focused, lift the chip's focus ring. */
+.mp-chip:has(input[type="radio"]:focus-visible) {
+  outline: 3px solid var(--mp-primary);
+  outline-offset: 2px;
+}
+.mp-chip--toggle { font-family: 'Heebo', sans-serif; }
+.mp-chip[data-selected],
+.mp-chip[aria-pressed="true"] {
+  background: var(--mp-primary);
+  color: var(--mp-primary-ink);
+  border-color: var(--mp-primary);
+  box-shadow: 2px 2px 0 var(--mp-ink);
+  transform: translate(-1px, -1px);
+}
+.mp-chip[data-selected]:hover,
+.mp-chip[aria-pressed="true"]:hover {
+  background: color-mix(in oklch, var(--mp-primary) 85%, var(--mp-ink));
+  color: var(--mp-primary-ink);
+}
+.mp-chip[aria-invalid="true"] {
+  border-color: oklch(0.52 0.22 25);
+}
+
+/* ── Intake actions ───────────────────────────────────────── */
+.mp-intake__actions {
+  display: flex; flex-direction: column; align-items: flex-start;
+  gap: 10px;
+  padding-top: 18px;
+  border-top: 2px dashed var(--mp-ink);
+}
+.mp-intake__actions .mp-cta--primary {
+  font-size: 1.1rem;
+  padding: 18px 28px;
+}
+.mp-intake__action-hint {
+  margin: 0;
+  font-family: 'Heebo', sans-serif;
+  font-size: .82rem; color: var(--mp-ink-soft);
+  line-height: 1.45;
+}
+.mp-intake__mail-fallback {
+  font-family: 'Heebo', sans-serif;
+  font-size: .88rem;
+  color: var(--mp-ink-soft);
+  text-decoration: underline;
+}
+.mp-intake__mail-fallback:hover,
+.mp-intake__mail-fallback:focus-visible {
+  color: var(--mp-primary);
+  outline: none;
+}
+
+/* ── Live region (visually hidden, AT-readable) ───────────── */
+.mp-live-region {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+/* ── Dark-mode tweaks for new surfaces ────────────────────── */
+html.dark .mp-intake__hint {
+  background: color-mix(in oklch, var(--mp-surface) 70%, var(--mp-bg));
+}
+html.dark .mp-input,
+html.dark .mp-textarea {
+  background: color-mix(in oklch, var(--mp-surface) 80%, var(--mp-bg));
+}
+html.dark .mp-chip {
+  background: color-mix(in oklch, var(--mp-surface) 80%, var(--mp-bg));
+}
+html.dark .mp-template__emoji {
+  background: color-mix(in oklch, var(--mp-surface) 70%, var(--mp-bg));
 }

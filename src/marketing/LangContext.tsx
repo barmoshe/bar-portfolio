@@ -1,62 +1,30 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react';
-import { DEFAULT_LANG, dictionaries, type Dict, type Lang } from './i18n';
+import { createContext, useContext, useEffect, type ReactNode } from 'react';
+import { type Dict, t } from './i18n';
 
-const STORAGE_KEY = 'bm:marketing-lang';
-
-const readStoredLang = (): Lang => {
-  if (typeof localStorage === 'undefined') return DEFAULT_LANG;
-  const raw = localStorage.getItem(STORAGE_KEY);
-  return raw === 'en' || raw === 'he' ? raw : DEFAULT_LANG;
-};
+// The marketing page is HE-only since the build-first pivot. This is a
+// thin pass-through that preserves the `useLang()` shape so existing
+// components don't have to change. If a second language ever comes back,
+// reintroduce state + dictionary map here.
 
 type LangContextValue = {
-  lang: Lang;
-  setLang: (next: Lang) => void;
-  toggle: () => void;
   t: Dict;
 };
 
 const Ctx = createContext<LangContextValue | null>(null);
 
-export function LangProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>(readStoredLang);
+const VALUE: LangContextValue = { t };
 
+export function LangProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const html = document.documentElement;
-    html.lang = lang;
-    html.dir = lang === 'he' ? 'rtl' : 'ltr';
-    document.title = dictionaries[lang].meta.title;
+    html.lang = 'he';
+    html.dir = 'rtl';
+    document.title = t.meta.title;
     const meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
-    if (meta) meta.content = dictionaries[lang].meta.description;
-  }, [lang]);
-
-  const setLang = useCallback((next: Lang) => {
-    try {
-      localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      /* ignore quota / privacy errors */
-    }
-    setLangState(next);
+    if (meta) meta.content = t.meta.description;
   }, []);
 
-  const toggle = useCallback(() => {
-    setLang(lang === 'he' ? 'en' : 'he');
-  }, [lang, setLang]);
-
-  const value = useMemo<LangContextValue>(
-    () => ({ lang, setLang, toggle, t: dictionaries[lang] }),
-    [lang, setLang, toggle],
-  );
-
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={VALUE}>{children}</Ctx.Provider>;
 }
 
 export function useLang(): LangContextValue {

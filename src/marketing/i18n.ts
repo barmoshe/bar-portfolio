@@ -1,11 +1,11 @@
 /**
- * Marketing-site translations. Hebrew is the default; English is the
- * opt-in alternate. Components read from `useT()` which returns the
- * dictionary for the active language. Strings are organized by section
- * so adding a new locale only requires duplicating the matching keys.
+ * Marketing-site copy. Hebrew only — the page is HE-first and the EN
+ * toggle was removed when the page pivoted to the build-first concept.
+ * Components read from `useLang()` which returns `{ t }`. Strings stay
+ * organized by section so editing copy is a one-file change.
  */
 
-export type Lang = 'he' | 'en';
+export type Lang = 'he';
 
 export const DEFAULT_LANG: Lang = 'he';
 
@@ -18,10 +18,6 @@ export type Dict = {
     back: string;
     a11yTitle: string;
     a11yLabel: string;
-    langTitleHe: string;
-    langTitleEn: string;
-    langGlyphHe: string;
-    langGlyphEn: string;
   };
   hero: {
     sticker: string;
@@ -29,31 +25,62 @@ export type Dict = {
     headlineMark: string;
     lead: string;
     pullQuote: { quote: string; cite: string };
-    questionsLabel: string;
-    questions: string[];
-    ctaWhatsapp: string;
-    ctaMail: string;
+    ctaPrimary: string;
+    ctaSecondary: string;
     whatsappPrefill: string;
     statsLabel: string;
     stats: { num: string; label: string }[];
   };
-  audience: {
+  templates: {
     eyebrow: string;
     headlineLead: string;
     headlineMark: string;
     lead: string;
+    pickHint: string;
+    fitChipLabel: string;
     items: {
       slug: string;
       emoji: string;
-      kicker: string;
       title: string;
       summary: string;
-      cta: string;
-      ariaLabel: string;
-      whatsappMessage: string;
-      span: 'wide' | 'half' | 'tall';
-      accent: 'primary' | 'accent2' | 'accent3';
+      fits: string[];
     }[];
+  };
+  intake: {
+    eyebrow: string;
+    headlineLead: string;
+    headlineMark: string;
+    lead: string;
+    requiredHint: string;
+    optionalHeading: string;
+    fields: {
+      template: { label: string; placeholder: string };
+      idea: { label: string; hint: string; placeholder: string };
+      audience: { label: string; placeholder: string };
+      problem: { label: string; placeholder: string };
+      features: { label: string; hint: string };
+      references: { label: string; placeholder: string };
+      timeline: { label: string };
+      budget: { label: string; hint: string };
+      name: { label: string; placeholder: string };
+      contactMethod: { label: string; whatsapp: string; email: string };
+      contactValue: {
+        labelWhatsapp: string;
+        labelEmail: string;
+        placeholderWhatsapp: string;
+        placeholderEmail: string;
+      };
+    };
+    features: { id: string; label: string }[];
+    timelines: { id: string; label: string }[];
+    budgets: { id: string; label: string }[];
+    submit: string;
+    submitHint: string;
+    mailFallback: string;
+    liveSuccess: string;
+    liveError: string;
+    briefHeading: string;
+    briefFooter: string;
   };
   services: {
     eyebrow: string;
@@ -95,13 +122,14 @@ export type Dict = {
   contact: {
     headline: string;
     body: string;
+    ctaPrimary: string;
     ctaWhatsapp: string;
     ctaMail: string;
   };
   sticky: {
     region: string;
+    primary: string;
     whatsapp: string;
-    mail: string;
   };
   footer: {
     text: string;
@@ -111,8 +139,9 @@ export type Dict = {
 
 const HE: Dict = {
   meta: {
-    title: 'בר משה — שירותים: לימוד, ליווי, ובנייה',
-    description: 'בר משה — מפתח עצמאי. שיעורים פרטיים, ליווי טכני, ובניית אפליקציות, אתרים ורעיונות יצירתיים.',
+    title: 'בר משה — תאר. אבנה. את.ה מחליט.ה.',
+    description:
+      'יש לך רעיון? תאר אותו בטופס, אני בונה POC על חשבוני, ורק אם זה עובד עבורך — נמשיך. בלי בריפים אינסופיים ובלי הצעות מחיר ראשונות.',
   },
   header: {
     skip: 'דלג לתוכן',
@@ -121,164 +150,285 @@ const HE: Dict = {
     back: '← פורטפוליו',
     a11yTitle: 'הגדרות נגישות',
     a11yLabel: 'פתיחת הגדרות נגישות',
-    langTitleHe: 'עברית',
-    langTitleEn: 'English',
-    langGlyphHe: 'EN',
-    langGlyphEn: 'עב',
   },
   hero: {
-    sticker: '🎯 פתוח לפרויקטים חדשים',
-    headlineLead: 'רעיון בראש,\nואין מושג מאיפה ',
-    headlineMark: 'מתחילים?',
-    lead: 'אני בר. מלמד, מלווה, ובונה — אפליקציות, אתרים, ורעיונות יצירתיים מהסקיצה ועד הלייב. בלי הפתעות, ובלי באזוורדס.',
+    sticker: '🛠 בונה ראשון, מדבר אחר־כך',
+    headlineLead: 'תאר. אבנה.\n',
+    headlineMark: 'את.ה מחליט.ה.',
+    lead:
+      'יש לך רעיון? תאר אותו בטופס למטה — אני אבנה POC ראשון. אם עובד עבורך, נמשיך לבנות יחד. אם לא — נפרדים בלי שום התחייבות.',
     pullQuote: {
-      quote: 'תפס את הצורך מהשיחה הראשונה.',
+      quote: 'תפס את הצורך מהשיחה הראשונה, ובנה POC לפני שהספקנו לחתום על משהו.',
       cite: 'מ. ק., מייסדת סטארטאפ',
     },
-    questionsLabel: 'מתאים אם...',
-    questions: [
-      'רוצה ללמוד לבנות בלי לדעת איך מתחילים',
-      'יש לך מוצר בראש ואת.ה צריך.ה מישהו שינווט אותו לאוויר',
-      'צוות קטן שמחפש מנטור או בילדר חיצוני',
-    ],
-    ctaWhatsapp: 'דברו איתי בוואטסאפ',
-    ctaMail: 'שלחו מייל',
-    whatsappPrefill: 'היי בר! יש לי רעיון בראש ואני מחפש.ת מאיפה להתחיל. אשמח לתאם שיחה ראשונה.',
+    ctaPrimary: 'תאר את הרעיון',
+    ctaSecondary: 'או בוואטסאפ',
+    whatsappPrefill:
+      'היי בר! יש לי רעיון בראש ואני רוצה לתאר אותו בקצרה. אפשר לדבר?',
     statsLabel: 'במספרים',
     stats: [
       { num: '5+', label: 'שנים מפתח' },
-      { num: '20+', label: 'פרויקטים שוגרו' },
-      { num: '∞', label: 'קפה במהלך' },
+      { num: '20+', label: 'POC ופרויקטים שוגרו' },
+      { num: '0', label: 'תשלום מראש' },
     ],
   },
-  audience: {
-    eyebrow: 'למי זה מתאים',
-    headlineLead: 'אם אחד מאלה מוכר — ',
-    headlineMark: 'בואו נדבר.',
-    lead: 'ארבעה כיוונים, כל אחד עם נקודת התחלה משלו. בחר.י את שלך וההודעה תיפתח עם ההקשר הנכון.',
+  templates: {
+    eyebrow: 'תבניות פרויקטים',
+    headlineLead: 'בחר.י מאיפה ',
+    headlineMark: 'מתחילים.',
+    lead:
+      'לחיצה על תבנית מעבירה אותך לטופס עם סוג הפרויקט כבר מסומן. לא מצאת את שלך? יש "אחר" בסוף.',
+    pickHint: 'לחץ.י לבחירה',
+    fitChipLabel: 'מתאים גם ל',
     items: [
       {
-        slug: 'learners',
-        emoji: '🎓',
-        kicker: 'לומדים',
-        title: 'תצא משיעור אחד עם פרויקט שאת.ה מבין.ה',
-        summary: 'שיעורים פרטיים מאפס, ליווי למטלות, והדרכה לפרויקט גמר. מתחילים ראשון ללא התחייבות.',
-        cta: 'בואו נדבר על שיעור',
-        ariaLabel: 'פתח שיחה ב-WhatsApp - לומדים',
-        whatsappMessage: 'שלום בר, אני מעוניין/ת ללמוד פיתוח ולקבל ליווי. אשמח לשמוע איך מתחילים.',
-        span: 'wide',
-        accent: 'accent2',
-      },
-      {
-        slug: 'builders',
-        emoji: '🛠',
-        kicker: 'בילדרים',
-        title: 'ה-MVP בידיים שלך תוך 6 שבועות',
-        summary: 'מ-MVP לאתר תדמית. מתכננים יחד, בונים בקצב צפוי, ומשגרים בלי הפתעות.',
-        cta: 'נדבר על הרעיון',
-        ariaLabel: 'פתח שיחה ב-WhatsApp - בילדרים',
-        whatsappMessage: 'שלום בר, יש לי רעיון לפרויקט ואני צריך/ה הכוונה ובנייה. בא לי לשמוע איך אתה עובד.',
-        span: 'half',
-        accent: 'primary',
-      },
-      {
-        slug: 'startups',
+        slug: 'mvp',
         emoji: '🚀',
-        kicker: 'סטארטאפים',
-        title: 'מנטור קבוע שמכיר את הקוד שלכם',
-        summary: 'מנטורינג, סקירות קוד, בחירת מחסנית טכנולוגית, ועזרה במעבר מ-MVP למוצר חי.',
-        cta: 'נתאם שיחת ייעוץ',
-        ariaLabel: 'פתח שיחה ב-WhatsApp - סטארטאפים',
-        whatsappMessage: 'שלום בר, אני מסטארטאפ/צוות פיתוח קטן ואנחנו מחפשים מנטור או יועץ טכני. אפשר לתאם שיחה?',
-        span: 'half',
-        accent: 'accent3',
+        title: 'MVP לסטארטאפ',
+        summary: 'גרסה ראשונה עובדת של המוצר — מספיק כדי להראות למשתמשים ולגייס.',
+        fits: ['יזם.ית סולו', 'סטארטאפ early-stage'],
       },
       {
-        slug: 'companies',
-        emoji: '🏢',
-        kicker: 'חברות',
-        title: 'פרויקט מסונכרן מול הצוות, עם מסירה נקייה',
-        summary: 'בנייה מקצה לקצה: אתרי תדמית, אפליקציות, כלי AI פנימיים, ואינטגרציות. עם תיעוד ומסירה מסודרת.',
-        cta: 'נתאם שיחה ראשונה',
-        ariaLabel: 'פתח שיחה ב-WhatsApp - חברות',
-        whatsappMessage: 'שלום, אנחנו חברה שמעוניינת לשכור אותך לפרויקט. אשמח להציג בקצרה את הצורך ולתאם שיחה.',
-        span: 'wide',
-        accent: 'accent3',
+        slug: 'landing',
+        emoji: '🌐',
+        title: 'אתר תדמית / Landing Page',
+        summary: 'דף נחיתה או אתר חברה ממוקד — כדי שתופיע ברצינות באינטרנט.',
+        fits: ['עסק חדש', 'פרילנסר.ית', 'חברה'],
+      },
+      {
+        slug: 'ecommerce',
+        emoji: '🛍',
+        title: 'חנות אונליין (E-commerce)',
+        summary: 'חנות שמוכרת — Shopify, מותאם אישית, או משהו באמצע. כולל תשלומים ומלאי.',
+        fits: ['מותג קטן', 'יצרן.ית עצמאי.ת'],
+      },
+      {
+        slug: 'mobile',
+        emoji: '📱',
+        title: 'אפליקציית מובייל',
+        summary: 'iOS + Android באותו codebase. React Native, אפליקציות היברידיות, או PWA.',
+        fits: ['סטארטאפ', 'מוצר B2C'],
+      },
+      {
+        slug: 'ai',
+        emoji: '🤖',
+        title: 'כלי AI / GPT לעסק',
+        summary: 'אסיסטנט פנימי, chatbot, סיכום מסמכים, או אוטומציה מבוססת LLM.',
+        fits: ['חברה', 'צוות תפעול', 'יזם.ית'],
+      },
+      {
+        slug: 'automation',
+        emoji: '🔧',
+        title: 'אוטומציות ואינטגרציות',
+        summary: 'חיבור מערכות, סנכרון נתונים, scripts שחוסכים שעות עבודה.',
+        fits: ['צוות קטן', 'מנהל.ת תפעול'],
+      },
+      {
+        slug: 'dashboard',
+        emoji: '📊',
+        title: 'דשבורד / מערכת ניהול',
+        summary: 'Admin panel, BI, או מערכת פנים־ארגונית עם הרשאות וזרימת עבודה.',
+        fits: ['חברה', 'סטארטאפ ב-Scale'],
+      },
+      {
+        slug: 'portfolio',
+        emoji: '🎨',
+        title: 'פורטפוליו / אתר אישי',
+        summary: 'אתר אישי עם אופי — לא תבנית. כמו שהאתר הזה.',
+        fits: ['מעצב.ת', 'אמן.ית', 'פרילנסר.ית'],
+      },
+      {
+        slug: 'bot',
+        emoji: '💬',
+        title: 'בוט וואטסאפ / Chatbot',
+        summary: 'בוט שמשרת לקוחות, מקבל הזמנות, או עונה לשאלות חוזרות.',
+        fits: ['עסק קטן', 'מסעדה / חנות', 'סוכנות'],
+      },
+      {
+        slug: 'other',
+        emoji: '✨',
+        title: 'משהו אחר',
+        summary: 'יש לך רעיון שלא מתאים לאף תבנית? מצוין. ספר.י בטופס.',
+        fits: ['כל אחד'],
       },
     ],
   },
+  intake: {
+    eyebrow: 'תיאור הרעיון',
+    headlineLead: 'מלא מה שאת.ה יודע.ת. אני ',
+    headlineMark: 'אבנה ראשון.',
+    lead:
+      'הטופס נשלח ישירות לוואטסאפ שלי כהודעה מסודרת. ככל שתפרט.י יותר — POC ראשון מדויק יותר. אבל גם 3 שורות מספיקות להתחיל.',
+    requiredHint: 'חובה רק 3 שדות: סוג, רעיון, ודרך ליצור איתך קשר.',
+    optionalHeading: 'עוד פרטים — אופציונלי',
+    fields: {
+      template: {
+        label: 'סוג הפרויקט',
+        placeholder: 'בחר.י תבנית למעלה, או "אחר"',
+      },
+      idea: {
+        label: 'מה את.ה רוצה לבנות?',
+        hint: 'במשפט-שניים. בלי באזוורדס.',
+        placeholder:
+          'לדוגמה: "אפליקציה שמחברת בין מורים פרטיים לתלמידים לפי תחום וזמינות."',
+      },
+      audience: {
+        label: 'מי המשתמש?',
+        placeholder: 'סטודנטים, חנויות קטנות, צוותי פיתוח, אנשי 60+...',
+      },
+      problem: {
+        label: 'מה הבעיה שזה פותר?',
+        placeholder: 'מה לא עובד היום שהמוצר הזה אמור לפתור?',
+      },
+      features: {
+        label: 'פיצ\'רים שחשובים',
+        hint: 'בחר.י כל מה שמתאים. אפשר להוסיף עוד בטקסט החופשי.',
+      },
+      references: {
+        label: 'השראה / דוגמאות',
+        placeholder:
+          'קישורים לאתרים, אפליקציות, או מותגים שמעוררים אותך. או "משהו בסגנון X".',
+      },
+      timeline: {
+        label: 'מתי צריך את זה?',
+      },
+      budget: {
+        label: 'סדר גודל של תקציב',
+        hint: 'לא בטוח.ה? בחר.י "עוד לא יודע.ת". אעריך אחרי שאראה את הסקופ.',
+      },
+      name: {
+        label: 'איך קוראים לך?',
+        placeholder: 'שם פרטי מספיק',
+      },
+      contactMethod: {
+        label: 'איפה הכי קל לדבר איתך?',
+        whatsapp: 'WhatsApp',
+        email: 'מייל',
+      },
+      contactValue: {
+        labelWhatsapp: 'מספר טלפון',
+        labelEmail: 'כתובת מייל',
+        placeholderWhatsapp: '05X-XXXXXXX',
+        placeholderEmail: 'you@example.com',
+      },
+    },
+    features: [
+      { id: 'auth', label: 'התחברות משתמשים (Auth)' },
+      { id: 'payments', label: 'תשלומים' },
+      { id: 'admin', label: 'פאנל ניהול' },
+      { id: 'ai', label: 'AI / GPT' },
+      { id: 'mobile', label: 'מובייל (iOS/Android)' },
+      { id: 'multilang', label: 'רב-לשוני' },
+      { id: 'api', label: 'אינטגרציה עם API חיצוני' },
+      { id: 'notifications', label: 'שליחת מיילים / WhatsApp' },
+      { id: 'uploads', label: 'העלאת קבצים / תמונות' },
+      { id: 'maps', label: 'מפות / Geolocation' },
+    ],
+    timelines: [
+      { id: 'urgent', label: 'דחוף — תוך שבוע' },
+      { id: 'month', label: 'בחודש הקרוב' },
+      { id: 'quarter', label: 'ברבעון הקרוב' },
+      { id: 'no-rush', label: 'אין לחץ' },
+    ],
+    budgets: [
+      { id: 'lt5', label: 'עד ₪5,000' },
+      { id: '5-15', label: '₪5,000 – ₪15,000' },
+      { id: '15-50', label: '₪15,000 – ₪50,000' },
+      { id: 'gt50', label: 'מעל ₪50,000' },
+      { id: 'unknown', label: 'עוד לא יודע.ת' },
+    ],
+    submit: 'שלח לבר עכשיו ←',
+    submitHint:
+      'ייפתח וואטסאפ עם ההודעה מסודרת. אפשר עוד לערוך לפני ששולחים. אין שמירת מידע באתר.',
+    mailFallback: 'מעדיפ.ה במייל? לחצ.י כאן',
+    liveSuccess: 'נפתח וואטסאפ עם ההודעה המסודרת.',
+    liveError: 'יש שדות חסרים. בדק.י את הסימונים האדומים.',
+    briefHeading: 'היי בר!',
+    briefFooter: '— נשלח מהטופס באתר',
+  },
   services: {
-    eyebrow: 'השירותים',
-    headlineLead: 'שלושה ',
-    headlineMark: 'שערים',
-    lead: 'כל שירות עומד בפני עצמו — בחר.י מה שמתאים, או נשלב כמה לפי השלב שלך.',
-    ctaLabel: 'לפרטים ולתיאום',
+    eyebrow: 'גם זה',
+    headlineLead: 'פחות פרויקט שלם, יותר ',
+    headlineMark: 'ליווי?',
+    lead:
+      'לא כל פנייה היא פרויקט מאפס. אם את.ה מחפש.ת ללמוד, להתייעץ, או להוסיף יד בצוות — יש גם את אלה.',
+    ctaLabel: 'דברו איתי בוואטסאפ',
     items: [
       {
         slug: 'tutoring',
         emoji: '🎓',
         kicker: 'לימוד פרטי',
         title: 'שיעורים אחד על אחד',
-        summary: 'רוצה ללמוד לבנות בלי לדעת לבנות? אני אקח אותך מאפס לפרויקט אמיתי — בקצב שלך, בלי שטויות.',
+        summary:
+          'רוצה ללמוד לבנות בלי לדעת מאיפה מתחילים? אני אקח אותך מאפס לפרויקט אמיתי — בקצב שלך, בלי שטויות.',
         bullets: [
           'מבוא לתכנות, JavaScript, TypeScript ו-React',
           'ליווי לבחינות, מטלות ופרויקטי גמר',
           'הצצה ל-DevOps, ענן ו-AI לפי הצורך',
-          'שיעור ראשון להיכרות — חינם',
+          'שיעור היכרות ראשון — חינם',
         ],
-        whatsappMessage: 'שלום בר, אני מעוניין/ת בשיעורים פרטיים בתכנות. אשמח לתאם שיחת היכרות.',
+        whatsappMessage:
+          'שלום בר, אני מעוניין/ת בשיעורים פרטיים בתכנות. אשמח לתאם שיחת היכרות.',
       },
       {
         slug: 'guiding',
         emoji: '🧭',
         kicker: 'ליווי וייעוץ',
         title: 'ליווי טכני לצוות או יזם.ית סולו',
-        summary: 'יש לך רעיון ולא בטוח.ה איך מתחילים? נשב ביחד, נבנה תוכנית, ונוודא שכל בחירה טכנית משרתת את המוצר.',
+        summary:
+          'יש לך צוות קטן? יזם.ית סולו? נכנס פעם בשבוע/שבועיים לסקירת קוד, בחירת stack, ועזרה במעבר מ-MVP לחי.',
         bullets: [
           'סקירת קוד וארכיטקטורה',
           'בחירת מחסנית טכנולוגית ותכנון תשתית',
-          'מנטורינג שבועי / דו־שבועי לצוותי פיתוח',
+          'מנטורינג שבועי / דו־שבועי',
           'עזרה במעבר מ-MVP למוצר חי',
         ],
-        whatsappMessage: 'שלום בר, אני מחפש/ת ליווי וייעוץ טכני לפרויקט/צוות. אפשר לתאם שיחה?',
+        whatsappMessage:
+          'שלום בר, אני מחפש/ת ליווי וייעוץ טכני לפרויקט/צוות. אפשר לתאם שיחה?',
       },
       {
         slug: 'building',
         emoji: '🛠',
-        kicker: 'בנייה',
-        title: 'בונים מקצה לקצה',
-        summary: 'מ-MVP לאתר חברה, מאפליקציית מובייל לכלי AI פנימי. מתכננים, בונים, ומשגרים — בלי הפתעות.',
+        kicker: 'בנייה ארוכת טווח',
+        title: 'בנייה מקצה לקצה',
+        summary:
+          'אחרי שהוכחנו את ה-POC, בונים את הגרסה האמיתית: scope סגור, מחיר ידוע, אבני דרך שבועיות, ומסירה נקייה.',
         bullets: [
           'אתרי תדמית, נחיתה ו-Web Apps',
           'אפליקציות React Native / מובייל היברידי',
           'אינטגרציות AI, אוטומציות ו-DevOps',
           'ליווי שבועיים אחרי הלייב — כלול',
         ],
-        whatsappMessage: 'שלום בר, יש לי פרויקט שאני רוצה לבנות מקצה לקצה. אשמח לתאם שיחה.',
+        whatsappMessage:
+          'שלום בר, אני רוצה להמשיך אחרי POC לפרויקט מלא. אפשר לתאם שיחה?',
       },
     ],
   },
   process: {
-    eyebrow: 'איך עובדים',
+    eyebrow: 'איך זה עובד',
     headlineLead: 'שלושה שלבים, ',
-    headlineMark: 'בלי הפתעות.',
-    lead: 'בלי תהליכים מסובכים. שיחה ראשונה, בנייה שקופה, ומסירה עם ליווי קצר אחרי שעולים לאוויר.',
+    headlineMark: 'בלי הצעות מחיר מסובכות.',
+    lead:
+      'במקום בריף שמתמשך שבועות והצעת מחיר שאת.ה מתלבט.ת עליה — אני בונה ראשון, ורק אם עובד עבורך נמשיך.',
     stepsLabel: 'שלבים',
     steps: [
       {
         num: '01',
-        title: 'בריף',
-        body: 'שיחת היכרות קצרה. מציפים את הצורך, מי המשתמש.ת, ואיך מודדים הצלחה. יוצאים עם תוכנית קונקרטית.',
+        title: 'תאר את הרעיון',
+        body:
+          'מלא.י את הטופס למעלה. ההודעה תיפתח בוואטסאפ — אפשר לערוך לפני שולחים. אחרי שיגרה, אני חוזר אליך תוך 24 שעות.',
       },
       {
         num: '02',
-        title: 'בנייה',
-        body: 'אני בונה בקצב צפוי, עם אבני דרך שבועיות. את.ה רואה התקדמות, נותן.ת פידבק, וכיוון משתנה כשצריך.',
+        title: 'אני בונה POC',
+        body:
+          'תוך 7–14 ימים יהיה לך משהו עובד לראות. על חשבוני, בלי תשלום מראש, בלי חוזה. אם הסקופ גדול מדי ל-POC — נסכים יחד מה בפנים ומה לפעם הבאה.',
       },
       {
         num: '03',
-        title: 'מסירה',
-        body: 'משגרים, מתעדים, ומשאירים אותך עם משהו שאת.ה יכול.ה לתחזק. ליווי שבועיים אחרי הלייב — כלול.',
+        title: 'את.ה מחליט.ה',
+        body:
+          'אהבת? נסגור scope ומחיר לגרסה המלאה ונמשיך. לא? פוצים יפה, ה-POC נשאר אצלך, ואני ממשיך הלאה. בלי שום התחייבות.',
       },
     ],
   },
@@ -290,21 +440,24 @@ const HE: Dict = {
     items: [
       {
         id: 't1',
-        quote: 'התחלתי בלי שום רקע בתכנות. אחרי 3 חודשים שיגרנו לאוויר אתר שאני באמת מבין/ה מאחורי הקלעים.',
+        quote:
+          'התחלתי בלי שום רקע בתכנות. אחרי 3 חודשים שיגרנו לאוויר אתר שאני באמת מבין/ה מאחורי הקלעים.',
         name: 'נ. ל.',
         role: 'יזמית, סטודיו עיצוב',
         accent: 'primary',
       },
       {
         id: 't2',
-        quote: 'הקצב היה צפוי, התקשורת ברורה, וחזרנו עם מוצר שאפשר לתחזק. הליווי אחרי הלייב היה ההבדל.',
+        quote:
+          'בר בנה לנו POC לפני שהספקנו לסיים בריף. שני ימים אחרי השיחה היה משהו שיכולנו לגעת בו — וזה שינה את כל הדיון הפנימי.',
         name: 'א. ב.',
         role: 'מנהל מוצר, חברת B2B',
         accent: 'accent3',
       },
       {
         id: 't3',
-        quote: 'בר תפס את הצורך מהשיחה הראשונה. בלי באזוורדס, בלי הפתעות תקציב, ועם פתרון שהחזיק שנים.',
+        quote:
+          'תפס את הצורך מהשיחה הראשונה. בלי באזוורדס, בלי הפתעות תקציב, ועם פתרון שהחזיק שנים.',
         name: 'מ. ק.',
         role: 'מייסדת, סטארטאפ Edtech',
         accent: 'accent2',
@@ -317,33 +470,39 @@ const HE: Dict = {
     headlineMark: 'שואלים אותי.',
     items: [
       {
-        q: 'אני בלי רקע טכני בכלל. עדיין רלוונטי?',
-        a: 'בהחלט. רוב מי שפונים אליי לא בא מעולם הקוד. השיעור הראשון הוא תמיד היכרות — בלי התחייבות — שבה נבדוק יחד אם זה מתאים, ובאיזה קצב.',
+        q: 'רגע, באמת אני לא משלם.ת מראש?',
+        a: 'נכון. ה-POC הראשון הוא על חשבוני — בלי תשלום, בלי חוזה, בלי "תוסיף.י כרטיס אשראי". אם אחרי שראית מה בנייתי תרצה.י להמשיך לגרסה מלאה, רק אז נסגור scope ומחיר. אם לא — נפרדים, ה-POC נשאר אצלך, ואין בינינו שום התחייבות. הסיבה: בריפים והצעות מחיר ארוכות לוקחים שבועות. POC ראשון לוקח לי כמה ימים ומגלה הרבה יותר.',
       },
       {
-        q: 'כמה זמן לוקח לבנות פרויקט?',
-        a: 'תלוי בסקופ. אתר נחיתה — שבוע עד שבועיים. MVP אפליקציה — 4 עד 8 שבועות. אחרי שיחת בריף קצרה אני שולח הערכת זמן ריאלית עם אבני דרך.',
+        q: 'איזה סקופ של POC אתה מוכן לבנות בחינם?',
+        a: 'תלוי. אם הרעיון מתאים — בדרך כלל 1-3 ימי עבודה שלי, מספיק כדי שתראה.י עובדת ליבה אחת או תזרים אחד עובד מקצה לקצה. אם הסקופ גדול מדי ל-POC, אני מציע גרסה מצומצמת שאני בונה חינם — ואת.ה מחליט.ה אם זה מספיק כדי להתקדם.',
+      },
+      {
+        q: 'אני בלי רקע טכני בכלל. עדיין רלוונטי?',
+        a: 'בהחלט. אני אעבור איתך על הטופס בוואטסאפ, נחדד את הרעיון יחד, ואז אני בונה. את.ה לא צריך.ה לדעת מה זה React או database — את.ה צריך.ה לדעת מה את.ה רוצה שהמשתמש.ת יוכל לעשות.',
+      },
+      {
+        q: 'כמה זמן לוקח לבנות פרויקט מלא, אחרי שהחלטתי להמשיך?',
+        a: 'תלוי בסקופ. אתר נחיתה — שבוע עד שבועיים. MVP אפליקציה — 4 עד 8 שבועות. אחרי שיש POC ביד, ההערכה הופכת מדויקת — כי כבר ראיתי איפה ההפתעות.',
       },
       {
         q: 'באילו טכנולוגיות אתה עובד?',
-        a: 'יומיום זה React, TypeScript, Node, ו-Vite — וכל מה שמסביב כשצריך: AI / LLM, Python, ענן (AWS / Vercel), DevOps, React Native. הבחירה תמיד נגזרת מהצורך, לא להפך.',
-      },
-      {
-        q: 'מאיפה מתחילים?',
-        a: 'הכי פשוט — הודעה בוואטסאפ או מייל. תכתבו במשפט-שניים מה הרעיון, ואני אחזור עם זמינות לשיחה ראשונה.',
+        a: 'יומיום: React, TypeScript, Node, Vite — וכל מה שמסביב כשצריך: AI / LLM, Python, ענן (AWS / Vercel), DevOps, React Native. הבחירה תמיד נגזרת מהצורך, לא להפך.',
       },
     ],
   },
   contact: {
-    headline: 'בואו נבנה את זה ביחד.',
-    body: 'שיחה ראשונה ללא התחייבות — מספרים לי על הרעיון, ואני אומר אם זה משהו שאני יכול לעזור איתו.',
-    ctaWhatsapp: 'וואטסאפ',
-    ctaMail: 'מייל',
+    headline: 'מוכן.ה? תאר את הרעיון.',
+    body:
+      'הטופס פתוח. אין שדה חובה מעבר ל-3 הראשונים. ההודעה נשלחת לוואטסאפ שלי כהודעה מסודרת — לא נשמר כלום באתר.',
+    ctaPrimary: 'לטופס ←',
+    ctaWhatsapp: 'או בוואטסאפ',
+    ctaMail: 'או במייל',
   },
   sticky: {
     region: 'קישורי יצירת קשר מהירים',
-    whatsapp: 'וואטסאפ',
-    mail: 'מייל',
+    primary: 'תאר את הרעיון',
+    whatsapp: 'WhatsApp',
   },
   footer: {
     text: 'בר משה © 2026 · ',
@@ -351,246 +510,4 @@ const HE: Dict = {
   },
 };
 
-const EN: Dict = {
-  meta: {
-    title: 'Bar Moshe - Tutoring, Mentoring, and Building',
-    description: 'Bar Moshe - independent developer. Private tutoring, technical mentoring, and building apps, websites, and creative ideas end-to-end.',
-  },
-  header: {
-    skip: 'Skip to content',
-    brandName: 'Bar Moshe',
-    brandTagline: '// independent studio',
-    back: 'Portfolio →',
-    a11yTitle: 'Accessibility settings',
-    a11yLabel: 'Open accessibility settings',
-    langTitleHe: 'עברית',
-    langTitleEn: 'English',
-    langGlyphHe: 'EN',
-    langGlyphEn: 'עב',
-  },
-  hero: {
-    sticker: '🎯 Open for new projects',
-    headlineLead: "Got an idea\nbut no clue where to ",
-    headlineMark: 'start?',
-    lead: "I'm Bar. I teach, mentor, and build - apps, websites, and creative ideas from sketch to live. No surprises, no buzzwords.",
-    pullQuote: {
-      quote: 'Grasped the need from the first call.',
-      cite: 'M. K., startup founder',
-    },
-    questionsLabel: 'For you if...',
-    questions: [
-      'You want to learn to build but don\'t know how to start',
-      'You have a product in mind and need someone to ship it',
-      'A small team looking for a mentor or external builder',
-    ],
-    ctaWhatsapp: 'Message me on WhatsApp',
-    ctaMail: 'Send an email',
-    whatsappPrefill: "Hi Bar! I have an idea in mind and I'm looking for a place to start. Would love to schedule a first call.",
-    statsLabel: 'By the numbers',
-    stats: [
-      { num: '5+', label: 'years building' },
-      { num: '20+', label: 'projects shipped' },
-      { num: '∞', label: 'coffee along the way' },
-    ],
-  },
-  audience: {
-    eyebrow: 'Who this is for',
-    headlineLead: 'If one of these sounds familiar - ',
-    headlineMark: "let's talk.",
-    lead: 'Four directions, each with its own starting point. Pick yours and the message opens with the right context.',
-    items: [
-      {
-        slug: 'learners',
-        emoji: '🎓',
-        kicker: 'Learners',
-        title: 'Walk out of one lesson with a project you understand',
-        summary: 'Private lessons from zero, homework support, and final-project guidance. First session - no commitment.',
-        cta: "Let's talk lessons",
-        ariaLabel: 'Open WhatsApp chat - Learners',
-        whatsappMessage: "Hi Bar, I'd like to learn coding and get some guidance. Would love to hear how to get started.",
-        span: 'wide',
-        accent: 'accent2',
-      },
-      {
-        slug: 'builders',
-        emoji: '🛠',
-        kicker: 'Builders',
-        title: 'Your MVP in your hands within 6 weeks',
-        summary: 'From MVP to landing page. We plan together, build at a predictable pace, and ship without surprises.',
-        cta: "Let's talk about the idea",
-        ariaLabel: 'Open WhatsApp chat - Builders',
-        whatsappMessage: 'Hi Bar, I have a project idea and need direction and a builder. Curious to hear how you work.',
-        span: 'half',
-        accent: 'primary',
-      },
-      {
-        slug: 'startups',
-        emoji: '🚀',
-        kicker: 'Startups',
-        title: 'A regular mentor who knows your codebase',
-        summary: 'Mentoring, code reviews, tech-stack picks, and help moving from MVP to a live product.',
-        cta: "Let's set up a call",
-        ariaLabel: 'Open WhatsApp chat - Startups',
-        whatsappMessage: "Hi Bar, I'm from a startup / small dev team and we're looking for a mentor or technical advisor. Can we schedule a call?",
-        span: 'half',
-        accent: 'accent3',
-      },
-      {
-        slug: 'companies',
-        emoji: '🏢',
-        kicker: 'Companies',
-        title: 'A delivered project, in sync with your team',
-        summary: 'End-to-end builds: marketing sites, apps, internal AI tools, and integrations. With docs and a clean handoff.',
-        cta: "Let's schedule a first call",
-        ariaLabel: 'Open WhatsApp chat - Companies',
-        whatsappMessage: "Hi, we're a company interested in hiring you for a project. Happy to brief you and schedule a call.",
-        span: 'wide',
-        accent: 'accent3',
-      },
-    ],
-  },
-  services: {
-    eyebrow: 'Services',
-    headlineLead: 'Three ',
-    headlineMark: 'gateways',
-    lead: 'Each service stands alone - pick what fits, or we combine a few based on the stage you\'re at.',
-    ctaLabel: 'Details and scheduling',
-    items: [
-      {
-        slug: 'tutoring',
-        emoji: '🎓',
-        kicker: 'Private tutoring',
-        title: 'One-on-one lessons',
-        summary: "Want to learn to build without knowing how? I'll take you from zero to a real project - at your pace, no fluff.",
-        bullets: [
-          'Intro to programming, JavaScript, TypeScript, and React',
-          'Support for exams, homework, and capstone projects',
-          'A peek at DevOps, cloud, and AI as needed',
-          'First intro lesson - free',
-        ],
-        whatsappMessage: "Hi Bar, I'm interested in private coding lessons. Would love to schedule an intro call.",
-      },
-      {
-        slug: 'guiding',
-        emoji: '🧭',
-        kicker: 'Mentoring & advising',
-        title: 'Technical mentoring for teams or solo founders',
-        summary: "Got an idea and not sure how to start? We sit together, build a plan, and make sure every tech choice serves the product.",
-        bullets: [
-          'Code and architecture reviews',
-          'Tech-stack picks and infrastructure planning',
-          'Weekly / bi-weekly mentoring for dev teams',
-          'Help moving from MVP to live product',
-        ],
-        whatsappMessage: "Hi Bar, I'm looking for technical mentoring for a project / team. Can we schedule a call?",
-      },
-      {
-        slug: 'building',
-        emoji: '🛠',
-        kicker: 'Building',
-        title: 'End-to-end builds',
-        summary: "From MVP to company site, from mobile app to internal AI tool. We plan, build, and ship - no surprises.",
-        bullets: [
-          'Marketing sites, landing pages, and Web Apps',
-          'React Native / hybrid mobile apps',
-          'AI integrations, automations, and DevOps',
-          'Two weeks of post-launch support - included',
-        ],
-        whatsappMessage: 'Hi Bar, I have a project I want to build end-to-end. Would love to schedule a call.',
-      },
-    ],
-  },
-  process: {
-    eyebrow: 'How we work',
-    headlineLead: 'Three steps, ',
-    headlineMark: 'no surprises.',
-    lead: 'No complicated processes. A first call, transparent building, and a clean handoff with short post-launch support.',
-    stepsLabel: 'Steps',
-    steps: [
-      {
-        num: '01',
-        title: 'Brief',
-        body: "A short intro call. We surface the need, who the user is, and how we measure success. We leave with a concrete plan.",
-      },
-      {
-        num: '02',
-        title: 'Build',
-        body: 'I build at a predictable pace, with weekly milestones. You see progress, give feedback, and we change direction when needed.',
-      },
-      {
-        num: '03',
-        title: 'Handoff',
-        body: 'We ship, document, and leave you with something you can maintain. Two weeks of post-launch support - included.',
-      },
-    ],
-  },
-  proof: {
-    eyebrow: 'Testimonials',
-    headlineLead: 'Voices that went ',
-    headlineMark: 'live.',
-    lead: 'A few lines from people who studied with me, built with me, or shipped something together.',
-    items: [
-      {
-        id: 't1',
-        quote: 'I started with zero coding background. Three months later we shipped a site I genuinely understand under the hood.',
-        name: 'N. L.',
-        role: 'Founder, design studio',
-        accent: 'primary',
-      },
-      {
-        id: 't2',
-        quote: 'The pace was predictable, communication was clear, and we walked away with a maintainable product. Post-launch support made the difference.',
-        name: 'A. B.',
-        role: 'Product manager, B2B company',
-        accent: 'accent3',
-      },
-      {
-        id: 't3',
-        quote: 'Bar grasped the need from the first call. No buzzwords, no budget surprises, with a solution that lasted years.',
-        name: 'M. K.',
-        role: 'Founder, edtech startup',
-        accent: 'accent2',
-      },
-    ],
-  },
-  faq: {
-    eyebrow: 'FAQ',
-    headlineLead: 'What people ',
-    headlineMark: 'ask me.',
-    items: [
-      {
-        q: "I have zero technical background. Is this still relevant?",
-        a: "Absolutely. Most of the people who reach out don't come from code. The first session is always an intro - no commitment - where we check together if it fits and at what pace.",
-      },
-      {
-        q: 'How long does a project take?',
-        a: 'Depends on scope. Landing site - one to two weeks. App MVP - 4 to 8 weeks. After a short brief call I send a realistic time estimate with milestones.',
-      },
-      {
-        q: 'What technologies do you work with?',
-        a: 'Day-to-day: React, TypeScript, Node, and Vite - plus everything around it as needed: AI / LLM, Python, cloud (AWS / Vercel), DevOps, React Native. The choice always follows the need.',
-      },
-      {
-        q: 'Where do we start?',
-        a: 'The simplest way - a WhatsApp message or email. Drop a sentence or two about the idea and I\'ll get back with availability for a first call.',
-      },
-    ],
-  },
-  contact: {
-    headline: "Let's build it together.",
-    body: "A first call with no commitment - tell me about the idea and I'll say if it's something I can help with.",
-    ctaWhatsapp: 'WhatsApp',
-    ctaMail: 'Email',
-  },
-  sticky: {
-    region: 'Quick contact links',
-    whatsapp: 'WhatsApp',
-    mail: 'Email',
-  },
-  footer: {
-    text: 'Bar Moshe © 2026 · ',
-    portfolioLink: 'back to portfolio',
-  },
-};
-
-export const dictionaries: Record<Lang, Dict> = { he: HE, en: EN };
+export const t: Dict = HE;
