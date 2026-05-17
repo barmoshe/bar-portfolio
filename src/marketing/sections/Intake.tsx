@@ -9,12 +9,12 @@ type ContactMethod = 'whatsapp' | 'email';
 type FormState = {
   template: string;
   idea: string;
+  whyNow: string;
   audience: string;
   problem: string;
-  features: string[];
   references: string;
   timeline: string;
-  budget: string;
+  howHeard: string;
   name: string;
   contactMethod: ContactMethod;
   contactValue: string;
@@ -23,12 +23,12 @@ type FormState = {
 const INITIAL: FormState = {
   template: '',
   idea: '',
+  whyNow: '',
   audience: '',
   problem: '',
-  features: [],
   references: '',
   timeline: '',
-  budget: '',
+  howHeard: '',
   name: '',
   contactMethod: 'whatsapp',
   contactValue: '',
@@ -58,15 +58,6 @@ export default function Intake({ selectedTemplate }: Props) {
     setForm((f) => ({ ...f, [key]: value }));
   };
 
-  const toggleFeature = (id: string) => {
-    setForm((f) => ({
-      ...f,
-      features: f.features.includes(id)
-        ? f.features.filter((x) => x !== id)
-        : [...f.features, id],
-    }));
-  };
-
   const builtBrief = useMemo(() => {
     const lookup = <T extends { id?: string; slug?: string }>(
       list: readonly T[],
@@ -76,11 +67,6 @@ export default function Intake({ selectedTemplate }: Props) {
     const tpl = lookup(contents.items, form.template);
     const templateLabel = tpl ? tpl.title : '—';
     const timelineLabel = lookup(brief.timelines, form.timeline)?.label ?? '';
-    const budgetLabel = lookup(brief.budgets, form.budget)?.label ?? '';
-    const featureLines = brief.features
-      .filter((f) => form.features.includes(f.id))
-      .map((f) => `• ${f.label}`)
-      .join('\n');
     const contactKind =
       form.contactMethod === 'whatsapp'
         ? brief.fields.contactMethod.whatsapp
@@ -92,12 +78,12 @@ export default function Intake({ selectedTemplate }: Props) {
       [s.type, templateLabel],
       [s.idea, form.idea.trim()],
     ];
+    if (form.whyNow.trim()) blocks.push([s.whyNow, form.whyNow.trim()]);
     if (form.audience.trim()) blocks.push([s.audience, form.audience.trim()]);
     if (form.problem.trim()) blocks.push([s.problem, form.problem.trim()]);
-    if (featureLines) blocks.push([s.features, featureLines]);
     if (form.references.trim()) blocks.push([s.references, form.references.trim()]);
     if (timelineLabel) blocks.push([s.timeline, timelineLabel]);
-    if (budgetLabel) blocks.push([s.budget, budgetLabel]);
+    if (form.howHeard.trim()) blocks.push([s.howHeard, form.howHeard.trim()]);
     blocks.push([
       '— —',
       `שם: ${form.name.trim()}`,
@@ -290,6 +276,24 @@ export default function Intake({ selectedTemplate }: Props) {
         <h3 className="mp-form__optional">{brief.optionalHeading}</h3>
 
         <div className="mp-field">
+          <label className="mp-field__label" htmlFor="brief-why-now">
+            {brief.fields.whyNow.label}
+          </label>
+          <p className="mp-field__hint" id="brief-why-now-hint">
+            {brief.fields.whyNow.hint}
+          </p>
+          <textarea
+            id="brief-why-now"
+            className="mp-textarea"
+            value={form.whyNow}
+            onChange={(e) => update('whyNow', e.target.value)}
+            placeholder={brief.fields.whyNow.placeholder}
+            rows={2}
+            aria-describedby="brief-why-now-hint"
+          />
+        </div>
+
+        <div className="mp-field">
           <label className="mp-field__label" htmlFor="brief-audience">
             {brief.fields.audience.label}
           </label>
@@ -316,28 +320,6 @@ export default function Intake({ selectedTemplate }: Props) {
             rows={2}
           />
         </div>
-
-        <fieldset className="mp-field mp-field--group">
-          <legend className="mp-field__label">{brief.fields.features.label}</legend>
-          <p className="mp-field__hint">{brief.fields.features.hint}</p>
-          <div className="mp-chip-group" role="group">
-            {brief.features.map((feat) => {
-              const checked = form.features.includes(feat.id);
-              return (
-                <button
-                  key={feat.id}
-                  type="button"
-                  className="mp-chip mp-chip--toggle"
-                  aria-pressed={checked}
-                  data-selected={checked || undefined}
-                  onClick={() => toggleFeature(feat.id)}
-                >
-                  <span>{feat.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </fieldset>
 
         <div className="mp-field">
           <label className="mp-field__label" htmlFor="brief-references">
@@ -378,31 +360,19 @@ export default function Intake({ selectedTemplate }: Props) {
           </div>
         </fieldset>
 
-        <fieldset className="mp-field mp-field--group">
-          <legend className="mp-field__label">{brief.fields.budget.label}</legend>
-          <p className="mp-field__hint">{brief.fields.budget.hint}</p>
-          <div className="mp-chip-group mp-chip-group--inline" role="radiogroup">
-            {brief.budgets.map((b) => {
-              const checked = form.budget === b.id;
-              return (
-                <label
-                  key={b.id}
-                  className="mp-chip mp-chip--radio"
-                  data-selected={checked || undefined}
-                >
-                  <input
-                    type="radio"
-                    name="budget"
-                    value={b.id}
-                    checked={checked}
-                    onChange={() => update('budget', b.id)}
-                  />
-                  <span>{b.label}</span>
-                </label>
-              );
-            })}
-          </div>
-        </fieldset>
+        <div className="mp-field">
+          <label className="mp-field__label" htmlFor="brief-how-heard">
+            {brief.fields.howHeard.label}
+          </label>
+          <input
+            id="brief-how-heard"
+            className="mp-input"
+            type="text"
+            value={form.howHeard}
+            onChange={(e) => update('howHeard', e.target.value)}
+            placeholder={brief.fields.howHeard.placeholder}
+          />
+        </div>
 
         <div className="mp-form__actions">
           <button type="submit" className="mp-form__submit">

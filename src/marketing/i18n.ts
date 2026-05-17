@@ -60,12 +60,12 @@ export type Dict = {
     fields: {
       template: { label: string; placeholder: string };
       idea: { label: string; hint: string; placeholder: string };
+      whyNow: { label: string; hint: string; placeholder: string };
       audience: { label: string; placeholder: string };
       problem: { label: string; placeholder: string };
-      features: { label: string; hint: string };
       references: { label: string; placeholder: string };
       timeline: { label: string };
-      budget: { label: string; hint: string };
+      howHeard: { label: string; placeholder: string };
       name: { label: string; placeholder: string };
       contactMethod: { label: string; whatsapp: string; email: string };
       contactValue: {
@@ -75,9 +75,7 @@ export type Dict = {
         placeholderEmail: string;
       };
     };
-    features: { id: string; label: string }[];
     timelines: { id: string; label: string }[];
-    budgets: { id: string; label: string }[];
     submit: string;
     submitHint: string;
     mailFallback: string;
@@ -89,12 +87,12 @@ export type Dict = {
     briefSections: {
       type: string;
       idea: string;
+      whyNow: string;
       audience: string;
       problem: string;
-      features: string;
       references: string;
       timeline: string;
-      budget: string;
+      howHeard: string;
     };
   };
   qa: {
@@ -281,18 +279,19 @@ const HE: Dict = {
         label: 'איזו בעיה זה פותר',
         placeholder: 'הם מבזבזים שעות על תיאום בוואטסאפ ובאקסל…',
       },
-      features: {
-        label: 'פיצ\'רים חשובים',
-        hint: 'סמן.י את מה שחייב להיות בגרסה הראשונה',
+      whyNow: {
+        label: 'למה דווקא עכשיו',
+        hint: 'מה השתנה שקרה לכך שאת.ה פונה היום? המידע הזה עוזר לי להבין דחיפות וקונטקסט.',
+        placeholder: 'לדוגמה: "סיימנו סבב גיוס", "המתחרה השיק משהו דומה", או "התעייפתי לחכות".',
       },
       references: {
         label: 'יש משהו דומה שאהבת',
         placeholder: 'קישורים, צילומי מסך, או "כמו X אבל בלי Y"',
       },
       timeline: { label: 'מתי דרוש' },
-      budget: {
-        label: 'תקציב משוער',
-        hint: 'POC ראשון תמיד על חשבוני. זה רק לפרויקט המלא.',
+      howHeard: {
+        label: 'איך הגעת אליי',
+        placeholder: 'GitHub, חבר.ה, פורטפוליו, חיפוש — מה שזכור',
       },
       name: { label: 'שם', placeholder: 'איך אקרא לך' },
       contactMethod: {
@@ -307,30 +306,11 @@ const HE: Dict = {
         placeholderEmail: 'name@example.com',
       },
     },
-    features: [
-      { id: 'auth', label: 'הרשמה / כניסה למשתמשים' },
-      { id: 'payments', label: 'תשלומים אונליין' },
-      { id: 'admin', label: 'פאנל ניהול' },
-      { id: 'mobile', label: 'אפליקציית מובייל' },
-      { id: 'integrations', label: 'אינטגרציות חיצוניות' },
-      { id: 'multilang', label: 'תמיכה רב־לשונית' },
-      { id: 'rtl', label: 'תמיכה ב-RTL / עברית' },
-      { id: 'ai', label: 'יכולות AI / GPT' },
-      { id: 'realtime', label: 'עדכונים בזמן אמת' },
-      { id: 'cms', label: 'מערכת ניהול תוכן' },
-    ],
     timelines: [
       { id: 'asap', label: 'כמה שיותר מהר' },
       { id: '1mo', label: 'בחודש הקרוב' },
       { id: '3mo', label: 'תוך 2–3 חודשים' },
       { id: 'open', label: 'גמיש' },
-    ],
-    budgets: [
-      { id: 'lt10', label: 'עד ₪10,000' },
-      { id: '10to30', label: '₪10,000–₪30,000' },
-      { id: '30to50', label: '₪30,000–₪50,000' },
-      { id: 'gt50', label: 'מעל ₪50,000' },
-      { id: 'unknown', label: 'עוד לא יודע.ת' },
     ],
     submit: 'שלח את הבריף לבר',
     submitHint:
@@ -344,12 +324,12 @@ const HE: Dict = {
     briefSections: {
       type: '*סוג הפרויקט*',
       idea: '*הרעיון*',
+      whyNow: '*למה דווקא עכשיו*',
       audience: '*המשתמש*',
       problem: '*הבעיה שזה פותר*',
-      features: '*פיצ\'רים חשובים*',
       references: '*השראה / דוגמאות*',
       timeline: '*לוח זמנים*',
-      budget: '*תקציב משוער*',
+      howHeard: '*איך הגיע אליי*',
     },
   },
   qa: {
@@ -363,29 +343,14 @@ const HE: Dict = {
           'באמת. אני משקיע 3–7 ימים עבודה כי זה הדרך הכי טובה שמצאתי להראות שאני יכול לבנות את מה שאת.ה צריך.ה — לפני שאת.ה משלמ.ת. אם לא נמשיך, זה הסיכון שלי. אם נמשיך, כל הצדדים יודעים בדיוק על מה הם חותמים.',
       },
       {
-        q: 'איזה טכנולוגיות אתה משתמש?',
+        q: 'מה אם אני עדיין לא יודע.ת בדיוק מה אני רוצה?',
         a:
-          'בעיקר TypeScript, React/Next.js לוובEXT, React Native למובייל, Node/Postgres לשרת. AI דרך OpenAI/Anthropic. תשלומים דרך Stripe או Tranzila. אבל הכלים זה לא העיקר — אני בוחר לפי הפרויקט.',
+          'מעולה — זה הרוב מהמקרים. תאר.י בשני משפטים מה את.ה לא רוצה, או איזו בעיה יומיומית עומדת מולך, ואני אבנה את ההבנה הראשונה שלי. אחרי שתראה.י משהו, קל בהרבה להגיד "כן, אבל…" — וזה בדיוק מה שאני מחפש.',
       },
       {
-        q: 'מה אם אני לא יודע.ת מה אני רוצה?',
+        q: 'אז איך בעצם משלמים אחרי ה־POC?',
         a:
-          'מעולה. תאר.י בשני משפטים מה את.ה לא רוצה, או מה הבעיה היומיומית, ואני אבנה את ההבנה הראשונה שלי. אחרי שתראה משהו — קל יותר להגיד "כן, אבל…"',
-      },
-      {
-        q: 'אני בחו"ל. עובדים יחד?',
-        a:
-          'בהחלט. הרבה מהלקוחות שלי בארה"ב, אירופה, ישראל. עובד באנגלית או בעברית, לפי הצורך.',
-      },
-      {
-        q: 'יש קוד פתוח? אני יכול.ה לראות עבודה קודמת?',
-        a:
-          'הפורטפוליו שלי בקישור בכותרת. בנוסף, בריבוי מהפרויקטים אני שולח מאגר GitHub פרטי בשלב ה־POC, ואת.ה רואה את הקוד בעיניים שלך.',
-      },
-      {
-        q: 'אז למה זה בחינם?',
-        a:
-          'כי הסיכון הכי גדול עבור הלקוח הוא לא הכסף — זה הזמן שיבוזבז על הצעה שלא תצא לפועל. אם אני מבזבז שבוע על POC שלא נמכר, זה ההשקעה שלי בלמידה.',
+          'אני לא עובד לפי שעות. כל פרויקט מקבל scope ברור ומחיר ידוע מראש — לפי תוצאות. פרויקטים קטנים יוצאים במחיר חבילה, פרויקטים גדולים מתפצלים לאבני דרך עם תשלום אחרי כל מסירה. אין retainer חודשי, אין חוזה ארוך. נגמרה עבודה — נגמר התשלום.',
       },
     ],
   },

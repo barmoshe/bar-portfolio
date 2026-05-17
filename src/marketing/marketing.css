@@ -237,11 +237,20 @@ html.dark .mp-cover__glyph { opacity: 0.16; }
 }
 .mp-cover__h-line {
   display: block;
-  /* Last line gets the accent treatment */
+  /* Clip the per-character slide-up animation. Padding/negative-margin
+     pair keeps the descender area visible without affecting the line
+     stack (Hebrew has no real descenders but we keep a tiny buffer). */
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
 }
 .mp-cover__h-line:last-child {
   color: var(--mp-accent);
   font-style: italic;
+}
+.mp-cover__h-char {
+  display: inline-block;
+  will-change: transform, opacity;
 }
 .mp-cover__standfirst {
   margin: 0;
@@ -937,6 +946,43 @@ html.dark .mp-colophon {
 .mp-colophon__back:focus-visible {
   color: var(--mp-bg);
   outline: none;
+}
+
+/* =============================================================
+   Ambient motion — ב glyph drift + scroll-driven section reveal
+   ----------------------------------------------------------------
+   Both are progressive enhancements: if the browser doesn't honor
+   them or motion is reduced, sections render statically at full
+   opacity. The 2025-01 reveal-bug taught us never to make sections
+   invisible without a guaranteed un-hide path — `animation: ... both`
+   only applies if the @supports query matches, so default state is
+   always visible.
+   ============================================================= */
+@media (prefers-reduced-motion: no-preference) {
+  .mp-cover__glyph,
+  .mp-colophon__glyph {
+    animation: mp-bet-drift 32s ease-in-out infinite;
+    transform-origin: 50% 50%;
+  }
+
+  @supports (animation-timeline: view()) {
+    .mp-section {
+      animation: mp-fade-up linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 30%;
+    }
+  }
+}
+
+@keyframes mp-bet-drift {
+  0%   { transform: rotate(-2.5deg) translate3d(0, 0, 0); }
+  50%  { transform: rotate(2.5deg) translate3d(1.5%, -1%, 0); }
+  100% { transform: rotate(-2.5deg) translate3d(0, 0, 0); }
+}
+
+@keyframes mp-fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* =============================================================
