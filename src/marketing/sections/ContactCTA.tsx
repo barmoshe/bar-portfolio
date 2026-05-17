@@ -21,7 +21,7 @@ export default function ContactCTA() {
           href="#intake"
           onClick={onPrimary}
         >
-          <span aria-hidden="true">→</span> {contact.ctaPrimary}
+          {contact.ctaPrimary}
         </a>
         <a
           className="mp-cta mp-cta--secondary"
@@ -29,10 +29,10 @@ export default function ContactCTA() {
           target="_blank"
           rel="noreferrer noopener"
         >
-          <span aria-hidden="true">💬</span> {contact.ctaWhatsapp}
+          {contact.ctaWhatsapp}
         </a>
         <a className="mp-cta mp-cta--ghost" href={mailtoHref}>
-          <span aria-hidden="true">✉</span> {contact.ctaMail}
+          {contact.ctaMail}
         </a>
       </div>
     </section>

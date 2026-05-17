@@ -41,7 +41,7 @@ export default function HeroPitch() {
               href="#intake"
               onClick={onPrimary}
             >
-              <span aria-hidden="true">→</span> {hero.ctaPrimary}
+              {hero.ctaPrimary}
             </a>
             <a
               className="mp-cta mp-cta--secondary"
@@ -49,7 +49,7 @@ export default function HeroPitch() {
               target="_blank"
               rel="noreferrer noopener"
             >
-              <span aria-hidden="true">💬</span> {hero.ctaSecondary}
+              {hero.ctaSecondary}
             </a>
           </div>
         </div>

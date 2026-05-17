@@ -17,7 +17,6 @@ export default function Services() {
       <div className="mp-services">
         {services.items.map((s) => (
           <article className="mp-service" key={s.slug} aria-labelledby={`s-${s.slug}`}>
-            <span className="mp-service__emoji" aria-hidden="true">{s.emoji}</span>
             <p className="mp-service__kicker">{s.kicker}</p>
             <h3 className="mp-service__title" id={`s-${s.slug}`}>{s.title}</h3>
             <p className="mp-service__summary">{s.summary}</p>

@@ -1,12 +1,6 @@
 import { useLang } from '../LangContext';
 import { scrollToIntake } from '../scrollToIntake';
 
-const ACCENTS = [
-  'mp-template--primary',
-  'mp-template--accent2',
-  'mp-template--accent3',
-] as const;
-
 type Props = {
   selected: string;
   onPick: (slug: string) => void;
@@ -35,20 +29,17 @@ export default function ProjectTemplates({ selected, onPick }: Props) {
       <p className="mp-lead">{templates.lead}</p>
 
       <div className="mp-templates">
-        {templates.items.map((tpl, i) => {
+        {templates.items.map((tpl) => {
           const isSelected = selected === tpl.slug;
           return (
             <button
               key={tpl.slug}
               type="button"
-              className={`mp-template ${ACCENTS[i % ACCENTS.length]}`}
+              className="mp-template"
               data-selected={isSelected || undefined}
               aria-pressed={isSelected}
               onClick={() => handlePick(tpl.slug)}
             >
-              <span className="mp-template__emoji" aria-hidden="true">
-                {tpl.emoji}
-              </span>
               <h3 className="mp-template__title">{tpl.title}</h3>
               <p className="mp-template__summary">{tpl.summary}</p>
               {tpl.fits.length > 0 ? (
@@ -60,7 +51,7 @@ export default function ProjectTemplates({ selected, onPick }: Props) {
                 </p>
               ) : null}
               <span className="mp-template__cta" aria-hidden="true">
-                {isSelected ? '✓ נבחר' : templates.pickHint}
+                {isSelected ? templates.pickedLabel : templates.pickHint}
               </span>
             </button>
           );

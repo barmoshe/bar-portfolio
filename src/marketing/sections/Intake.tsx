@@ -73,7 +73,7 @@ export default function Intake({ selectedTemplate }: Props) {
     ): T | undefined => list.find((it) => it.id === id || it.slug === id);
 
     const tpl = lookup(templates.items, form.template);
-    const templateLabel = tpl ? `${tpl.emoji} ${tpl.title}` : '—';
+    const templateLabel = tpl ? tpl.title : '—';
     const timelineLabel = lookup(intake.timelines, form.timeline)?.label ?? '';
     const budgetLabel = lookup(intake.budgets, form.budget)?.label ?? '';
     const featureLines = intake.features
@@ -178,7 +178,6 @@ export default function Intake({ selectedTemplate }: Props) {
                       onChange={() => update('template', tpl.slug)}
                       required
                     />
-                    <span aria-hidden="true">{tpl.emoji}</span>
                     <span>{tpl.title}</span>
                   </label>
                 );
@@ -250,7 +249,6 @@ export default function Intake({ selectedTemplate }: Props) {
                   checked={form.contactMethod === 'whatsapp'}
                   onChange={() => update('contactMethod', 'whatsapp')}
                 />
-                <span aria-hidden="true">💬</span>
                 <span>{intake.fields.contactMethod.whatsapp}</span>
               </label>
               <label
@@ -264,7 +262,6 @@ export default function Intake({ selectedTemplate }: Props) {
                   checked={form.contactMethod === 'email'}
                   onChange={() => update('contactMethod', 'email')}
                 />
-                <span aria-hidden="true">✉</span>
                 <span>{intake.fields.contactMethod.email}</span>
               </label>
             </div>
@@ -344,7 +341,6 @@ export default function Intake({ selectedTemplate }: Props) {
                     data-selected={checked || undefined}
                     onClick={() => toggleFeature(feat.id)}
                   >
-                    <span aria-hidden="true">{checked ? '✓' : '+'}</span>
                     <span>{feat.label}</span>
                   </button>
                 );
@@ -419,7 +415,7 @@ export default function Intake({ selectedTemplate }: Props) {
 
         <div className="mp-intake__actions">
           <button type="submit" className="mp-cta mp-cta--primary">
-            <span aria-hidden="true">💬</span> {intake.submit}
+            {intake.submit}
           </button>
           <p className="mp-intake__action-hint">{intake.submitHint}</p>
           <a className="mp-intake__mail-fallback" href={mailHref}>

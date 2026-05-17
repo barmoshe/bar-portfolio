@@ -62,7 +62,7 @@ export default function StickyCTA() {
         href={`#${INTAKE_ID}`}
         onClick={onPrimary}
       >
-        <span aria-hidden="true">→</span> {sticky.primary}
+        {sticky.primary}
       </a>
       <a
         className="mp-cta mp-cta--secondary"
@@ -70,7 +70,7 @@ export default function StickyCTA() {
         target="_blank"
         rel="noreferrer noopener"
       >
-        <span aria-hidden="true">💬</span> {sticky.whatsapp}
+        {sticky.whatsapp}
       </a>
     </div>
   );

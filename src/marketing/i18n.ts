@@ -37,10 +37,10 @@ export type Dict = {
     headlineMark: string;
     lead: string;
     pickHint: string;
+    pickedLabel: string;
     fitChipLabel: string;
     items: {
       slug: string;
-      emoji: string;
       title: string;
       summary: string;
       fits: string[];
@@ -101,7 +101,6 @@ export type Dict = {
     ctaLabel: string;
     items: {
       slug: 'tutoring' | 'guiding' | 'building';
-      emoji: string;
       kicker: string;
       title: string;
       summary: string;
@@ -163,7 +162,7 @@ const HE: Dict = {
     a11yLabel: 'פתיחת הגדרות נגישות',
   },
   hero: {
-    sticker: '🛠 בונה ראשון, מדבר אחר־כך',
+    sticker: 'בונה ראשון. מדבר אחר־כך.',
     headlineLead: 'תאר. אבנה.\n',
     headlineMark: 'את.ה מחליט.ה.',
     lead:
@@ -189,75 +188,66 @@ const HE: Dict = {
     headlineMark: 'מתחילים.',
     lead:
       'לחיצה על תבנית מעבירה אותך לטופס עם סוג הפרויקט כבר מסומן. לא מצאת את שלך? יש "אחר" בסוף.',
-    pickHint: 'לחץ.י לבחירה',
+    pickHint: 'בחר את התבנית',
+    pickedLabel: 'נבחר',
     fitChipLabel: 'מתאים גם ל',
     items: [
       {
         slug: 'mvp',
-        emoji: '🚀',
         title: 'MVP לסטארטאפ',
         summary: 'גרסה ראשונה עובדת של המוצר — מספיק כדי להראות למשתמשים ולגייס.',
         fits: ['יזם.ית סולו', 'סטארטאפ early-stage'],
       },
       {
         slug: 'landing',
-        emoji: '🌐',
         title: 'אתר תדמית / Landing Page',
         summary: 'דף נחיתה או אתר חברה ממוקד — כדי שתופיע ברצינות באינטרנט.',
         fits: ['עסק חדש', 'פרילנסר.ית', 'חברה'],
       },
       {
         slug: 'ecommerce',
-        emoji: '🛍',
         title: 'חנות אונליין (E-commerce)',
         summary: 'חנות שמוכרת — Shopify, מותאם אישית, או משהו באמצע. כולל תשלומים ומלאי.',
         fits: ['מותג קטן', 'יצרן.ית עצמאי.ת'],
       },
       {
         slug: 'mobile',
-        emoji: '📱',
         title: 'אפליקציית מובייל',
         summary: 'iOS + Android באותו codebase. React Native, אפליקציות היברידיות, או PWA.',
         fits: ['סטארטאפ', 'מוצר B2C'],
       },
       {
         slug: 'ai',
-        emoji: '🤖',
         title: 'כלי AI / GPT לעסק',
         summary: 'אסיסטנט פנימי, chatbot, סיכום מסמכים, או אוטומציה מבוססת LLM.',
         fits: ['חברה', 'צוות תפעול', 'יזם.ית'],
       },
       {
         slug: 'automation',
-        emoji: '🔧',
         title: 'אוטומציות ואינטגרציות',
         summary: 'חיבור מערכות, סנכרון נתונים, scripts שחוסכים שעות עבודה.',
         fits: ['צוות קטן', 'מנהל.ת תפעול'],
       },
       {
         slug: 'dashboard',
-        emoji: '📊',
         title: 'דשבורד / מערכת ניהול',
         summary: 'Admin panel, BI, או מערכת פנים־ארגונית עם הרשאות וזרימת עבודה.',
         fits: ['חברה', 'סטארטאפ ב-Scale'],
       },
       {
         slug: 'portfolio',
-        emoji: '🎨',
         title: 'פורטפוליו / אתר אישי',
         summary: 'אתר אישי עם אופי — לא תבנית. כמו שהאתר הזה.',
         fits: ['מעצב.ת', 'אמן.ית', 'פרילנסר.ית'],
       },
       {
         slug: 'bot',
-        emoji: '💬',
         title: 'בוט וואטסאפ / Chatbot',
         summary: 'בוט שמשרת לקוחות, מקבל הזמנות, או עונה לשאלות חוזרות.',
         fits: ['עסק קטן', 'מסעדה / חנות', 'סוכנות'],
       },
       {
         slug: 'other',
-        emoji: '✨',
         title: 'משהו אחר',
         summary: 'יש לך רעיון שלא מתאים לאף תבנית? מצוין. ספר.י בטופס.',
         fits: ['כל אחד'],
@@ -358,14 +348,14 @@ const HE: Dict = {
     briefHeading: 'היי בר!',
     briefFooter: '— נשלח מהטופס באתר',
     briefSections: {
-      type: '🎯 *סוג הפרויקט*',
-      idea: '💡 *הרעיון*',
-      audience: '👤 *המשתמש*',
-      problem: '🔧 *הבעיה שזה פותר*',
-      features: "⭐ *פיצ'רים חשובים*",
-      references: '🎨 *השראה / דוגמאות*',
-      timeline: '⏱ *לוח זמנים*',
-      budget: '💰 *תקציב משוער*',
+      type: '*סוג הפרויקט*',
+      idea: '*הרעיון*',
+      audience: '*המשתמש*',
+      problem: '*הבעיה שזה פותר*',
+      features: "*פיצ'רים חשובים*",
+      references: '*השראה / דוגמאות*',
+      timeline: '*לוח זמנים*',
+      budget: '*תקציב משוער*',
     },
   },
   services: {
@@ -378,7 +368,6 @@ const HE: Dict = {
     items: [
       {
         slug: 'tutoring',
-        emoji: '🎓',
         kicker: 'לימוד פרטי',
         title: 'שיעורים אחד על אחד',
         summary:
@@ -394,7 +383,6 @@ const HE: Dict = {
       },
       {
         slug: 'guiding',
-        emoji: '🧭',
         kicker: 'ליווי וייעוץ',
         title: 'ליווי טכני לצוות או יזם.ית סולו',
         summary:
@@ -410,7 +398,6 @@ const HE: Dict = {
       },
       {
         slug: 'building',
-        emoji: '🛠',
         kicker: 'בנייה ארוכת טווח',
         title: 'בנייה מקצה לקצה',
         summary:
