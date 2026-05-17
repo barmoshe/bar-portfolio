@@ -3,33 +3,32 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
   type ReactNode,
 } from 'react';
-import { type Dict, type Lang, DEFAULT_LANG, DIR, getDict } from './i18n';
+import {
+  type Dict,
+  type Lang,
+  DEFAULT_LANG,
+  DIR,
+  HE_RANDOM_WEIGHT,
+  getDict,
+} from './i18n';
 
 /**
- * Stateful language provider for the marketing (business) route.
+ * Stateful language provider for the marketing route. Cooperates with
+ * the inline pre-paint script in `business/index.html`, which resolves
+ * `bm:lang` from localStorage (rolling a weighted-random default on
+ * first visit) and exposes the result on `window.__bmLang` so React
+ * mounts in the correct locale with no FOUC.
  *
- * Cooperates with the inline pre-paint script in `business/index.html`
- * (layer 1 of 2): that script resolves `bm:lang` from localStorage,
- * rolls a weighted-random 70/30 HE/EN default on first visit, sets
- * `<html lang>` / `<html dir>`, and exposes the resolved value on
- * `window.__bmLang` so React mounts with no FOUC and no hydration
- * mismatch.
- *
- * This provider (layer 2) keeps state, persists changes back to
- * localStorage, and re-applies `<html lang>` / `<html dir>` plus
- * `<title>` / `<meta name=description>` whenever the user toggles.
+ * The fallbacks in `readInitial` only fire if the pre-paint script
+ * itself failed (e.g., localStorage blocked by an extension) — they
+ * keep the page bilingual even in that degraded state.
  */
 
 const STORAGE_KEY = 'bm:lang';
-
-declare global {
-  interface Window {
-    __bmLang?: Lang;
-  }
-}
 
 type LangContextValue = {
   t: Dict;
@@ -49,7 +48,7 @@ function readInitial(): Lang {
   } catch {
     /* ignore */
   }
-  return Math.random() < 0.7 ? 'he' : 'en';
+  return Math.random() < HE_RANDOM_WEIGHT ? 'he' : 'en';
 }
 
 function persist(lang: Lang): void {
@@ -70,21 +69,26 @@ function applyToDocument(lang: Lang, dict: Dict): void {
 }
 
 export function LangProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>(() => readInitial());
+  const [lang, setLang] = useState<Lang>(readInitial);
   const dict = getDict(lang);
 
   useEffect(() => {
     applyToDocument(lang, dict);
   }, [lang, dict]);
 
-  const setLang = useCallback((next: Lang) => {
-    setLangState((prev) => (prev === next ? prev : next));
+  const setLangAndPersist = useCallback((next: Lang) => {
+    setLang(next);
     persist(next);
   }, []);
 
-  return (
-    <Ctx.Provider value={{ t: dict, lang, setLang }}>{children}</Ctx.Provider>
+  // Memoized so unrelated parent re-renders (e.g. when MarketingApp's
+  // selectedTemplate changes) don't invalidate every useLang() consumer.
+  const value = useMemo<LangContextValue>(
+    () => ({ t: dict, lang, setLang: setLangAndPersist }),
+    [dict, lang, setLangAndPersist],
   );
+
+  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
 export function useLang(): LangContextValue {
