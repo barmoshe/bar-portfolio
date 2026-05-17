@@ -16,8 +16,6 @@ import { useReveal } from './hooks/useReveal';
 
 export default function MarketingApp() {
   useReveal();
-  // Templates → Intake bridge. Only the template field is touched when
-  // a card is picked; other form input the user typed is preserved.
   const [selectedTemplate, setSelectedTemplate] = useState<string>('');
 
   return (

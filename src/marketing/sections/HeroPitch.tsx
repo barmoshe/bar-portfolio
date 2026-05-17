@@ -1,6 +1,7 @@
 import MarketingHeroSlides from '../MarketingHeroSlides';
 import { useLang } from '../LangContext';
 import { buildWhatsAppHref } from '../contact';
+import { scrollToIntake } from '../scrollToIntake';
 
 export default function HeroPitch() {
   const { t } = useLang();
@@ -8,12 +9,7 @@ export default function HeroPitch() {
 
   const onPrimary = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    const target = document.getElementById('intake');
-    if (!target) return;
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
-    const firstField = target.querySelector<HTMLElement>('textarea, input');
-    firstField?.focus({ preventScroll: true });
+    scrollToIntake();
   };
 
   return (

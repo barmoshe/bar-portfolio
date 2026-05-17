@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useLang } from '../LangContext';
-import { buildWhatsAppHref, mailtoHref } from '../contact';
+import { buildMailtoHref, buildWhatsAppHref } from '../contact';
+import { INTAKE_ID } from '../scrollToIntake';
 
 type ContactMethod = 'whatsapp' | 'email';
 
@@ -44,8 +45,7 @@ export default function Intake({ selectedTemplate }: Props) {
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const formRef = useRef<HTMLFormElement | null>(null);
 
-  // Templates section pre-selects template via parent state. Only the
-  // `template` field is touched — other inputs the user typed are kept.
+  // Preserve other user input when a template card is re-picked.
   useEffect(() => {
     if (selectedTemplate && selectedTemplate !== form.template) {
       setForm((f) => ({ ...f, template: selectedTemplate }));
@@ -66,74 +66,50 @@ export default function Intake({ selectedTemplate }: Props) {
     }));
   };
 
-  const templateTitle = (slug: string): string => {
-    const found = templates.items.find((it) => it.slug === slug);
-    return found ? `${found.emoji} ${found.title}` : '—';
-  };
+  const brief = useMemo(() => {
+    const lookup = <T extends { id?: string; slug?: string }>(
+      list: readonly T[],
+      id: string,
+    ): T | undefined => list.find((it) => it.id === id || it.slug === id);
 
-  const featureLabels = (ids: string[]): string =>
-    intake.features
-      .filter((f) => ids.includes(f.id))
+    const tpl = lookup(templates.items, form.template);
+    const templateLabel = tpl ? `${tpl.emoji} ${tpl.title}` : '—';
+    const timelineLabel = lookup(intake.timelines, form.timeline)?.label ?? '';
+    const budgetLabel = lookup(intake.budgets, form.budget)?.label ?? '';
+    const featureLines = intake.features
+      .filter((f) => form.features.includes(f.id))
       .map((f) => `• ${f.label}`)
       .join('\n');
-
-  const timelineLabel = (id: string): string =>
-    intake.timelines.find((it) => it.id === id)?.label ?? '—';
-
-  const budgetLabel = (id: string): string =>
-    intake.budgets.find((it) => it.id === id)?.label ?? '—';
-
-  const buildBrief = (): string => {
-    const lines: string[] = [];
-    lines.push(intake.briefHeading);
-    lines.push('');
-    lines.push('🎯 *סוג הפרויקט*');
-    lines.push(templateTitle(form.template));
-    lines.push('');
-    lines.push('💡 *הרעיון*');
-    lines.push(form.idea.trim());
-    if (form.audience.trim()) {
-      lines.push('');
-      lines.push('👤 *המשתמש*');
-      lines.push(form.audience.trim());
-    }
-    if (form.problem.trim()) {
-      lines.push('');
-      lines.push('🔧 *הבעיה שזה פותר*');
-      lines.push(form.problem.trim());
-    }
-    if (form.features.length > 0) {
-      lines.push('');
-      lines.push("⭐ *פיצ'רים חשובים*");
-      lines.push(featureLabels(form.features));
-    }
-    if (form.references.trim()) {
-      lines.push('');
-      lines.push('🎨 *השראה / דוגמאות*');
-      lines.push(form.references.trim());
-    }
-    if (form.timeline) {
-      lines.push('');
-      lines.push('⏱ *לוח זמנים*');
-      lines.push(timelineLabel(form.timeline));
-    }
-    if (form.budget) {
-      lines.push('');
-      lines.push('💰 *תקציב משוער*');
-      lines.push(budgetLabel(form.budget));
-    }
-    lines.push('');
-    lines.push('— —');
     const contactKind =
       form.contactMethod === 'whatsapp'
         ? intake.fields.contactMethod.whatsapp
         : intake.fields.contactMethod.email;
-    lines.push(`שם: ${form.name.trim()}`);
-    lines.push(`יצירת קשר (${contactKind}): ${form.contactValue.trim()}`);
-    lines.push('');
-    lines.push(intake.briefFooter);
-    return lines.join('\n');
-  };
+    const s = intake.briefSections;
+
+    const blocks: string[][] = [
+      [intake.briefHeading],
+      [s.type, templateLabel],
+      [s.idea, form.idea.trim()],
+    ];
+    if (form.audience.trim()) blocks.push([s.audience, form.audience.trim()]);
+    if (form.problem.trim()) blocks.push([s.problem, form.problem.trim()]);
+    if (featureLines) blocks.push([s.features, featureLines]);
+    if (form.references.trim()) blocks.push([s.references, form.references.trim()]);
+    if (timelineLabel) blocks.push([s.timeline, timelineLabel]);
+    if (budgetLabel) blocks.push([s.budget, budgetLabel]);
+    blocks.push([
+      '— —',
+      `שם: ${form.name.trim()}`,
+      `יצירת קשר (${contactKind}): ${form.contactValue.trim()}`,
+    ]);
+    blocks.push([intake.briefFooter]);
+    return blocks.map((b) => b.join('\n')).join('\n\n');
+  }, [form, intake, templates]);
+
+  const mailHref = useMemo(
+    () => buildMailtoHref(intake.mailSubject, brief),
+    [intake.mailSubject, brief],
+  );
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -146,24 +122,14 @@ export default function Intake({ selectedTemplate }: Props) {
       firstInvalid?.focus();
       return;
     }
-    const brief = buildBrief();
-    const href = buildWhatsAppHref(brief);
-    window.open(href, '_blank', 'noopener,noreferrer');
+    window.open(buildWhatsAppHref(brief), '_blank', 'noopener,noreferrer');
     setStatus(intake.liveSuccess);
-  };
-
-  const mailHref = (): string => {
-    const subject = encodeURIComponent('פנייה חדשה מהאתר');
-    const body = encodeURIComponent(buildBrief());
-    // Reuse existing email recipient from mailtoHref by parsing it once.
-    const recipient = mailtoHref.split('?')[0];
-    return `${recipient}?subject=${subject}&body=${body}`;
   };
 
   return (
     <section
       className="mp-section mp-section--wide"
-      id="intake"
+      id={INTAKE_ID}
       aria-labelledby="intake-headline"
     >
       <span className="mp-eyebrow">{intake.eyebrow}</span>
@@ -184,9 +150,7 @@ export default function Intake({ selectedTemplate }: Props) {
           {intake.requiredHint}
         </p>
 
-        {/* ── Required block ───────────────────────────────────── */}
-        <div className="mp-intake__block mp-intake__block--required">
-          <fieldset
+        <fieldset
             className="mp-field mp-field--group"
             aria-invalid={submitAttempted && !form.template}
           >
@@ -334,12 +298,9 @@ export default function Intake({ selectedTemplate }: Props) {
               aria-invalid={submitAttempted && !form.contactValue.trim()}
             />
           </div>
-        </div>
 
-        {/* ── Optional block ───────────────────────────────────── */}
         <h3 className="mp-intake__optional-heading">{intake.optionalHeading}</h3>
 
-        <div className="mp-intake__block">
           <div className="mp-field">
             <label className="mp-field__label" htmlFor="intake-audience">
               {intake.fields.audience.label}
@@ -455,20 +416,19 @@ export default function Intake({ selectedTemplate }: Props) {
               })}
             </div>
           </fieldset>
-        </div>
 
         <div className="mp-intake__actions">
           <button type="submit" className="mp-cta mp-cta--primary">
             <span aria-hidden="true">💬</span> {intake.submit}
           </button>
           <p className="mp-intake__action-hint">{intake.submitHint}</p>
-          <a className="mp-intake__mail-fallback" href={mailHref()}>
+          <a className="mp-intake__mail-fallback" href={mailHref}>
             {intake.mailFallback}
           </a>
         </div>
 
         <div
-          className="mp-live-region"
+          className="visually-hidden"
           role="status"
           aria-live="polite"
           aria-atomic="true"

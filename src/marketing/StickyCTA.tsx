@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLang } from './LangContext';
 import { whatsappHref } from './contact';
+import { INTAKE_ID, scrollToIntake } from './scrollToIntake';
 
 export default function StickyCTA() {
   const { t } = useLang();
@@ -28,10 +29,9 @@ export default function StickyCTA() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Hide the sticky bar while the intake form is on screen — two CTAs
-  // pointing at a form you're already looking at is noise.
+  // Two CTAs pointing at a form already on screen would be noise.
   useEffect(() => {
-    const target = document.getElementById('intake');
+    const target = document.getElementById(INTAKE_ID);
     if (!target) return;
     const io = new IntersectionObserver(
       (entries) => {
@@ -45,12 +45,7 @@ export default function StickyCTA() {
 
   const onPrimary = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    const target = document.getElementById('intake');
-    if (!target) return;
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
-    const firstField = target.querySelector<HTMLElement>('textarea, input');
-    firstField?.focus({ preventScroll: true });
+    scrollToIntake();
   };
 
   const hidden = hiddenScroll || hiddenIntake;
@@ -64,7 +59,7 @@ export default function StickyCTA() {
     >
       <a
         className="mp-cta mp-cta--primary"
-        href="#intake"
+        href={`#${INTAKE_ID}`}
         onClick={onPrimary}
       >
         <span aria-hidden="true">→</span> {sticky.primary}

@@ -77,10 +77,21 @@ export type Dict = {
     submit: string;
     submitHint: string;
     mailFallback: string;
+    mailSubject: string;
     liveSuccess: string;
     liveError: string;
     briefHeading: string;
     briefFooter: string;
+    briefSections: {
+      type: string;
+      idea: string;
+      audience: string;
+      problem: string;
+      features: string;
+      references: string;
+      timeline: string;
+      budget: string;
+    };
   };
   services: {
     eyebrow: string;
@@ -341,10 +352,21 @@ const HE: Dict = {
     submitHint:
       'ייפתח וואטסאפ עם ההודעה מסודרת. אפשר עוד לערוך לפני ששולחים. אין שמירת מידע באתר.',
     mailFallback: 'מעדיפ.ה במייל? לחצ.י כאן',
+    mailSubject: 'פנייה חדשה מהאתר',
     liveSuccess: 'נפתח וואטסאפ עם ההודעה המסודרת.',
     liveError: 'יש שדות חסרים. בדק.י את הסימונים האדומים.',
     briefHeading: 'היי בר!',
     briefFooter: '— נשלח מהטופס באתר',
+    briefSections: {
+      type: '🎯 *סוג הפרויקט*',
+      idea: '💡 *הרעיון*',
+      audience: '👤 *המשתמש*',
+      problem: '🔧 *הבעיה שזה פותר*',
+      features: "⭐ *פיצ'רים חשובים*",
+      references: '🎨 *השראה / דוגמאות*',
+      timeline: '⏱ *לוח זמנים*',
+      budget: '💰 *תקציב משוער*',
+    },
   },
   services: {
     eyebrow: 'גם זה',

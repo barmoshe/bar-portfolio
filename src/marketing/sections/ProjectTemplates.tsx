@@ -1,4 +1,11 @@
 import { useLang } from '../LangContext';
+import { scrollToIntake } from '../scrollToIntake';
+
+const ACCENTS = [
+  'mp-template--primary',
+  'mp-template--accent2',
+  'mp-template--accent3',
+] as const;
 
 type Props = {
   selected: string;
@@ -11,10 +18,7 @@ export default function ProjectTemplates({ selected, onPick }: Props) {
 
   const handlePick = (slug: string) => {
     onPick(slug);
-    const target = document.getElementById('intake');
-    if (!target) return;
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    scrollToIntake();
   };
 
   return (
@@ -33,17 +37,11 @@ export default function ProjectTemplates({ selected, onPick }: Props) {
       <div className="mp-templates">
         {templates.items.map((tpl, i) => {
           const isSelected = selected === tpl.slug;
-          const accentClass =
-            i % 3 === 0
-              ? 'mp-template--primary'
-              : i % 3 === 1
-                ? 'mp-template--accent2'
-                : 'mp-template--accent3';
           return (
             <button
               key={tpl.slug}
               type="button"
-              className={`mp-template ${accentClass}`}
+              className={`mp-template ${ACCENTS[i % ACCENTS.length]}`}
               data-selected={isSelected || undefined}
               aria-pressed={isSelected}
               onClick={() => handlePick(tpl.slug)}
