@@ -10,10 +10,8 @@ import Proof from './sections/Proof';
 import FAQ from './sections/FAQ';
 import ContactCTA from './sections/ContactCTA';
 import PaperGrain from './components/PaperGrain';
-import { useReveal } from './hooks/useReveal';
 
 export default function MarketingApp() {
-  useReveal();
   const [selectedTemplate, setSelectedTemplate] = useState<string>('');
 
   return (

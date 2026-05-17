@@ -983,14 +983,6 @@ html.dark .mp-colophon {
 }
 
 /* =============================================================
-   Reveal-on-scroll (gentle fade only)
-   ============================================================= */
-@media (prefers-reduced-motion: no-preference) {
-  .mp-section { opacity: 0; transform: translateY(8px); transition: opacity .7s ease, transform .7s ease; }
-  .mp-section.is-in { opacity: 1; transform: translateY(0); }
-}
-
-/* =============================================================
    Focus ring (global)
    ============================================================= */
 .mp-root :focus-visible {
@@ -1003,11 +995,4 @@ html.dark .mp-colophon {
    ============================================================= */
 .mp-root main:focus {
   outline: none;
-}
-
-/* =============================================================
-   Reduced motion safety net
-   ============================================================= */
-@media (prefers-reduced-motion: reduce) {
-  .mp-section { transition: none; opacity: 1; transform: none; }
 }
