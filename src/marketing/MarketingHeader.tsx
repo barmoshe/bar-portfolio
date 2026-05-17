@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import AccessibilityPanel from '../components/AccessibilityPanel';
 import { useTheme } from '../hooks/useTheme';
 import { useLang } from './LangContext';
+import LangToggle from './components/LangToggle';
 import { scrollToIntake } from './scrollToIntake';
 
 export default function MarketingHeader() {
@@ -44,6 +45,8 @@ export default function MarketingHeader() {
             {masthead.portfolioLink}
           </a>
         </nav>
+
+        <LangToggle />
 
         <button
           ref={a11yBtnRef}

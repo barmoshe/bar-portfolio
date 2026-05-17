@@ -168,6 +168,73 @@ html.dark .mp-grain {
   outline: none;
 }
 
+/* ── Language toggle (segmented pill EN | עב) ────────────────
+   Two buttons sharing one rounded border, sitting beside the
+   accessibility button. Active option fills with ink; inactive
+   stays transparent. Matches the existing .mp-bar__btn rhythm
+   (1.5px border, hover/focus flips to solid ink). */
+.mp-bar__lang {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1.5px solid var(--mp-rule-strong);
+  border-radius: 999px;
+  overflow: hidden;
+  height: 44px;
+  flex-shrink: 0;
+}
+.mp-bar__lang-btn {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--mp-ink-soft);
+  font-family: var(--mp-sans);
+  font-weight: 600;
+  font-size: .85rem;
+  padding: 0 14px;
+  min-width: 44px;
+  display: inline-grid;
+  place-items: center;
+  transition: background-color .15s, color .15s;
+}
+.mp-bar__lang-btn + .mp-bar__lang-btn {
+  border-inline-start: 1.5px solid var(--mp-rule-strong);
+}
+.mp-bar__lang-btn:hover,
+.mp-bar__lang-btn:focus-visible {
+  color: var(--mp-ink);
+  outline: none;
+}
+.mp-bar__lang-btn:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--mp-accent);
+}
+.mp-bar__lang-btn--active {
+  background: var(--mp-ink);
+  color: var(--mp-accent-ink);
+}
+.mp-bar__lang-btn--active:hover {
+  color: var(--mp-accent-ink);
+}
+/* Hebrew label uses the serif so the עברית glyphs read at the
+   correct weight next to the Latin EN label. */
+.mp-bar__lang-btn[lang="he"] {
+  font-family: var(--mp-serif);
+  font-weight: 700;
+  font-size: .95rem;
+}
+
+/* ── LTR overrides for the marketing route ─────────────────
+   The page was designed RTL-first. Under [dir="ltr"] hide the
+   decorative Hebrew bet glyph — it’s a brand motif specific to
+   the Hebrew framing and a Latin equivalent would feel forced.
+   The rest of the layout uses logical properties (margin-inline,
+   border-inline-start, etc.) and doesn’t need extra rules. */
+html[dir="ltr"] .mp-dropcap,
+html[dir="ltr"] .mp-colophon__glyph,
+html[dir="ltr"] .mp-cover__glyph {
+  display: none;
+}
+
 /* =============================================================
    Cover (hero)
    ============================================================= */

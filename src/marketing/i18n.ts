@@ -1,13 +1,20 @@
 /**
- * Marketing-site copy. Hebrew only. The page is framed as a printed
- * editorial issue ("גליון 01"), so the copy is structured by section
- * with magazine-style numbering, kickers, and pull quotes. Editing
- * copy is a one-file change.
+ * Marketing-site copy. EN + HE. The page is framed as a printed
+ * editorial issue ("Issue 01" / "גליון 01"), so the copy is
+ * structured by section with magazine-style numbering, kickers,
+ * and pull quotes. Editing copy is a one-file change.
  */
 
-export type Lang = 'he';
+export type Lang = 'en' | 'he';
 
 export const DEFAULT_LANG: Lang = 'he';
+
+export const LANGS: readonly Lang[] = ['en', 'he'] as const;
+
+export const DIR: Record<Lang, 'ltr' | 'rtl'> = {
+  en: 'ltr',
+  he: 'rtl',
+};
 
 export type Dict = {
   meta: { title: string; description: string };
@@ -21,6 +28,10 @@ export type Dict = {
     briefLink: string;
     a11yTitle: string;
     a11yLabel: string;
+    langGroupLabel: string;
+    langEnLabel: string;
+    langHeLabel: string;
+    langSwitchedTo: string;
   };
   cover: {
     issueLine: string;
@@ -144,6 +155,10 @@ const HE: Dict = {
     briefLink: 'הבריף',
     a11yTitle: 'הגדרות נגישות',
     a11yLabel: 'פתיחת הגדרות נגישות',
+    langGroupLabel: 'בחירת שפה',
+    langEnLabel: 'English',
+    langHeLabel: 'עברית',
+    langSwitchedTo: 'השפה שונתה לעברית',
   },
   cover: {
     issueLine: 'גליון 01 · בנייה לפני בריף',
@@ -405,12 +420,298 @@ const HE: Dict = {
   },
 };
 
-const DICTS: Record<Lang, Dict> = {
-  he: HE,
+const EN: Dict = {
+  meta: {
+    title: 'Bar Moshe — Describe. I Build. You Decide.',
+    description:
+      'I build a working POC on my own dime before we talk price. If it works for you — we keep going. If not — we part ways, no strings attached.',
+  },
+  masthead: {
+    issueNumber: 'Issue 01',
+    issueDate: '2025 / 26',
+    skip: 'Skip to content',
+    brandName: 'Bar Moshe',
+    brandTagline: 'Builds first, talks later',
+    portfolioLink: 'Portfolio',
+    briefLink: 'The brief',
+    a11yTitle: 'Accessibility settings',
+    a11yLabel: 'Open accessibility settings',
+    langGroupLabel: 'Language',
+    langEnLabel: 'English',
+    langHeLabel: 'עברית',
+    langSwitchedTo: 'Language switched to English',
+  },
+  cover: {
+    issueLine: 'Issue 01 · Build before brief',
+    headlineLines: ['Describe.', 'I build.', 'You decide.'],
+    standfirst:
+      'Instead of a brief that drags on for weeks and a proposal you have to wonder about — describe the idea in the form, and I build a first POC on my own dime. If it works for you, we keep building together. If not, we part ways, no strings attached.',
+    byline: 'Bar Moshe · Independent builds · since 2020',
+    scrollHint: 'Keep reading',
+  },
+  contents: {
+    number: '01',
+    kicker: 'Contents',
+    title: 'Where to start',
+    standfirst:
+      'These are the kinds of projects I build most. Picking one here opens the brief with the right field already filled in. Not there? There’s "other".',
+    items: [
+      {
+        slug: 'mvp',
+        title: 'Startup MVP',
+        summary:
+          'From Figma to working code in a week. A first version solid enough to show users, raise on, or decide it’s not the direction.',
+        fits: ['Solo founder', 'Early-stage startup', 'Small team'],
+      },
+      {
+        slug: 'brand',
+        title: 'Brand site with character',
+        summary:
+          'Not a template. Animations, a palette of your own, interactions that make people remember you. Like this site — only yours.',
+        fits: ['New brand', 'Freelancer with identity', 'Studio'],
+      },
+      {
+        slug: 'ecommerce',
+        title: 'Custom online store',
+        summary:
+          'Shopify rebuilt from the ground up, a private checkout system, or a full boutique store from code. Right for a brand with identity — not a generic catalogue.',
+        fits: ['Small brand', 'Independent maker', 'Boutique shop'],
+      },
+      {
+        slug: 'ai-agent',
+        title: 'Private AI assistant / agent',
+        summary:
+          'A GPT chatbot for customers, RAG over all your documents, an autonomous agent that triages email and does the work. OpenAI, Anthropic, or an open model.',
+        fits: ['Company', 'Ops / support team', 'AI founder'],
+      },
+      {
+        slug: 'ai-video',
+        title: 'AI video render pipeline',
+        summary:
+          'A system that turns text → scenes → rendered video automatically. Remotion, FFmpeg, ElevenLabs, Runway. Right for explainer videos at scale, an illustrated podcast, or daily content for socials.',
+        fits: ['Content creator', 'Marketing agency', 'Brand with a series / podcast'],
+      },
+      {
+        slug: 'audio',
+        title: 'Audio engine / musical interaction',
+        summary:
+          'WebAudio, synthesis, multi-channel mixer, real-time effects. Like the Mixtape in my portfolio. Right for a product whose sound is part of the experience — not just background noise.',
+        fits: ['Artist', 'Music brand', 'Audio startup'],
+      },
+      {
+        slug: 'game',
+        title: 'Browser game / interactive experience',
+        summary:
+          'Canvas, WebGL, Three.js. A mini-game for a campaign, a viral piece for stories, or a prototype for a game you’re building yourself.',
+        fits: ['Brand with a campaign', 'Indie game dev', 'Creative agency'],
+      },
+      {
+        slug: 'realtime',
+        title: 'Dashboard / real-time system',
+        summary:
+          'Admin panel with permissions, live BI, a monitoring system on WebSocket. Charts, filters, CSV export. Everything your team is doing in Excel right now.',
+        fits: ['Company', 'Scaling startup', 'Data / ops team'],
+      },
+      {
+        slug: 'mobile',
+        title: 'Mobile app',
+        summary:
+          'iOS + Android in the same codebase. React Native or PWA. Push, offline, store, auth. Same team (me), two platforms.',
+        fits: ['Startup', 'B2C product', 'Business with loyal customers'],
+      },
+      {
+        slug: 'other',
+        title: 'Something else entirely',
+        summary:
+          'Got a weird idea in a space I haven’t seen? Perfect — the best things I’ve worked on started that way. Write it in the brief.',
+        fits: ['Anyone'],
+      },
+    ],
+    pickedLabel: 'Picked',
+  },
+  method: {
+    number: '02',
+    kicker: 'The method',
+    title: 'How we build together',
+    standfirst:
+      'Three steps with no opening proposals. No 14-page "tailored quote". No signing anything before you see something working.',
+    steps: [
+      {
+        num: '01',
+        title: 'Describe',
+        body:
+          'You fill in a short brief. Three required fields: project type, the idea, and a way to reach you. Everything else is optional. The brief lands directly in my WhatsApp as a tidy message — no server storage, no "subscribe to the newsletter", no nonsense.',
+      },
+      {
+        num: '02',
+        title: 'I build',
+        body:
+          'Within 3–7 days I build a first POC on my own dime. Not a mockup. Not Figma. Working code you can open, click, send to a friend, and ask if this is what you imagined. If not, we part ways here. No invoice.',
+      },
+      {
+        num: '03',
+        title: 'You decide',
+        body:
+          'If it works for you, we talk about going further: clear scope, price known up front, weekly milestones, clean handoff. I don’t work by the hour — I work by the outcome.',
+      },
+    ],
+    pullQuote: {
+      quote:
+        'The biggest risk for the client isn’t the money — it’s the time wasted on a proposal that never ships.',
+      cite: 'Bar Moshe',
+    },
+  },
+  about: {
+    number: '03',
+    kicker: 'Who I am',
+    title: 'Bar Moshe',
+    paragraphs: [
+      'Full-stack developer since 2020. Most of the work is TypeScript, React, and Node, but the second line of my CV is always something different: WebAudio, GSAP, Three.js, and lately a lot of LLM-based assistants. Every project is a chance to learn something new — that’s why I’m still here.',
+      'I build because it was the hobby before it was the job. I decide quickly because it’s much easier to fix code that sort of works than a brief that never became code. That’s why I work POC-first: I learn what to build, and you see what you’re getting.',
+      'Based in Israel, working with clients around the world in Hebrew and English. Write before you check the big software shops — if it isn’t a fit, I’ll tell you.',
+    ],
+    stats: [
+      { value: '5+', label: 'years building' },
+      { value: '20+', label: 'POCs shipped' },
+      { value: '0', label: 'upfront payment' },
+    ],
+  },
+  brief: {
+    number: '04',
+    kicker: 'The brief',
+    title: 'What do you want to build',
+    standfirst:
+      'This brief goes straight to my WhatsApp as a tidy message. The more detail you give, the sharper the first POC. Three lines is enough to start.',
+    requiredHint: 'Only 3 required fields: type, idea, and a way to reach you.',
+    optionalHeading: 'More detail — optional',
+    fields: {
+      template: {
+        label: 'Project type',
+        placeholder: 'Pick the closest template — you can always change it later',
+      },
+      idea: {
+        label: 'The idea in short',
+        hint: 'One sentence or three. Clear beats clever.',
+        placeholder:
+          'For example: "A platform that connects ceramic makers with design shops — the maker uploads a catalogue, the shop orders directly, and they pay a fee only on a sale."',
+      },
+      audience: {
+        label: 'Who will use it',
+        placeholder: 'For example: design-shop owners aged 30–50, independent ceramic makers',
+      },
+      problem: {
+        label: 'What problem it solves',
+        placeholder: 'They waste hours coordinating over WhatsApp and Excel…',
+      },
+      whyNow: {
+        label: 'Why now',
+        hint: 'What changed that brought you here today? This helps me read urgency and context.',
+        placeholder:
+          'For example: "we closed a funding round", "a competitor shipped something similar", or "I got tired of waiting".',
+      },
+      references: {
+        label: 'Anything similar you liked',
+        placeholder: 'Links, screenshots, or "like X but without Y"',
+      },
+      timeline: { label: 'When you need it' },
+      howHeard: {
+        label: 'How you found me',
+        placeholder: 'GitHub, a friend, portfolio, search — whatever you remember',
+      },
+      name: { label: 'Name', placeholder: 'What should I call you' },
+      contactMethod: {
+        label: 'Preferred way to reach you',
+        whatsapp: 'WhatsApp',
+        email: 'Email',
+      },
+      contactValue: {
+        labelWhatsapp: 'Phone number',
+        labelEmail: 'Email address',
+        placeholderWhatsapp: '+972 5X-XXXXXXX',
+        placeholderEmail: 'name@example.com',
+      },
+    },
+    timelines: [
+      { id: 'asap', label: 'As soon as possible' },
+      { id: '1mo', label: 'Within the next month' },
+      { id: '3mo', label: 'Within 2–3 months' },
+      { id: 'open', label: 'Flexible' },
+    ],
+    submit: 'Send the brief to Bar',
+    submitHint:
+      'WhatsApp will open with the message ready to go. You can still edit before sending. Nothing is stored on the site.',
+    marginalNote:
+      'You don’t have to fill everything. Three fields is enough to start. Writing in English? Great. Hebrew? Also fine. Want to attach a link or screenshot? Send it on WhatsApp once the brief is on its way.',
+    mailFallback: 'Prefer email? Click here',
+    mailSubject: 'New brief from the site',
+    liveSuccess: 'WhatsApp opened with the tidy brief.',
+    liveError: 'Some fields are missing. Check the red markers.',
+    briefHeading: 'Hi Bar,',
+    briefFooter: '— sent from the site brief',
+    briefSections: {
+      type: '*Project type*',
+      idea: '*The idea*',
+      whyNow: '*Why now*',
+      audience: '*The user*',
+      problem: '*The problem it solves*',
+      references: '*Inspiration / examples*',
+      timeline: '*Timeline*',
+      howHeard: '*How they found me*',
+    },
+  },
+  qa: {
+    number: '05',
+    kicker: 'Q & A',
+    title: 'What people ask before reaching out',
+    items: [
+      {
+        q: 'Really no payment for the POC?',
+        a:
+          'Really. I invest 3–7 days because it’s the best way I’ve found to show I can build what you need — before you pay anything. If we don’t continue, that’s my risk. If we do, both sides know exactly what they’re signing up for.',
+      },
+      {
+        q: 'What if I don’t know yet exactly what I want?',
+        a:
+          'Perfect — that’s most cases. Describe in two sentences what you don’t want, or which daily problem is in front of you, and I’ll build my first read of it. Once you see something, it’s much easier to say "yes, but…" — and that’s exactly what I’m after.',
+      },
+      {
+        q: 'So how does payment actually work after the POC?',
+        a:
+          'I don’t work by the hour. Every project gets a clear scope and a price known up front — outcome-based. Small projects ship at a package price; larger ones break into milestones with payment after each delivery. No monthly retainer, no long contract. Work’s done — payment’s done.',
+      },
+    ],
+  },
+  colophon: {
+    number: '06',
+    kicker: 'Colophon',
+    title: 'Right. You made it this far.',
+    pullQuote:
+      'So what do you think — worth describing the idea in one sentence and seeing what comes out?',
+    ctaPrimary: 'To the brief',
+    ctaWhatsapp: 'Send me a WhatsApp',
+    ctaMail: 'Or email',
+    credit: 'Written, designed, and coded by Bar Moshe · 2025/26',
+    portfolioLink: 'Full portfolio',
+  },
+  runningFoot: {
+    backToTop: '↑ Top',
+    whatsapp: 'WhatsApp',
+    mail: 'Email',
+    issueLabel: 'Issue 01',
+  },
 };
 
-export const t: Dict = HE;
+const DICTS: Record<Lang, Dict> = { en: EN, he: HE };
+
+export function getDict(lang: Lang): Dict {
+  return DICTS[lang] ?? HE;
+}
+
+// Back-compat exports. Older callers can still `import { t }`; the value
+// is the default-language dictionary at module load. Stateful callers
+// should use `useLang()` from LangContext instead.
+export const t: Dict = DICTS[DEFAULT_LANG];
 
 export function tFor(lang: Lang = DEFAULT_LANG): Dict {
-  return DICTS[lang] ?? HE;
+  return getDict(lang);
 }
