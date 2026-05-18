@@ -10,7 +10,7 @@ type Props = {
 
 export default function ProjectTemplates({ selected, onPick }: Props) {
   const { t } = useLang();
-  const { contents, build } = t;
+  const { contents } = t;
 
   const handlePick = (slug: string) => {
     onPick(slug);
@@ -19,7 +19,7 @@ export default function ProjectTemplates({ selected, onPick }: Props) {
 
   return (
     <section
-      className="mp-section mp-contents mp-buildlog"
+      className="mp-section mp-contents"
       id="contents"
       aria-labelledby="contents-headline"
     >
@@ -36,9 +36,6 @@ export default function ProjectTemplates({ selected, onPick }: Props) {
         {contents.items.map((item, i) => {
           const isSelected = selected === item.slug;
           const num = String(i + 1).padStart(2, '0');
-          const status = isSelected
-            ? build.templateStatusSelected
-            : build.templateStatusReady;
           return (
             <li className="mp-toc__row" key={item.slug}>
               <button
@@ -50,16 +47,12 @@ export default function ProjectTemplates({ selected, onPick }: Props) {
               >
                 <span className="mp-toc__num" aria-hidden="true">{num}</span>
                 <span className="mp-toc__body">
-                  <span className="mp-toc__cmd" aria-hidden="true">
-                    <span className="mp-toc__cmd-sigil">$</span>
-                    <span className="mp-toc__cmd-prefix">{build.templateCmdPrefix}</span>
-                    <span className="mp-toc__cmd-slug">{item.slug}</span>
-                  </span>
                   <span className="mp-toc__title">{item.title}</span>
                   <span className="mp-toc__summary">{item.summary}</span>
                 </span>
                 <span className="mp-toc__cta" aria-hidden="true">
-                  [{status}]
+                  {isSelected ? contents.pickedLabel : '→'}
+                  <span className="mp-toc__cta-arrow">{isSelected ? '✓' : '→'}</span>
                 </span>
               </button>
             </li>

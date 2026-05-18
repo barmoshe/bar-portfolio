@@ -636,10 +636,6 @@ export default function Intake({ selectedTemplate }: Props) {
                     </button>
                   </nav>
                 )}
-
-                <p className="mp-quest__keyboard" aria-hidden="true">
-                  {quest.keyboardHint}
-                </p>
               </article>
             </form>
 

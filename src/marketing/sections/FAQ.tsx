@@ -8,7 +8,7 @@ export default function FAQ() {
 
   return (
     <section
-      className="mp-section mp-qa mp-buildlog"
+      className="mp-section mp-qa"
       id="qa"
       aria-labelledby="qa-headline"
     >
@@ -19,28 +19,19 @@ export default function FAQ() {
         id="qa-headline"
       />
 
-      <ol className="mp-qa-list">
-        {qa.items.map((it, i) => {
-          const num = String(i + 1).padStart(2, '0');
-          return (
-            <li className="mp-qa__row" key={it.q}>
-              <details className="mp-qa__row-details">
-                <summary className="mp-qa__q">
-                  <span className="mp-qa__q-num" aria-hidden="true">
-                    Q.{num}
-                  </span>
-                  <span className="mp-qa__q-text">{it.q}</span>
-                  <span className="mp-qa__q-toggle" aria-hidden="true">+</span>
-                </summary>
-                <p className="mp-qa__a">
-                  <span className="mp-qa__a-mark" aria-hidden="true">A.</span>
-                  <span>{it.a}</span>
-                </p>
-              </details>
-            </li>
-          );
-        })}
-      </ol>
+      <ul className="mp-qa-list">
+        {qa.items.map((it) => (
+          <li className="mp-qa__row" key={it.q}>
+            <details className="mp-qa__row-details">
+              <summary className="mp-qa__q">
+                <span className="mp-qa__q-text">{it.q}</span>
+                <span className="mp-qa__q-toggle" aria-hidden="true">+</span>
+              </summary>
+              <p className="mp-qa__a">{it.a}</p>
+            </details>
+          </li>
+        ))}
+      </ul>
 
       <RunningFoot sectionNumber={qa.number} />
     </section>
