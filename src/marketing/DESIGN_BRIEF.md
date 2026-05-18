@@ -42,7 +42,7 @@ src/marketing/
 └── components/                ← infra (mostly unused; see below)
 
 business/index.html            ← entry HTML; pre-paint script + Google
-                                  Fonts (Rubik + Heebo)
+                                  Fonts (Suez One + Rubik)
 src/lib/gsap.ts                ← GSAP + ScrollTrigger + SplitText + Flip
 src/lib/scrollReveal.ts        ← createReveal() helper
 src/components/InkDefs.tsx     ← SVG filters (turbulence, displacement)
@@ -66,8 +66,8 @@ src/hooks/useTheme.ts          ← theme cycle + ink-wipe transition
 - **Column ribbon**: `border-inline-start: 6px` in a status color
   (BACKLOG = magenta, etc.) gives the kanban metaphor without
   needing horizontal columns (which die on mobile).
-- **Typography**: Rubik (display, 400-900) + Heebo (body, 400-900)
-  via Google Fonts.
+- **Typography**: Suez One (hero h1, chunky playful serif) + Rubik
+  (display & body, 400-900) via Google Fonts.
 - **Focus ring**: 3px magenta outline at 3px offset on every
   interactive surface.
 

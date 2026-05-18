@@ -10,7 +10,7 @@
        magenta on hover/focus.
      - Magenta / orange / blue accent triad (semantic for BOARD:
        magenta = TODO, orange = DOING, blue = DONE).
-     - Rubik display + Heebo body.
+     - Suez One hero + Rubik display/body.
 
    All animations are GPU-only (transform/opacity/box-shadow).
    prefers-reduced-motion collapses every motion to a usable
@@ -52,8 +52,9 @@
   --mp-radius-lg:   28px;
 
   /* type */
-  --mp-font-body:    'Heebo', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  --mp-font-display: 'Rubik', 'Heebo', system-ui, sans-serif;
+  --mp-font-body:    'Rubik', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --mp-font-display: 'Rubik', system-ui, sans-serif;
+  --mp-font-hero:    'Suez One', 'Rubik', system-ui, sans-serif;
 
   background: var(--mp-bg);
   color: var(--mp-ink);
@@ -140,7 +141,12 @@ html.dark .mp-root {
   line-height: 1.05;
   margin: 0;
 }
-.mp-root h1 { font-size: clamp(2.2rem, 8vw, 4.4rem); }
+.mp-root h1 {
+  font-family: var(--mp-font-hero);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  font-size: clamp(2.2rem, 8vw, 4.4rem);
+}
 .mp-root h2 { font-size: clamp(1.8rem, 5.5vw, 2.8rem); }
 .mp-root h3 { font-size: clamp(1.2rem, 3.5vw, 1.6rem); }
 

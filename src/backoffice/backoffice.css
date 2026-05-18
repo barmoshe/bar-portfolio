@@ -30,7 +30,7 @@
   min-block-size: 100vh;
   background: var(--paper-2);
   color: var(--ink);
-  font-family: "Heebo", "Rubik", system-ui, -apple-system, sans-serif;
+  font-family: "Rubik", system-ui, -apple-system, sans-serif;
   line-height: 1.5;
 }
 
