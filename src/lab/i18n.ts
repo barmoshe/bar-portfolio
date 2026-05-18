@@ -714,7 +714,7 @@ const HE: Dict = {
       {
         q: 'באיזה כלים אתה משתמש?',
         a:
-          'תלוי בפרויקט. לפעמים זה כתיבה ישירה של קוד, לפעמים שילוב עם Base44/Lovable וכאלה. אני בוחר את הכלי המתאים, לא להפך.',
+          'תלוי בפרויקט. אני עובד AI-native ומהיר, יודע מתי לקפוץ ל-Base44 או Lovable, מתי לכתוב קוד ישירות עם Cursor או Claude, ומתי לשלב הכל יחד. הכלי משרת את הפרויקט, לא להפך.',
       },
       {
         q: 'אני בכלל לא טכני, זה בעיה?',
@@ -1283,7 +1283,7 @@ const EN: Dict = {
       {
         q: 'What tools do you use?',
         a:
-          'Depends on the project. Sometimes direct code, sometimes integration with Base44/Lovable and the like. I pick the tool for the job, not the other way around.',
+          'Depends on the project. I work AI-native and fast, knowing when to jump into Base44 or Lovable, when to write code directly with Cursor or Claude, and when to combine them. The tool serves the project, not the other way around.',
       },
       {
         q: 'I’m not technical at all, is that a problem?',
