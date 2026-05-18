@@ -166,39 +166,74 @@ const HE: Dict = {
       'כמה דוגמאות. תבחר את הקרוב ביותר, או פשוט תכתוב משלך. הטופס נפתח עם פלייסהולדר שמתאים לסוג.',
     items: [
       {
-        slug: 'small-site',
-        title: 'אתר קטן לעסק',
-        summary: 'דף נחיתה, אתר שירות, פורטפוליו — משהו שמסביר ומקפיץ.',
+        slug: 'mvp',
+        title: 'גרסה ראשונה למיזם',
+        summary: 'מרעיון למוצר עובד, מהר. גרסה ראשונה שמספיק טובה להראות.',
         promptHint:
-          'למשל: דף נחיתה לסטודיו ליוגה ברעננה — מסביר מה זה, מתי שיעורים, וטופס הרשמה לשיעור ניסיון.',
+          'למשל: פלטפורמה שמחברת בין מעצבים פרילנסרים ללקוחות — הזמנה, תיאום, תשלום בנאמנות.',
       },
       {
-        slug: 'internal-tool',
-        title: 'כלי פנימי שיחסוך זמן',
-        summary: 'מחליף 12 גיליונות אקסל. טפסים, רשימות, התראות, ייצוא.',
+        slug: 'brand',
+        title: 'אתר משלך, לא מתבנית',
+        summary: 'מעוצב ונבנה אישית. טיפוגרפיה, צבעים ואנימציות שמתאימים לך.',
         promptHint:
-          'למשל: מערכת קטנה לנהל הזמנות בקייטרינג — מי הזמין מה, מתי, ולמי שולחים.',
+          'למשל: אתר לסטודיו קרמיקה — שקט, מוזיאוני, עם גלריית עבודות שמרגישה כמו חדר תצוגה.',
       },
       {
-        slug: 'mini-app',
-        title: 'אפליקציה עם פיצ׳ר אחד',
-        summary: 'משהו פשוט שעושה דבר אחד טוב. בדפדפן או במובייל.',
+        slug: 'ecommerce',
+        title: 'חנות אונליין מעוצבת אישית',
+        summary: 'חנות עם אופי. לא קטלוג גנרי.',
         promptHint:
-          'למשל: אפליקציה שעוזרת לי לתעד תרגולי גיטרה — שעות, נושאים, גרף התקדמות.',
+          'למשל: חנות לספלי קרמיקה בעבודת יד — 4 דגמים, סיפור של היוצר על כל מוצר.',
       },
       {
-        slug: 'automation',
-        title: 'אוטומציה זריזה',
-        summary: 'תהליך חוזר שמתבצע אוטומטית. סיכומים, התראות, סינכרון בין כלים.',
+        slug: 'ai-agent',
+        title: 'סוכן AI שעובד בשבילך',
+        summary: 'צ׳אט ללקוחות, מענה לפי מסמכים שלך, סוכן שעובר על מיילים.',
         promptHint:
-          'למשל: סקריפט שכל בוקר אוסף לי תוצאות חיפושים מ-5 אתרים ושולח סיכום למייל.',
+          'למשל: סוכן שקורא מיילים נכנסים, מתייג לפי כוונה (דמו / תמחור / ספאם) ומציע טיוטת תשובה.',
       },
       {
-        slug: 'something-else',
+        slug: 'ai-video',
+        title: 'סטודיו יצירתי מבוסס AI',
+        summary: 'כלים לגרפיקה, תמונות, סרטונים — מהרעיון לתוצר.',
+        promptHint:
+          'למשל: כלי שמקבל כותרת חדשות בבוקר ומייצר סרטון אנכי קצר עם הקראה ורקע מתאים.',
+      },
+      {
+        slug: 'audio',
+        title: 'מוזיקה, סאונד וכל מה שביניהם',
+        summary: 'פלאגינים, כלי הפקה, סינתזה, אפקטים בזמן אמת.',
+        promptHint:
+          'למשל: פס-קול אינטראקטיבי לאתר גלריה — אקורדים שמשתנים תוך כדי גלילה בין סקציות.',
+      },
+      {
+        slug: 'game',
+        title: 'משחק דפדפן או חוויה אינטראקטיבית',
+        summary: 'משחקון לקמפיין, חוויה לסטוריז, או גרסה ראשונה למשחק אינדי.',
+        promptHint:
+          'למשל: מיני-משחק שיתופי לקמפיין מותג — לחיצה מהירה, טבלת שיאים, אפשרות לשתף תוצאה.',
+      },
+      {
+        slug: 'realtime',
+        title: 'דשבורד שמתעדכן בזמן אמת',
+        summary: 'פאנל ניהול עם הרשאות, נתונים חיים, התראות, ייצוא.',
+        promptHint:
+          'למשל: דשבורד למחסן — תחנות, הזמנות פתוחות, התראה כשתחנה רגועה יותר מ-5 דקות.',
+      },
+      {
+        slug: 'mobile',
+        title: 'אפליקציה לטלפון',
+        summary: 'אפליקציה שעובדת על כל טלפון. התראות, מצב לא־מקוון, התחברות.',
+        promptHint:
+          'למשל: אפליקציה לחובבי ציפורים — לוג של תצפית ב-3 הקשות, גרף ועוד מה נצפה בסביבה היום.',
+      },
+      {
+        slug: 'other',
         title: 'משהו אחר לגמרי',
         summary: 'יש לך רעיון מוזר? מעולה. הדברים הטובים מתחילים ככה.',
         promptHint:
-          'תאר את הרעיון כמו שאתה מספר אותו לחבר. אני אבין.',
+          'תאר את הרעיון כמו שאתה מספר אותו לחבר. מוזר זה בברכה.',
       },
     ],
     pickedLabel: 'נבחר',
@@ -385,39 +420,74 @@ const EN: Dict = {
       'A few examples. Pick the closest — or write your own. The form opens with a matching placeholder.',
     items: [
       {
-        slug: 'small-site',
-        title: 'Small business site',
-        summary: 'A landing page, a service site, a portfolio — something that explains and converts.',
+        slug: 'mvp',
+        title: 'First version of a venture',
+        summary: 'From idea to a working product, fast. Solid enough to show.',
         promptHint:
-          'For example: a landing page for a yoga studio — what it is, schedule, signup for a trial class.',
+          'For example: a platform connecting freelance designers and clients — booking, scope, escrow payment.',
       },
       {
-        slug: 'internal-tool',
-        title: 'Internal tool that saves time',
-        summary: 'Replaces 12 spreadsheets. Forms, lists, alerts, exports.',
+        slug: 'brand',
+        title: 'A site of your own, not from a template',
+        summary: 'Designed and built personally. Typography, colors, animations chosen for you.',
         promptHint:
-          'For example: a small system to manage catering orders — who ordered what, when, where to deliver.',
+          'For example: a site for a ceramics studio — quiet, museum-like, with a gallery that feels like a viewing room.',
       },
       {
-        slug: 'mini-app',
-        title: 'One-feature app',
-        summary: 'Something simple that does one thing well. Web or mobile.',
+        slug: 'ecommerce',
+        title: 'A custom-designed online store',
+        summary: 'A store with identity. Not a generic catalogue.',
         promptHint:
-          'For example: an app to track my guitar practice — hours, topics, a progress chart.',
+          'For example: a shop for hand-thrown ceramic mugs — 4 styles, a story from the maker on every item.',
       },
       {
-        slug: 'automation',
-        title: 'Quick automation',
-        summary: 'A recurring task running on its own. Summaries, alerts, sync between tools.',
+        slug: 'ai-agent',
+        title: 'Private AI assistant / agent',
+        summary: 'Customer chat, doc-grounded Q&A, an agent that triages email.',
         promptHint:
-          'For example: a script that collects search results from 5 sites every morning and emails me a summary.',
+          'For example: an agent that reads incoming sales emails, tags them by intent (demo / pricing / spam), and drafts a first reply.',
       },
       {
-        slug: 'something-else',
+        slug: 'ai-video',
+        title: 'AI creative & visual toolkit',
+        summary: 'Graphics, images, video — from idea to finished asset.',
+        promptHint:
+          'For example: a tool that takes a morning news headline and produces a short vertical video with VO and b-roll.',
+      },
+      {
+        slug: 'audio',
+        title: 'Music, sound, and the tools in between',
+        summary: 'Plugins, production tools, synthesis, real-time effects.',
+        promptHint:
+          'For example: an interactive soundtrack for a gallery site — chords shift as you scroll between sections.',
+      },
+      {
+        slug: 'game',
+        title: 'Browser game / interactive experience',
+        summary: 'A mini-game for a campaign, a viral piece, or a first version of an indie game.',
+        promptHint:
+          'For example: a shareable click-to-win mini-game for a brand campaign — leaderboard, share-result, fast.',
+      },
+      {
+        slug: 'realtime',
+        title: 'Dashboard / real-time system',
+        summary: 'Admin panel with permissions, live data, alerts, exports.',
+        promptHint:
+          'For example: a warehouse dashboard — pick-stations, open orders, alert when a station idles >5min.',
+      },
+      {
+        slug: 'mobile',
+        title: 'Mobile app',
+        summary: 'An app for every phone. Notifications, offline mode, sign-in.',
+        promptHint:
+          'For example: an app for amateur birders — log a sighting in 3 taps, see what was spotted nearby today.',
+      },
+      {
+        slug: 'other',
         title: 'Something else entirely',
         summary: 'Got a weird idea? Great. The good ones start that way.',
         promptHint:
-          'Describe it like you’d tell a friend. I’ll get it.',
+          'Describe it like you’d tell a friend. Weird is welcome.',
       },
     ],
     pickedLabel: 'Picked',
