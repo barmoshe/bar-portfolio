@@ -944,13 +944,10 @@ html.dark .mp-root {
   .mp-toc {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 1fr;
     gap: 16px;
   }
-}
-@media (min-width: 1024px) {
-  .mp-toc {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  .mp-toc__btn { block-size: 100%; }
 }
 
 /* ---------------------------------------------------------------
@@ -1163,27 +1160,28 @@ html.dark .mp-root {
 .mp-quest__chapters {
   list-style: none;
   padding: 0;
-  margin: 0 0 16px;
+  margin: 0 0 20px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 6px;
+  grid-auto-rows: 1fr;
+  gap: 10px;
   position: relative;
 }
 .mp-quest__chapter {
   position: relative;
-  padding: 8px 4px;
+  padding: 12px 8px;
   background: var(--mp-surface);
-  border: 2px solid var(--mp-ink);
+  border: 2.5px solid var(--mp-ink);
   border-radius: var(--mp-radius-sm);
   text-align: center;
-  font-size: .72rem;
   line-height: 1.2;
   box-shadow: var(--mp-shadow-sm);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
-  min-block-size: 40px;
+  gap: 6px;
+  min-block-size: 72px;
+  block-size: 100%;
   justify-content: center;
   transition: background-color .25s ease, color .25s ease;
 }
@@ -1199,23 +1197,21 @@ html.dark .mp-root {
 }
 .mp-quest__chapter-num {
   font-family: var(--mp-font-display);
-  font-weight: 800;
-  font-size: .82rem;
+  font-weight: 900;
+  font-size: 1rem;
   letter-spacing: 0.04em;
+  opacity: .85;
 }
 .mp-quest__chapter-name {
   font-family: var(--mp-font-display);
   font-weight: 700;
-  font-size: .76rem;
-  /* Hidden by default - too tight to read at 5-col mobile width.
-     The active chapter's name lives in the card header below. */
-  display: none;
+  font-size: .8rem;
 }
 .mp-quest__progress { display: none; }
 @media (min-width: 480px) {
-  .mp-quest__chapter { min-block-size: 52px; padding: 8px 6px; }
-  .mp-quest__chapter-num { font-size: .68rem; opacity: .8; }
-  .mp-quest__chapter-name { display: block; }
+  .mp-quest__chapter { min-block-size: 88px; padding: 14px 10px; }
+  .mp-quest__chapter-num { font-size: 1.1rem; }
+  .mp-quest__chapter-name { font-size: .88rem; }
 }
 
 /* Board layout - ticket + brief sidebar */
