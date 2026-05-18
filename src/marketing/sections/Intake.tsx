@@ -532,7 +532,7 @@ export default function Intake({ selectedTemplate }: Props) {
                   focusRef.current = node;
                 }}
               >
-                {quest.nav.sendAgain} →
+                {quest.nav.sendAgain} <span className="mp-arrow" aria-hidden="true">→</span>
               </button>
               <a className="mp-form__mail" href={mailHref}>
                 {brief.mailFallback}
@@ -624,7 +624,7 @@ export default function Intake({ selectedTemplate }: Props) {
                       onClick={back}
                       disabled={stepIndex === 0}
                     >
-                      ← {quest.nav.back}
+                      <span className="mp-arrow" aria-hidden="true">←</span> {quest.nav.back}
                     </button>
                     {!beat.required && (
                       <button
@@ -640,7 +640,7 @@ export default function Intake({ selectedTemplate }: Props) {
                       className="mp-quest__primary"
                       onClick={next}
                     >
-                      {quest.nav.next} →
+                      {quest.nav.next} <span className="mp-arrow" aria-hidden="true">→</span>
                     </button>
                   </nav>
                 )}
@@ -1025,7 +1025,7 @@ function ReviewBlock({
           aria-label={`${quest.nav.send} — ${board.ringHold}`}
           {...bind}
         >
-          <span>{quest.nav.send} →</span>
+          <span>{quest.nav.send} <span className="mp-arrow" aria-hidden="true">→</span></span>
           <svg
             className="mp-longpress-ring"
             viewBox="0 0 36 36"

@@ -47,8 +47,13 @@ export default function ContactCTA() {
 
       <p className="mp-final__credit">
         {colophon.credit} ·{' '}
-        <a href={`#${INTAKE_ID}`}>{colophon.ctaPrimary} →</a> ·{' '}
-        <a href="../">← {colophon.portfolioLink}</a>
+        <a href={`#${INTAKE_ID}`}>
+          {colophon.ctaPrimary} <span className="mp-arrow" aria-hidden="true">→</span>
+        </a>{' '}
+        ·{' '}
+        <a href="../">
+          <span className="mp-arrow" aria-hidden="true">←</span> {colophon.portfolioLink}
+        </a>
       </p>
     </section>
   );

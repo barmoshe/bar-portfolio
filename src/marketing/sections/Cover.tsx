@@ -1,28 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLang } from '../LangContext';
 import { INTAKE_ID } from '../scrollToIntake';
-import { gsap, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
 
 /**
- * Hero — three sticker "beat" cards stacked with an offset rhythm,
- * the DOING beat centered and elevated so the kanban triptych reads
- * in one glance above the fold on a 390×844 phone. Then two CTAs.
- *
- * The DOING pulse runs ONLY while the hero is on-screen
- * (IntersectionObserver gate, capped to one concurrent pulser per
- * page per the mobile motion budget).
+ * Hero — one focal ticket card that IS the value proposition. The
+ * BOARD metaphor in literal form: "your project, already in DOING."
+ * Big promise H1 above, single sticker ticket below with a real
+ * checklist + a primary CTA inside the card. Secondary actions
+ * below. Designed for 390×844 first.
  */
 export default function Cover() {
-  const { t } = useLang();
-  const { cover, board } = t;
+  const { t, lang } = useLang();
   const rootRef = useRef<HTMLElement | null>(null);
-  const doingPillRef = useRef<HTMLSpanElement | null>(null);
+  const pillRef = useRef<HTMLSpanElement | null>(null);
   const [pulseAlive, setPulseAlive] = useState(false);
 
-  // Pause the DOING pulse when the hero leaves the viewport so we
-  // don't burn battery animating off-screen pixels.
+  // Pause the DOING pulse when the hero leaves the viewport.
   useEffect(() => {
-    const el = doingPillRef.current;
+    const el = pillRef.current;
     if (!el || typeof IntersectionObserver === 'undefined') return;
     const io = new IntersectionObserver(
       ([entry]) => setPulseAlive(entry.isIntersecting),
@@ -32,87 +27,57 @@ export default function Cover() {
     return () => io.disconnect();
   }, []);
 
-  // Entrance choreography. Single GSAP timeline; reduced-motion users
-  // get an opacity-only fade with no stagger.
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
+  // Entrance is a pure-CSS fade-up via the .mp-hero__rise class +
+  // CSS animation-delay per element. Avoids React-StrictMode +
+  // useGSAP + axe-core dev-mode interactions that were starving the
+  // RAF loop and leaving elements stuck at partial opacity.
 
-      mm.add(FULL_MOTION_QUERY, () => {
-        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-        tl.set('[data-anim-target]', { autoAlpha: 0 });
-        tl.fromTo(
-          '[data-anim-target="eyebrow"]',
-          { y: 8 },
-          { autoAlpha: 1, y: 0, duration: 0.36 },
-        );
-        tl.fromTo(
-          '[data-anim-target="title"]',
-          { y: 14 },
-          { autoAlpha: 1, y: 0, duration: 0.42 },
-          '-=0.18',
-        );
-        tl.fromTo(
-          '[data-anim-target="beat-1"]',
-          { y: 24, rotate: -4 },
-          { autoAlpha: 1, y: 0, rotate: -1, duration: 0.46 },
-          '-=0.2',
-        );
-        tl.fromTo(
-          '[data-anim-target="beat-2"]',
-          { y: 28, rotate: 4, scale: 0.92 },
-          {
-            autoAlpha: 1,
-            y: 0,
-            rotate: 1,
-            scale: 1,
-            duration: 0.52,
-            ease: 'back.out(1.4)',
-          },
-          '-=0.32',
-        );
-        tl.fromTo(
-          '[data-anim-target="beat-3"]',
-          { y: 24, rotate: -4 },
-          { autoAlpha: 1, y: 0, rotate: -0.5, duration: 0.46 },
-          '-=0.36',
-        );
-        tl.fromTo(
-          '[data-anim-target="cta"]',
-          { y: 16 },
-          { autoAlpha: 1, y: 0, duration: 0.32, stagger: 0.08 },
-          '-=0.28',
-        );
-        tl.fromTo(
-          '[data-anim-target="standfirst"]',
-          { y: 12 },
-          { autoAlpha: 1, y: 0, duration: 0.36 },
-          '-=0.18',
-        );
-        tl.fromTo(
-          '[data-anim-target="scroll-cue"]',
-          { y: -8 },
-          { autoAlpha: 1, y: 0, duration: 0.4 },
-          '-=0.2',
-        );
-      });
+  const isHe = lang === 'he';
 
-      mm.add('(prefers-reduced-motion: reduce)', () => {
-        gsap.set('[data-anim-target]', { autoAlpha: 1, y: 0, rotate: 0, scale: 1 });
-      });
-
-      return () => mm.kill();
-    },
-    { scope: rootRef },
-  );
-
-  const verbs = cover.headlineLines;
-  // Map the three visible beats to TODO / DOING / DONE.
-  const beats = [
-    { verb: verbs[0] ?? 'תאר.', status: board.status.todo,  cls: 'mp-status--todo'  },
-    { verb: verbs[1] ?? 'אבנה.', status: board.status.doing, cls: 'mp-status--doing' },
-    { verb: verbs[2] ?? 'תחליט.', status: board.status.done,  cls: 'mp-status--done'  },
-  ];
+  // Hero copy lives here, not i18n.ts — the BOARD hero rewrites the
+  // pitch as a literal ticket. The rest of the page's copy stays
+  // sourced from i18n.ts.
+  const copy = isHe
+    ? {
+        eyebrow: 'גליון 01 · בלי תשלום מראש',
+        titleA: 'בונה לך',
+        titleB: 'POC',
+        titleC: 'על חשבוני.',
+        lead:
+          'תכתוב לי בכמה שורות מה אתה רוצה לבנות. תוך שבוע יש לך POC עובד ביד. אהבת? יאללה ממשיכים. לא אהבת? נפרדים בלי שאלות, בלי תשלום, בלי בולשיט.',
+        ticketNum: '#BAR-001',
+        ticketStatus: t.board.status.doing,
+        ticketTitle: 'הפרויקט הבא שלך',
+        ticketSub: 'מוכן להפוך לקוד',
+        checks: [
+          'תיאור — מה אתה רוצה לבנות, ב־3 שורות',
+          'POC — שבוע על חשבוני, קוד אמיתי שרץ',
+          'החלטה — רק אם זה עובד לך, ממשיכים',
+        ],
+        ctaPrimary: '✦ פתח את הכרטיס שלך',
+        ctaSecondary: 'או תראה מה אני בונה',
+        scrollHint: 'גלילה',
+      }
+    : {
+        eyebrow: 'Issue 01 · No upfront cost',
+        titleA: 'I build you',
+        titleB: 'a POC',
+        titleC: 'on my dime.',
+        lead:
+          'Tell me in a few lines what you want built. A week later you have a working POC in your hands. Loved it? Let’s keep going. Didn’t? We part ways — no questions, no invoice, no BS.',
+        ticketNum: '#BAR-001',
+        ticketStatus: t.board.status.doing,
+        ticketTitle: 'Your next project',
+        ticketSub: 'Ready to become code',
+        checks: [
+          'Describe — what you want built, in 3 lines',
+          'POC — one week on me, real code that runs',
+          'Decide — keep going only if it works for you',
+        ],
+        ctaPrimary: '✦ Open your ticket',
+        ctaSecondary: 'Or see what I’ve built',
+        scrollHint: 'scroll',
+      };
 
   return (
     <section
@@ -121,63 +86,82 @@ export default function Cover() {
       aria-labelledby="cover-headline"
       ref={rootRef}
     >
-      <p className="mp-hero__eyebrow" data-anim-target="eyebrow">
-        {cover.issueLine}
+      <p className="mp-hero__eyebrow">
+        {copy.eyebrow}
       </p>
 
-      {/* The three sticker beats below ARE the visible H1; this
-          element exists for screen readers / search engines only. */}
-      <h1 id="cover-headline" className="visually-hidden">
-        {cover.headlineLines.join(' ')}
+      <h1
+        id="cover-headline"
+        className="mp-hero__title"
+             >
+        {copy.titleA}{' '}
+        <span className="mp-hero__title-accent">{copy.titleB}</span>{' '}
+        {copy.titleC}
       </h1>
 
-      <ol className="mp-hero__stack" aria-hidden="true">
-        {beats.map((b, i) => (
-          <li key={i} className={`mp-hero__row mp-hero__row--${i + 1}`}>
-            <article
-              className={`mp-card mp-hero__beat mp-hero__beat--${i + 1}`}
-              data-anim-target={`beat-${i + 1}`}
-            >
-              <span className="mp-hero__verb">{b.verb}</span>
-              <span
-                className={`mp-status ${b.cls}`}
-                ref={i === 1 ? doingPillRef : undefined}
-                data-alive={i === 1 ? (pulseAlive ? 'true' : 'false') : undefined}
-              >
-                {b.status}
-              </span>
-            </article>
-          </li>
-        ))}
-      </ol>
+      <p className="mp-hero__lead">
+        {copy.lead}
+      </p>
 
-      <div className="mp-hero__ctas">
+      <article
+        className="mp-card mp-hero__ticket"
+       
+        aria-label={`${copy.ticketNum} ${copy.ticketTitle}`}
+      >
+        <header className="mp-hero__ticket-head">
+          <span className="mp-hero__ticket-num">{copy.ticketNum}</span>
+          <span
+            className="mp-status mp-status--doing mp-status--inline"
+            ref={pillRef}
+            data-alive={pulseAlive ? 'true' : 'false'}
+          >
+            ● {copy.ticketStatus}
+          </span>
+        </header>
+
+        <div className="mp-hero__ticket-body">
+          <h2 className="mp-hero__ticket-title">{copy.ticketTitle}</h2>
+          <p className="mp-hero__ticket-sub">{copy.ticketSub}</p>
+        </div>
+
+        <ul className="mp-hero__checks">
+          {copy.checks.map((c, i) => (
+            <li
+              key={i}
+              className="mp-hero__check"
+             
+            >
+              <span className="mp-hero__check-box" aria-hidden="true">✓</span>
+              <span className="mp-hero__check-text">{c}</span>
+            </li>
+          ))}
+        </ul>
+
         <a
-          className="mp-cta mp-cta--primary"
+          className="mp-cta mp-cta--primary mp-cta--block mp-hero__ticket-cta"
           href={`#${INTAKE_ID}`}
-          data-anim-target="cta"
         >
-          ✦ {cover.ctaStart}
+          {copy.ctaPrimary} <span className="mp-arrow" aria-hidden="true">→</span>
         </a>
+      </article>
+
+      <div className="mp-hero__secondary">
         <a
-          className="mp-cta mp-cta--secondary"
+          className="mp-hero__secondary-link"
           href="#contents"
-          data-anim-target="cta"
+         
         >
-          {cover.ctaBrowse} ↓
+          {copy.ctaSecondary} ↓
         </a>
       </div>
-
-      <p className="mp-hero__standfirst" data-anim-target="standfirst">
-        {cover.standfirst}
-      </p>
 
       <a
         className="mp-hero__scroll-cue"
         href="#contents"
-        data-anim-target="scroll-cue"
+       
+        aria-label={copy.scrollHint}
       >
-        {cover.scrollHint}
+        {copy.scrollHint}
       </a>
     </section>
   );

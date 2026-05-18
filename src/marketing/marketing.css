@@ -566,19 +566,19 @@ html.dark .mp-root {
 }
 
 /* ---------------------------------------------------------------
-   10. Hero (Cover) — 2-row offset stack
+   10. Hero (Cover) — one focal ticket card with a real promise H1.
    --------------------------------------------------------------- */
 
 .mp-hero {
   position: relative;
   min-block-size: 100svh;
-  padding-inline: 16px;
-  padding-block-start: clamp(24px, 6vw, 48px);
-  padding-block-end: clamp(32px, 8vw, 64px);
+  padding-inline: clamp(16px, 4vw, 24px);
+  padding-block-start: clamp(20px, 5vw, 36px);
+  padding-block-end: clamp(48px, 10vw, 72px);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: clamp(20px, 5vw, 32px);
+  gap: clamp(14px, 3.5vw, 22px);
   max-inline-size: 720px;
   margin-inline: auto;
 }
@@ -586,100 +586,183 @@ html.dark .mp-root {
 .mp-hero__eyebrow {
   font-family: var(--mp-font-display);
   font-weight: 700;
-  font-size: .82rem;
-  letter-spacing: 0.12em;
+  font-size: .78rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--mp-ink-soft);
+  color: var(--mp-primary);
+  margin: 0;
 }
 [lang="he"] .mp-hero__eyebrow { letter-spacing: 0; text-transform: none; }
 
 .mp-hero__title {
-  font-size: clamp(1.7rem, 7vw, 3rem);
-  margin-block-end: 4px;
+  font-size: clamp(2rem, 8.5vw, 3.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  margin: 0;
+  /* tighten the optical block so the title reads as one statement */
+  text-wrap: balance;
+}
+.mp-hero__title-accent {
+  color: var(--mp-primary);
+  position: relative;
+  display: inline-block;
+}
+.mp-hero__title-accent::after {
+  /* Marker underline under the accent word — uses the same sticker
+     shadow vocabulary so it feels in-system rather than decorative. */
+  content: '';
+  position: absolute;
+  inset-inline-start: -4px;
+  inset-inline-end: -4px;
+  inset-block-end: 4px;
+  block-size: 12px;
+  background: var(--mp-accent-2);
+  opacity: .55;
+  z-index: -1;
+  border-radius: 2px;
+  transform: skewX(-6deg);
 }
 
-.mp-hero__stack {
-  list-style: none;
+.mp-hero__lead {
+  font-size: clamp(.98rem, 2.4vw, 1.12rem);
+  line-height: 1.55;
+  color: var(--mp-ink-soft);
+  max-inline-size: 56ch;
+  margin: 0;
+}
+
+/* The focal ticket — this IS the hero. */
+.mp-hero__ticket {
+  position: relative;
   padding: 0;
+  background: var(--mp-surface);
+  overflow: hidden;
+  transform: rotate(-0.5deg);
+}
+
+.mp-hero__ticket-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 16px;
+  background: color-mix(in oklch, var(--mp-ink) 7%, var(--mp-surface));
+  border-block-end: 2px solid var(--mp-ink);
+  font-family: var(--mp-font-display);
+}
+.mp-hero__ticket-num {
+  font-weight: 800;
+  font-size: .82rem;
+  letter-spacing: 0.04em;
+  color: var(--mp-ink-soft);
+}
+
+.mp-hero__ticket-body {
+  padding: 16px 18px 4px;
+}
+.mp-hero__ticket-title {
+  font-family: var(--mp-font-display);
+  font-weight: 900;
+  font-size: clamp(1.25rem, 4vw, 1.55rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0 0 4px;
+}
+.mp-hero__ticket-sub {
+  font-size: .9rem;
+  color: var(--mp-ink-soft);
+  margin: 0;
+}
+
+.mp-hero__checks {
+  list-style: none;
+  padding: 12px 18px;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: clamp(10px, 2.5vw, 14px);
+  gap: 8px;
 }
-
-.mp-hero__row {
-  display: flex;
+.mp-hero__check {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  align-items: start;
+  gap: 10px;
+  padding-block: 4px;
+  font-size: .95rem;
+  line-height: 1.4;
 }
-.mp-hero__row--1 { justify-content: flex-start; padding-inline-end: clamp(32px, 12vw, 64px); }
-.mp-hero__row--2 { justify-content: flex-end;   padding-inline-start: clamp(16px, 6vw, 32px); }
-.mp-hero__row--3 { justify-content: flex-start; padding-inline-end: clamp(32px, 12vw, 64px); }
-
-.mp-hero__beat {
-  position: relative;
-  inline-size: 100%;
-  max-inline-size: 380px;
-  min-block-size: clamp(96px, 20svh, 132px);
-  padding: 16px 18px 16px 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 4px;
-}
-.mp-hero__beat--1 { transform: rotate(-1deg); }
-.mp-hero__beat--2 { transform: rotate(1deg);  background: var(--mp-bg-2); }
-.mp-hero__beat--3 { transform: rotate(-0.5deg); }
-
-.mp-hero__verb {
+.mp-hero__check-box {
+  inline-size: 22px;
+  block-size: 22px;
+  border: 2px solid var(--mp-ink);
+  border-radius: 5px;
+  background: var(--mp-accent-3);
+  color: var(--mp-accent-3-ink);
   font-family: var(--mp-font-display);
   font-weight: 900;
-  font-size: clamp(1.6rem, 6vw, 2.4rem);
-  letter-spacing: -0.02em;
+  font-size: .85rem;
   line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-block-start: 1px;
 }
-.mp-hero__beat-tag {
-  font-size: .82rem;
-  color: var(--mp-ink-soft);
-  line-height: 1.3;
-  margin-inline-end: 60px; /* clear the absolute status pill */
+.mp-hero__check-text {
+  color: var(--mp-ink);
 }
 
-.mp-hero__ctas {
+.mp-hero__ticket-cta {
+  margin: 6px 14px 14px;
+  inline-size: calc(100% - 28px);
+  font-size: 1rem;
+}
+
+.mp-hero__secondary {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  justify-content: center;
+  padding-block-start: 4px;
 }
-@media (min-width: 480px) {
-  .mp-hero__ctas { flex-direction: row; flex-wrap: wrap; }
-  .mp-hero__ctas .mp-cta { flex: 1 1 0; min-inline-size: 200px; }
+.mp-root a.mp-hero__secondary-link,
+.mp-hero__secondary-link {
+  font-family: var(--mp-font-display);
+  font-weight: 700;
+  font-size: .92rem;
+  color: var(--mp-ink-soft);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+  text-decoration-color: color-mix(in oklch, var(--mp-ink-soft) 50%, transparent);
+  padding: 8px 12px;
+  min-block-size: 44px;
+  display: inline-flex;
+  align-items: center;
 }
-
-.mp-hero__standfirst {
-  display: none;
-}
-@media (min-width: 720px) {
-  .mp-hero__standfirst {
-    display: block;
-    color: var(--mp-ink-soft);
-    font-size: 1.05rem;
-    max-inline-size: 56ch;
-  }
+.mp-root a.mp-hero__secondary-link:hover,
+.mp-root a.mp-hero__secondary-link:focus-visible {
+  color: var(--mp-primary);
+  text-decoration-color: var(--mp-primary);
 }
 
 .mp-hero__scroll-cue {
   position: absolute;
-  inset-block-end: 16px;
+  inset-block-end: 14px;
   inset-inline-start: 50%;
   transform: translateX(-50%);
   font-family: var(--mp-font-display);
   font-weight: 700;
-  font-size: .8rem;
+  font-size: .72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--mp-ink-soft);
   text-decoration: none;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
+  opacity: .8;
 }
+[lang="he"] .mp-hero__scroll-cue { letter-spacing: 0; text-transform: none; }
 .mp-hero__scroll-cue::after {
   content: '↓';
   font-size: 1rem;
@@ -693,12 +776,14 @@ html.dark .mp-root {
   .mp-hero__scroll-cue::after { animation: none; }
 }
 
-/* Entrance state — GSAP picks these up and clears them */
-.mp-hero[data-anim="ready"] .mp-hero__beat,
-.mp-hero[data-anim="ready"] .mp-hero__ctas .mp-cta,
-.mp-hero[data-anim="ready"] .mp-hero__title,
-.mp-hero[data-anim="ready"] .mp-hero__eyebrow {
-  opacity: 0;
+@media (min-width: 720px) {
+  .mp-hero {
+    gap: clamp(18px, 3vw, 26px);
+  }
+  .mp-hero__ticket {
+    max-inline-size: 560px;
+    align-self: flex-start;
+  }
 }
 
 /* ---------------------------------------------------------------
@@ -811,6 +896,14 @@ html.dark .mp-root {
 }
 .mp-toc__cta-arrow { display: none; }
 [dir="rtl"] .mp-toc__cta { transform: scaleX(-1); }
+
+.mp-arrow {
+  display: inline-block;
+  line-height: 1;
+}
+[dir="rtl"] .mp-arrow {
+  transform: scaleX(-1);
+}
 
 @media (min-width: 720px) {
   .mp-toc {
