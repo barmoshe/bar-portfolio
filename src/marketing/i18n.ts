@@ -308,10 +308,10 @@ const HE: Dict = {
       },
       {
         slug: 'ai-video',
-        title: 'מכונה שמייצרת לך וידאו (AI)',
+        title: 'סטודיו יצירתי מבוסס AI',
         summary:
-          'מטקסט → סצנות → וידאו מוכן, הכל אוטומטי. לסרטוני הסבר בכמויות, פודקאסט מאויר, או תוכן יומי לרשתות.',
-        fits: ['יוצר.ת תוכן', 'סוכנות שיווק', 'מותג עם סדרה / פודקאסט'],
+          'כלים לגרפיקה, תמונות, סרטונים ומחקר ויזואלי - מטקסט לתוצר. גנרציית נכסים בכמויות, חקר סגנון, או צינור הפקה לסדרת תוכן שלמה.',
+        fits: ['יוצר.ת תוכן', 'סוכנות שיווק', 'מותג עם סדרה / פודקאסט', 'סטודיו יצירתי'],
       },
       {
         slug: 'audio',
@@ -630,30 +630,30 @@ const HE: Dict = {
         },
         'ai-video': {
           idea: {
-            prompt: 'איזה תוכן וידאו אתה רוצה שייוצר אוטומטית? איך הוא מתחיל ומה יוצא בסוף?',
-            hint: 'מקור → טרנספורם → פלט. שורה לכל אחד.',
+            prompt: 'איזה תוכן ויזואלי אתה רוצה שייוצר אוטומטית? איך הוא מתחיל ומה יוצא בסוף?',
+            hint: 'מקור ← טרנספורם ← פלט. שורה לכל אחד.',
             placeholder:
-              'כותרת חדשות יומית → סרטון אנכי של 30 שניות עם הקראה סינתטית + b-roll, מתפרסם בטיקטוק ב-8 בבוקר.',
+              'כותרת חדשות יומית ← גרפיקת רשת או סרטון אנכי קצר עם הקראה ו-b-roll, מתפרסם בבוקר.',
           },
           whyNow: {
             prompt: 'למה לאוטומט עכשיו - מכסת תוכן, צוות חסר, פלטפורמה חדשה?',
-            placeholder: 'הבטחנו 5 שורטים בשבוע לספונסר והעורך שלנו מצליח רק שניים.',
+            placeholder: 'הבטחנו עשרות נכסים בשבוע לספונסר והצוות שלנו לא מספיק.',
           },
           audience: {
-            prompt: 'מי צופה בפלט? גודל קהל, פלטפורמה, אורך קשב?',
-            placeholder: 'TikTok / Reels, גילאי 16-30, 30 שניות מקסימום.',
+            prompt: 'מי צופה או משתמש בפלט? פלטפורמה, אורך קשב, הקשר?',
+            placeholder: 'רשתות חברתיות, גילאי 16-30, פורמט קצר.',
           },
           problem: {
             prompt: 'מה העלות של ייצור ידני היום?',
-            placeholder: 'עורך אחד, 4 שעות לסרטון, 7 בשבוע = משרה מלאה.',
+            placeholder: 'מעצב אחד, שעות לכל נכס, עשרות בשבוע = משרה מלאה.',
           },
           references: {
-            prompt: 'מערכות אוטו-וידאו או סגנונות שאתה אוהב?',
-            placeholder: 'כמו Opus Clip אבל לסקריפטים מקוריים, לא רק לעיבוד מחדש.',
+            prompt: 'כלים, ספריות או סגנונות יצירתיים שאתה אוהב?',
+            placeholder: 'קישור או דוגמה - הסגנון שאתה רוצה לכוון אליו.',
           },
-          timeline: { prompt: 'מתי הצנרת צריכה לייצר?' },
+          timeline: { prompt: 'מתי הצנרת צריכה להתחיל לייצר?' },
           howHeard: { prompt: 'איך הגעת אליי?' },
-          review: { prompt: 'זה הבריף לצנרת הוידאו. לשלוח?' },
+          review: { prompt: 'זה הבריף ליצירת התוכן. לשלוח?' },
         },
         audio: {
           idea: {
@@ -713,7 +713,7 @@ const HE: Dict = {
         realtime: {
           idea: {
             prompt: 'איזה דשבורד או מערכת בזמן אמת? אילו נתונים זורמים פנימה וכל כמה זמן?',
-            hint: 'מקור → דשבורד → מי פועל לפי זה.',
+            hint: 'מקור ← דשבורד ← מי פועל לפי זה.',
             placeholder:
               'דשבורד חי של תחנות ליקוט במחסן: תחנות, הזמנות נוכחיות, ליקוטים, התרעות כשתחנה רגועה יותר מ-5 דקות.',
           },
@@ -927,10 +927,10 @@ const EN: Dict = {
       },
       {
         slug: 'ai-video',
-        title: 'AI video render pipeline',
+        title: 'AI creative & visual toolkit',
         summary:
-          'A system that turns text → scenes → rendered video automatically. Right for explainer videos at scale, an illustrated podcast, or daily content for socials.',
-        fits: ['Content creator', 'Marketing agency', 'Brand with a series / podcast'],
+          'Tools for graphics, images, video, and visual research - text to finished asset. Asset generation at scale, style exploration, or a full production pipeline for an ongoing content series.',
+        fits: ['Content creator', 'Marketing agency', 'Brand with a series / podcast', 'Creative studio'],
       },
       {
         slug: 'audio',
@@ -1251,30 +1251,30 @@ const EN: Dict = {
         },
         'ai-video': {
           idea: {
-            prompt: 'What video content do you want produced automatically? How does it start and what comes out?',
+            prompt: 'What visual content do you want produced automatically? How does it start and what comes out?',
             hint: 'Source → transform → output. One line each.',
             placeholder:
-              'Daily news headline → 30-second vertical with synthetic VO + b-roll, posted to TikTok at 8am.',
+              'Daily news headline → a social graphic or short vertical with VO + b-roll, posted each morning.',
           },
           whyNow: {
             prompt: 'Why automate now - content quota, headcount, new platform?',
-            placeholder: 'We promised 5 shorts/week to a sponsor and our editor can do two.',
+            placeholder: 'We promised dozens of assets a week to a sponsor and our team can\'t keep up.',
           },
           audience: {
-            prompt: 'Who watches the output? Audience size, platform, attention span?',
-            placeholder: 'TikTok / Reels, 16–30, 30 seconds max.',
+            prompt: 'Who sees or uses the output? Platform, attention span, context?',
+            placeholder: 'Social, 16-30, short format.',
           },
           problem: {
             prompt: 'What’s the cost of doing it manually today?',
-            placeholder: 'One editor, 4 hours per video, 7 a week - that’s a full-time hire.',
+            placeholder: 'One designer, hours per asset, dozens a week - that’s a full-time hire.',
           },
           references: {
-            prompt: 'Any auto-video systems or styles you like?',
-            placeholder: 'Like Opus Clip but for original scripts, not repurposing.',
+            prompt: 'Tools, libraries, or creative styles you like?',
+            placeholder: 'A link or example - the style you’re aiming for.',
           },
-          timeline: { prompt: 'When does the pipeline need to be producing?' },
+          timeline: { prompt: 'When does the pipeline need to start producing?' },
           howHeard: { prompt: 'How did you find me?' },
-          review: { prompt: 'This is the video brief. Send?' },
+          review: { prompt: 'This is the creative brief. Send?' },
         },
         audio: {
           idea: {
