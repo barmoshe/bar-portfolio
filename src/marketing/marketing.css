@@ -1,5 +1,5 @@
 /* =============================================================
-   Marketing page — "לוח / BOARD" direction
+   Marketing page - "לוח / BOARD" direction
    ----------------------------------------------------------------
    Mobile-first kanban-as-narrative redesign. Every visible block
    is a sticker-card with a status pill (TODO/DOING/DONE). Sections
@@ -22,20 +22,20 @@
    --------------------------------------------------------------- */
 
 .mp-root {
-  /* color — refined palette: softer paper, cooler ink, jewel-tone accents.
+  /* color - refined palette: softer paper, cooler ink, jewel-tone accents.
      Same semantic roles as before (magenta=TODO, amber=DOING, teal=DONE)
      but tuned for cohesion and AA contrast across all surface pairings. */
   --mp-bg:          oklch(0.965 0.018 85);   /* off-white paper, hint of warmth */
   --mp-bg-2:        oklch(0.945 0.022 85);   /* tinted card for the DOING beat */
   --mp-surface:     oklch(0.995 0.005 85);   /* cleanest white for card faces */
-  --mp-ink:         oklch(0.20 0.03 265);    /* deep blue-graphite — cooler */
+  --mp-ink:         oklch(0.20 0.03 265);    /* deep blue-graphite - cooler */
   --mp-ink-soft:    oklch(0.42 0.04 265);    /* secondary text */
 
-  --mp-primary:     oklch(0.52 0.20 350);    /* raspberry-magenta — TODO */
+  --mp-primary:     oklch(0.52 0.20 350);    /* raspberry-magenta - TODO */
   --mp-primary-ink: oklch(0.99 0.015 350);
-  --mp-accent-2:    oklch(0.74 0.15 55);     /* warm amber — DOING */
+  --mp-accent-2:    oklch(0.74 0.15 55);     /* warm amber - DOING */
   --mp-accent-2-ink:oklch(0.20 0.03 265);
-  --mp-accent-3:    oklch(0.48 0.13 215);    /* deep teal-cobalt — DONE */
+  --mp-accent-3:    oklch(0.48 0.13 215);    /* deep teal-cobalt - DONE */
   --mp-accent-3-ink:oklch(0.99 0.015 215);
 
   --mp-whatsapp:    oklch(0.48 0.15 150);    /* slightly deeper, more refined */
@@ -202,7 +202,7 @@ html.dark .mp-root {
 .mp-h__title { display: block; }
 
 /* ---------------------------------------------------------------
-   5. The sticker card — the primitive that carries everything
+   5. The sticker card - the primitive that carries everything
    --------------------------------------------------------------- */
 
 .mp-card {
@@ -217,7 +217,7 @@ html.dark .mp-root {
   text-align: start;
 }
 
-/* No :hover-only — focus-within + data-pressed mirror it for touch */
+/* No :hover-only - focus-within + data-pressed mirror it for touch */
 .mp-card:where(:hover, :focus-within, [data-pressed="true"]) {
   transform: translate(2px, -3px);
   box-shadow: var(--mp-shadow-pop);
@@ -267,13 +267,13 @@ html.dark .mp-root {
 .mp-status--closed   { background: var(--mp-surface);  color: var(--mp-ink); }
 .mp-status--building { background: var(--mp-surface);  color: var(--mp-ink); }
 
-/* Inline variant — flows in document order rather than absolute corner */
+/* Inline variant - flows in document order rather than absolute corner */
 .mp-status--inline {
   position: static;
   display: inline-flex;
 }
 
-/* DOING glow — box-shadow + opacity only, no `filter` (mobile-cheap).
+/* DOING glow - box-shadow + opacity only, no `filter` (mobile-cheap).
    Driven by data-alive, which the section's IntersectionObserver
    toggles so off-screen pulses stop. Cap: 1 concurrent on the page. */
 .mp-status--doing[data-alive="true"] {
@@ -293,7 +293,7 @@ html.dark .mp-root {
 .mp-column .mp-status--doing[data-alive="true"] { animation-duration: 2.2s; }
 
 /* ---------------------------------------------------------------
-   7. Column wrapper — tinted ribbon down the start-edge
+   7. Column wrapper - tinted ribbon down the start-edge
    --------------------------------------------------------------- */
 
 .mp-column {
@@ -339,7 +339,7 @@ html.dark .mp-root {
 }
 
 /* ---------------------------------------------------------------
-   8. CTAs — primary (WhatsApp green) + secondary (ink with pop)
+   8. CTAs - primary (WhatsApp green) + secondary (ink with pop)
    --------------------------------------------------------------- */
 
 .mp-root a.mp-cta,
@@ -451,7 +451,7 @@ html.dark .mp-root {
   font-size: .7rem;
   color: var(--mp-ink-soft);
   line-height: 1.15;
-  /* Hidden on the tightest phones — header reads cleaner with just the name. */
+  /* Hidden on the tightest phones - header reads cleaner with just the name. */
   display: none;
 }
 @media (min-width: 480px) {
@@ -572,7 +572,7 @@ html.dark .mp-root {
 }
 
 /* ---------------------------------------------------------------
-   10. Hero (Cover) — one focal ticket card with a real promise H1.
+   10. Hero (Cover) - one focal ticket card with a real promise H1.
    --------------------------------------------------------------- */
 
 .mp-hero {
@@ -614,7 +614,7 @@ html.dark .mp-root {
   display: inline-block;
 }
 .mp-hero__title-accent::after {
-  /* Marker underline under the accent word — uses the same sticker
+  /* Marker underline under the accent word - uses the same sticker
      shadow vocabulary so it feels in-system rather than decorative. */
   content: '';
   position: absolute;
@@ -637,7 +637,7 @@ html.dark .mp-root {
   margin: 0;
 }
 
-/* The focal ticket — this IS the hero. */
+/* The focal ticket - this IS the hero. */
 .mp-hero__ticket {
   position: relative;
   padding: 0;
@@ -825,7 +825,7 @@ html.dark .mp-root {
 }
 
 /* ---------------------------------------------------------------
-   11. ProjectTemplates — BACKLOG column with ticket cards
+   11. ProjectTemplates - BACKLOG column with ticket cards
    --------------------------------------------------------------- */
 
 .mp-toc {
@@ -957,7 +957,7 @@ html.dark .mp-root {
 }
 
 /* ---------------------------------------------------------------
-   12. Process — sticky vertical step-rail, pill morphs on scroll
+   12. Process - sticky vertical step-rail, pill morphs on scroll
    --------------------------------------------------------------- */
 
 .mp-method {
@@ -1074,7 +1074,7 @@ html.dark .mp-root {
 }
 
 /* ---------------------------------------------------------------
-   13. About — bio ticket + 3 stat sub-tickets
+   13. About - bio ticket + 3 stat sub-tickets
    --------------------------------------------------------------- */
 
 .mp-about__body {
@@ -1147,7 +1147,7 @@ html.dark .mp-root {
 }
 
 /* ---------------------------------------------------------------
-   14. Intake — the LIVE TICKET (climax)
+   14. Intake - the LIVE TICKET (climax)
    --------------------------------------------------------------- */
 
 .mp-quest {
@@ -1210,7 +1210,7 @@ html.dark .mp-root {
   font-family: var(--mp-font-display);
   font-weight: 700;
   font-size: .76rem;
-  /* Hidden by default — too tight to read at 5-col mobile width.
+  /* Hidden by default - too tight to read at 5-col mobile width.
      The active chapter's name lives in the card header below. */
   display: none;
 }
@@ -1221,7 +1221,7 @@ html.dark .mp-root {
   .mp-quest__chapter-name { display: block; }
 }
 
-/* Board layout — ticket + brief sidebar */
+/* Board layout - ticket + brief sidebar */
 .mp-quest__board {
   display: flex;
   flex-direction: column;
@@ -1298,7 +1298,7 @@ html.dark .mp-root {
 
 .mp-quest__control { margin: 4px 0; }
 
-/* Sticker-press inputs — the tactile DNA */
+/* Sticker-press inputs - the tactile DNA */
 .mp-quest__input,
 .mp-quest__textarea {
   inline-size: 100%;
@@ -1486,7 +1486,7 @@ html.dark .mp-root {
   .mp-quest__primary:hover, .mp-quest__primary:focus-visible { transform: none; }
 }
 
-/* Long-press SEND — progress ring */
+/* Long-press SEND - progress ring */
 .mp-quest__send {
   display: flex;
   flex-direction: column;
@@ -1545,7 +1545,7 @@ html.dark .mp-root {
   text-align: center;
 }
 
-/* Review pre block — wrap nicely */
+/* Review pre block - wrap nicely */
 .mp-quest__review { display: flex; flex-direction: column; gap: 12px; }
 .mp-quest__review-intro { margin: 0; font-size: .95rem; color: var(--mp-ink-soft); }
 .mp-quest__brief-out {
@@ -1571,7 +1571,7 @@ html.dark .mp-root {
 }
 .mp-quest__review-edit-list .mp-quest__nav-btn { flex: 0 0 auto; }
 
-/* Brief sidebar / letter — sticky <details> on mobile, sidebar ≥820px */
+/* Brief sidebar / letter - sticky <details> on mobile, sidebar ≥820px */
 .mp-quest__letter {
   background: var(--mp-surface);
   border: 2.5px solid var(--mp-ink);
@@ -1681,7 +1681,7 @@ html.dark .mp-root {
 }
 
 /* ---------------------------------------------------------------
-   15. FAQ — question sticker cards
+   15. FAQ - question sticker cards
    --------------------------------------------------------------- */
 
 .mp-qa-list {
@@ -1758,7 +1758,7 @@ html.dark .mp-root {
 }
 
 /* ---------------------------------------------------------------
-   16. ContactCTA — the DONE slam
+   16. ContactCTA - the DONE slam
    --------------------------------------------------------------- */
 
 .mp-final {
@@ -1872,7 +1872,7 @@ html.dark .mp-root {
 }
 
 /* ---------------------------------------------------------------
-   18. Accessibility panel — overrides so the shared portfolio panel
+   18. Accessibility panel - overrides so the shared portfolio panel
    wears the BOARD aesthetic when opened from the marketing route.
    The panel markup lives in src/components/AccessibilityPanel.tsx
    and reuses portfolio classes; we re-skin those classes here.

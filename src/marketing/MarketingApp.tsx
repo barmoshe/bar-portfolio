@@ -12,14 +12,14 @@ import ContactCTA from './sections/ContactCTA';
 import { useReveal } from './hooks/useReveal';
 
 /**
- * Marketing entry — "לוח / BOARD" direction. Every visible block is
+ * Marketing entry - "לוח / BOARD" direction. Every visible block is
  * a sticker-card with a status pill. Sections are kanban columns.
  *
  * Mobile-first: layout decisions in marketing.css favor portrait phones
  * first, then translate up.
  *
  * The only scroll-related animation on this page is the section reveal
- * wired up by `useReveal` — sections fade + translate up once on entry.
+ * wired up by `useReveal` - sections fade + translate up once on entry.
  *
  * Locked: theme system (`useTheme.ts` + `.ink-wipe`), pre-paint script
  * in `business/index.html`, copy in `i18n.ts` (existing strings),

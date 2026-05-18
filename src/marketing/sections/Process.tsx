@@ -1,7 +1,7 @@
 import { useLang } from '../LangContext';
 
 /**
- * Process — three step cards stacked vertically. Status pills are
+ * Process - three step cards stacked vertically. Status pills are
  * static (Step 1 = DONE, Step 2 = DOING, Step 3 = TODO), painting a
  * project mid-flight using all three kanban states.
  */
@@ -64,7 +64,7 @@ export default function Process() {
 
       <figure className="mp-pull">
         <blockquote>{method.pullQuote.quote}</blockquote>
-        <figcaption>— {method.pullQuote.cite}</figcaption>
+        <figcaption>- {method.pullQuote.cite}</figcaption>
       </figure>
     </section>
   );

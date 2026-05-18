@@ -4,7 +4,7 @@ import { gsap, FULL_MOTION_QUERY } from '../../lib/gsap';
 type Props = {
   children: ReactNode;
   href: string;
-  /** Optional onClick — called before the bloom transition fires. */
+  /** Optional onClick - called before the bloom transition fires. */
   onActivate?: () => void;
   /**
    * Element id to scroll to after the bloom wash completes.
@@ -26,7 +26,7 @@ type Props = {
  * from the tap point and the page scrolls to the target. Reduces
  * to a plain instant scroll under prefers-reduced-motion.
  *
- * Designed for *touch first* — no hover-only behavior; press
+ * Designed for *touch first* - no hover-only behavior; press
  * feedback uses CSS :active scale; bloom plays on both tap and
  * keyboard activation (clientX/Y come from the bounding rect
  * centre when keyboard-triggered).

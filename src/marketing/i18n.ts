@@ -50,9 +50,9 @@ export type Dict = {
     standfirst: string;
     byline: string;
     scrollHint: string;
-    /** Primary hero CTA label — "start a build" */
+    /** Primary hero CTA label - "start a build" */
     ctaStart: string;
-    /** Secondary hero text link — "see what I build" */
+    /** Secondary hero text link - "see what I build" */
     ctaBrowse: string;
   };
   contents: {
@@ -211,7 +211,7 @@ export type Dict = {
   };
   /**
    * BOARD-direction microcopy. Status pills, column headers, and the
-   * sticky brief mini-ticket. Additive — not consumed by older sections,
+   * sticky brief mini-ticket. Additive - not consumed by older sections,
    * referenced by the redesigned chrome only.
    */
   board: {
@@ -240,7 +240,7 @@ export type Dict = {
 
 const HE: Dict = {
   meta: {
-    title: 'בר משה — תאר. אבנה. תחליט.',
+    title: 'בר משה - תאר. אבנה. תחליט.',
     description:
       'בונה לך POC על חשבוני לפני שמדברים בכלל על מחיר. עבד לך? יאללה ממשיכים. לא? כל אחד הולך לדרכו, בלי שום התחייבות.',
   },
@@ -261,11 +261,11 @@ const HE: Dict = {
   },
   cover: {
     issueLine: 'גליון 01 · בונה קודם, מדבר אחר־כך',
-    // The cover headline is the manifesto. Three short imperatives —
+    // The cover headline is the manifesto. Three short imperatives -
     // direct, punchy, matches the HTML title.
     headlineLines: ['תאר.', 'אבנה.', 'תחליט.'],
     standfirst:
-      'תפסיק עם הבריפים האינסופיים. תכתוב לי בכמה שורות מה אתה רוצה לבנות, ובתוך שבוע אני שולח לך POC אמיתי — על חשבוני. אהבת? יאללה ממשיכים. לא אהבת? נפרדים בלי שאלות.',
+      'תפסיק עם הבריפים האינסופיים. תכתוב לי בכמה שורות מה אתה רוצה לבנות, ובתוך שבוע אני שולח לך POC אמיתי - על חשבוני. אהבת? יאללה ממשיכים. לא אהבת? נפרדים בלי שאלות.',
     byline: 'בר משה · בונה דברים מאז 2020',
     scrollHint: 'גלילה למטה',
     ctaStart: 'בוא נתחיל',
@@ -276,7 +276,7 @@ const HE: Dict = {
     kicker: 'התוכן',
     title: 'אז מה בונים?',
     standfirst:
-      'אלה הדברים שהכי מבקשים ממני לבנות. תבחר אחד — והטופס למטה ייפתח עם השדה הנכון כבר מסומן. משהו אחר לגמרי? יש גם "אחר".',
+      'אלה הדברים שהכי מבקשים ממני לבנות. תבחר אחד - והטופס למטה ייפתח עם השדה הנכון כבר מסומן. משהו אחר לגמרי? יש גם "אחר".',
     items: [
       {
         slug: 'mvp',
@@ -289,21 +289,21 @@ const HE: Dict = {
         slug: 'brand',
         title: 'אתר שזוכרים',
         summary:
-          'לא עוד תבנית. אנימציות, פלטה משלך, אינטראקציות שנשארות בראש. בערך כמו האתר הזה — רק שלך.',
+          'לא עוד תבנית. אנימציות, פלטה משלך, אינטראקציות שנשארות בראש. בערך כמו האתר הזה - רק שלך.',
         fits: ['מותג חדש', 'פרילנס עם זהות', 'סטודיו'],
       },
       {
         slug: 'ecommerce',
         title: 'חנות אונליין שזה לא תבנית',
         summary:
-          'שופיפיי שעוצב מאפס, מערכת תשלומים משלך, או חנות־בוטיק שלמה בקוד. למותג עם אופי — לא לעוד קטלוג גנרי.',
+          'שופיפיי שעוצב מאפס, מערכת תשלומים משלך, או חנות־בוטיק שלמה בקוד. למותג עם אופי - לא לעוד קטלוג גנרי.',
         fits: ['מותג קטן', 'יצירה עצמאית', 'חנות־בוטיק'],
       },
       {
         slug: 'ai-agent',
         title: 'סוכן AI שעובד בשבילך',
         summary:
-          'צ׳אט ללקוחות, RAG על כל המסמכים שלך, או סוכן שעובר על מיילים ופשוט עושה את העבודה. מודל ענן או מודל פתוח — מה שמתאים לעסק שלך.',
+          'צ׳אט ללקוחות, RAG על כל המסמכים שלך, או סוכן שעובר על מיילים ופשוט עושה את העבודה. מודל ענן או מודל פתוח - מה שמתאים לעסק שלך.',
         fits: ['חברה', 'צוות תפעול / שירות', 'יזמ.ית AI'],
       },
       {
@@ -317,7 +317,7 @@ const HE: Dict = {
         slug: 'audio',
         title: 'הכל מסביב לסאונד אינטראקטיבי',
         summary:
-          'סינתזה, מיקסר רב־ערוצי, אפקטים בזמן אמת. כמו ה-Mixtape בפורטפוליו שלי. למוצר שהסאונד הוא חלק מהחוויה — לא רק רעש רקע.',
+          'סינתזה, מיקסר רב־ערוצי, אפקטים בזמן אמת. כמו ה-Mixtape בפורטפוליו שלי. למוצר שהסאונד הוא חלק מהחוויה - לא רק רעש רקע.',
         fits: ['אמן.ית', 'מותג מוזיקלי', 'סטארטאפ אודיו'],
       },
       {
@@ -331,7 +331,7 @@ const HE: Dict = {
         slug: 'realtime',
         title: 'דשבורד שמתעדכן בזמן אמת',
         summary:
-          'פאנל ניהול עם הרשאות, BI חי, מערכת ניטור בזמן אמת. גרפים, פילטרים, ייצוא ל-CSV. כל מה שהצוות שלך עושה היום באקסל — רק שזה עובד.',
+          'פאנל ניהול עם הרשאות, BI חי, מערכת ניטור בזמן אמת. גרפים, פילטרים, ייצוא ל-CSV. כל מה שהצוות שלך עושה היום באקסל - רק שזה עובד.',
         fits: ['חברה', 'סטארטאפ ב-scale', 'צוות נתונים / ops'],
       },
       {
@@ -345,7 +345,7 @@ const HE: Dict = {
         slug: 'other',
         title: 'משהו אחר לגמרי',
         summary:
-          'יש לך רעיון מוזר מתחום שעוד לא נגעתי בו? מצוין — הדברים הכי טובים שיצא לי לעבוד עליהם התחילו ככה. תכתוב את זה בטופס, נתחיל משם.',
+          'יש לך רעיון מוזר מתחום שעוד לא נגעתי בו? מצוין - הדברים הכי טובים שיצא לי לעבוד עליהם התחילו ככה. תכתוב את זה בטופס, נתחיל משם.',
         fits: ['כל אחד.ת'],
       },
     ],
@@ -362,7 +362,7 @@ const HE: Dict = {
         num: '01',
         title: 'תאר',
         body:
-          'בריף קצר. שלושה שדות חובה: סוג הפרויקט, הרעיון, ואיך לחזור אליך. השאר רשות. הכל נוחת אצלי בוואטסאפ — בלי שמירה בשרת, בלי "להירשם לניוזלטר", בלי בולשיט.',
+          'בריף קצר. שלושה שדות חובה: סוג הפרויקט, הרעיון, ואיך לחזור אליך. השאר רשות. הכל נוחת אצלי בוואטסאפ - בלי שמירה בשרת, בלי "להירשם לניוזלטר", בלי בולשיט.',
       },
       {
         num: '02',
@@ -378,7 +378,7 @@ const HE: Dict = {
       },
     ],
     pullQuote: {
-      quote: 'הסיכון הכי גדול הוא לא הכסף — זה הזמן שמתבזבז על הצעות שאף פעם לא הופכות לקוד.',
+      quote: 'הסיכון הכי גדול הוא לא הכסף - זה הזמן שמתבזבז על הצעות שאף פעם לא הופכות לקוד.',
       cite: 'בר משה',
     },
   },
@@ -387,9 +387,9 @@ const HE: Dict = {
     kicker: 'מי אני',
     title: 'בר משה',
     paragraphs: [
-      'מפתח מאז 2020. כל פרויקט מביא איתו אתגר אחר — וזה בדיוק מה שמשאיר את העבודה מעניינת. בזכות זה אני עדיין נהנה.',
-      'התחלתי לבנות הרבה לפני שזה הפך לפרנסה. אני מחליט מהר כי קוד שעובד קל לתקן, ובריף שלא הפך לקוד — כמעט אי אפשר. בגלל זה אני עובד POC-first: ככה אני יודע מה לבנות, ואתה רואה מה אתה מקבל — לפני שצריך להחליט משהו.',
-      'אני בישראל, עובד עם לקוחות בכל העולם — בעברית ובאנגלית. עדיף שתכתוב לי לפני שאתה רץ לכל חברות הפיתוח: אם זה לא מתאים, אגיד לך מראש. כך לא נבזבז זמן לאף אחד.',
+      'מפתח מאז 2020. כל פרויקט מביא איתו אתגר אחר - וזה בדיוק מה שמשאיר את העבודה מעניינת. בזכות זה אני עדיין נהנה.',
+      'התחלתי לבנות הרבה לפני שזה הפך לפרנסה. אני מחליט מהר כי קוד שעובד קל לתקן, ובריף שלא הפך לקוד - כמעט אי אפשר. בגלל זה אני עובד POC-first: ככה אני יודע מה לבנות, ואתה רואה מה אתה מקבל - לפני שצריך להחליט משהו.',
+      'אני בישראל, עובד עם לקוחות בכל העולם - בעברית ובאנגלית. עדיף שתכתוב לי לפני שאתה רץ לכל חברות הפיתוח: אם זה לא מתאים, אגיד לך מראש. כך לא נבזבז זמן לאף אחד.',
     ],
     stats: [
       { value: '5+', label: 'שנים בקוד' },
@@ -402,7 +402,7 @@ const HE: Dict = {
     kicker: 'תכתוב לי',
     title: 'מה הרעיון שלך?',
     standfirst:
-      'הבריף נוחת ישר אצלי בוואטסאפ, מסודר ומוכן לקריאה. כמה שיותר פירוט — POC מדויק יותר. גם שלוש שורות זה התחלה מצוינת.',
+      'הבריף נוחת ישר אצלי בוואטסאפ, מסודר ומוכן לקריאה. כמה שיותר פירוט - POC מדויק יותר. גם שלוש שורות זה התחלה מצוינת.',
     requiredHint: 'רק 3 שדות חובה: סוג, רעיון, ואיך לחזור אליך.',
     optionalHeading: 'יש לך עוד? אל תתבייש',
     fields: {
@@ -414,7 +414,7 @@ const HE: Dict = {
         label: 'הרעיון בקצרה',
         hint: 'משפט אחד או שלושה. ברור עדיף על מנומק.',
         placeholder:
-          'לדוגמה: "פלטפורמה שמחברת בין יצרני קרמיקה לחנויות עיצוב — היצרן מעלה קטלוג, החנות מזמינה ישירות, הוא משלם עמלה רק על מכירה."',
+          'לדוגמה: "פלטפורמה שמחברת בין יצרני קרמיקה לחנויות עיצוב - היצרן מעלה קטלוג, החנות מזמינה ישירות, הוא משלם עמלה רק על מכירה."',
       },
       audience: {
         label: 'מי ישתמש בזה',
@@ -436,7 +436,7 @@ const HE: Dict = {
       timeline: { label: 'מתי דרוש' },
       howHeard: {
         label: 'איך הגעת אליי',
-        placeholder: 'GitHub, חבר שסיפר, פורטפוליו, חיפוש — מה שזכור',
+        placeholder: 'GitHub, חבר שסיפר, פורטפוליו, חיפוש - מה שזכור',
       },
       name: { label: 'שם', placeholder: 'שם או כינוי' },
       contactMethod: {
@@ -467,7 +467,7 @@ const HE: Dict = {
     liveSuccess: 'נפתח וואטסאפ עם הבריף המסודר.',
     liveError: 'יש שדות חסרים. הסימונים האדומים מראים בדיוק איפה.',
     briefHeading: 'היי בר,',
-    briefFooter: '— נשלח מהבריף באתר',
+    briefFooter: '- נשלח מהבריף באתר',
     briefSections: {
       type: '*סוג הפרויקט*',
       idea: '*הרעיון*',
@@ -507,7 +507,7 @@ const HE: Dict = {
       tapToEdit: 'עריכה',
       keyboardHint: 'Enter להמשך · Esc לחזרה · Alt+S לדילוג',
       prompts: {
-        template: 'נתחיל קל — איזה סוג פרויקט יש לך בראש?',
+        template: 'נתחיל קל - איזה סוג פרויקט יש לך בראש?',
         idea: 'אז מה הרעיון? משפט-שניים מספיק. נחדד יחד.',
         name: 'איך לקרוא לך?',
         contact: 'איך הכי נוח לחזור אליך?',
@@ -532,7 +532,7 @@ const HE: Dict = {
             placeholder: 'אנחנו מציגים ל-YC בעוד 5 שבועות ורוצים דמו אמיתי, לא מצגת.',
           },
           audience: {
-            prompt: 'מי המשתמש הראשון — האדם שאם הוא יאהב, תדע שיש כיוון?',
+            prompt: 'מי המשתמש הראשון - האדם שאם הוא יאהב, תדע שיש כיוון?',
             placeholder: 'מעצבי פרודקט בני 25-40 שעובדים בערבים כפרילנסרים.',
           },
           problem: {
@@ -550,9 +550,9 @@ const HE: Dict = {
         brand: {
           idea: {
             prompt: 'איזה מותג אנחנו בונים? מה האתר צריך לגרום למבקר להרגיש בשלוש השניות הראשונות?',
-            hint: 'אם לאתר היה ז\'אנר מוזיקלי — מה הוא היה?',
+            hint: 'אם לאתר היה ז\'אנר מוזיקלי - מה הוא היה?',
             placeholder:
-              'סטודיו לקרמיקה לאספנים — שקט, איטי, כמו חדר במוזיאון שמצאת במקרה.',
+              'סטודיו לקרמיקה לאספנים - שקט, איטי, כמו חדר במוזיאון שמצאת במקרה.',
           },
           whyNow: {
             prompt: 'למה אתר חדש דווקא עכשיו? השקה, ריבריידינג, או פשוט נמאס מהקיים?',
@@ -568,7 +568,7 @@ const HE: Dict = {
           },
           references: {
             prompt: 'אתרים ששמרת? לוחות פינטרסט, קישורים, "מרגיש כמו X".',
-            placeholder: 'studio.bruno-mars, kvadrat.dk — אותה רמת איפוק.',
+            placeholder: 'studio.bruno-mars, kvadrat.dk - אותה רמת איפוק.',
           },
           timeline: { prompt: 'מתי אתה רוצה להיות באתר החדש?' },
           howHeard: { prompt: 'איך הגעת אליי?' },
@@ -609,7 +609,7 @@ const HE: Dict = {
               'סוכן שקורא מיילי מכירות נכנסים, מתייג לפי כוונה (דמו / תמחור / ספאם) וכותב טיוטת תשובה ראשונה בקול שלנו.',
           },
           whyNow: {
-            prompt: 'מה השתנה — ב-AI או בעסק — שגורם לזה להיות עכשיו?',
+            prompt: 'מה השתנה - ב-AI או בעסק - שגורם לזה להיות עכשיו?',
             placeholder: 'ה-SDR שלנו עזב ונדרש שהאינבוקס ימשיך לזוז.',
           },
           audience: {
@@ -622,7 +622,7 @@ const HE: Dict = {
           },
           references: {
             prompt: 'מוצרי AI שניסית שכמעט קלעו?',
-            placeholder: 'ה-AI של Linear לטיוטת issues — אותה רמת איפוק.',
+            placeholder: 'ה-AI של Linear לטיוטת issues - אותה רמת איפוק.',
           },
           timeline: { prompt: 'מתי הסוכן צריך לרוץ?' },
           howHeard: { prompt: 'איך הגעת אליי?' },
@@ -636,7 +636,7 @@ const HE: Dict = {
               'כותרת חדשות יומית → סרטון אנכי של 30 שניות עם הקראה סינתטית + b-roll, מתפרסם בטיקטוק ב-8 בבוקר.',
           },
           whyNow: {
-            prompt: 'למה לאוטומט עכשיו — מכסת תוכן, צוות חסר, פלטפורמה חדשה?',
+            prompt: 'למה לאוטומט עכשיו - מכסת תוכן, צוות חסר, פלטפורמה חדשה?',
             placeholder: 'הבטחנו 5 שורטים בשבוע לספונסר והעורך שלנו מצליח רק שניים.',
           },
           audience: {
@@ -658,12 +658,12 @@ const HE: Dict = {
         audio: {
           idea: {
             prompt: 'איזו חוויה מוזיקלית או מנוע אודיו? איך זה צריך להרגיש לאוזן?',
-            hint: 'אם היה לזה מבחן עיניים-עצומות — מה המשתמש שומע?',
+            hint: 'אם היה לזה מבחן עיניים-עצומות - מה המשתמש שומע?',
             placeholder:
-              'פס-קול אינטראקטיבי לאתר גלריה — אקורדים משתנים תוך כדי גלילה בין סקציות.',
+              'פס-קול אינטראקטיבי לאתר גלריה - אקורדים משתנים תוך כדי גלילה בין סקציות.',
           },
           whyNow: {
-            prompt: 'למה עכשיו — תערוכה, השקה, רעיון לכלי נגינה חדש?',
+            prompt: 'למה עכשיו - תערוכה, השקה, רעיון לכלי נגינה חדש?',
             placeholder: 'ערב פתיחה במרץ והפס-קול הוא כל ההצגה.',
           },
           audience: {
@@ -676,7 +676,7 @@ const HE: Dict = {
           },
           references: {
             prompt: 'אתרים או אפליקציות מבוססי סאונד שאתה אוהב? Mixtape, Endel, Marpi.',
-            placeholder: 'https://marpi.studio — התחושה הזו.',
+            placeholder: 'https://marpi.studio - התחושה הזו.',
           },
           timeline: { prompt: 'מתי זה צריך להיות חי?' },
           howHeard: { prompt: 'איך הגעת אליי?' },
@@ -685,17 +685,17 @@ const HE: Dict = {
         game: {
           idea: {
             prompt: 'איזה משחק או חוויה אינטראקטיבית? מה המכניקה הראשית במשפט?',
-            hint: 'אם זה היה ארון משחקים בלונה פארק — מה היה כתוב על המדבקה?',
+            hint: 'אם זה היה ארון משחקים בלונה פארק - מה היה כתוב על המדבקה?',
             placeholder:
-              'משחק דפדפן ללחיצה על עגבניות — שחקנים מצילים עגבנייה נופלת בלחיצה לפני שהיא פוגעת ברצפה, טבלת שיאים בסוף.',
+              'משחק דפדפן ללחיצה על עגבניות - שחקנים מצילים עגבנייה נופלת בלחיצה לפני שהיא פוגעת ברצפה, טבלת שיאים בסוף.',
           },
           whyNow: {
-            prompt: 'למה עכשיו — השקת קמפיין, הפעלת מותג, פרויקט-צד?',
+            prompt: 'למה עכשיו - השקת קמפיין, הפעלת מותג, פרויקט-צד?',
             placeholder:
               'אנחנו ספונסרים של פסטיבל אוכל בעוד 6 שבועות ורוצים מיני-משחק שאפשר לחלוק על האתר של המותג.',
           },
           audience: {
-            prompt: 'מי השחקן? באיזה הקשר — סטוריז, דפדפן בעבודה, סלולרי בתור?',
+            prompt: 'מי השחקן? באיזה הקשר - סטוריז, דפדפן בעבודה, סלולרי בתור?',
             placeholder: 'גילאי 16-35 בסלולרי, מגיעים מסטוריז אינסטגרם.',
           },
           problem: {
@@ -704,7 +704,7 @@ const HE: Dict = {
           },
           references: {
             prompt: 'משחקי דפדפן או חוויות אינטראקטיביות שתפסו אותך?',
-            placeholder: 'כמו Patatap — אותה רמת ליטוש.',
+            placeholder: 'כמו Patatap - אותה רמת ליטוש.',
           },
           timeline: { prompt: 'מתי המשחק צריך להיות אפשר-לשחק?' },
           howHeard: { prompt: 'איך הגעת אליי?' },
@@ -741,7 +741,7 @@ const HE: Dict = {
         mobile: {
           idea: {
             prompt: 'איזו אפליקציית מובייל? מה הפעולה היומיומית הראשית בה?',
-            hint: 'דמיין משתמש פותח את האפליקציה בתחנת אוטובוס — מה הוא עושה?',
+            hint: 'דמיין משתמש פותח את האפליקציה בתחנת אוטובוס - מה הוא עושה?',
             placeholder:
               'אפליקציית מובייל לחובבי ציפורים: לוג של תצפית ב-3 הקשות, ראייה של מה נצפה בסביבה היום.',
           },
@@ -767,7 +767,7 @@ const HE: Dict = {
         },
         other: {
           idea: {
-            prompt: 'תאר את הרעיון. מה הוא — ולמה הוא צריך להיות קיים?',
+            prompt: 'תאר את הרעיון. מה הוא - ולמה הוא צריך להיות קיים?',
             hint: 'מוזר זה בברכה. הקצוות המוזרות עושות את הפרויקטים הכי טובים.',
             placeholder:
               'יומן מעקב שינה שמדרג חלומות לפי לוסידיות, נתפר כל בוקר מהקלטות קוליות שמלמלת ב-4 לפנות בוקר.',
@@ -777,7 +777,7 @@ const HE: Dict = {
             placeholder: 'תמלול קולי סוף סוף מספיק טוב למלמולים של חצי-ער.',
           },
           audience: {
-            prompt: 'למי זה? אפילו נישה של 50 איש זה בסדר — החדים יוצאים לאוויר.',
+            prompt: 'למי זה? אפילו נישה של 50 איש זה בסדר - החדים יוצאים לאוויר.',
             placeholder: 'מתרגלי חלימה צלולה וביבליופילים שמנהלים יומני חלומות.',
           },
           problem: {
@@ -803,17 +803,17 @@ const HE: Dict = {
       {
         q: 'באמת בלי תשלום על ה-POC?',
         a:
-          'באמת. אני משקיע 3–7 ימים כי זו הדרך הכי טובה שמצאתי להוכיח שאני יכול לבנות את מה שצריך — לפני שמשלמים. לא ממשיכים? הסיכון שלי. ממשיכים? שני הצדדים יודעים בדיוק על מה חתמו.',
+          'באמת. אני משקיע 3–7 ימים כי זו הדרך הכי טובה שמצאתי להוכיח שאני יכול לבנות את מה שצריך - לפני שמשלמים. לא ממשיכים? הסיכון שלי. ממשיכים? שני הצדדים יודעים בדיוק על מה חתמו.',
       },
       {
         q: 'מה אם הכיוון עדיין לא לגמרי ברור?',
         a:
-          'מעולה — זה רוב המקרים. אם ראית מוצר שמרגיז אותך, או יש בעיה יומיומית שכואבת — תכתוב שני משפטים, ואני אבנה את הניחוש הראשון שלי. ברגע שיש משהו לראות, הרבה יותר קל להגיד "כן, אבל…" — וזה בדיוק מה שאני מחפש.',
+          'מעולה - זה רוב המקרים. אם ראית מוצר שמרגיז אותך, או יש בעיה יומיומית שכואבת - תכתוב שני משפטים, ואני אבנה את הניחוש הראשון שלי. ברגע שיש משהו לראות, הרבה יותר קל להגיד "כן, אבל…" - וזה בדיוק מה שאני מחפש.',
       },
       {
         q: 'אז איך בעצם משלמים אחרי ה-POC?',
         a:
-          'אני לא עובד לפי שעות. כל פרויקט מקבל סקופ ברור ומחיר סגור מראש — לפי תוצאות. פרויקטים קטנים יוצאים במחיר חבילה. גדולים מתפצלים לאבני דרך, עם תשלום אחרי כל מסירה. אין ריטיינר חודשי, אין חוזה ארוך. נגמרה העבודה — נגמר התשלום.',
+          'אני לא עובד לפי שעות. כל פרויקט מקבל סקופ ברור ומחיר סגור מראש - לפי תוצאות. פרויקטים קטנים יוצאים במחיר חבילה. גדולים מתפצלים לאבני דרך, עם תשלום אחרי כל מסירה. אין ריטיינר חודשי, אין חוזה ארוך. נגמרה העבודה - נגמר התשלום.',
       },
     ],
   },
@@ -822,7 +822,7 @@ const HE: Dict = {
     kicker: 'קולופון',
     title: 'יפה. הגעת עד לכאן.',
     pullQuote:
-      'אז שווה לתאר את הרעיון במשפט אחד — ולראות מה יוצא מזה.',
+      'אז שווה לתאר את הרעיון במשפט אחד - ולראות מה יוצא מזה.',
     ctaPrimary: 'בוא נתחיל',
     ctaWhatsapp: 'תכתוב לי בוואטסאפ',
     ctaMail: 'או מייל',
@@ -861,9 +861,9 @@ const HE: Dict = {
 
 const EN: Dict = {
   meta: {
-    title: 'Bar Moshe — Describe. I Build. You Decide.',
+    title: 'Bar Moshe - Describe. I Build. You Decide.',
     description:
-      'I build a working POC on my own dime before we talk price. If it works for you — we keep going. If not — we part ways, no strings attached.',
+      'I build a working POC on my own dime before we talk price. If it works for you - we keep going. If not - we part ways, no strings attached.',
   },
   masthead: {
     issueNumber: 'Issue 01',
@@ -884,7 +884,7 @@ const EN: Dict = {
     issueLine: 'Issue 01 · Build before brief',
     headlineLines: ['Describe.', 'I build.', 'You decide.'],
     standfirst:
-      'Instead of a brief that drags on for weeks and a proposal you have to wonder about — describe the idea in the form, and I build a first POC on my own dime. If it works for you, we keep building together. If not, we part ways, no strings attached.',
+      'Instead of a brief that drags on for weeks and a proposal you have to wonder about - describe the idea in the form, and I build a first POC on my own dime. If it works for you, we keep building together. If not, we part ways, no strings attached.',
     byline: 'Bar Moshe · Independent builds · since 2020',
     scrollHint: 'Keep reading',
     ctaStart: 'Start a build',
@@ -908,21 +908,21 @@ const EN: Dict = {
         slug: 'brand',
         title: 'Brand site with character',
         summary:
-          'Not a template. Animations, a palette of your own, interactions that make people remember you. Like this site — only yours.',
+          'Not a template. Animations, a palette of your own, interactions that make people remember you. Like this site - only yours.',
         fits: ['New brand', 'Freelancer with identity', 'Studio'],
       },
       {
         slug: 'ecommerce',
         title: 'Custom online store',
         summary:
-          'Shopify rebuilt from the ground up, a private checkout system, or a full boutique store from code. Right for a brand with identity — not a generic catalogue.',
+          'Shopify rebuilt from the ground up, a private checkout system, or a full boutique store from code. Right for a brand with identity - not a generic catalogue.',
         fits: ['Small brand', 'Independent maker', 'Boutique shop'],
       },
       {
         slug: 'ai-agent',
         title: 'Private AI assistant / agent',
         summary:
-          'A chatbot for customers, RAG over all your documents, an autonomous agent that triages email and does the work. Cloud-hosted or open model — whatever fits your data and budget.',
+          'A chatbot for customers, RAG over all your documents, an autonomous agent that triages email and does the work. Cloud-hosted or open model - whatever fits your data and budget.',
         fits: ['Company', 'Ops / support team', 'AI founder'],
       },
       {
@@ -936,7 +936,7 @@ const EN: Dict = {
         slug: 'audio',
         title: 'Audio engine / musical interaction',
         summary:
-          'Synthesis, multi-channel mixer, real-time effects. Like the Mixtape in my portfolio. Right for a product whose sound is part of the experience — not just background noise.',
+          'Synthesis, multi-channel mixer, real-time effects. Like the Mixtape in my portfolio. Right for a product whose sound is part of the experience - not just background noise.',
         fits: ['Artist', 'Music brand', 'Audio startup'],
       },
       {
@@ -964,7 +964,7 @@ const EN: Dict = {
         slug: 'other',
         title: 'Something else entirely',
         summary:
-          'Got a weird idea in a space I haven’t seen? Perfect — the best things I’ve worked on started that way. Write it in the brief.',
+          'Got a weird idea in a space I haven’t seen? Perfect - the best things I’ve worked on started that way. Write it in the brief.',
         fits: ['Anyone'],
       },
     ],
@@ -981,7 +981,7 @@ const EN: Dict = {
         num: '01',
         title: 'Describe',
         body:
-          'You fill in a short brief. Three required fields: project type, the idea, and a way to reach you. Everything else is optional. The brief lands directly in my WhatsApp as a tidy message — no server storage, no "subscribe to the newsletter", no nonsense.',
+          'You fill in a short brief. Three required fields: project type, the idea, and a way to reach you. Everything else is optional. The brief lands directly in my WhatsApp as a tidy message - no server storage, no "subscribe to the newsletter", no nonsense.',
       },
       {
         num: '02',
@@ -993,12 +993,12 @@ const EN: Dict = {
         num: '03',
         title: 'You decide',
         body:
-          'If it works for you, we talk about going further: clear scope, price known up front, weekly milestones, clean handoff. I don’t work by the hour — I work by the outcome.',
+          'If it works for you, we talk about going further: clear scope, price known up front, weekly milestones, clean handoff. I don’t work by the hour - I work by the outcome.',
       },
     ],
     pullQuote: {
       quote:
-        'The biggest risk for the client isn’t the money — it’s the time wasted on a proposal that never ships.',
+        'The biggest risk for the client isn’t the money - it’s the time wasted on a proposal that never ships.',
       cite: 'Bar Moshe',
     },
   },
@@ -1007,9 +1007,9 @@ const EN: Dict = {
     kicker: 'Who I am',
     title: 'Bar Moshe',
     paragraphs: [
-      'Developer since 2020. Every project brings a different challenge — which is exactly what keeps the work interesting. That’s why I’m still here.',
+      'Developer since 2020. Every project brings a different challenge - which is exactly what keeps the work interesting. That’s why I’m still here.',
       'I build because it was the hobby before it was the job. I decide quickly because it’s much easier to fix code that sort of works than a brief that never became code. That’s why I work POC-first: I learn what to build, and you see what you’re getting.',
-      'Based in Israel, working with clients around the world in Hebrew and English. Write before you check the big software shops — if it isn’t a fit, I’ll tell you.',
+      'Based in Israel, working with clients around the world in Hebrew and English. Write before you check the big software shops - if it isn’t a fit, I’ll tell you.',
     ],
     stats: [
       { value: '5+', label: 'years building' },
@@ -1024,17 +1024,17 @@ const EN: Dict = {
     standfirst:
       'This brief goes straight to my WhatsApp as a tidy message. The more detail you give, the sharper the first POC. Three lines is enough to start.',
     requiredHint: 'Only 3 required fields: type, idea, and a way to reach you.',
-    optionalHeading: 'More detail — optional',
+    optionalHeading: 'More detail - optional',
     fields: {
       template: {
         label: 'Project type',
-        placeholder: 'Pick the closest template — you can always change it later',
+        placeholder: 'Pick the closest template - you can always change it later',
       },
       idea: {
         label: 'The idea in short',
         hint: 'One sentence or three. Clear beats clever.',
         placeholder:
-          'For example: "A platform that connects ceramic makers with design shops — the maker uploads a catalogue, the shop orders directly, and they pay a fee only on a sale."',
+          'For example: "A platform that connects ceramic makers with design shops - the maker uploads a catalogue, the shop orders directly, and they pay a fee only on a sale."',
       },
       audience: {
         label: 'Who will use it',
@@ -1057,7 +1057,7 @@ const EN: Dict = {
       timeline: { label: 'When you need it' },
       howHeard: {
         label: 'How you found me',
-        placeholder: 'GitHub, a friend, portfolio, search — whatever you remember',
+        placeholder: 'GitHub, a friend, portfolio, search - whatever you remember',
       },
       name: { label: 'Name', placeholder: 'What should I call you' },
       contactMethod: {
@@ -1088,7 +1088,7 @@ const EN: Dict = {
     liveSuccess: 'WhatsApp opened with the tidy brief.',
     liveError: 'Some fields are missing. Check the red markers.',
     briefHeading: 'Hi Bar,',
-    briefFooter: '— sent from the site brief',
+    briefFooter: '- sent from the site brief',
     briefSections: {
       type: '*Project type*',
       idea: '*The idea*',
@@ -1128,7 +1128,7 @@ const EN: Dict = {
       tapToEdit: 'Edit',
       keyboardHint: 'Enter to continue · Esc for back · Alt+S to skip',
       prompts: {
-        template: 'Easy one to start — what kind of project do you have in mind?',
+        template: 'Easy one to start - what kind of project do you have in mind?',
         idea: 'Tell me about the idea. One sentence or three.',
         name: 'What should I call you?',
         contact: 'Best way to reach you?',
@@ -1153,7 +1153,7 @@ const EN: Dict = {
             placeholder: 'We pitch to YC interviewers in 5 weeks and want a real demo, not slides.',
           },
           audience: {
-            prompt: 'Who’s the first user — the one whose love means the direction is real?',
+            prompt: 'Who’s the first user - the one whose love means the direction is real?',
             placeholder: 'Solo product designers, 25–40, freelancing evenings.',
           },
           problem: {
@@ -1173,7 +1173,7 @@ const EN: Dict = {
             prompt: 'What brand are we building? What should it make visitors feel in the first three seconds?',
             hint: 'If the site had a music genre, what would it be?',
             placeholder:
-              'A ceramics studio for collectors — quiet, slow, like a museum room you stumble into.',
+              'A ceramics studio for collectors - quiet, slow, like a museum room you stumble into.',
           },
           whyNow: {
             prompt: 'Why a new site now? Launch, rebrand, finally tired of Squarespace?',
@@ -1189,7 +1189,7 @@ const EN: Dict = {
           },
           references: {
             prompt: 'Sites you’ve saved? Pinterest boards, links, "feels like X".',
-            placeholder: 'studio.bruno-mars, kvadrat.dk — that level of restraint.',
+            placeholder: 'studio.bruno-mars, kvadrat.dk - that level of restraint.',
           },
           timeline: { prompt: 'When do you want to be on the new site?' },
           howHeard: { prompt: 'How did you find me?' },
@@ -1230,7 +1230,7 @@ const EN: Dict = {
               'An agent that reads incoming sales emails, tags them by intent (demo / pricing / spam), and drafts a first reply in our voice.',
           },
           whyNow: {
-            prompt: 'What changed — in AI or in the business — that makes this now?',
+            prompt: 'What changed - in AI or in the business - that makes this now?',
             placeholder: 'Our SDR just left and the inbox needs to keep moving.',
           },
           audience: {
@@ -1243,7 +1243,7 @@ const EN: Dict = {
           },
           references: {
             prompt: 'Any AI products you’ve tried that almost got it right?',
-            placeholder: 'Linear’s AI for drafting issues — that kind of restraint.',
+            placeholder: 'Linear’s AI for drafting issues - that kind of restraint.',
           },
           timeline: { prompt: 'When does the agent need to be running?' },
           howHeard: { prompt: 'How did you find me?' },
@@ -1257,7 +1257,7 @@ const EN: Dict = {
               'Daily news headline → 30-second vertical with synthetic VO + b-roll, posted to TikTok at 8am.',
           },
           whyNow: {
-            prompt: 'Why automate now — content quota, headcount, new platform?',
+            prompt: 'Why automate now - content quota, headcount, new platform?',
             placeholder: 'We promised 5 shorts/week to a sponsor and our editor can do two.',
           },
           audience: {
@@ -1266,7 +1266,7 @@ const EN: Dict = {
           },
           problem: {
             prompt: 'What’s the cost of doing it manually today?',
-            placeholder: 'One editor, 4 hours per video, 7 a week — that’s a full-time hire.',
+            placeholder: 'One editor, 4 hours per video, 7 a week - that’s a full-time hire.',
           },
           references: {
             prompt: 'Any auto-video systems or styles you like?',
@@ -1281,10 +1281,10 @@ const EN: Dict = {
             prompt: 'What kind of musical experience or audio engine? How should it feel to the ear?',
             hint: 'If it had a closing-the-eyes test, what would the user hear?',
             placeholder:
-              'An interactive ambient soundtrack for an art-gallery site — chords change as you scroll past sections.',
+              'An interactive ambient soundtrack for an art-gallery site - chords change as you scroll past sections.',
           },
           whyNow: {
-            prompt: 'Why now — an exhibition, a launch, a new instrument idea?',
+            prompt: 'Why now - an exhibition, a launch, a new instrument idea?',
             placeholder: 'Opening night is in March and the soundtrack is the whole show.',
           },
           audience: {
@@ -1297,7 +1297,7 @@ const EN: Dict = {
           },
           references: {
             prompt: 'Sound-driven sites or apps you love? Mixtape, Endel, Marpi.',
-            placeholder: 'https://marpi.studio — that feel.',
+            placeholder: 'https://marpi.studio - that feel.',
           },
           timeline: { prompt: 'When does it need to be live?' },
           howHeard: { prompt: 'How did you find me?' },
@@ -1308,14 +1308,14 @@ const EN: Dict = {
             prompt: 'What game or interactive piece? What’s the one-line core mechanic?',
             hint: 'If it were an arcade cabinet, what would the sticker say?',
             placeholder:
-              'Click-the-tomato browser game — players save a falling tomato by clicking before it hits the floor, leaderboard at the end.',
+              'Click-the-tomato browser game - players save a falling tomato by clicking before it hits the floor, leaderboard at the end.',
           },
           whyNow: {
-            prompt: 'Why now — a campaign launch, a brand activation, a side-project?',
+            prompt: 'Why now - a campaign launch, a brand activation, a side-project?',
             placeholder: 'We’re sponsoring a food festival in 6 weeks and want a shareable mini-game on the brand site.',
           },
           audience: {
-            prompt: 'Who’s the player? In what context — story tap, browser at work, phone in line?',
+            prompt: 'Who’s the player? In what context - story tap, browser at work, phone in line?',
             placeholder: '16–35 on phones, arriving from Instagram stories.',
           },
           problem: {
@@ -1324,7 +1324,7 @@ const EN: Dict = {
           },
           references: {
             prompt: 'Any browser games or interactive pieces that nailed it?',
-            placeholder: 'Like Patatap — that level of polish.',
+            placeholder: 'Like Patatap - that level of polish.',
           },
           timeline: { prompt: 'When does the game need to be playable?' },
           howHeard: { prompt: 'How did you find me?' },
@@ -1360,7 +1360,7 @@ const EN: Dict = {
         mobile: {
           idea: {
             prompt: 'What mobile app? What’s the one daily action inside it?',
-            hint: 'Imagine the user opening the app at a bus stop — what do they do?',
+            hint: 'Imagine the user opening the app at a bus stop - what do they do?',
             placeholder:
               'A mobile app for amateur birders: log a sighting in 3 taps, see what’s been spotted nearby today.',
           },
@@ -1386,7 +1386,7 @@ const EN: Dict = {
         },
         other: {
           idea: {
-            prompt: 'Describe the idea. What is it — and why does it need to exist?',
+            prompt: 'Describe the idea. What is it - and why does it need to exist?',
             hint: 'Weird is welcome. Strange edges make the best projects.',
             placeholder:
               'A sleep-tracking journal that ranks your dreams by lucidity, stitched together each morning from voice notes you mumbled at 4am.',
@@ -1396,7 +1396,7 @@ const EN: Dict = {
             placeholder: 'Voice transcription is finally good enough for half-asleep mumbling.',
           },
           audience: {
-            prompt: 'Who’s it for? Even a niche of 50 is fine — the sharpest gets shipped.',
+            prompt: 'Who’s it for? Even a niche of 50 is fine - the sharpest gets shipped.',
             placeholder: 'Lucid-dream practitioners and bibliophiles who keep dream journals.',
           },
           problem: {
@@ -1422,17 +1422,17 @@ const EN: Dict = {
       {
         q: 'Really no payment for the POC?',
         a:
-          'Really. I invest 3–7 days because it’s the best way I’ve found to show I can build what you need — before you pay anything. If we don’t continue, that’s my risk. If we do, both sides know exactly what they’re signing up for.',
+          'Really. I invest 3–7 days because it’s the best way I’ve found to show I can build what you need - before you pay anything. If we don’t continue, that’s my risk. If we do, both sides know exactly what they’re signing up for.',
       },
       {
         q: 'What if I don’t know yet exactly what I want?',
         a:
-          'Perfect — that’s most cases. Describe in two sentences what you don’t want, or which daily problem is in front of you, and I’ll build my first read of it. Once you see something, it’s much easier to say "yes, but…" — and that’s exactly what I’m after.',
+          'Perfect - that’s most cases. Describe in two sentences what you don’t want, or which daily problem is in front of you, and I’ll build my first read of it. Once you see something, it’s much easier to say "yes, but…" - and that’s exactly what I’m after.',
       },
       {
         q: 'So how does payment actually work after the POC?',
         a:
-          'I don’t work by the hour. Every project gets a clear scope and a price known up front — outcome-based. Small projects ship at a package price; larger ones break into milestones with payment after each delivery. No monthly retainer, no long contract. Work’s done — payment’s done.',
+          'I don’t work by the hour. Every project gets a clear scope and a price known up front - outcome-based. Small projects ship at a package price; larger ones break into milestones with payment after each delivery. No monthly retainer, no long contract. Work’s done - payment’s done.',
       },
     ],
   },
@@ -1441,7 +1441,7 @@ const EN: Dict = {
     kicker: 'Colophon',
     title: 'Right. You made it this far.',
     pullQuote:
-      'So what do you think — worth describing the idea in one sentence and seeing what comes out?',
+      'So what do you think - worth describing the idea in one sentence and seeing what comes out?',
     ctaPrimary: 'To the brief',
     ctaWhatsapp: 'Send me a WhatsApp',
     ctaMail: 'Or email',

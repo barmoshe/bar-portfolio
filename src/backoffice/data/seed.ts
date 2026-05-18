@@ -2,7 +2,7 @@ import type { BackofficeState } from './types';
 
 /**
  * Seed state for the back-office demo. All names, businesses, neighborhoods,
- * and content are fictional — any resemblance to real Israeli businesses is
+ * and content are fictional - any resemblance to real Israeli businesses is
  * coincidental. Phone numbers use the standard 05X-XXX-XXXX prefix.
  *
  * Date strings are anchored relative to a fixed reference (2026-04-26) so the
@@ -54,7 +54,7 @@ export const SEED_STATE: BackofficeState = {
       notes: [
         {
           id: 'nt_olive_1',
-          body: 'מאיה ביקשה צבעוניות חמה — ירוק זית, חרדל, וקרם. אין שחור גמור באף מקום באתר.',
+          body: 'מאיה ביקשה צבעוניות חמה - ירוק זית, חרדל, וקרם. אין שחור גמור באף מקום באתר.',
           author: 'בר',
           createdAt: iso(-30, 11, 5),
         },
@@ -74,7 +74,7 @@ export const SEED_STATE: BackofficeState = {
           issuedAt: iso(-40, 10),
           dueAt: iso(-25, 10),
           status: 'paid',
-          items: [{ id: 'it_1', label: 'מקדמה — 50% מהפרויקט', qty: 1, unitPrice: 11000 }],
+          items: [{ id: 'it_1', label: 'מקדמה - 50% מהפרויקט', qty: 1, unitPrice: 11000 }],
         },
         {
           id: 'inv_olive_2',
@@ -113,10 +113,10 @@ export const SEED_STATE: BackofficeState = {
       hoursLogged: 64,
       tags: ['React', 'Astro', 'Fintech', 'דו־לשוני'],
       tasks: [
-        { id: 'tsk_ridge_1', title: 'בדיקה משפטית — עמוד גילוי נאות', done: true },
+        { id: 'tsk_ridge_1', title: 'בדיקה משפטית - עמוד גילוי נאות', done: true },
         { id: 'tsk_ridge_2', title: 'אופטימיזציית טעינה (LCP < 2.0s)', done: true },
         { id: 'tsk_ridge_3', title: 'הטמעת GA4 + שרת מדיניות פרטיות', done: true },
-        { id: 'tsk_ridge_4', title: 'תרגום עברית — עמודי "אודות" ו"שירותים"', done: false, dueDate: iso(4) },
+        { id: 'tsk_ridge_4', title: 'תרגום עברית - עמודי "אודות" ו"שירותים"', done: false, dueDate: iso(4) },
         { id: 'tsk_ridge_5', title: 'העלאה לפרודקשן + DNS', done: false, dueDate: iso(9) },
       ],
       notes: [
@@ -128,7 +128,7 @@ export const SEED_STATE: BackofficeState = {
         },
         {
           id: 'nt_ridge_2',
-          body: 'יש לוודא ש־Cloudflare מכוון נכון לפני ה־15 — דניאל מצפה לאתר חי לקראת הכנס.',
+          body: 'יש לוודא ש־Cloudflare מכוון נכון לפני ה־15 - דניאל מצפה לאתר חי לקראת הכנס.',
           author: 'בר',
           createdAt: iso(-3, 18, 45),
         },
@@ -142,7 +142,7 @@ export const SEED_STATE: BackofficeState = {
           issuedAt: iso(-55, 10),
           dueAt: iso(-40, 10),
           status: 'paid',
-          items: [{ id: 'it_r1', label: 'מקדמה — 50%', qty: 1, unitPrice: 17000 }],
+          items: [{ id: 'it_r1', label: 'מקדמה - 50%', qty: 1, unitPrice: 17000 }],
         },
         {
           id: 'inv_ridge_2',
@@ -152,7 +152,7 @@ export const SEED_STATE: BackofficeState = {
           issuedAt: iso(-45, 10),
           dueAt: iso(-15, 10),
           status: 'sent',
-          items: [{ id: 'it_r2', label: 'אבן דרך — עיצוב מאושר', qty: 1, unitPrice: 8500 }],
+          items: [{ id: 'it_r2', label: 'אבן דרך - עיצוב מאושר', qty: 1, unitPrice: 8500 }],
         },
         {
           id: 'inv_ridge_3',
@@ -171,7 +171,7 @@ export const SEED_STATE: BackofficeState = {
       id: 'lead_noa_mentor',
       client: {
         name: 'נועה לוי',
-        company: 'חניכה אישית — מעבר ל־React',
+        company: 'חניכה אישית - מעבר ל־React',
         email: 'noa.levi.dev@gmail.com',
         phone: '050-339-2210',
         city: 'רמת גן',
@@ -179,7 +179,7 @@ export const SEED_STATE: BackofficeState = {
         color: 'var(--purple)',
       },
       type: 'mentorship',
-      title: 'חניכה שבועית — מעבר מ־jQuery ל־React',
+      title: 'חניכה שבועית - מעבר מ־jQuery ל־React',
       summary:
         'נועה מפתחת בחברה קטנה ועושה מעבר ל־React. פגישה אחת בשבוע (יום שני, 19:00–20:30), כולל ביקורת קוד אסינכרונית בין הפגישות.',
       status: 'in_progress',
@@ -192,15 +192,15 @@ export const SEED_STATE: BackofficeState = {
       hoursLogged: 22,
       tags: ['חניכה', 'React', 'TypeScript', 'שבועי'],
       tasks: [
-        { id: 'tsk_noa_1', title: 'שבוע 6: hooks מתקדמים — useReducer + Context', done: true },
+        { id: 'tsk_noa_1', title: 'שבוע 6: hooks מתקדמים - useReducer + Context', done: true },
         { id: 'tsk_noa_2', title: 'שבוע 7: אסטרטגיית fetch + ניהול cache', done: false, dueDate: iso(2) },
-        { id: 'tsk_noa_3', title: 'ביקורת קוד — מודול ההרשאות שלה', done: false, dueDate: iso(4) },
+        { id: 'tsk_noa_3', title: 'ביקורת קוד - מודול ההרשאות שלה', done: false, dueDate: iso(4) },
         { id: 'tsk_noa_4', title: 'שבוע 8: בדיקות יחידה עם Vitest', done: false, dueDate: iso(9) },
       ],
       notes: [
         {
           id: 'nt_noa_1',
-          body: 'נועה לומדת מהר. אפשר להאיץ קצב — היא ביקשה לכסות SSR בעוד שלושה שבועות.',
+          body: 'נועה לומדת מהר. אפשר להאיץ קצב - היא ביקשה לכסות SSR בעוד שלושה שבועות.',
           author: 'בר',
           createdAt: iso(-14, 21, 10),
         },
@@ -253,13 +253,13 @@ export const SEED_STATE: BackofficeState = {
       hoursLogged: 3,
       tags: ['portfolio', 'Stripe', 'אסתטי'],
       tasks: [
-        { id: 'tsk_ari_1', title: 'שיחת אפיון שנייה — הגדרת זרימת הזמנה', done: true },
+        { id: 'tsk_ari_1', title: 'שיחת אפיון שנייה - הגדרת זרימת הזמנה', done: true },
         { id: 'tsk_ari_2', title: 'הצעת מחיר רשמית בכתב', done: false, dueDate: iso(3) },
       ],
       notes: [
         {
           id: 'nt_ari_1',
-          body: 'איתי בוחן עוד מציע. ההצעה צריכה לכלול אופציה זולה יותר ללא תשלומים — רק לידים.',
+          body: 'איתי בוחן עוד מציע. ההצעה צריכה לכלול אופציה זולה יותר ללא תשלומים - רק לידים.',
           author: 'בר',
           createdAt: iso(-1, 17),
         },
@@ -291,7 +291,7 @@ export const SEED_STATE: BackofficeState = {
       hoursLogged: 1,
       tags: ['ייעוץ', 'בריאות', 'GDPR'],
       tasks: [
-        { id: 'tsk_bloom_1', title: 'שיחת אפיון ראשונה — מיפוי דרישות', done: true },
+        { id: 'tsk_bloom_1', title: 'שיחת אפיון ראשונה - מיפוי דרישות', done: true },
         { id: 'tsk_bloom_2', title: 'מסמך השוואה: SaaS מול Custom', done: false, dueDate: iso(5) },
       ],
       notes: [],
@@ -312,7 +312,7 @@ export const SEED_STATE: BackofficeState = {
       type: 'maintenance',
       title: 'תחזוקה חודשית לאתר WordPress קיים',
       summary:
-        'יוסי שכר אותי לתחזוקה שוטפת — עדכוני אבטחה, גיבויים, ופתרון תקלות נקודתיות. בהמתנה לאישור החוזה השנתי.',
+        'יוסי שכר אותי לתחזוקה שוטפת - עדכוני אבטחה, גיבויים, ופתרון תקלות נקודתיות. בהמתנה לאישור החוזה השנתי.',
       status: 'on_hold',
       priority: 'low',
       createdAt: iso(-21, 9),
@@ -365,17 +365,17 @@ export const SEED_STATE: BackofficeState = {
     },
   ],
   activity: [
-    { id: 'act_g1', leadId: 'lead_adler', kind: 'lead_created', summary: 'ליד חדש: שני אדלר — מאפיית אדלר', createdAt: iso(-2, 15, 10) },
-    { id: 'act_g2', leadId: 'lead_bloom_health', kind: 'lead_created', summary: 'ליד חדש: תמר אלון — קליניקת בריאות אלון', createdAt: iso(-5, 10, 30) },
+    { id: 'act_g1', leadId: 'lead_adler', kind: 'lead_created', summary: 'ליד חדש: שני אדלר - מאפיית אדלר', createdAt: iso(-2, 15, 10) },
+    { id: 'act_g2', leadId: 'lead_bloom_health', kind: 'lead_created', summary: 'ליד חדש: תמר אלון - קליניקת בריאות אלון', createdAt: iso(-5, 10, 30) },
     { id: 'act_g3', leadId: 'lead_ridgeway', kind: 'note_added', summary: 'הערה חדשה אצל קפיטל ראש פינה', createdAt: iso(-3, 18, 45) },
     { id: 'act_g4', leadId: 'lead_olive', kind: 'task_completed', summary: 'משימה הושלמה: גלריית מנות', createdAt: iso(-4, 16) },
-    { id: 'act_g5', leadId: 'lead_ridgeway', kind: 'progress_changed', summary: 'התקדמות עודכנה ל־88% — קפיטל ראש פינה', createdAt: iso(-6, 12) },
-    { id: 'act_g6', leadId: 'lead_olive', kind: 'invoice_sent', summary: 'חשבונית 2026-0024 נשלחה — זית ותימין', createdAt: iso(-2, 10) },
-    { id: 'act_g7', leadId: 'lead_noa_mentor', kind: 'invoice_sent', summary: 'חשבונית 2026-0023 נשלחה — חניכה לנועה', createdAt: iso(-1, 10) },
-    { id: 'act_g8', leadId: 'lead_noa_mentor', kind: 'task_completed', summary: 'משימה הושלמה: שבוע 6 — hooks מתקדמים', createdAt: iso(-7, 21) },
-    { id: 'act_g9', leadId: 'lead_ari_studio', kind: 'lead_created', summary: 'ליד חדש: איתי ברק — סטודיו צילום', createdAt: iso(-11, 12) },
-    { id: 'act_g10', leadId: 'lead_olive', kind: 'status_changed', summary: 'סטטוס שונה ל"בעבודה" — זית ותימין', createdAt: iso(-32, 10) },
+    { id: 'act_g5', leadId: 'lead_ridgeway', kind: 'progress_changed', summary: 'התקדמות עודכנה ל־88% - קפיטל ראש פינה', createdAt: iso(-6, 12) },
+    { id: 'act_g6', leadId: 'lead_olive', kind: 'invoice_sent', summary: 'חשבונית 2026-0024 נשלחה - זית ותימין', createdAt: iso(-2, 10) },
+    { id: 'act_g7', leadId: 'lead_noa_mentor', kind: 'invoice_sent', summary: 'חשבונית 2026-0023 נשלחה - חניכה לנועה', createdAt: iso(-1, 10) },
+    { id: 'act_g8', leadId: 'lead_noa_mentor', kind: 'task_completed', summary: 'משימה הושלמה: שבוע 6 - hooks מתקדמים', createdAt: iso(-7, 21) },
+    { id: 'act_g9', leadId: 'lead_ari_studio', kind: 'lead_created', summary: 'ליד חדש: איתי ברק - סטודיו צילום', createdAt: iso(-11, 12) },
+    { id: 'act_g10', leadId: 'lead_olive', kind: 'status_changed', summary: 'סטטוס שונה ל"בעבודה" - זית ותימין', createdAt: iso(-32, 10) },
     { id: 'act_g11', leadId: 'lead_ridgeway', kind: 'task_added', summary: 'משימה נוספה: תרגום עברית', createdAt: iso(-8, 14) },
-    { id: 'act_g12', leadId: 'lead_peregl', kind: 'status_changed', summary: 'סטטוס שונה ל"מושהה" — פרץ לוגיסטיקה', createdAt: iso(-9, 8, 25) },
+    { id: 'act_g12', leadId: 'lead_peregl', kind: 'status_changed', summary: 'סטטוס שונה ל"מושהה" - פרץ לוגיסטיקה', createdAt: iso(-9, 8, 25) },
   ],
 };

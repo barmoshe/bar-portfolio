@@ -4,7 +4,7 @@ import { gsap, FULL_MOTION_QUERY } from '../../lib/gsap';
 type Props = {
   /** One line per array entry; rendered as a stacked block heading. */
   lines: string[];
-  /** Element to render — h1 for the cover, h2 elsewhere. */
+  /** Element to render - h1 for the cover, h2 elsewhere. */
   as?: 'h1' | 'h2';
   id?: string;
   className?: string;

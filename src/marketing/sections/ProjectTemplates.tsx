@@ -2,7 +2,7 @@ import { useLang } from '../LangContext';
 import { scrollToIntake } from '../scrollToIntake';
 
 /**
- * BACKLOG column — 10 ticket cards the visitor can pick from. Picking
+ * BACKLOG column - 10 ticket cards the visitor can pick from. Picking
  * one sets the template (parent state) and scrolls to the Intake form.
  * No drag-and-drop; the kanban metaphor lives in the column ribbon +
  * pill state rather than in horizontal columns (mobile-first decision).

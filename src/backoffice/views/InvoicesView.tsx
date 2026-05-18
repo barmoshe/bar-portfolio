@@ -146,7 +146,7 @@ export default function InvoicesView({ navigate }: { navigate: (r: Route) => voi
                               סימון כשולמה
                             </button>
                           )}
-                          {inv.status === 'paid' && <span style={{ color: 'var(--ink-faint)' }}>—</span>}
+                          {inv.status === 'paid' && <span style={{ color: 'var(--ink-faint)' }}>-</span>}
                         </td>
                       </tr>
                     );

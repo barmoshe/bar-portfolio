@@ -1,7 +1,7 @@
 /**
  * Subtle paper-grain noise overlay. SVG fractal noise rendered once,
  * mixed at low opacity over the page to give a printed-paper feel.
- * Pure SVG filter — no raster asset, no bundle cost beyond ~400 bytes.
+ * Pure SVG filter - no raster asset, no bundle cost beyond ~400 bytes.
  */
 export default function PaperGrain() {
   return (

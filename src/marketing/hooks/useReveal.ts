@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-// Section reveal — the only scroll-related animation on the marketing
+// Section reveal - the only scroll-related animation on the marketing
 // site. Adds `.is-in` to every `.mp-section` (and any `.mp-reveal`
 // opt-in) when it enters the viewport, then unobserves so the reveal
 // runs exactly once. Reduced motion stamps `.is-in` immediately so no

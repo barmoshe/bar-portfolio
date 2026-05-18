@@ -3,7 +3,7 @@ import { useLang } from '../LangContext';
 import { INTAKE_ID } from '../scrollToIntake';
 
 /**
- * Hero — one focal ticket card that IS the value proposition. The
+ * Hero - one focal ticket card that IS the value proposition. The
  * BOARD metaphor in literal form: "your project, already in DOING."
  * Big promise H1 above, single sticker ticket below with a real
  * checklist + a primary CTA inside the card. Secondary actions
@@ -34,7 +34,7 @@ export default function Cover() {
 
   const isHe = lang === 'he';
 
-  // Hero copy lives here, not i18n.ts — the BOARD hero rewrites the
+  // Hero copy lives here, not i18n.ts - the BOARD hero rewrites the
   // pitch as a literal ticket. The rest of the page's copy stays
   // sourced from i18n.ts.
   const copy = isHe
@@ -50,9 +50,9 @@ export default function Cover() {
         ticketTitle: 'הפרויקט הבא שלך',
         ticketSub: 'מוכן להפוך לקוד',
         checks: [
-          'תיאור — מה אתה רוצה לבנות, ב־3 שורות',
-          'POC — שבוע על חשבוני, קוד אמיתי שרץ',
-          'החלטה — רק אם זה עובד לך, ממשיכים',
+          'תיאור - מה אתה רוצה לבנות, ב־3 שורות',
+          'POC - שבוע על חשבוני, קוד אמיתי שרץ',
+          'החלטה - רק אם זה עובד לך, ממשיכים',
         ],
         ctaPrimary: '✦ פתח את הכרטיס שלך',
         ctaSecondary: 'או תראה מה אני בונה',
@@ -64,15 +64,15 @@ export default function Cover() {
         titleB: 'a POC',
         titleC: 'on my dime.',
         lead:
-          'Tell me in a few lines what you want built. A week later you have a working POC in your hands. Loved it? Let’s keep going. Didn’t? We part ways — no questions, no invoice, no BS.',
+          'Tell me in a few lines what you want built. A week later you have a working POC in your hands. Loved it? Let’s keep going. Didn’t? We part ways - no questions, no invoice, no BS.',
         ticketNum: '#BAR-001',
         ticketStatus: t.board.status.doing,
         ticketTitle: 'Your next project',
         ticketSub: 'Ready to become code',
         checks: [
-          'Describe — what you want built, in 3 lines',
-          'POC — one week on me, real code that runs',
-          'Decide — keep going only if it works for you',
+          'Describe - what you want built, in 3 lines',
+          'POC - one week on me, real code that runs',
+          'Decide - keep going only if it works for you',
         ],
         ctaPrimary: '✦ Open your ticket',
         ctaSecondary: 'Or see what I’ve built',

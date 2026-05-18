@@ -273,7 +273,7 @@ export default function LeadDetailView({ leadId, tab, navigate }: Props) {
                   <span className="bo-vh">הערה חדשה</span>
                   <textarea
                     rows={3}
-                    placeholder="הוסיפי הערה — מה נאמר, מה הוסכם, מה צריך לעקוב…"
+                    placeholder="הוסיפי הערה - מה נאמר, מה הוסכם, מה צריך לעקוב…"
                     value={noteInput}
                     onChange={(e) => setNoteInput(e.target.value)}
                     required
@@ -327,7 +327,7 @@ export default function LeadDetailView({ leadId, tab, navigate }: Props) {
                         <ul className="bo-inv__items">
                           {inv.items.map((it) => (
                             <li key={it.id}>
-                              {it.label} — {it.qty} × {formatMoney(it.unitPrice, inv.currency)}
+                              {it.label} - {it.qty} × {formatMoney(it.unitPrice, inv.currency)}
                             </li>
                           ))}
                         </ul>
