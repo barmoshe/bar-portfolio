@@ -256,6 +256,9 @@ html.dark .mp-root {
   background: var(--mp-surface);
   color: var(--mp-ink);
   white-space: nowrap;
+  max-inline-size: calc(100% - 24px);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 [lang="en"] .mp-status { text-transform: uppercase; }
 
@@ -1169,7 +1172,7 @@ html.dark .mp-root {
 }
 .mp-quest__chapter {
   position: relative;
-  padding: 12px 8px;
+  padding: 10px 6px;
   background: var(--mp-surface);
   border: 2.5px solid var(--mp-ink);
   border-radius: var(--mp-radius-sm);
@@ -1179,11 +1182,18 @@ html.dark .mp-root {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  min-block-size: 72px;
+  gap: 4px;
+  min-block-size: 48px;
   block-size: 100%;
   justify-content: center;
   transition: background-color .25s ease, color .25s ease;
+}
+/* Under 480px the 5-column rail has ~50px per cell - too narrow for the
+   chapter label. Drop to compact dots-with-numbers; the active chapter's
+   name is shown in the card header via .mp-quest__chapter-tag. */
+@media (max-width: 479px) {
+  .mp-quest__chapter-name { display: none; }
+  .mp-quest__chapters { gap: 6px; }
 }
 .mp-quest__chapter[data-state="done"] {
   background: var(--mp-accent-3);
@@ -1564,18 +1574,15 @@ html.dark .mp-root {
 }
 .mp-quest__review-edit-list .mp-quest__nav-btn { flex: 0 0 auto; }
 
-/* Brief sidebar / letter - sticky <details> on mobile, sidebar ≥820px */
+/* Brief sidebar / letter - flows below the ticket on mobile, becomes a
+   sticky side-rail ≥820px. Sticky-bottom on phones overlapped the form
+   inputs when the soft keyboard opened, so we let it scroll naturally. */
 .mp-quest__letter {
   background: var(--mp-surface);
   border: 2.5px solid var(--mp-ink);
   border-radius: var(--mp-radius);
   box-shadow: var(--mp-shadow);
   padding: 14px 16px;
-  position: sticky;
-  inset-block-end: max(12px, env(safe-area-inset-bottom, 0px));
-  z-index: 5;
-  max-block-size: 56vh;
-  overflow: auto;
 }
 .mp-quest__letter-head {
   display: flex;
