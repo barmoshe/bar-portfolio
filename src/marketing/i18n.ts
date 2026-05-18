@@ -209,6 +209,33 @@ export type Dict = {
     mail: string;
     issueLabel: string;
   };
+  /**
+   * BOARD-direction microcopy. Status pills, column headers, and the
+   * sticky brief mini-ticket. Additive — not consumed by older sections,
+   * referenced by the redesigned chrome only.
+   */
+  board: {
+    status: {
+      todo: string;
+      doing: string;
+      done: string;
+      selected: string;
+      open: string;
+      closed: string;
+      building: string;
+    };
+    columns: {
+      backlog: string;
+      process: string;
+      about: string;
+      intake: string;
+      faq: string;
+      ship: string;
+    };
+    brief: string;
+    progress: string;
+    ringHold: string;
+  };
 };
 
 const HE: Dict = {
@@ -808,6 +835,28 @@ const HE: Dict = {
     mail: 'מייל',
     issueLabel: 'גליון 01',
   },
+  board: {
+    status: {
+      todo: 'לעשות',
+      doing: 'בעבודה',
+      done: 'בוצע',
+      selected: 'נבחר',
+      open: 'פתוח',
+      closed: 'סגור',
+      building: 'בונה',
+    },
+    columns: {
+      backlog: 'מוכן להתחיל',
+      process: 'איך זה עובד',
+      about: 'מי אני',
+      intake: 'פתח כרטיס',
+      faq: 'שאלות',
+      ship: 'מוכן לשלוח',
+    },
+    brief: 'התקציר שלך עד כה',
+    progress: '{n}/{total} פרקים',
+    ringHold: 'החזק כדי לשלוח',
+  },
 };
 
 const EN: Dict = {
@@ -1404,6 +1453,28 @@ const EN: Dict = {
     whatsapp: 'WhatsApp',
     mail: 'Email',
     issueLabel: 'Issue 01',
+  },
+  board: {
+    status: {
+      todo: 'TODO',
+      doing: 'DOING',
+      done: 'DONE',
+      selected: 'PICKED',
+      open: 'OPEN',
+      closed: 'CLOSED',
+      building: 'BUILDING',
+    },
+    columns: {
+      backlog: 'BACKLOG',
+      process: 'PROCESS',
+      about: 'ABOUT',
+      intake: 'NEW TICKET',
+      faq: 'FAQ',
+      ship: 'READY TO SHIP',
+    },
+    brief: 'Your brief so far',
+    progress: '{n}/{total} chapters',
+    ringHold: 'Hold to send',
   },
 };
 

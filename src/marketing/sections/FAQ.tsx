@@ -1,10 +1,8 @@
 import { useLang } from '../LangContext';
-import SectionHeading from '../components/SectionHeading';
-import RunningFoot from '../components/RunningFoot';
 
 export default function FAQ() {
   const { t } = useLang();
-  const { qa } = t;
+  const { qa, board } = t;
 
   return (
     <section
@@ -12,12 +10,13 @@ export default function FAQ() {
       id="qa"
       aria-labelledby="qa-headline"
     >
-      <SectionHeading
-        number={qa.number}
-        kicker={qa.kicker}
-        title={qa.title}
-        id="qa-headline"
-      />
+      <header className="mp-h">
+        <span className="mp-h__num" aria-hidden="true">{qa.number}</span>
+        <span className="mp-h__kicker">{board.columns.faq}</span>
+        <h2 id="qa-headline" className="mp-h__title">
+          {qa.title}
+        </h2>
+      </header>
 
       <ul className="mp-qa-list">
         {qa.items.map((it) => (
@@ -32,8 +31,6 @@ export default function FAQ() {
           </li>
         ))}
       </ul>
-
-      <RunningFoot sectionNumber={qa.number} />
     </section>
   );
 }

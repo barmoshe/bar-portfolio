@@ -8,9 +8,12 @@ import {
 import { useLang } from '../LangContext';
 import { buildMailtoHref, buildWhatsAppHref } from '../contact';
 import { INTAKE_ID } from '../scrollToIntake';
-import SectionHeading from '../components/SectionHeading';
-import RunningFoot from '../components/RunningFoot';
 import { gsap, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
+import { useLongPress } from '../hooks/useLongPress';
+
+// SectionHeading + RunningFoot are intentionally NOT imported — the
+// BOARD redesign uses ticket-style chrome instead. See `mp-h` /
+// `mp-final` in marketing.css for the replacement primitives.
 
 type ContactMethod = 'whatsapp' | 'email';
 
@@ -79,7 +82,7 @@ type Props = { selectedTemplate: string };
 
 export default function Intake({ selectedTemplate }: Props) {
   const { t } = useLang();
-  const { brief, contents } = t;
+  const { brief, contents, board } = t;
   const quest = brief.quest;
 
   const [form, setForm] = useState<FormState>(INITIAL);
@@ -88,6 +91,10 @@ export default function Intake({ selectedTemplate }: Props) {
   const [invalidBeat, setInvalidBeat] = useState<BeatId | null>(null);
   const [status, setStatus] = useState('');
   const [phase, setPhase] = useState<'questioning' | 'sent'>('questioning');
+  // Tracks the most-recently-committed beat so the matching brief row
+  // can flash a magenta border-bloom for one frame. Cleared on
+  // animationend (CSS-driven).
+  const [lastCommit, setLastCommit] = useState<BeatId | null>(null);
 
   const stageRef = useRef<HTMLDivElement | null>(null);
   const focusRef = useRef<HTMLElement | null>(null);
@@ -213,6 +220,8 @@ export default function Intake({ selectedTemplate }: Props) {
       }
       return n;
     });
+    // Border-bloom trigger — flashes the brief row that just landed.
+    if (beatHasContent(beat.id)) setLastCommit(beat.id);
     if (stepIndex < BEATS.length - 1) {
       setStatus(quest.liveCommitted);
       setStepIndex(stepIndex + 1);
@@ -493,12 +502,11 @@ export default function Intake({ selectedTemplate }: Props) {
       id={INTAKE_ID}
       aria-labelledby="brief-headline"
     >
-      <SectionHeading
-        number={brief.number}
-        kicker={brief.kicker}
-        title={brief.title}
-        id="brief-headline"
-      />
+      <header className="mp-h">
+        <span className="mp-h__num" aria-hidden="true">{brief.number}</span>
+        <span className="mp-h__kicker">{board.columns.intake}</span>
+        <h2 id="brief-headline" className="mp-h__title">{brief.title}</h2>
+      </header>
 
       <p className="mp-standfirst">{brief.standfirst}</p>
 
@@ -655,6 +663,10 @@ export default function Intake({ selectedTemplate }: Props) {
                     <li
                       key={`${entry.jumpId}-${i}`}
                       className="mp-quest__letter-line"
+                      data-just-committed={lastCommit === entry.jumpId || undefined}
+                      onAnimationEnd={() => {
+                        if (lastCommit === entry.jumpId) setLastCommit(null);
+                      }}
                     >
                       <button
                         type="button"
@@ -682,8 +694,6 @@ export default function Intake({ selectedTemplate }: Props) {
       >
         {liveAnnouncement}
       </div>
-
-      <RunningFoot sectionNumber={brief.number} />
     </section>
   );
 }
@@ -942,45 +952,106 @@ function BeatControl({
 
     case 'review':
       return (
-        <div className="mp-quest__review">
-          <p className="mp-quest__review-intro">{quest.reviewIntro}</p>
-          <pre className="mp-quest__brief-out" aria-label={quest.reviewTitle}>
-            {builtBrief}
-          </pre>
-          {letterEntries.length > 0 && (
-            <ul className="mp-quest__review-edit-list">
-              {letterEntries.map((entry, i) => (
-                <li key={`${entry.jumpId}-${i}`}>
-                  <button
-                    type="button"
-                    className="mp-quest__nav-btn"
-                    onClick={() => onJump(entry.jumpId)}
-                  >
-                    {quest.tapToEdit}: {entry.label.replace(/[*]/g, '')}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-          <div className="mp-quest__send">
-            <button
-              type="button"
-              className="mp-quest__primary mp-quest__primary--send"
-              onClick={onSubmit}
-              data-quest-focus
-              ref={(node) => { focusRef.current = node; }}
-            >
-              {quest.nav.send} →
-            </button>
-            <p className="mp-form__action-hint">{brief.submitHint}</p>
-            <a
-              className="mp-form__mail"
-              href={buildMailtoHref(brief.mailSubject, builtBrief)}
-            >
-              {brief.mailFallback}
-            </a>
-          </div>
-        </div>
+        <ReviewBlock
+          quest={quest}
+          brief={brief}
+          builtBrief={builtBrief}
+          letterEntries={letterEntries}
+          onSubmit={onSubmit}
+          onJump={onJump}
+          focusRef={focusRef}
+        />
       );
   }
+}
+
+type ReviewBlockProps = {
+  quest: BeatControlProps['t']['brief']['quest'];
+  brief: BeatControlProps['t']['brief'];
+  builtBrief: string;
+  letterEntries: BeatControlProps['letterEntries'];
+  onSubmit: () => void;
+  onJump: (id: BeatId) => void;
+  focusRef: BeatControlProps['focusRef'];
+};
+
+function ReviewBlock({
+  quest,
+  brief,
+  builtBrief,
+  letterEntries,
+  onSubmit,
+  onJump,
+  focusRef,
+}: ReviewBlockProps) {
+  const { t } = useLang();
+  const { board } = t;
+  const { bind, progress, holding } = useLongPress({
+    ms: 600,
+    onConfirm: onSubmit,
+  });
+  // SVG ring geometry — circumference ≈ 100, easy to drive via dasharray.
+  const RING_LEN = 100;
+  const dashOffset = RING_LEN * (1 - progress);
+
+  return (
+    <div className="mp-quest__review">
+      <p className="mp-quest__review-intro">{quest.reviewIntro}</p>
+      <pre className="mp-quest__brief-out" aria-label={quest.reviewTitle}>
+        {builtBrief}
+      </pre>
+      {letterEntries.length > 0 && (
+        <ul className="mp-quest__review-edit-list">
+          {letterEntries.map((entry, i) => (
+            <li key={`${entry.jumpId}-${i}`}>
+              <button
+                type="button"
+                className="mp-quest__nav-btn"
+                onClick={() => onJump(entry.jumpId)}
+              >
+                {quest.tapToEdit}: {entry.label.replace(/[*]/g, '')}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="mp-quest__send">
+        <button
+          type="button"
+          className="mp-quest__primary mp-quest__primary--send"
+          data-quest-focus
+          data-holding={holding || undefined}
+          ref={(node) => { focusRef.current = node; }}
+          aria-label={`${quest.nav.send} — ${board.ringHold}`}
+          {...bind}
+        >
+          <span>{quest.nav.send} →</span>
+          <svg
+            className="mp-longpress-ring"
+            viewBox="0 0 36 36"
+            aria-hidden="true"
+          >
+            <circle
+              className="mp-longpress-ring__bg"
+              cx="18" cy="18" r="15.9155"
+            />
+            <circle
+              className="mp-longpress-ring__fill"
+              cx="18" cy="18" r="15.9155"
+              style={{ strokeDashoffset: dashOffset }}
+            />
+          </svg>
+        </button>
+        <p className="mp-form__action-hint">
+          {board.ringHold} · {brief.submitHint}
+        </p>
+        <a
+          className="mp-form__mail"
+          href={buildMailtoHref(brief.mailSubject, builtBrief)}
+        >
+          {brief.mailFallback}
+        </a>
+      </div>
+    </div>
+  );
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './marketing.css';
 import { LangProvider } from './LangContext';
 import MarketingHeader from './MarketingHeader';
@@ -9,29 +9,33 @@ import Process from './sections/Process';
 import About from './sections/About';
 import FAQ from './sections/FAQ';
 import ContactCTA from './sections/ContactCTA';
+import { ScrollTrigger } from '../lib/gsap';
 
 /**
- * Marketing entry — currently STRIPPED to plain HTML pending a
- * full visual redesign. The form logic, copy, theme system, and
- * a11y panel are all wired and locked. The next design agent
- * picks up from `DESIGN_BRIEF.md` in this folder.
+ * Marketing entry — "לוח / BOARD" direction. Every visible block is
+ * a sticker-card with a status pill. Sections are kanban columns.
  *
- * Infra components left in place for the redesign to wire back:
- *   - components/LiquidField    (gooey color field)
- *   - components/KineticHeadline (clip-reveal headline)
- *   - components/BloomCta        (touch-first bloom CTA)
- *   - components/SectionZone     (per-section palette crossfade)
- *   - components/PaperGrain      (SVG noise overlay)
+ * Mobile-first: layout decisions in marketing.css favor portrait phones
+ * first, then translate up. iOS Safari ScrollTrigger quirks dodged by
+ * setting `ignoreMobileResize: true` once at boot and avoiding `pin`
+ * + `normalizeScroll`.
  *
- * These are not imported here — they exist as building blocks
- * the redesigning agent can use, ignore, or replace.
+ * Locked: theme system (`useTheme.ts` + `.ink-wipe`), pre-paint script
+ * in `business/index.html`, copy in `i18n.ts` (existing strings),
+ * Intake form logic.
  */
 export default function MarketingApp() {
   const [selectedTemplate, setSelectedTemplate] = useState<string>('');
 
+  // Boot-time ScrollTrigger tuning — avoid iOS Safari's address-bar
+  // resize re-triggering refresh and clobbering pin positions.
+  useEffect(() => {
+    ScrollTrigger.config({ ignoreMobileResize: true });
+  }, []);
+
   return (
     <LangProvider>
-      <div className="mp-root">
+      <div className="mp-root mp-board">
         <MarketingHeader />
         <main id="main" tabIndex={-1}>
           <Cover />

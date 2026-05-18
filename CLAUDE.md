@@ -77,7 +77,7 @@ All three branch on `FULL_MOTION_QUERY` from `src/lib/gsap.ts` and use `useGSAP`
 
 ### Marketing site (`src/marketing/`)
 
-A separate Vite entry; not a route. `MarketingApp` wraps `LangProvider`. Strings live in `src/marketing/i18n.ts` (HE + EN dictionaries), persisted as `bm:lang` and surfaced through `useLang()` as `{ lang, setLang, toggle, t }`. Three semantic accents (`--mp-primary` magenta, `--mp-accent-2` orange, `--mp-accent-3` blue) carry fixed roles — see `knowledge/02-design-system.md` § Marketing color-meaning. Shares `bm:theme` with the portfolio.
+A separate Vite entry; not a route. `MarketingApp` wraps `LangProvider`. Strings live in `src/marketing/i18n.ts` (HE + EN dictionaries), persisted as `bm:lang` and surfaced through `useLang()` as `{ lang, setLang, toggle, t }`. Three semantic accents (`--mp-primary` magenta, `--mp-accent-2` orange, `--mp-accent-3` blue) carry fixed roles. **Under the current "BOARD" direction these map to kanban states**: magenta = TODO, orange = DOING, blue = DONE; WhatsApp green (`--mp-whatsapp`) is reserved for the dispatch CTA. See `knowledge/02-design-system.md` § Marketing color-meaning. Shares `bm:theme` with the portfolio.
 
 ### Backoffice (`src/backoffice/`)
 
