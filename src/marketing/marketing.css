@@ -2194,10 +2194,15 @@ html.dark .mp-lab {
   }
 }
 
-/* The crafting grid itself. Mobile = 1 col, ≥640px = 3 cols. */
+/* The crafting grid itself.
+   - Mobile (< 640px): flex column with CSS-reordered slots, RARITY hidden
+     (the sticky peek bar at the viewport bottom takes over that job).
+   - Tablet+ (>= 640px): 3-col grid with named areas, RARITY shown in center,
+     TYPE chip overlaid below the rarity stars.
+*/
 .lab-craft__grid {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
   padding: 0;
   margin: 0;
@@ -2205,6 +2210,7 @@ html.dark .mp-lab {
 }
 @media (min-width: 640px) {
   .lab-craft__grid {
+    display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-template-areas:
       "what what  who"
@@ -2214,25 +2220,32 @@ html.dark .mp-lab {
   }
 }
 
-/* Map each slot to its grid-area on wide screens. */
-.lab-craft__slot--what    { grid-area: what; }
-.lab-craft__slot--type    { display: none; }
-.lab-craft__slot--who     { grid-area: who; }
-.lab-craft__slot--vibe    { grid-area: vibe; }
-.lab-craft__slot--rarity  { grid-area: rarity; }
-.lab-craft__slot--ref     { grid-area: ref; }
-.lab-craft__slot--contact { grid-area: contact; }
-.lab-craft__slot--method  { grid-area: method; }
-.lab-craft__slot--submit  { grid-area: submit; }
-
-/* On narrow screens the TYPE chip is visible inline above WHAT. */
+/* Mobile order — TYPE first (context), then required inputs, then optional,
+   then send. RARITY is hidden on mobile because the sticky peek bar already
+   shows rarity status at the bottom of the viewport. */
 @media (max-width: 639px) {
-  .lab-craft__slot--type { display: flex; }
+  .lab-craft__slot--type    { order: 0; }
+  .lab-craft__slot--what    { order: 1; }
+  .lab-craft__slot--who     { order: 2; }
+  .lab-craft__slot--vibe    { order: 3; }
+  .lab-craft__slot--ref     { order: 4; }
+  .lab-craft__slot--contact { order: 5; }
+  .lab-craft__slot--method  { order: 6; }
+  .lab-craft__slot--submit  { order: 7; }
+  .lab-craft__slot--rarity  { display: none; }
 }
+
+/* Tablet+ map each slot to its grid-area. */
 @media (min-width: 640px) {
-  /* Re-add TYPE as a small inline chip inside the WHAT slot via ::before
-     is too fiddly; instead render the type chip BELOW the rarity stars
-     on wide screens. */
+  .lab-craft__slot--what    { grid-area: what; }
+  .lab-craft__slot--who     { grid-area: who; }
+  .lab-craft__slot--vibe    { grid-area: vibe; }
+  .lab-craft__slot--rarity  { grid-area: rarity; }
+  .lab-craft__slot--ref     { grid-area: ref; }
+  .lab-craft__slot--contact { grid-area: contact; }
+  .lab-craft__slot--method  { grid-area: method; }
+  .lab-craft__slot--submit  { grid-area: submit; }
+  /* TYPE chip overlays into the rarity cell area on wide screens. */
   .lab-craft__slot--type {
     display: flex;
     grid-area: rarity;
@@ -2571,4 +2584,192 @@ html.dark .mp-lab {
   color: color-mix(in oklch, var(--mp-ink) 65%, transparent);
   padding-block-start: 8px;
   border-block-start: 1.5px dashed color-mix(in oklch, var(--mp-ink) 30%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Mobile bottom-sheet — sticky peek bar at the viewport edge plus  */
+/* an expandable native <dialog> with the full output card. Hidden  */
+/* on tablet+ where the in-page aside is sufficient.                */
+/* ---------------------------------------------------------------- */
+.lab-craft__sheet-peek,
+.lab-craft__sheet-dialog {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  /* On mobile the in-page aside is redundant with the sheet. */
+  .lab-craft > .lab-craft__output { display: none; }
+
+  /* Peek bar — sticky at the viewport bottom, always visible above any
+     scroll context. Acts as a button that opens the dialog. */
+  .lab-craft__sheet-peek {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    position: sticky;
+    bottom: 12px;
+    margin-block-start: 16px;
+    margin-inline: auto;
+    width: calc(100% - 8px);
+    max-width: 480px;
+    padding: 12px 16px;
+    background: var(--mp-surface);
+    color: var(--mp-ink);
+    border: 2.5px solid var(--mp-ink);
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 700;
+    box-shadow: 6px 6px 0 var(--mp-ink);
+    cursor: pointer;
+    min-height: 56px;
+    z-index: 20;
+    transition: box-shadow .18s ease, transform .18s ease, background .25s ease;
+  }
+  .lab-craft__sheet-peek:hover { transform: translate(-1px, -1px); }
+  .lab-craft__sheet-peek:focus-visible {
+    outline: 3px solid var(--mp-primary);
+    outline-offset: 3px;
+  }
+  .lab-craft__sheet-peek[data-rarity="uncommon"]  { box-shadow: 6px 6px 0 oklch(0.55 0.16 145); }
+  .lab-craft__sheet-peek[data-rarity="rare"]      { box-shadow: 6px 6px 0 oklch(0.55 0.18 270); }
+  .lab-craft__sheet-peek[data-rarity="epic"]      { box-shadow: 6px 6px 0 var(--mp-primary); }
+  .lab-craft__sheet-peek[data-rarity="legendary"] {
+    box-shadow: 8px 8px 0 oklch(0.72 0.18 80);
+    background: color-mix(in oklch, oklch(0.72 0.18 80) 14%, var(--mp-surface));
+  }
+
+  .lab-craft__sheet-peek-rarity {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .lab-craft__sheet-peek-stars {
+    font-size: 0.96rem;
+    letter-spacing: 2px;
+  }
+  .lab-craft__sheet-peek[data-rarity="uncommon"]  .lab-craft__sheet-peek-stars { color: oklch(0.55 0.16 145); }
+  .lab-craft__sheet-peek[data-rarity="rare"]      .lab-craft__sheet-peek-stars { color: oklch(0.55 0.18 270); }
+  .lab-craft__sheet-peek[data-rarity="epic"]      .lab-craft__sheet-peek-stars { color: var(--mp-primary); }
+  .lab-craft__sheet-peek[data-rarity="legendary"] .lab-craft__sheet-peek-stars { color: oklch(0.55 0.18 80); }
+  .lab-craft__sheet-peek-label {
+    text-transform: uppercase;
+    font-size: 0.74rem;
+    letter-spacing: 1.4px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: color-mix(in oklch, var(--mp-ink) 6%, var(--mp-surface));
+  }
+  .lab-craft__sheet-peek-count {
+    flex: 1;
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: color-mix(in oklch, var(--mp-ink) 75%, transparent);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .lab-craft__sheet-peek-arrow {
+    font-size: 1.1rem;
+    color: var(--mp-primary);
+  }
+
+  /* The bottom-sheet dialog itself. Native <dialog> handles focus trap,
+     ESC, and backdrop. We just position it as a bottom sheet. */
+  .lab-craft__sheet-dialog {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    max-height: 92vh;
+    margin: 0 auto;
+    margin-block-start: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    /* On Safari/older browsers without :modal, default open positioning is
+       centered; the explicit margin pushes the box to the viewport bottom. */
+    inset-inline: 0;
+    inset-block-end: 0;
+    inset-block-start: auto;
+    overflow: visible;
+  }
+  .lab-craft__sheet-dialog::backdrop {
+    background: oklch(0 0 0 / 0.5);
+    backdrop-filter: blur(2px);
+  }
+  .lab-craft__sheet-dialog[open] {
+    animation: lab-sheet-up .25s ease;
+  }
+  @keyframes lab-sheet-up {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lab-craft__sheet-dialog[open] { animation: none; }
+  }
+
+  /* Sheet grip — visual handle hint at the very top. Decorative. */
+  .lab-craft__sheet-grip {
+    display: flex;
+    justify-content: center;
+    padding: 8px 0 4px;
+    background: var(--mp-surface);
+    border-radius: 18px 18px 0 0;
+    border: 2px solid var(--mp-ink);
+    border-block-end: 0;
+  }
+  .lab-craft__sheet-grip-bar {
+    display: block;
+    width: 56px;
+    height: 5px;
+    border-radius: 999px;
+    background: color-mix(in oklch, var(--mp-ink) 30%, transparent);
+  }
+  .lab-craft__sheet-content {
+    padding: 14px 18px;
+    border-radius: 0;
+    border-block-start: 0;
+    border-block-end: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: calc(92vh - 130px);
+    overflow-y: auto;
+  }
+  .lab-craft__sheet-actions {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+    padding: 12px 18px calc(env(safe-area-inset-bottom, 0px) + 14px);
+    background: var(--mp-surface);
+    border: 2px solid var(--mp-ink);
+    border-block-start: 0;
+    border-radius: 0 0 0 0;
+    box-shadow: 0 -4px 16px oklch(0 0 0 / .12);
+  }
+  .lab-craft__sheet-actions > .mp-cta:first-child {
+    flex: 0 0 56px;
+    min-width: 56px;
+    padding: 0;
+    font-size: 1.3rem;
+    line-height: 1;
+  }
+  .lab-craft__sheet-send {
+    flex: 1;
+    margin: 0;
+  }
+
+  /* Give the bottom of the form room so the peek bar doesn't overlay
+     the SUBMIT slot when the user scrolls to the end. */
+  .lab-craft__slot--submit { margin-block-end: 72px; }
+}
+
+/* Larger phones / small tablets: keep the 3-col grid but loosen padding
+   inside slots so it doesn't feel cramped. */
+@media (min-width: 640px) and (max-width: 819px) {
+  .lab-craft__slot { padding: 10px; min-height: 80px; }
+  .lab-craft__rarity-stars { font-size: 1.1rem; letter-spacing: 2px; }
 }

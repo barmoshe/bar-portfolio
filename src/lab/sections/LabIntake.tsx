@@ -52,6 +52,9 @@ export default function LabIntake({ selectedTemplate }: Props) {
   const [showErrors, setShowErrors] = useState(false);
   const [status, setStatus] = useState('');
   const whatRef = useRef<HTMLTextAreaElement | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const sheetDialogRef = useRef<HTMLDialogElement | null>(null);
+  const sheetPeekRef = useRef<HTMLButtonElement | null>(null);
 
   const pickedItem = useMemo(
     () => contents.items.find((i) => i.slug === selectedTemplate),
@@ -197,6 +200,73 @@ export default function LabIntake({ selectedTemplate }: Props) {
 
   const submitLabel = allEssentialsFilled ? craft.submitReady : craft.submit;
 
+  // Mobile bottom-sheet dialog handlers. The dialog renders the same
+  // output card content as the desktop aside, plus a Send button that
+  // re-uses the form's submit path via formRef.requestSubmit().
+  const openSheet = () => {
+    sheetDialogRef.current?.showModal();
+  };
+  const closeSheet = () => {
+    sheetDialogRef.current?.close();
+    // Restore focus to the peek button so keyboard users don't lose place.
+    requestAnimationFrame(() => sheetPeekRef.current?.focus());
+  };
+  const onSheetSend = () => {
+    sheetDialogRef.current?.close();
+    formRef.current?.requestSubmit();
+  };
+
+  // Output card content — rendered once in <aside> (desktop/tablet) and
+  // once inside the mobile <dialog>. Extracted to keep them in lockstep.
+  const outputBody = (
+    <>
+      <header className="lab-craft__output-head">
+        <span className="lab-craft__output-rarity" data-rarity={rarity}>
+          ◆ {rarityLabel}
+        </span>
+        <span className="lab-craft__output-title">
+          {craft.outputHeading}
+        </span>
+      </header>
+
+      <div className="lab-craft__output-body" aria-live="polite">
+        {pickedItem ? (
+          <p className="lab-craft__output-type">
+            <strong>{pickedItem.title}</strong>
+          </p>
+        ) : null}
+        {form.what.trim() ? (
+          <p className="lab-craft__output-line">{form.what.trim()}</p>
+        ) : (
+          <p className="lab-craft__output-line lab-craft__output-line--ghost">
+            {craft.outputEmpty}
+          </p>
+        )}
+        {form.who.trim() ? (
+          <p className="lab-craft__output-line">
+            {brief.previewFor}: {form.who.trim()}
+          </p>
+        ) : null}
+        {form.reference.trim() ? (
+          <p className="lab-craft__output-line">
+            {brief.previewLike}: {form.reference.trim()}
+          </p>
+        ) : null}
+        {selectedVibeLabels.length ? (
+          <p className="lab-craft__output-vibes">
+            {selectedVibeLabels.map((v) => (
+              <span key={v} className="lab-craft__output-vibe">{v}</span>
+            ))}
+          </p>
+        ) : null}
+      </div>
+
+      <footer className="lab-craft__output-foot">
+        {sendingVia}
+      </footer>
+    </>
+  );
+
   return (
     <section
       className="mp-section mp-brief mp-brief--lab"
@@ -217,6 +287,7 @@ export default function LabIntake({ selectedTemplate }: Props) {
 
       <div className="lab-craft">
         <form
+          ref={formRef}
           className="lab-craft__grid"
           onSubmit={onSubmit}
           noValidate
@@ -439,52 +510,69 @@ export default function LabIntake({ selectedTemplate }: Props) {
           data-rarity={rarity}
           aria-label={craft.outputHeading}
         >
-          <header className="lab-craft__output-head">
-            <span className="lab-craft__output-rarity" data-rarity={rarity}>
-              ◆ {rarityLabel}
-            </span>
-            <span className="lab-craft__output-title">
-              {craft.outputHeading}
-            </span>
-          </header>
-
-          <div className="lab-craft__output-body" aria-live="polite">
-            {pickedItem ? (
-              <p className="lab-craft__output-type">
-                <strong>{pickedItem.title}</strong>
-              </p>
-            ) : null}
-            {form.what.trim() ? (
-              <p className="lab-craft__output-line">{form.what.trim()}</p>
-            ) : (
-              <p className="lab-craft__output-line lab-craft__output-line--ghost">
-                {craft.outputEmpty}
-              </p>
-            )}
-            {form.who.trim() ? (
-              <p className="lab-craft__output-line">
-                {brief.previewFor}: {form.who.trim()}
-              </p>
-            ) : null}
-            {form.reference.trim() ? (
-              <p className="lab-craft__output-line">
-                {brief.previewLike}: {form.reference.trim()}
-              </p>
-            ) : null}
-            {selectedVibeLabels.length ? (
-              <p className="lab-craft__output-vibes">
-                {selectedVibeLabels.map((v) => (
-                  <span key={v} className="lab-craft__output-vibe">{v}</span>
-                ))}
-              </p>
-            ) : null}
-          </div>
-
-          <footer className="lab-craft__output-foot">
-            {sendingVia}
-          </footer>
+          {outputBody}
         </aside>
       </div>
+
+      {/* Mobile-only sticky peek bar. Always visible at viewport bottom,
+          shows compact rarity + counter + opens the dialog when tapped.
+          Hidden on tablet/desktop where the aside lives in-page. */}
+      <button
+        ref={sheetPeekRef}
+        type="button"
+        className="lab-craft__sheet-peek"
+        onClick={openSheet}
+        aria-haspopup="dialog"
+        aria-label={craft.outputHeading}
+        data-rarity={rarity}
+      >
+        <span className="lab-craft__sheet-peek-rarity">
+          <span className="lab-craft__sheet-peek-stars" aria-hidden="true">
+            {rarity === 'legendary' ? '★★★★★'
+              : rarity === 'epic'      ? '★★★★☆'
+              : rarity === 'rare'      ? '★★★☆☆'
+              : rarity === 'uncommon'  ? '★★☆☆☆'
+                                       : '★☆☆☆☆'}
+          </span>
+          <span className="lab-craft__sheet-peek-label">{rarityLabel}</span>
+        </span>
+        <span className="lab-craft__sheet-peek-count">{counterText}</span>
+        <span className="lab-craft__sheet-peek-arrow" aria-hidden="true">↑</span>
+      </button>
+
+      {/* Mobile-only bottom-sheet dialog. Native <dialog> gives us focus
+          trap, ESC handling, and backdrop for free. */}
+      <dialog
+        ref={sheetDialogRef}
+        className="lab-craft__sheet-dialog"
+        aria-label={craft.outputHeading}
+      >
+        <header className="lab-craft__sheet-grip" aria-hidden="true">
+          <span className="lab-craft__sheet-grip-bar" />
+        </header>
+        <div className="lab-craft__sheet-content mp-card" data-rarity={rarity}>
+          {outputBody}
+        </div>
+        <footer className="lab-craft__sheet-actions">
+          <button
+            type="button"
+            className="mp-cta mp-cta--secondary"
+            onClick={closeSheet}
+          >
+            {/* Reuses i18n: the editing/back affordance. */}
+            ↓
+          </button>
+          <button
+            type="button"
+            className="mp-cta mp-cta--primary mp-cta--block lab-craft__sheet-send"
+            onClick={onSheetSend}
+            data-ready={allEssentialsFilled || undefined}
+            data-legendary={rarity === 'legendary' || undefined}
+          >
+            {submitLabel}
+          </button>
+        </footer>
+      </dialog>
     </section>
   );
 }
