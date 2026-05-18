@@ -331,7 +331,7 @@ const HE: Dict = {
         slug: 'realtime',
         title: 'דשבורד שמתעדכן בזמן אמת',
         summary:
-          'פאנל ניהול עם הרשאות, BI חי, מערכת ניטור בזמן אמת. גרפים, פילטרים, ייצוא נתונים. כל מה שהצוות שלך עושה היום באקסל - רק שזה עובד.',
+          'פאנל ניהול עם הרשאות, דשבורד נתונים חי, מערכת ניטור בזמן אמת. גרפים, פילטרים, ייצוא נתונים. כל מה שהצוות שלך עושה היום באקסל - רק שזה עובד.',
         fits: ['חברה', 'סטארטאפ ב-scale', 'צוות נתונים / ops'],
       },
       {
@@ -950,7 +950,7 @@ const EN: Dict = {
         slug: 'realtime',
         title: 'Dashboard / real-time system',
         summary:
-          'Admin panel with permissions, live BI, a real-time monitoring system. Charts, filters, data export. Everything your team is doing in Excel right now.',
+          'Admin panel with permissions, a live data dashboard, a real-time monitoring system. Charts, filters, data export. Everything your team is doing in Excel right now.',
         fits: ['Company', 'Scaling startup', 'Data / ops team'],
       },
       {
