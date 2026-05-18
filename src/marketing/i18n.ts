@@ -675,8 +675,8 @@ const HE: Dict = {
             placeholder: 'תחושת חדר, של נוכחות איפשהו במקום לחיצה בין דפים.',
           },
           references: {
-            prompt: 'אתרים או אפליקציות מבוססי סאונד שאתה אוהב? Endel, Marpi, או כל דוגמה אחרת.',
-            placeholder: 'https://marpi.studio - התחושה הזו.',
+            prompt: 'אתרים, אפליקציות, פלאגינים או כלים מוזיקליים שאתה אוהב? קישור, סקרינשוט, או "כמו X אבל בלי Y".',
+            placeholder: 'קישור לאתר, פלאגין או דמו - והתחושה שאתה רוצה להעביר.',
           },
           timeline: { prompt: 'מתי זה צריך להיות חי?' },
           howHeard: { prompt: 'איך הגעת אליי?' },
@@ -1296,8 +1296,8 @@ const EN: Dict = {
             placeholder: 'Sense of room, of being present somewhere instead of clicking through pages.',
           },
           references: {
-            prompt: 'Sound-driven sites or apps you love? Endel, Marpi, or any other example.',
-            placeholder: 'https://marpi.studio - that feel.',
+            prompt: 'Sound-driven sites, apps, plugins, or musical tools you love? Link, screenshot, or "like X but without Y".',
+            placeholder: 'A link to a site, plugin, or demo - and the feel you want to capture.',
           },
           timeline: { prompt: 'When does it need to be live?' },
           howHeard: { prompt: 'How did you find me?' },
