@@ -41,17 +41,17 @@ export default function Cover() {
     ? {
         eyebrow: 'גליון 01 · בלי תשלום מראש',
         titleA: 'בונה לך',
-        titleB: 'POC',
+        titleB: 'אבטיפוס',
         titleC: 'על חשבוני.',
         lead:
-          'תכתוב לי בכמה שורות מה אתה רוצה לבנות. תוך שבוע יש לך POC עובד ביד. אהבת? יאללה ממשיכים. לא אהבת? נפרדים בלי שאלות, בלי תשלום, בלי בולשיט.',
+          'תכתוב לי בכמה שורות מה אתה רוצה לבנות. תוך שבוע יש לך אבטיפוס עובד ביד. אהבת? יאללה ממשיכים. לא אהבת? נפרדים בלי שאלות, בלי תשלום, בלי בולשיט.',
         ticketNum: '#BAR-001',
         ticketStatus: t.board.status.doing,
         ticketTitle: 'הפרויקט הבא שלך',
         ticketSub: 'מוכן להפוך לקוד',
         checks: [
           'תיאור - מה אתה רוצה לבנות, ב־3 שורות',
-          'POC - שבוע על חשבוני, קוד אמיתי שרץ',
+          'אבטיפוס - שבוע על חשבוני, קוד אמיתי שרץ',
           'החלטה - רק אם זה עובד לך, ממשיכים',
         ],
         ctaPrimary: '✦ פתח את הכרטיס שלך',
@@ -61,17 +61,17 @@ export default function Cover() {
     : {
         eyebrow: 'Issue 01 · No upfront cost',
         titleA: 'I build you',
-        titleB: 'a POC',
+        titleB: 'a prototype',
         titleC: 'on my dime.',
         lead:
-          'Tell me in a few lines what you want built. A week later you have a working POC in your hands. Loved it? Let’s keep going. Didn’t? We part ways - no questions, no invoice, no BS.',
+          'Tell me in a few lines what you want built. A week later you have a working prototype in your hands. Loved it? Let’s keep going. Didn’t? We part ways - no questions, no invoice, no BS.',
         ticketNum: '#BAR-001',
         ticketStatus: t.board.status.doing,
         ticketTitle: 'Your next project',
         ticketSub: 'Ready to become code',
         checks: [
           'Describe - what you want built, in 3 lines',
-          'POC - one week on me, real code that runs',
+          'Prototype - one week on me, real code that runs',
           'Decide - keep going only if it works for you',
         ],
         ctaPrimary: '✦ Open your ticket',

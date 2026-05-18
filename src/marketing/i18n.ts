@@ -242,7 +242,7 @@ const HE: Dict = {
   meta: {
     title: 'בר משה - תאר. אבנה. תחליט.',
     description:
-      'בונה לך POC על חשבוני לפני שמדברים בכלל על מחיר. עבד לך? יאללה ממשיכים. לא? כל אחד הולך לדרכו, בלי שום התחייבות.',
+      'בונה לך אבטיפוס על חשבוני לפני שמדברים בכלל על מחיר. עבד לך? יאללה ממשיכים. לא? כל אחד הולך לדרכו, בלי שום התחייבות.',
   },
   masthead: {
     issueNumber: 'גליון 01',
@@ -265,7 +265,7 @@ const HE: Dict = {
     // direct, punchy, matches the HTML title.
     headlineLines: ['תאר.', 'אבנה.', 'תחליט.'],
     standfirst:
-      'תפסיק עם הבריפים האינסופיים. תכתוב לי בכמה שורות מה אתה רוצה לבנות, ובתוך שבוע אני שולח לך POC אמיתי - על חשבוני. אהבת? יאללה ממשיכים. לא אהבת? נפרדים בלי שאלות.',
+      'תפסיק עם הבריפים האינסופיים. תכתוב לי בכמה שורות מה אתה רוצה לבנות, ובתוך שבוע אני שולח לך אבטיפוס אמיתי - על חשבוני. אהבת? יאללה ממשיכים. לא אהבת? נפרדים בלי שאלות.',
     byline: 'בר משה · בונה דברים מאז 2020',
     scrollHint: 'גלילה למטה',
     ctaStart: 'בוא נתחיל',
@@ -280,9 +280,9 @@ const HE: Dict = {
     items: [
       {
         slug: 'mvp',
-        title: 'MVP לסטארטאפ',
+        title: 'גרסה ראשונה לסטארטאפ',
         summary:
-          'מ-Figma לקוד עובד בתוך שבוע. גרסה ראשונה שמספיק טובה כדי להראות למשתמשים, לרוץ איתה לסבב גיוס, או פשוט להבין שזה לא הכיוון.',
+          'מרעיון לקוד עובד בתוך שבוע. גרסה ראשונה שמספיק טובה כדי להראות למשתמשים, לרוץ איתה לסבב גיוס, או פשוט להבין שזה לא הכיוון.',
         fits: ['ייזום סולו', 'סטארטאפ early-stage', 'צוות קטן'],
       },
       {
@@ -368,7 +368,7 @@ const HE: Dict = {
         num: '02',
         title: 'אבנה',
         body:
-          'תוך 3–7 ימים יש לך POC ביד. לא מוקאפ. לא Figma. קוד עובד. תפתח, תלחץ, תראה לחבר, ותגיד לי אם זה הכיוון. לא הכיוון? נפרדים כאן. בלי חשבון.',
+          'תוך 3–7 ימים יש לך אבטיפוס ביד. לא מוקאפ. לא מצגת. קוד עובד. תפתח, תלחץ, תראה לחבר, ותגיד לי אם זה הכיוון. לא הכיוון? נפרדים כאן. בלי חשבון.',
       },
       {
         num: '03',
@@ -388,12 +388,12 @@ const HE: Dict = {
     title: 'בר משה',
     paragraphs: [
       'מפתח מאז 2020. כל פרויקט מביא איתו אתגר אחר - וזה בדיוק מה שמשאיר את העבודה מעניינת. בזכות זה אני עדיין נהנה.',
-      'התחלתי לבנות הרבה לפני שזה הפך לפרנסה. אני מחליט מהר כי קוד שעובד קל לתקן, ובריף שלא הפך לקוד - כמעט אי אפשר. בגלל זה אני עובד POC-first: ככה אני יודע מה לבנות, ואתה רואה מה אתה מקבל - לפני שצריך להחליט משהו.',
+      'התחלתי לבנות הרבה לפני שזה הפך לפרנסה. אני מחליט מהר כי קוד שעובד קל לתקן, ובריף שלא הפך לקוד - כמעט אי אפשר. בגלל זה אני מתחיל מאבטיפוס: ככה אני יודע מה לבנות, ואתה רואה מה אתה מקבל - לפני שצריך להחליט משהו.',
       'אני בישראל, עובד עם לקוחות בכל העולם - בעברית ובאנגלית. עדיף שתכתוב לי לפני שאתה רץ לכל חברות הפיתוח: אם זה לא מתאים, אגיד לך מראש. כך לא נבזבז זמן לאף אחד.',
     ],
     stats: [
       { value: '5+', label: 'שנים בקוד' },
-      { value: '20+', label: 'POCs שנבנו' },
+      { value: '20+', label: 'אבטיפוסים שנבנו' },
       { value: '0', label: 'תשלום מראש' },
     ],
   },
@@ -402,7 +402,7 @@ const HE: Dict = {
     kicker: 'תכתוב לי',
     title: 'מה הרעיון שלך?',
     standfirst:
-      'הבריף נוחת ישר אצלי בוואטסאפ, מסודר ומוכן לקריאה. כמה שיותר פירוט - POC מדויק יותר. גם שלוש שורות זה התחלה מצוינת.',
+      'הבריף נוחת ישר אצלי בוואטסאפ, מסודר ומוכן לקריאה. כמה שיותר פירוט - אבטיפוס מדויק יותר. גם שלוש שורות זה התחלה מצוינת.',
     requiredHint: 'רק 3 שדות חובה: סוג, רעיון, ואיך לחזור אליך.',
     optionalHeading: 'יש לך עוד? אל תתבייש',
     fields: {
@@ -522,7 +522,7 @@ const HE: Dict = {
       byTemplate: {
         mvp: {
           idea: {
-            prompt: 'איזה MVP אתה רוצה לבנות? מה החלק הקטן ביותר שכבר מספיק כדי לבדוק את ההנחה?',
+            prompt: 'איזו גרסה ראשונה אתה רוצה לבנות? מה החלק הקטן ביותר שכבר מספיק כדי לבדוק את ההנחה?',
             hint: 'משפט אחד מספיק. נחדד יחד.',
             placeholder:
               'פלטפורמה שמעצבים פרילנסרים מציגים בה פרויקטים קטנים, לקוחות מזמינים פגישת 30 דקות, התשלום בנאמנות עד מסירה.',
@@ -536,16 +536,16 @@ const HE: Dict = {
             placeholder: 'מעצבי פרודקט בני 25-40 שעובדים בערבים כפרילנסרים.',
           },
           problem: {
-            prompt: 'מה כואב היום בלי ה-MVP הזה?',
+            prompt: 'מה כואב היום בלי הגרסה הראשונה הזו?',
             placeholder: 'מעצבים רודפים אחרי שינויי סקופ בוואטסאפ ומקבלים תשלום באיחור.',
           },
           references: {
             prompt: 'ראית משהו שקרוב לזה? קישור, צילום, "כמו X אבל בלי Y".',
             placeholder: 'כמו Toptal אבל ליוצרים סולו, בלי עמלת סוכנות.',
           },
-          timeline: { prompt: 'מתי אתה צריך POC עובד ביד?' },
+          timeline: { prompt: 'מתי אתה צריך אבטיפוס עובד ביד?' },
           howHeard: { prompt: 'איך הגעת אליי? סקרנות.' },
-          review: { prompt: 'זה הבריף של ה-MVP. אישור אחרון לפני שזה נופל בוואטסאפ?' },
+          review: { prompt: 'זה הבריף של הגרסה הראשונה. אישור אחרון לפני שזה נופל בוואטסאפ?' },
         },
         brand: {
           idea: {
@@ -801,7 +801,7 @@ const HE: Dict = {
     title: 'מה שואלים אותי לפני שפונים',
     items: [
       {
-        q: 'באמת בלי תשלום על ה-POC?',
+        q: 'באמת בלי תשלום על האבטיפוס?',
         a:
           'באמת. אני משקיע 3–7 ימים כי זו הדרך הכי טובה שמצאתי להוכיח שאני יכול לבנות את מה שצריך - לפני שמשלמים. לא ממשיכים? הסיכון שלי. ממשיכים? שני הצדדים יודעים בדיוק על מה חתמו.',
       },
@@ -811,7 +811,7 @@ const HE: Dict = {
           'מעולה - זה רוב המקרים. אם ראית מוצר שמרגיז אותך, או יש בעיה יומיומית שכואבת - תכתוב שני משפטים, ואני אבנה את הניחוש הראשון שלי. ברגע שיש משהו לראות, הרבה יותר קל להגיד "כן, אבל…" - וזה בדיוק מה שאני מחפש.',
       },
       {
-        q: 'אז איך בעצם משלמים אחרי ה-POC?',
+        q: 'אז איך בעצם משלמים אחרי האבטיפוס?',
         a:
           'אני לא עובד לפי שעות. כל פרויקט מקבל סקופ ברור ומחיר סגור מראש - לפי תוצאות. פרויקטים קטנים יוצאים במחיר חבילה. גדולים מתפצלים לאבני דרך, עם תשלום אחרי כל מסירה. אין ריטיינר חודשי, אין חוזה ארוך. נגמרה העבודה - נגמר התשלום.',
       },
@@ -863,7 +863,7 @@ const EN: Dict = {
   meta: {
     title: 'Bar Moshe - Describe. I Build. You Decide.',
     description:
-      'I build a working POC on my own dime before we talk price. If it works for you - we keep going. If not - we part ways, no strings attached.',
+      'I build a working prototype on my own dime before we talk price. If it works for you - we keep going. If not - we part ways, no strings attached.',
   },
   masthead: {
     issueNumber: 'Issue 01',
@@ -884,7 +884,7 @@ const EN: Dict = {
     issueLine: 'Issue 01 · Build before brief',
     headlineLines: ['Describe.', 'I build.', 'You decide.'],
     standfirst:
-      'Instead of a brief that drags on for weeks and a proposal you have to wonder about - describe the idea in the form, and I build a first POC on my own dime. If it works for you, we keep building together. If not, we part ways, no strings attached.',
+      'Instead of a brief that drags on for weeks and a proposal you have to wonder about - describe the idea in the form, and I build a first prototype on my own dime. If it works for you, we keep building together. If not, we part ways, no strings attached.',
     byline: 'Bar Moshe · Independent builds · since 2020',
     scrollHint: 'Keep reading',
     ctaStart: 'Start a build',
@@ -899,9 +899,9 @@ const EN: Dict = {
     items: [
       {
         slug: 'mvp',
-        title: 'Startup MVP',
+        title: 'Startup first version',
         summary:
-          'From Figma to working code in a week. A first version solid enough to show users, raise on, or decide it’s not the direction.',
+          'From idea to working code in a week. A first version solid enough to show users, raise on, or decide it’s not the direction.',
         fits: ['Solo founder', 'Early-stage startup', 'Small team'],
       },
       {
@@ -987,7 +987,7 @@ const EN: Dict = {
         num: '02',
         title: 'I build',
         body:
-          'Within 3–7 days I build a first POC on my own dime. Not a mockup. Not Figma. Working code you can open, click, send to a friend, and ask if this is what you imagined. If not, we part ways here. No invoice.',
+          'Within 3–7 days I build a first prototype on my own dime. Not a mockup. Not a slide deck. Working code you can open, click, send to a friend, and ask if this is what you imagined. If not, we part ways here. No invoice.',
       },
       {
         num: '03',
@@ -1008,12 +1008,12 @@ const EN: Dict = {
     title: 'Bar Moshe',
     paragraphs: [
       'Developer since 2020. Every project brings a different challenge - which is exactly what keeps the work interesting. That’s why I’m still here.',
-      'I build because it was the hobby before it was the job. I decide quickly because it’s much easier to fix code that sort of works than a brief that never became code. That’s why I work POC-first: I learn what to build, and you see what you’re getting.',
+      'I build because it was the hobby before it was the job. I decide quickly because it’s much easier to fix code that sort of works than a brief that never became code. That’s why I work prototype-first: I learn what to build, and you see what you’re getting.',
       'Based in Israel, working with clients around the world in Hebrew and English. Write before you check the big software shops - if it isn’t a fit, I’ll tell you.',
     ],
     stats: [
       { value: '5+', label: 'years building' },
-      { value: '20+', label: 'POCs shipped' },
+      { value: '20+', label: 'prototypes shipped' },
       { value: '0', label: 'upfront payment' },
     ],
   },
@@ -1022,7 +1022,7 @@ const EN: Dict = {
     kicker: 'The brief',
     title: 'What do you want to build',
     standfirst:
-      'This brief goes straight to my WhatsApp as a tidy message. The more detail you give, the sharper the first POC. Three lines is enough to start.',
+      'This brief goes straight to my WhatsApp as a tidy message. The more detail you give, the sharper the first prototype. Three lines is enough to start.',
     requiredHint: 'Only 3 required fields: type, idea, and a way to reach you.',
     optionalHeading: 'More detail - optional',
     fields: {
@@ -1143,7 +1143,7 @@ const EN: Dict = {
       byTemplate: {
         mvp: {
           idea: {
-            prompt: 'What MVP do you want to build? What’s the smallest slice that already tests the bet?',
+            prompt: 'What first version do you want to build? What’s the smallest slice that already tests the bet?',
             hint: 'One sentence is plenty. We’ll sharpen it together.',
             placeholder:
               'A platform where solo designers list 1-off projects, clients book a 30-min slot, payment held in escrow until delivery.',
@@ -1157,16 +1157,16 @@ const EN: Dict = {
             placeholder: 'Solo product designers, 25–40, freelancing evenings.',
           },
           problem: {
-            prompt: 'What hurts today without this MVP?',
+            prompt: 'What hurts today without this first version?',
             placeholder: 'Designers chase scope changes on WhatsApp and get paid late.',
           },
           references: {
             prompt: 'Anything you’ve seen that’s close? A link, a screenshot, "like X but without Y".',
             placeholder: 'Like Toptal but solo-creator, no agency markup.',
           },
-          timeline: { prompt: 'When do you need a working POC in hand?' },
+          timeline: { prompt: 'When do you need a working prototype in hand?' },
           howHeard: { prompt: 'How did you find me? Curious.' },
-          review: { prompt: 'This is the MVP brief. Last check before it lands in WhatsApp?' },
+          review: { prompt: 'This is the first-version brief. Last check before it lands in WhatsApp?' },
         },
         brand: {
           idea: {
@@ -1420,7 +1420,7 @@ const EN: Dict = {
     title: 'What people ask before reaching out',
     items: [
       {
-        q: 'Really no payment for the POC?',
+        q: 'Really no payment for the prototype?',
         a:
           'Really. I invest 3–7 days because it’s the best way I’ve found to show I can build what you need - before you pay anything. If we don’t continue, that’s my risk. If we do, both sides know exactly what they’re signing up for.',
       },
@@ -1430,7 +1430,7 @@ const EN: Dict = {
           'Perfect - that’s most cases. Describe in two sentences what you don’t want, or which daily problem is in front of you, and I’ll build my first read of it. Once you see something, it’s much easier to say "yes, but…" - and that’s exactly what I’m after.',
       },
       {
-        q: 'So how does payment actually work after the POC?',
+        q: 'So how does payment actually work after the prototype?',
         a:
           'I don’t work by the hour. Every project gets a clear scope and a price known up front - outcome-based. Small projects ship at a package price; larger ones break into milestones with payment after each delivery. No monthly retainer, no long contract. Work’s done - payment’s done.',
       },
