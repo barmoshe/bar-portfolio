@@ -18,7 +18,7 @@ workflow it sells.
 ```
 src/marketing/
 ├── MarketingApp.tsx           ← root: wraps in .mp-root .mp-board,
-│                                seeds ScrollTrigger.config
+│                                calls useReveal()
 ├── MarketingHeader.tsx        ← sticky bar (brand, lang, ⚙)
 ├── main.tsx                   ← React mount; axe-core in dev
 ├── marketing.css              ← FULL design system. Tokens, sticker
@@ -29,12 +29,12 @@ src/marketing/
 │                                board.brief, board.progress, board.ringHold
 ├── LangContext.tsx, contact.ts, scrollToIntake.ts
 ├── hooks/
-│   ├── useReveal.ts           ← IntersectionObserver fallback (unused)
+│   ├── useReveal.ts           ← IO-based section reveal (sole scroll motion)
 │   └── useLongPress.ts        ← 600ms hold-to-confirm w/ rAF progress
 ├── sections/
 │   ├── Cover.tsx              ← 2-row offset hero stack (3 sticker beats)
 │   ├── ProjectTemplates.tsx   ← "BACKLOG" column, 10 ticket cards
-│   ├── Process.tsx            ← 3 step cards w/ scroll-driven status morph
+│   ├── Process.tsx            ← 3 step cards w/ static status pills
 │   ├── About.tsx              ← bio ticket + 3 stat micro-cards (count-up)
 │   ├── Intake.tsx             ← live ticket; LOCKED logic, re-skinned chrome
 │   ├── FAQ.tsx                ← <details> sticker cards
@@ -44,7 +44,9 @@ src/marketing/
 business/index.html            ← entry HTML; pre-paint script + Google
                                   Fonts (Suez One + Rubik)
 src/lib/gsap.ts                ← GSAP + ScrollTrigger + SplitText + Flip
-src/lib/scrollReveal.ts        ← createReveal() helper
+                                  (marketing site does NOT use ScrollTrigger;
+                                   only the portfolio does)
+src/lib/scrollReveal.ts        ← createReveal() helper (portfolio only)
 src/components/InkDefs.tsx     ← SVG filters (turbulence, displacement)
 src/hooks/useTheme.ts          ← theme cycle + ink-wipe transition
 ```
@@ -76,15 +78,15 @@ src/hooks/useTheme.ts          ← theme cycle + ink-wipe transition
 - ≤ 1 concurrently-animating SVG `<filter>`. No `baseFrequency`
   keyframes on mobile.
 - No CSS `filter` keyframes. Use `box-shadow` + `opacity`.
-- ≤ 8 concurrent GSAP scroll-driven transforms per frame.
-- ≤ 12 active ScrollTriggers (`ScrollTrigger.batch` for BACKLOG).
+- **The only scroll-related animation is the section reveal** wired
+  up by `useReveal` (fade + 16px translate-up on first entry,
+  one-shot, IO-unobserved after firing). No `ScrollTrigger`, no
+  `window.scroll` listeners, no parallax, no scroll-scrubbed
+  transforms.
 - All infinite/loop animations IO-gated via `data-alive`.
 - `100svh` everywhere (never `100vh`).
-- `ScrollTrigger.config({ ignoreMobileResize: true })` seeded at boot.
-- Never `ScrollTrigger.normalizeScroll(true)` — breaks input focus
-  on iOS Safari.
-- Reduced-motion short-circuits via `gsap.matchMedia` +
-  `FULL_MOTION_QUERY` (from `src/lib/gsap.ts`).
+- Reduced-motion short-circuits: `useReveal` stamps `.is-in`
+  immediately so sections are visible without transition.
 
 ## Don't change
 
@@ -127,10 +129,8 @@ not currently mounted, available if a future direction needs them:
 
 | File | What it is |
 |---|---|
-| `LiquidField.tsx` | Full-viewport gooey CSS color field (GSAP). |
 | `KineticHeadline.tsx` | Per-line clip-path headline reveal. |
 | `BloomCta.tsx` | Touch-first orb CTA with bloom-wash transition. |
-| `SectionZone.tsx` | Crossfades root CSS vars on enter via ScrollTrigger. |
 | `PaperGrain.tsx` | Static SVG noise overlay. |
 | `LangToggle.tsx` | Active. Renders the HE/EN pill in the header. |
 | `SectionHeading.tsx`, `RunningFoot.tsx` | Editorial-era leftovers; BOARD uses its own `.mp-h` + no per-section footer. |
@@ -155,8 +155,8 @@ Deploys go live on push to `main` via GitHub Actions.
 - [ ] Every visible block is a sticker card with a status pill.
 - [ ] Hero shows three offset cards above the fold on 390×844.
 - [ ] DOING card pulses; only one element pulses at a time.
-- [ ] Process step pills morph TODO → DOING → DONE in order as you
-      scroll past each card (exactly one DOING at any time).
+- [ ] Process step pills are static (Step 1 DONE, Step 2 DOING,
+      Step 3 TODO) — no scroll-driven morph.
 - [ ] Intake header pill morphs across chapters; brief sidebar is
       a sticky `<details>` on mobile, true sidebar from 820px up.
 - [ ] Field commit triggers a border-bloom on the matching brief row.

@@ -1,16 +1,17 @@
 import { useEffect } from 'react';
 
-// Fallback section reveals for browsers without CSS scroll-driven
-// animations (Firefox, older Safari). When `animation-timeline: view()`
-// is supported, this hook does nothing and the CSS @supports block in
-// marketing.css owns the reveal. Reduced motion stamps every section
-// .is-in immediately so nothing is ever stuck invisible.
+// Section reveal — the only scroll-related animation on the marketing
+// site. Adds `.is-in` to every `.mp-section` (and any `.mp-reveal`
+// opt-in) when it enters the viewport, then unobserves so the reveal
+// runs exactly once. Reduced motion stamps `.is-in` immediately so no
+// element is ever stuck invisible.
 export function useReveal() {
   useEffect(() => {
-    if (CSS.supports('animation-timeline: view()')) return;
-    const sections = document.querySelectorAll<HTMLElement>('.mp-section');
+    const targets = document.querySelectorAll<HTMLElement>(
+      '.mp-section, .mp-reveal',
+    );
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      sections.forEach((el) => el.classList.add('is-in'));
+      targets.forEach((el) => el.classList.add('is-in'));
       return;
     }
     const io = new IntersectionObserver(
@@ -22,9 +23,9 @@ export function useReveal() {
           }
         });
       },
-      { rootMargin: '0px 0px -15% 0px', threshold: 0.05 }
+      { rootMargin: '0px 0px -15% 0px', threshold: 0.05 },
     );
-    sections.forEach((el) => io.observe(el));
+    targets.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, []);
 }

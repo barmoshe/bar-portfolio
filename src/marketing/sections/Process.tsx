@@ -1,69 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
 import { useLang } from '../LangContext';
 
 /**
- * Process — three step cards stacked vertically. Each card's status
- * pill morphs TODO → DOING → DONE as the user scrolls past it. No
- * GSAP `pin` (iOS Safari pin-jumping is well-documented in 2025);
- * we use an IntersectionObserver to toggle per-card status.
+ * Process — three step cards stacked vertically. Status pills are
+ * static (Step 1 = DONE, Step 2 = DOING, Step 3 = TODO), painting a
+ * project mid-flight using all three kanban states.
  */
-type StepStatus = 'todo' | 'doing' | 'done';
+type StepStatus = 'done' | 'doing' | 'todo';
+
+const STATIC_STATUSES: StepStatus[] = ['done', 'doing', 'todo'];
 
 export default function Process() {
   const { t } = useLang();
   const { method, board } = t;
-  const stepsRef = useRef<Array<HTMLLIElement | null>>([]);
-  const [statuses, setStatuses] = useState<StepStatus[]>(
-    () => method.steps.map(() => 'todo' as StepStatus),
-  );
-
-  useEffect(() => {
-    const compute = () => {
-      // The active "DOING" step is the one whose top is closest to
-      // — but not past — a trigger line at 40% of the viewport height.
-      // Everything above that is DONE; everything below is TODO.
-      const triggerY = window.innerHeight * 0.4;
-      const tops = stepsRef.current.map((el) => {
-        if (!el) return Number.POSITIVE_INFINITY;
-        return el.getBoundingClientRect().top;
-      });
-      let active = -1;
-      for (let i = 0; i < tops.length; i++) {
-        if (tops[i] <= triggerY) active = i;
-      }
-      setStatuses((prev) => {
-        const next = prev.slice();
-        let changed = false;
-        for (let i = 0; i < next.length; i++) {
-          const v: StepStatus =
-            i < active ? 'done' : i === active ? 'doing' : 'todo';
-          if (next[i] !== v) {
-            next[i] = v;
-            changed = true;
-          }
-        }
-        return changed ? next : prev;
-      });
-    };
-
-    let raf = 0;
-    const onScroll = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = 0;
-        compute();
-      });
-    };
-
-    compute();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, [method.steps]);
 
   return (
     <section
@@ -85,7 +33,7 @@ export default function Process() {
 
       <ol className="mp-steps">
         {method.steps.map((s, i) => {
-          const status = statuses[i];
+          const status: StepStatus = STATIC_STATUSES[i] ?? 'todo';
           const pillCls =
             status === 'done'  ? 'mp-status--done'  :
             status === 'doing' ? 'mp-status--doing' :
@@ -98,7 +46,6 @@ export default function Process() {
             <li
               className={`mp-step mp-step--${i + 1}`}
               key={s.num}
-              ref={(el) => { stepsRef.current[i] = el; }}
               data-status={status}
             >
               <span className="mp-step__num" aria-hidden="true">{s.num}</span>

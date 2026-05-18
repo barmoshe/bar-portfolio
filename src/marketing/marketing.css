@@ -2078,21 +2078,27 @@ html.dark .mp-root {
 }
 
 /* ---------------------------------------------------------------
-   19. Reveal-on-enter helper (used by ScrollTrigger.batch and useReveal)
+   19. Reveal-on-enter helper (the only scroll-related motion on the
+   marketing site). `useReveal` adds `.is-in` to every `.mp-section`
+   and any opt-in `.mp-reveal` element on first entry.
    --------------------------------------------------------------- */
 
-.mp-reveal {
+.mp-reveal,
+.mp-section {
   opacity: 0;
   transform: translateY(16px);
 }
-.mp-reveal.is-in {
+.mp-reveal.is-in,
+.mp-section.is-in {
   opacity: 1;
   transform: translateY(0);
   transition: opacity .42s ease, transform .42s ease;
 }
 @media (prefers-reduced-motion: reduce) {
   .mp-reveal,
-  .mp-reveal.is-in {
+  .mp-reveal.is-in,
+  .mp-section,
+  .mp-section.is-in {
     opacity: 1;
     transform: none;
     transition: none;
