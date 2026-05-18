@@ -310,9 +310,9 @@ html.dark .mp-root {
 
 .mp-column__header {
   display: flex;
-  align-items: baseline;
-  justify-content: flex-start;
-  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin-block-end: 16px;
   padding-block-end: 12px;
   border-block-end: 2px dashed var(--mp-ink);
@@ -330,10 +330,6 @@ html.dark .mp-root {
   font-weight: 800;
   font-size: .78rem;
   color: var(--mp-ink-soft);
-  padding: 2px 8px;
-  border: 1.5px solid var(--mp-ink);
-  border-radius: 999px;
-  background: var(--mp-surface);
 }
 
 .mp-column__list {
@@ -760,7 +756,11 @@ html.dark .mp-root {
 .mp-hero__scroll-cue {
   position: absolute;
   inset-block-end: 14px;
-  inset-inline-start: 50%;
+  /* Use physical `left` so translateX(-50%) centers correctly in both LTR
+     and RTL. inset-inline-start: 50% becomes `right: 50%` in RTL, which
+     pairs incorrectly with the physical translateX and pushes the cue
+     off-center. */
+  left: 50%;
   transform: translateX(-50%);
   font-family: var(--mp-font-display);
   font-weight: 700;
