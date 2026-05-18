@@ -2176,311 +2176,286 @@ html.dark .mp-lab {
 .mp-lab .mp-status--selected { background: var(--mp-accent-2); color: var(--mp-accent-2-ink); }
 
 /* ---------------------------------------------------------------- */
-/* LabIntake — "Crafting Recipe" form: 3x3 grid of slots, live       */
-/* output card with rarity color escalation, vibe chip multipliers.  */
-/* Inspired by inventory crafting UIs (Minecraft / Stardew). Mobile  */
-/* stacks all slots vertically; tablet+ uses the 3-col grid.         */
+/* LabIntake — "Quest Dialogue" sequential form.                     */
+/* One question at a time. Avatar bubble with typing animation,      */
+/* chips suggestions, freeform input, prev/next nav. Live preview    */
+/* in a sidebar (desktop) or sticky bottom panel (mobile).           */
+/* All motion respects prefers-reduced-motion.                       */
 /* ---------------------------------------------------------------- */
-.lab-craft {
+.lab-quest {
   display: grid;
   grid-template-columns: 1fr;
   gap: 18px;
   align-items: start;
 }
 @media (min-width: 980px) {
-  .lab-craft {
+  .lab-quest {
     grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
     gap: 24px;
   }
 }
 
-/* The crafting grid itself.
-   - Mobile (< 640px): flex column with CSS-reordered slots, RARITY hidden
-     (the sticky peek bar at the viewport bottom takes over that job).
-   - Tablet+ (>= 640px): 3-col grid with named areas, RARITY shown in center,
-     TYPE chip overlaid below the rarity stars.
-*/
-.lab-craft__grid {
+/* Card — animated swap per beat via `key={step}` on the JSX. */
+.lab-quest__card {
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 0;
-  margin: 0;
-  border: 0;
-}
-@media (min-width: 640px) {
-  .lab-craft__grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-areas:
-      "what what  who"
-      "vibe rarity ref"
-      "contact method submit";
-    gap: 14px;
-  }
-}
-
-/* Mobile order — TYPE first (context), then required inputs, then optional,
-   then send. RARITY is hidden on mobile because the sticky peek bar already
-   shows rarity status at the bottom of the viewport. */
-@media (max-width: 639px) {
-  .lab-craft__slot--type    { order: 0; }
-  .lab-craft__slot--what    { order: 1; }
-  .lab-craft__slot--who     { order: 2; }
-  .lab-craft__slot--vibe    { order: 3; }
-  .lab-craft__slot--ref     { order: 4; }
-  .lab-craft__slot--contact { order: 5; }
-  .lab-craft__slot--method  { order: 6; }
-  .lab-craft__slot--submit  { order: 7; }
-  .lab-craft__slot--rarity  { display: none; }
-}
-
-/* Tablet+ map each slot to its grid-area. */
-@media (min-width: 640px) {
-  .lab-craft__slot--what    { grid-area: what; }
-  .lab-craft__slot--who     { grid-area: who; }
-  .lab-craft__slot--vibe    { grid-area: vibe; }
-  .lab-craft__slot--rarity  { grid-area: rarity; }
-  .lab-craft__slot--ref     { grid-area: ref; }
-  .lab-craft__slot--contact { grid-area: contact; }
-  .lab-craft__slot--method  { grid-area: method; }
-  .lab-craft__slot--submit  { grid-area: submit; }
-  /* TYPE chip overlays into the rarity cell area on wide screens. */
-  .lab-craft__slot--type {
-    display: flex;
-    grid-area: rarity;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    box-shadow: none;
-    pointer-events: auto;
-    margin-block-start: 8px;
-  }
-}
-
-/* Common slot chrome — a sticker card. */
-.lab-craft__slot {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px;
-  border: 2px solid var(--mp-ink);
-  border-radius: 14px;
-  background: var(--mp-surface);
-  box-shadow: var(--mp-shadow-sm);
-  min-height: 88px;
+  gap: 16px;
   position: relative;
-  transition: box-shadow .18s ease, transform .18s ease;
+  animation: lab-quest-slide .35s ease;
 }
-.lab-craft__slot[data-essential="true"]::after {
-  content: "";
-  position: absolute;
-  inset-block-start: -6px;
-  inset-inline-end: -6px;
-  width: 14px;
-  height: 14px;
+@keyframes lab-quest-slide {
+  from { transform: translateX(20px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+[dir="rtl"] .lab-quest__card { animation-name: lab-quest-slide-rtl; }
+@keyframes lab-quest-slide-rtl {
+  from { transform: translateX(-20px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lab-quest__card { animation: none; }
+}
+
+/* Progress dots */
+.lab-quest__progress {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  padding-block-end: 4px;
+}
+.lab-quest__dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--mp-ink) 18%, transparent);
+  border: 1.5px solid color-mix(in oklch, var(--mp-ink) 30%, transparent);
+  transition: width .25s ease, background .25s ease;
+}
+.lab-quest__dot[data-state="done"] {
+  background: var(--mp-primary);
+  border-color: var(--mp-primary);
+}
+.lab-quest__dot[data-state="active"] {
+  background: var(--mp-primary);
+  border-color: var(--mp-ink);
+  width: 22px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lab-quest__dot { transition: none; }
+}
+
+/* Chat: avatar + bubble */
+.lab-quest__chat {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+.lab-quest__avatar {
+  width: 52px;
+  height: 52px;
   border-radius: 999px;
   background: var(--mp-primary);
-  border: 2px solid var(--mp-ink);
-}
-.lab-craft__label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 700;
-  font-size: 0.92rem;
-  color: var(--mp-ink);
-  padding: 0;
-}
-.lab-craft__slot-icon {
-  font-size: 1.05rem;
-  color: var(--mp-primary);
-}
-.lab-craft__req {
-  color: var(--mp-accent-2);
+  color: var(--mp-primary-ink);
+  display: grid;
+  place-items: center;
+  border: 2.5px solid var(--mp-ink);
+  box-shadow: var(--mp-shadow-sm);
   font-weight: 800;
+  font-size: 1.3rem;
 }
-.lab-craft__hint {
+.lab-quest__avatar[data-typing] {
+  animation: lab-quest-avatar-bounce 1s ease infinite;
+}
+@keyframes lab-quest-avatar-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lab-quest__avatar[data-typing] { animation: none; }
+}
+.lab-quest__avatar-letter { line-height: 1; }
+
+.lab-quest__bubble {
+  background: color-mix(in oklch, var(--mp-primary) 10%, var(--mp-surface));
+  border: 2px solid var(--mp-ink);
+  border-radius: 18px;
+  padding: 12px 14px;
+  box-shadow: var(--mp-shadow-sm);
+  position: relative;
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.lab-quest__bubble::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: -10px;
+  top: 14px;
+  width: 0;
+  height: 0;
+  border: 8px solid transparent;
+  border-inline-end-color: var(--mp-ink);
+  border-inline-start-width: 0;
+}
+.lab-quest__bubble::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: -7px;
+  top: 16px;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-inline-end-color: color-mix(in oklch, var(--mp-primary) 10%, var(--mp-surface));
+  border-inline-start-width: 0;
+}
+.lab-quest__prompt {
   margin: 0;
-  font-size: 0.82rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  color: var(--mp-ink);
+}
+.lab-quest__hint {
+  margin: 0;
+  font-size: 0.88rem;
   color: color-mix(in oklch, var(--mp-ink) 65%, transparent);
 }
-.lab-craft__input {
-  font: inherit;
-  font-size: 1rem;
-  padding: 10px 12px;
-  border: 2px solid var(--mp-ink);
-  border-radius: 10px;
-  background: var(--mp-surface);
-  color: var(--mp-ink);
-  box-shadow: var(--mp-shadow-sm);
-  min-height: 44px;
-}
-.lab-craft__input:focus-visible {
-  outline: 3px solid var(--mp-primary);
-  outline-offset: 2px;
-}
-.lab-craft__input[data-invalid="true"] {
-  border-color: var(--mp-accent-2);
-  box-shadow: 3px 3px 0 var(--mp-accent-2);
-}
-.lab-craft__input--textarea {
-  min-height: 72px;
-  resize: vertical;
-  line-height: 1.45;
-}
 
-/* TYPE chip */
-.lab-craft__type-chip {
+/* Typing dots */
+.lab-quest__typing {
   display: inline-flex;
+  gap: 4px;
   align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border: 2px solid var(--mp-ink);
+  padding: 6px 4px;
+}
+.lab-quest__typing span {
+  width: 7px;
+  height: 7px;
   border-radius: 999px;
-  background: color-mix(in oklch, var(--mp-primary) 14%, var(--mp-surface));
-  font-weight: 700;
-  font-size: 0.92rem;
-  box-shadow: var(--mp-shadow-sm);
+  background: color-mix(in oklch, var(--mp-ink) 50%, transparent);
+  animation: lab-quest-typing 1s ease infinite;
 }
-.lab-craft__type-mini {
-  font-size: 1rem;
-  color: var(--mp-primary);
+.lab-quest__typing span:nth-child(2) { animation-delay: 0.15s; }
+.lab-quest__typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes lab-quest-typing {
+  0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+  40%           { transform: scale(1);   opacity: 1; }
 }
-.lab-craft__type-empty {
-  font-size: 0.86rem;
-  color: color-mix(in oklch, var(--mp-ink) 60%, transparent);
-  text-align: center;
+@media (prefers-reduced-motion: reduce) {
+  .lab-quest__typing span { animation: none; opacity: 0.7; }
 }
 
-/* Vibe chips */
-.lab-craft__chips {
+/* Chips — staggered fade-in */
+.lab-quest__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-block-start: 4px;
+  gap: 8px;
 }
-.lab-craft__chip {
+.lab-quest__chip {
   font: inherit;
-  font-size: 0.88rem;
-  padding: 6px 12px;
+  font-size: 0.94rem;
+  padding: 9px 16px;
   border: 2px solid var(--mp-ink);
   border-radius: 999px;
   background: var(--mp-surface);
   color: var(--mp-ink);
   box-shadow: var(--mp-shadow-sm);
   cursor: pointer;
-  min-height: 36px;
+  min-height: 40px;
   font-weight: 600;
   transition: background .15s ease, box-shadow .15s ease, transform .15s ease;
+  opacity: 0;
+  animation: lab-quest-chip-in .35s ease forwards;
 }
-.lab-craft__chip:hover { transform: translate(-1px, -1px); }
-.lab-craft__chip:focus-visible {
+@keyframes lab-quest-chip-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lab-quest__chip { animation: none; opacity: 1; }
+}
+.lab-quest__chip:hover { transform: translate(-1px, -1px); }
+.lab-quest__chip:focus-visible {
   outline: 3px solid var(--mp-primary);
   outline-offset: 2px;
 }
-.lab-craft__chip[data-active="true"] {
+.lab-quest__chip[data-active] {
   background: color-mix(in oklch, var(--mp-primary) 22%, var(--mp-surface));
   box-shadow: 3px 3px 0 var(--mp-primary);
 }
 
-/* Rarity indicator cell */
-.lab-craft__slot--rarity {
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 4px;
-  background: color-mix(in oklch, var(--mp-ink) 4%, var(--mp-surface));
-}
-.lab-craft__rarity-stars {
-  font-size: 1.3rem;
-  letter-spacing: 4px;
-  color: color-mix(in oklch, var(--mp-ink) 30%, transparent);
-}
-.lab-craft__slot--rarity[data-rarity="uncommon"]  .lab-craft__rarity-stars { color: oklch(0.55 0.16 145); }
-.lab-craft__slot--rarity[data-rarity="rare"]      .lab-craft__rarity-stars { color: oklch(0.55 0.18 270); }
-.lab-craft__slot--rarity[data-rarity="epic"]      .lab-craft__rarity-stars { color: var(--mp-primary); }
-.lab-craft__slot--rarity[data-rarity="legendary"] .lab-craft__rarity-stars { color: oklch(0.72 0.18 80); }
-.lab-craft__rarity-label {
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 0.78rem;
-  letter-spacing: 1.5px;
-}
-.lab-craft__rarity-counter {
-  font-size: 0.82rem;
-  color: color-mix(in oklch, var(--mp-ink) 70%, transparent);
-}
-
-/* Method radios */
-.lab-craft__slot--method {
-  margin: 0;
-}
-.lab-craft__methods {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-block-start: 4px;
-}
-.lab-craft__method {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+/* Freeform input */
+.lab-quest__input-wrap { display: flex; flex-direction: column; }
+.lab-quest__input {
+  font: inherit;
+  font-size: 1.05rem;
+  padding: 12px 14px;
   border: 2px solid var(--mp-ink);
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--mp-surface);
-  cursor: pointer;
-  min-height: 40px;
-  font-weight: 600;
-  font-size: 0.92rem;
+  color: var(--mp-ink);
   box-shadow: var(--mp-shadow-sm);
+  min-height: 48px;
 }
-.lab-craft__method input {
-  accent-color: var(--mp-primary);
-  width: 16px;
-  height: 16px;
+.lab-quest__input:focus-visible {
+  outline: 3px solid var(--mp-primary);
+  outline-offset: 2px;
 }
-.lab-craft__method:has(input:checked) {
-  background: color-mix(in oklch, var(--mp-primary) 14%, var(--mp-surface));
-  box-shadow: 3px 3px 0 var(--mp-primary);
+.lab-quest__input--textarea {
+  min-height: 84px;
+  resize: vertical;
+  line-height: 1.5;
 }
 
-/* SUBMIT slot */
-.lab-craft__slot--submit {
-  align-items: stretch;
-  justify-content: center;
-  background: color-mix(in oklch, var(--mp-primary) 6%, var(--mp-surface));
+/* Nav footer */
+.lab-quest__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 0;
+  padding-block-start: 4px;
 }
-.lab-craft__submit {
+.lab-quest__nav-btn {
+  flex: 0 1 auto;
+  min-height: 44px;
+}
+.lab-quest__nav-skip { margin-inline-start: auto; }
+.lab-quest__nav-next,
+.lab-quest__nav-send {
+  margin-inline-start: auto;
   font-weight: 800;
 }
-.lab-craft__submit[data-ready] {
-  background: color-mix(in oklch, var(--mp-primary) 80%, oklch(0.48 0.15 150));
+.lab-quest__nav-next:disabled,
+.lab-quest__nav-send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
-.lab-craft__submit[data-legendary] {
-  animation: lab-craft-pulse 1.6s ease-in-out infinite;
-  background: oklch(0.72 0.18 80);
-  color: oklch(0.18 0.02 80);
-  box-shadow: 8px 8px 0 oklch(0.55 0.18 80);
+.lab-quest__nav-send[data-ready] {
+  background: color-mix(in oklch, var(--mp-primary) 70%, oklch(0.72 0.18 80));
+  animation: lab-quest-send-pulse 1.6s ease-in-out infinite;
 }
-@keyframes lab-craft-pulse {
+@keyframes lab-quest-send-pulse {
   0%, 100% { transform: translate(0, 0); }
   50%      { transform: translate(-2px, -2px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .lab-craft__submit[data-legendary] { animation: none; }
+  .lab-quest__nav-send[data-ready] { animation: none; }
 }
-.lab-craft__status {
-  margin: 6px 0 0;
-  min-height: 1.25em;
+
+.lab-quest__done {
+  margin: 0;
   font-size: 0.88rem;
-  color: var(--mp-ink);
   text-align: center;
+  color: color-mix(in oklch, var(--mp-ink) 70%, transparent);
 }
-.lab-craft__link-btn {
+
+.lab-quest__mail-fallback {
   background: none;
   border: 0;
   padding: 6px 0;
@@ -2491,285 +2466,116 @@ html.dark .mp-lab {
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
   cursor: pointer;
-  margin: 4px auto 0;
-  display: block;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
 }
-.lab-craft__link-btn:hover { color: var(--mp-primary); }
-.lab-craft__link-btn:focus-visible {
+.lab-quest__mail-fallback:hover { color: var(--mp-primary); }
+.lab-quest__mail-fallback:focus-visible {
   outline: 3px solid var(--mp-primary);
   outline-offset: 2px;
 }
 
-/* Output card — the "forged item". */
-.lab-craft__output {
-  padding: 18px;
+/* Live preview (sidebar desktop / sticky bottom mobile) */
+.lab-quest__preview {
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  position: relative;
-  transition: box-shadow .25s ease, border-color .25s ease;
 }
 @media (min-width: 980px) {
-  .lab-craft__output { position: sticky; top: 88px; }
+  .lab-quest__preview { position: sticky; top: 88px; }
 }
-.lab-craft__output[data-rarity="uncommon"]  { box-shadow: 6px 6px 0 oklch(0.55 0.16 145); }
-.lab-craft__output[data-rarity="rare"]      { box-shadow: 6px 6px 0 oklch(0.55 0.18 270); }
-.lab-craft__output[data-rarity="epic"]      { box-shadow: 6px 6px 0 var(--mp-primary); }
-.lab-craft__output[data-rarity="legendary"] {
-  box-shadow: 8px 8px 0 oklch(0.72 0.18 80);
-  border-color: oklch(0.55 0.18 80);
-}
-.lab-craft__output-head {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
+.lab-quest__preview-head {
   padding-block-end: 8px;
   border-block-end: 1.5px dashed color-mix(in oklch, var(--mp-ink) 30%, transparent);
 }
-.lab-craft__output-rarity {
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 0.78rem;
-  letter-spacing: 1.5px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: color-mix(in oklch, var(--mp-ink) 6%, var(--mp-surface));
-}
-.lab-craft__output-rarity[data-rarity="uncommon"]  { background: color-mix(in oklch, oklch(0.55 0.16 145) 18%, var(--mp-surface)); color: oklch(0.32 0.13 145); }
-.lab-craft__output-rarity[data-rarity="rare"]      { background: color-mix(in oklch, oklch(0.55 0.18 270) 18%, var(--mp-surface)); color: oklch(0.32 0.16 270); }
-.lab-craft__output-rarity[data-rarity="epic"]      { background: color-mix(in oklch, var(--mp-primary) 18%, var(--mp-surface));     color: var(--mp-primary-ink); }
-.lab-craft__output-rarity[data-rarity="legendary"] { background: color-mix(in oklch, oklch(0.72 0.18 80) 22%, var(--mp-surface)); color: oklch(0.28 0.10 80); }
-.lab-craft__output-title {
+.lab-quest__preview-title {
   font-weight: 700;
   font-size: 0.92rem;
 }
-.lab-craft__output-body {
+.lab-quest__preview-body {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  min-height: 100px;
+  gap: 8px;
+  min-height: 80px;
 }
-.lab-craft__output-type {
+.lab-quest__preview-type { margin: 0; font-size: 0.95rem; }
+.lab-quest__preview-line {
   margin: 0;
-  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: color-mix(in oklch, var(--mp-ink) 4%, transparent);
+  animation: lab-quest-preview-in .3s ease;
 }
-.lab-craft__output-line {
-  margin: 0;
-  line-height: 1.5;
-  font-size: 0.98rem;
+@keyframes lab-quest-preview-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-.lab-craft__output-line--ghost {
+@media (prefers-reduced-motion: reduce) {
+  .lab-quest__preview-line { animation: none; }
+}
+.lab-quest__preview-key {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: color-mix(in oklch, var(--mp-ink) 60%, transparent);
+}
+.lab-quest__preview-val {
+  font-size: 0.96rem;
+  line-height: 1.4;
+}
+.lab-quest__preview-line--ghost {
   color: color-mix(in oklch, var(--mp-ink) 45%, transparent);
   font-style: italic;
-}
-.lab-craft__output-vibes {
-  margin: 6px 0 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-.lab-craft__output-vibe {
-  font-size: 0.82rem;
-  padding: 3px 9px;
-  border-radius: 999px;
-  background: color-mix(in oklch, var(--mp-primary) 18%, var(--mp-surface));
-  color: var(--mp-primary-ink);
-  font-weight: 600;
-}
-.lab-craft__output-foot {
-  margin: 0;
-  font-size: 0.85rem;
-  color: color-mix(in oklch, var(--mp-ink) 65%, transparent);
-  padding-block-start: 8px;
-  border-block-start: 1.5px dashed color-mix(in oklch, var(--mp-ink) 30%, transparent);
+  background: transparent;
 }
 
-/* ---------------------------------------------------------------- */
-/* Mobile bottom-sheet — sticky peek bar at the viewport edge plus  */
-/* an expandable native <dialog> with the full output card. Hidden  */
-/* on tablet+ where the in-page aside is sufficient.                */
-/* ---------------------------------------------------------------- */
-.lab-craft__sheet-peek,
-.lab-craft__sheet-dialog {
-  display: none;
-}
-
-@media (max-width: 639px) {
-  /* On mobile the in-page aside is redundant with the sheet. */
-  .lab-craft > .lab-craft__output { display: none; }
-
-  /* Peek bar — sticky at the viewport bottom, always visible above any
-     scroll context. Acts as a button that opens the dialog. */
-  .lab-craft__sheet-peek {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+/* Mobile — preview becomes a sticky bottom panel */
+@media (max-width: 979px) {
+  .lab-quest__preview {
     position: sticky;
     bottom: 12px;
-    margin-block-start: 16px;
-    margin-inline: auto;
-    width: calc(100% - 8px);
-    max-width: 480px;
-    padding: 12px 16px;
-    background: var(--mp-surface);
-    color: var(--mp-ink);
-    border: 2.5px solid var(--mp-ink);
-    border-radius: 999px;
-    font: inherit;
-    font-weight: 700;
-    box-shadow: 6px 6px 0 var(--mp-ink);
-    cursor: pointer;
-    min-height: 56px;
-    z-index: 20;
-    transition: box-shadow .18s ease, transform .18s ease, background .25s ease;
-  }
-  .lab-craft__sheet-peek:hover { transform: translate(-1px, -1px); }
-  .lab-craft__sheet-peek:focus-visible {
-    outline: 3px solid var(--mp-primary);
-    outline-offset: 3px;
-  }
-  .lab-craft__sheet-peek[data-rarity="uncommon"]  { box-shadow: 6px 6px 0 oklch(0.55 0.16 145); }
-  .lab-craft__sheet-peek[data-rarity="rare"]      { box-shadow: 6px 6px 0 oklch(0.55 0.18 270); }
-  .lab-craft__sheet-peek[data-rarity="epic"]      { box-shadow: 6px 6px 0 var(--mp-primary); }
-  .lab-craft__sheet-peek[data-rarity="legendary"] {
-    box-shadow: 8px 8px 0 oklch(0.72 0.18 80);
-    background: color-mix(in oklch, oklch(0.72 0.18 80) 14%, var(--mp-surface));
-  }
-
-  .lab-craft__sheet-peek-rarity {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-  }
-  .lab-craft__sheet-peek-stars {
-    font-size: 0.96rem;
-    letter-spacing: 2px;
-  }
-  .lab-craft__sheet-peek[data-rarity="uncommon"]  .lab-craft__sheet-peek-stars { color: oklch(0.55 0.16 145); }
-  .lab-craft__sheet-peek[data-rarity="rare"]      .lab-craft__sheet-peek-stars { color: oklch(0.55 0.18 270); }
-  .lab-craft__sheet-peek[data-rarity="epic"]      .lab-craft__sheet-peek-stars { color: var(--mp-primary); }
-  .lab-craft__sheet-peek[data-rarity="legendary"] .lab-craft__sheet-peek-stars { color: oklch(0.55 0.18 80); }
-  .lab-craft__sheet-peek-label {
-    text-transform: uppercase;
-    font-size: 0.74rem;
-    letter-spacing: 1.4px;
-    padding: 3px 8px;
-    border-radius: 999px;
-    background: color-mix(in oklch, var(--mp-ink) 6%, var(--mp-surface));
-  }
-  .lab-craft__sheet-peek-count {
-    flex: 1;
-    text-align: center;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: color-mix(in oklch, var(--mp-ink) 75%, transparent);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .lab-craft__sheet-peek-arrow {
-    font-size: 1.1rem;
-    color: var(--mp-primary);
-  }
-
-  /* The bottom-sheet dialog itself. Native <dialog> handles focus trap,
-     ESC, and backdrop. We just position it as a bottom sheet. */
-  .lab-craft__sheet-dialog {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    max-height: 92vh;
-    margin: 0 auto;
-    margin-block-start: auto;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    /* On Safari/older browsers without :modal, default open positioning is
-       centered; the explicit margin pushes the box to the viewport bottom. */
-    inset-inline: 0;
-    inset-block-end: 0;
-    inset-block-start: auto;
-    overflow: visible;
-  }
-  .lab-craft__sheet-dialog::backdrop {
-    background: oklch(0 0 0 / 0.5);
-    backdrop-filter: blur(2px);
-  }
-  .lab-craft__sheet-dialog[open] {
-    animation: lab-sheet-up .25s ease;
-  }
-  @keyframes lab-sheet-up {
-    from { transform: translateY(100%); }
-    to   { transform: translateY(0); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .lab-craft__sheet-dialog[open] { animation: none; }
-  }
-
-  /* Sheet grip — visual handle hint at the very top. Decorative. */
-  .lab-craft__sheet-grip {
-    display: flex;
-    justify-content: center;
-    padding: 8px 0 4px;
-    background: var(--mp-surface);
-    border-radius: 18px 18px 0 0;
-    border: 2px solid var(--mp-ink);
-    border-block-end: 0;
-  }
-  .lab-craft__sheet-grip-bar {
-    display: block;
-    width: 56px;
-    height: 5px;
-    border-radius: 999px;
-    background: color-mix(in oklch, var(--mp-ink) 30%, transparent);
-  }
-  .lab-craft__sheet-content {
-    padding: 14px 18px;
-    border-radius: 0;
-    border-block-start: 0;
-    border-block-end: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: calc(92vh - 130px);
+    margin-block-start: 12px;
+    max-height: 220px;
     overflow-y: auto;
+    z-index: 5;
   }
-  .lab-craft__sheet-actions {
-    display: flex;
-    align-items: stretch;
-    gap: 8px;
-    padding: 12px 18px calc(env(safe-area-inset-bottom, 0px) + 14px);
-    background: var(--mp-surface);
-    border: 2px solid var(--mp-ink);
-    border-block-start: 0;
-    border-radius: 0 0 0 0;
-    box-shadow: 0 -4px 16px oklch(0 0 0 / .12);
-  }
-  .lab-craft__sheet-actions > .mp-cta:first-child {
-    flex: 0 0 56px;
-    min-width: 56px;
-    padding: 0;
-    font-size: 1.3rem;
-    line-height: 1;
-  }
-  .lab-craft__sheet-send {
-    flex: 1;
-    margin: 0;
-  }
-
-  /* Give the bottom of the form room so the peek bar doesn't overlay
-     the SUBMIT slot when the user scrolls to the end. */
-  .lab-craft__slot--submit { margin-block-end: 72px; }
 }
 
-/* Larger phones / small tablets: keep the 3-col grid but loosen padding
-   inside slots so it doesn't feel cramped. */
-@media (min-width: 640px) and (max-width: 819px) {
-  .lab-craft__slot { padding: 10px; min-height: 80px; }
-  .lab-craft__rarity-stars { font-size: 1.1rem; letter-spacing: 2px; }
+/* Empty / pick-first state */
+.lab-quest--empty {
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
 }
+.lab-quest--empty p {
+  margin: 0;
+  font-size: 1rem;
+  color: color-mix(in oklch, var(--mp-ink) 75%, transparent);
+}
+
+/* Sent state */
+.lab-quest--sent {
+  padding: 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+.lab-quest__sent-title {
+  margin: 0;
+  font-size: 1.4rem;
+  color: var(--mp-primary);
+}
+.lab-quest__sent-body {
+  margin: 0;
+  color: var(--mp-ink);
+  max-width: 36ch;
+}
+

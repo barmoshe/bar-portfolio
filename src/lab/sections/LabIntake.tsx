@@ -1,192 +1,232 @@
 import {
+  useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-  type ChangeEvent,
-  type FormEvent,
+  type KeyboardEvent,
 } from 'react';
 import { useLang } from '../LangContext';
 import { buildMailtoHref, buildWhatsAppHref } from '../../marketing/contact';
 import { INTAKE_ID } from '../scrollToIntake';
-import type { ContactMethodKey } from '../i18n';
+import type { Beat, ContactMethodKey } from '../i18n';
 
 /**
- * LabIntake — "Crafting Recipe" form.
+ * LabIntake — "Quest Dialogue" sequential form.
  *
- * The brief intake is laid out as a crafting grid (Minecraft / Stardew
- * Valley metaphor). Each slot is a field. The output panel renders the
- * assembled brief as a "forged item card" whose rarity colour escalates
- * with completeness: common → uncommon → rare → epic → legendary (with
- * a vibe chip selected). The 3/3 essentials counter doubles as the
- * progress bar; the submit pulses when legendary.
+ * One beat at a time. Bar's avatar types in a question, the user
+ * either taps a suggestion chip or types freeform, advances, and
+ * the brief assembles in real time in the sticky preview. Per
+ * template the beats vary (3-4 specific questions); two universal
+ * contact beats (method + value) are appended at the end.
+ *
+ * Inspired by Visual Novel / conversational form patterns —
+ * Mad Libs (+25-40% conversion, LukeW/Vast.com), conversational
+ * forms (+30%, Jotform).
  */
 
-type FormState = {
-  what: string;
-  who: string;
-  reference: string;
-  contactMethod: ContactMethodKey;
-  contactValue: string;
+type Answer = string;
+
+type ContactState = {
+  method: ContactMethodKey;
+  value: string;
 };
 
-const INITIAL: FormState = {
-  what: '',
-  who: '',
-  reference: '',
-  contactMethod: 'whatsapp',
-  contactValue: '',
-};
-
-type Rarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+type Phase = 'questioning' | 'sent';
 
 type Props = { selectedTemplate: string };
+
+const CONTACT_METHOD_BEAT_ID = '__contactMethod';
+const CONTACT_VALUE_BEAT_ID = '__contactValue';
 
 export default function LabIntake({ selectedTemplate }: Props) {
   const { t } = useLang();
   const { brief, contents, board } = t;
-  const { craft } = brief;
-
-  const [form, setForm] = useState<FormState>(INITIAL);
-  const [vibes, setVibes] = useState<Set<string>>(() => new Set());
-  const [showErrors, setShowErrors] = useState(false);
-  const [status, setStatus] = useState('');
-  const whatRef = useRef<HTMLTextAreaElement | null>(null);
-  const formRef = useRef<HTMLFormElement | null>(null);
-  const sheetDialogRef = useRef<HTMLDialogElement | null>(null);
-  const sheetPeekRef = useRef<HTMLButtonElement | null>(null);
+  const { quest } = brief;
 
   const pickedItem = useMemo(
     () => contents.items.find((i) => i.slug === selectedTemplate),
     [contents.items, selectedTemplate],
   );
 
-  // When a template is picked above, focus the "what" slot.
+  // Compose the full beat sequence: template beats + universal contact beats.
+  const beats: Beat[] = useMemo(() => {
+    if (!pickedItem) return [];
+    const contactMethod: Beat = {
+      id: CONTACT_METHOD_BEAT_ID,
+      prompt: quest.contactMethodPrompt,
+      chips: [
+        { value: 'whatsapp', label: quest.contactMethodChips.whatsapp },
+        { value: 'email', label: quest.contactMethodChips.email },
+      ],
+      required: true,
+    };
+    return [...pickedItem.beats, contactMethod];
+    // Contact value is rendered specially because its label/placeholder/
+    // input mode depend on the contactMethod answer; it's added below.
+  }, [pickedItem, quest.contactMethodPrompt, quest.contactMethodChips]);
+
+  // The user can navigate forward/back through beats. `step` is the
+  // current beat index; `committed` is the highest beat ever seen
+  // (used to know if we should show the contact-value beat too).
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState<Record<string, Answer>>({});
+  const [contact, setContact] = useState<ContactState>({ method: 'whatsapp', value: '' });
+  const [phase, setPhase] = useState<Phase>('questioning');
+  // typing animation flag, reset each time the prompt changes.
+  const [typing, setTyping] = useState(false);
+
+  const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const reducedMotion = useReducedMotionPref();
+
+  // Reset state when template changes.
   useEffect(() => {
-    if (!selectedTemplate) return;
-    whatRef.current?.focus({ preventScroll: true });
-    // A new template invalidates the previously picked vibes.
-    setVibes(new Set());
+    setStep(0);
+    setAnswers({});
+    setContact({ method: 'whatsapp', value: '' });
+    setPhase('questioning');
   }, [selectedTemplate]);
 
-  const onField = (key: keyof FormState) =>
-    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setForm((f) => ({ ...f, [key]: e.target.value }));
-    };
+  // Total step count: template beats + method beat + (always) value beat.
+  const totalSteps = beats.length + 1;
 
-  const onMethodChange = (next: ContactMethodKey) => {
-    setForm((f) => ({ ...f, contactMethod: next, contactValue: '' }));
-  };
-
-  const toggleVibe = (id: string) => {
-    setVibes((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
-
-  // Essentials = what + who + contactValue. Three slots.
-  const filledEssentials = useMemo(() => {
-    let n = 0;
-    if (form.what.trim()) n += 1;
-    if (form.who.trim()) n += 1;
-    if (form.contactValue.trim()) n += 1;
-    return n;
-  }, [form.what, form.who, form.contactValue]);
-
-  const allEssentialsFilled = filledEssentials === 3;
-  const hasVibe = vibes.size > 0;
-
-  const rarity: Rarity = useMemo(() => {
-    if (allEssentialsFilled && hasVibe) return 'legendary';
-    if (allEssentialsFilled) return 'epic';
-    if (filledEssentials === 2) return 'rare';
-    if (filledEssentials === 1) return 'uncommon';
-    return 'common';
-  }, [filledEssentials, allEssentialsFilled, hasVibe]);
-
-  const rarityLabel: string = useMemo(() => {
-    switch (rarity) {
-      case 'legendary': return craft.rarity.legendary;
-      case 'epic':      return craft.rarity.legendary; // share gold with legendary visually
-      case 'rare':      return craft.rarity.rare;
-      case 'uncommon':  return craft.rarity.uncommon;
-      default:          return craft.rarity.common;
+  // Determine current beat: either from beats[] or the synthetic contact-value beat.
+  const isContactValueStep = step === beats.length;
+  const currentBeat: Beat | null = useMemo(() => {
+    if (isContactValueStep) {
+      return {
+        id: CONTACT_VALUE_BEAT_ID,
+        prompt:
+          contact.method === 'whatsapp'
+            ? quest.contactValuePromptWhatsapp
+            : quest.contactValuePromptEmail,
+        placeholder:
+          contact.method === 'whatsapp'
+            ? brief.fields.contactValue.placeholderWhatsapp
+            : brief.fields.contactValue.placeholderEmail,
+        required: true,
+      };
     }
-  }, [rarity, craft.rarity]);
+    return beats[step] ?? null;
+  }, [
+    isContactValueStep,
+    contact.method,
+    quest.contactValuePromptWhatsapp,
+    quest.contactValuePromptEmail,
+    brief.fields.contactValue.placeholderWhatsapp,
+    brief.fields.contactValue.placeholderEmail,
+    beats,
+    step,
+  ]);
 
-  const whatInvalid = showErrors && !form.what.trim();
-  const whoInvalid = showErrors && !form.who.trim();
-  const contactInvalid = showErrors && !form.contactValue.trim();
+  // Typing animation — when the beat changes, briefly show dots, then
+  // show the text. Disabled under prefers-reduced-motion.
+  useEffect(() => {
+    if (!currentBeat) return;
+    if (reducedMotion) {
+      setTyping(false);
+      return;
+    }
+    setTyping(true);
+    const id = window.setTimeout(() => setTyping(false), 380);
+    return () => window.clearTimeout(id);
+  }, [step, isContactValueStep, currentBeat, reducedMotion]);
 
-  const whatPlaceholder =
-    pickedItem?.slotHints.what ?? brief.fields.idea.placeholder;
-  const whoPlaceholder =
-    pickedItem?.slotHints.who ?? brief.fields.whoFor.placeholder;
-  const referencePlaceholder =
-    pickedItem?.slotHints.reference ?? brief.fields.reference.placeholder;
+  // After typing finishes, focus the input. We keep this separate so
+  // focus doesn't fight with the typing animation.
+  useEffect(() => {
+    if (typing) return;
+    inputRef.current?.focus({ preventScroll: true });
+  }, [typing, step, isContactValueStep]);
 
-  const contactLabel =
-    form.contactMethod === 'whatsapp'
-      ? brief.fields.contactValue.labelWhatsapp
-      : brief.fields.contactValue.labelEmail;
-  const contactPlaceholder =
-    form.contactMethod === 'whatsapp'
-      ? brief.fields.contactValue.placeholderWhatsapp
-      : brief.fields.contactValue.placeholderEmail;
-  const sendingVia =
-    form.contactMethod === 'whatsapp'
-      ? brief.previewSendVia.whatsapp
-      : brief.previewSendVia.email;
+  // Current value for the active beat.
+  const currentValue: string = useMemo(() => {
+    if (!currentBeat) return '';
+    if (currentBeat.id === CONTACT_METHOD_BEAT_ID) return contact.method;
+    if (currentBeat.id === CONTACT_VALUE_BEAT_ID) return contact.value;
+    return answers[currentBeat.id] ?? '';
+  }, [currentBeat, answers, contact]);
 
-  const selectedVibeLabels = useMemo(() => {
-    if (!pickedItem) return [] as string[];
-    return pickedItem.vibeChips
-      .filter((c) => vibes.has(c.id))
-      .map((c) => c.label);
-  }, [pickedItem, vibes]);
+  const setCurrentValue = (value: string) => {
+    if (!currentBeat) return;
+    if (currentBeat.id === CONTACT_METHOD_BEAT_ID) {
+      // The chips for the contact-method beat hold the method key.
+      const method = value === 'email' ? 'email' : 'whatsapp';
+      setContact((c) => ({ ...c, method }));
+      return;
+    }
+    if (currentBeat.id === CONTACT_VALUE_BEAT_ID) {
+      setContact((c) => ({ ...c, value }));
+      return;
+    }
+    setAnswers((a) => ({ ...a, [currentBeat.id]: value }));
+  };
 
-  const counterText = useMemo(() => {
-    if (allEssentialsFilled) return craft.essentialsAll;
-    return craft.essentialsCount
-      .replace('{n}', String(filledEssentials))
-      .replace('{total}', '3');
-  }, [filledEssentials, allEssentialsFilled, craft.essentialsAll, craft.essentialsCount]);
+  const canAdvance = useMemo(() => {
+    if (!currentBeat) return false;
+    if (!currentBeat.required) return true;
+    return currentValue.trim().length > 0;
+  }, [currentBeat, currentValue]);
 
-  const buildBriefBody = (): string => {
+  const isLastStep = step >= totalSteps - 1;
+
+  const onBack = () => setStep((s) => Math.max(0, s - 1));
+  const onNext = () => setStep((s) => Math.min(totalSteps - 1, s + 1));
+  const onSkip = () => onNext();
+
+  const onChipPick = (value: string) => {
+    setCurrentValue(value);
+    // Method chip auto-advances; other chips fill the value but let
+    // the user augment via the text input before advancing.
+    if (currentBeat?.id === CONTACT_METHOD_BEAT_ID) {
+      // Defer one tick so the state lands before navigation.
+      requestAnimationFrame(onNext);
+    }
+  };
+
+  const onInputKeyDown = (e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    // Enter advances. Shift+Enter inside textarea adds a newline.
+    if (e.key === 'Enter' && !(e.target instanceof HTMLTextAreaElement && e.shiftKey)) {
+      e.preventDefault();
+      if (canAdvance) {
+        if (isLastStep) onSend();
+        else onNext();
+      }
+    }
+    // Esc goes back.
+    if (e.key === 'Escape' && step > 0) {
+      e.preventDefault();
+      onBack();
+    }
+  };
+
+  // Build the prefilled brief body for wa.me / mailto.
+  const buildBriefBody = useCallback((): string => {
     const lines: string[] = [];
     lines.push(brief.briefHeading, '');
     if (pickedItem) {
       lines.push(`${brief.briefSections.type}: ${pickedItem.title}`);
     }
-    lines.push(`${brief.briefSections.idea}: ${form.what.trim()}`);
-    lines.push(`${brief.briefSections.whoFor}: ${form.who.trim()}`);
-    if (form.reference.trim()) {
-      lines.push(`${brief.briefSections.reference}: ${form.reference.trim()}`);
-    }
-    if (selectedVibeLabels.length) {
-      lines.push(`${brief.briefSections.vibe}: ${selectedVibeLabels.join(', ')}`);
+    for (const beat of beats) {
+      if (beat.id === CONTACT_METHOD_BEAT_ID) continue;
+      const v = answers[beat.id]?.trim();
+      if (!v) continue;
+      lines.push(`*${beat.prompt}*: ${v}`);
     }
     lines.push('', brief.briefFooter);
     return lines.join('\n');
-  };
+  }, [answers, beats, brief, pickedItem]);
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!allEssentialsFilled) {
-      setShowErrors(true);
-      setStatus(brief.liveError);
-      return;
-    }
+  const onSend = () => {
+    if (!canAdvance) return;
     const body = buildBriefBody();
     const href =
-      form.contactMethod === 'whatsapp'
+      contact.method === 'whatsapp'
         ? buildWhatsAppHref(body)
         : buildMailtoHref(brief.mailSubject, body);
-    setStatus(brief.liveSuccess);
-    if (form.contactMethod === 'whatsapp') {
+    setPhase('sent');
+    if (contact.method === 'whatsapp') {
       window.open(href, '_blank', 'noopener,noreferrer');
     } else {
       window.location.href = href;
@@ -198,74 +238,63 @@ export default function LabIntake({ selectedTemplate }: Props) {
     window.location.href = buildMailtoHref(brief.mailSubject, body);
   };
 
-  const submitLabel = allEssentialsFilled ? craft.submitReady : craft.submit;
+  // Empty state — no template picked yet.
+  if (!pickedItem) {
+    return (
+      <section
+        className="mp-section mp-brief mp-brief--lab"
+        id={INTAKE_ID}
+        aria-labelledby="brief-headline"
+      >
+        <header className="mp-h">
+          <span className="mp-h__num" aria-hidden="true">{brief.number}</span>
+          <span className="mp-h__kicker">{board.columns.process}</span>
+          <h2 id="brief-headline" className="mp-h__title">
+            {brief.title}
+          </h2>
+        </header>
+        <p className="mp-standfirst" style={{ marginBlockEnd: 20 }}>
+          {brief.standfirst}
+        </p>
+        <div className="lab-quest lab-quest--empty mp-card">
+          <p>{quest.pickTemplateFirst}</p>
+          <a href="#contents" className="mp-cta mp-cta--secondary">
+            ↑
+          </a>
+        </div>
+      </section>
+    );
+  }
 
-  // Mobile bottom-sheet dialog handlers. The dialog renders the same
-  // output card content as the desktop aside, plus a Send button that
-  // re-uses the form's submit path via formRef.requestSubmit().
-  const openSheet = () => {
-    sheetDialogRef.current?.showModal();
-  };
-  const closeSheet = () => {
-    sheetDialogRef.current?.close();
-    // Restore focus to the peek button so keyboard users don't lose place.
-    requestAnimationFrame(() => sheetPeekRef.current?.focus());
-  };
-  const onSheetSend = () => {
-    sheetDialogRef.current?.close();
-    formRef.current?.requestSubmit();
-  };
-
-  // Output card content — rendered once in <aside> (desktop/tablet) and
-  // once inside the mobile <dialog>. Extracted to keep them in lockstep.
-  const outputBody = (
-    <>
-      <header className="lab-craft__output-head">
-        <span className="lab-craft__output-rarity" data-rarity={rarity}>
-          ◆ {rarityLabel}
-        </span>
-        <span className="lab-craft__output-title">
-          {craft.outputHeading}
-        </span>
-      </header>
-
-      <div className="lab-craft__output-body" aria-live="polite">
-        {pickedItem ? (
-          <p className="lab-craft__output-type">
-            <strong>{pickedItem.title}</strong>
-          </p>
-        ) : null}
-        {form.what.trim() ? (
-          <p className="lab-craft__output-line">{form.what.trim()}</p>
-        ) : (
-          <p className="lab-craft__output-line lab-craft__output-line--ghost">
-            {craft.outputEmpty}
-          </p>
-        )}
-        {form.who.trim() ? (
-          <p className="lab-craft__output-line">
-            {brief.previewFor}: {form.who.trim()}
-          </p>
-        ) : null}
-        {form.reference.trim() ? (
-          <p className="lab-craft__output-line">
-            {brief.previewLike}: {form.reference.trim()}
-          </p>
-        ) : null}
-        {selectedVibeLabels.length ? (
-          <p className="lab-craft__output-vibes">
-            {selectedVibeLabels.map((v) => (
-              <span key={v} className="lab-craft__output-vibe">{v}</span>
-            ))}
-          </p>
-        ) : null}
-      </div>
-
-      <footer className="lab-craft__output-foot">
-        {sendingVia}
-      </footer>
-    </>
-  );
+  // SENT state — confirmation card.
+  if (phase === 'sent') {
+    return (
+      <section
+        className="mp-section mp-brief mp-brief--lab"
+        id={INTAKE_ID}
+        aria-labelledby="brief-headline"
+      >
+        <header className="mp-h">
+          <span className="mp-h__num" aria-hidden="true">{brief.number}</span>
+          <span className="mp-h__kicker">{board.columns.process}</span>
+          <h2 id="brief-headline" className="mp-h__title">
+            {brief.title}
+          </h2>
+        </header>
+        <div className="lab-quest lab-quest--sent mp-card">
+          <h3 className="lab-quest__sent-title">✦ {quest.sentTitle}</h3>
+          <p className="lab-quest__sent-body">{quest.sentBody}</p>
+          <button
+            type="button"
+            className="mp-cta mp-cta--secondary"
+            onClick={() => { setStep(0); setPhase('questioning'); }}
+          >
+            ↺ {quest.back}
+          </button>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -285,294 +314,239 @@ export default function LabIntake({ selectedTemplate }: Props) {
         {brief.standfirst}
       </p>
 
-      <div className="lab-craft">
-        <form
-          ref={formRef}
-          className="lab-craft__grid"
-          onSubmit={onSubmit}
-          noValidate
-          aria-label={craft.gridLabel}
-          aria-describedby="lab-craft-status"
-          data-rarity={rarity}
+      <div className="lab-quest">
+        <div
+          ref={cardRef}
+          className="lab-quest__card mp-card"
+          key={`${step}-${isContactValueStep}`}
+          data-step={step}
         >
-          {/* Cell: WHAT (idea) — top-start, spans 2 cols on wide screens */}
-          <div className="lab-craft__slot lab-craft__slot--what" data-essential="true">
-            <label className="lab-craft__label" htmlFor="lab-what">
-              <span className="lab-craft__slot-icon" aria-hidden="true">✦</span>
-              {craft.slotLabels.what}
-              <span className="lab-craft__req" aria-hidden="true">*</span>
-            </label>
-            <textarea
-              id="lab-what"
-              ref={whatRef}
-              className="lab-craft__input lab-craft__input--textarea"
-              data-lab-focus
-              value={form.what}
-              onChange={onField('what')}
-              placeholder={whatPlaceholder}
-              rows={2}
-              required
-              aria-required="true"
-              aria-invalid={whatInvalid || undefined}
-              data-invalid={whatInvalid || undefined}
-            />
-          </div>
-
-          {/* Cell: TYPE (template chip) — center top */}
+          {/* Progress dots */}
           <div
-            className="lab-craft__slot lab-craft__slot--type"
-            aria-label={brief.templatePickedPrefix}
+            className="lab-quest__progress"
+            role="progressbar"
+            aria-valuenow={step + 1}
+            aria-valuemin={1}
+            aria-valuemax={totalSteps}
+            aria-label={quest.progressLabel.replace('{n}', String(step + 1)).replace('{total}', String(totalSteps))}
           >
-            {pickedItem ? (
-              <span className="lab-craft__type-chip">
-                <span className="lab-craft__type-mini" aria-hidden="true">⬡</span>
-                {pickedItem.title}
-              </span>
-            ) : (
-              <span className="lab-craft__type-empty">
-                {craft.pickTemplateFirst}
-              </span>
-            )}
+            {Array.from({ length: totalSteps }).map((_, i) => (
+              <span
+                key={i}
+                className="lab-quest__dot"
+                data-state={
+                  i < step ? 'done' : i === step ? 'active' : 'todo'
+                }
+                aria-hidden="true"
+              />
+            ))}
           </div>
 
-          {/* Cell: WHO */}
-          <div className="lab-craft__slot lab-craft__slot--who" data-essential="true">
-            <label className="lab-craft__label" htmlFor="lab-who">
-              <span className="lab-craft__slot-icon" aria-hidden="true">◉</span>
-              {craft.slotLabels.who}
-              <span className="lab-craft__req" aria-hidden="true">*</span>
-            </label>
-            <input
-              id="lab-who"
-              className="lab-craft__input"
-              type="text"
-              value={form.who}
-              onChange={onField('who')}
-              placeholder={whoPlaceholder}
-              required
-              aria-required="true"
-              aria-invalid={whoInvalid || undefined}
-              data-invalid={whoInvalid || undefined}
-            />
-          </div>
-
-          {/* Cell: VIBE chips */}
-          <div className="lab-craft__slot lab-craft__slot--vibe">
-            <span className="lab-craft__label" id="lab-vibe-label">
-              <span className="lab-craft__slot-icon" aria-hidden="true">✺</span>
-              {craft.slotLabels.vibe}
-            </span>
-            {pickedItem ? (
-              <>
-                <p className="lab-craft__hint">{craft.vibeHint}</p>
-                <div
-                  className="lab-craft__chips"
-                  role="group"
-                  aria-labelledby="lab-vibe-label"
-                >
-                  {pickedItem.vibeChips.map((chip) => {
-                    const active = vibes.has(chip.id);
-                    return (
-                      <button
-                        key={chip.id}
-                        type="button"
-                        className="lab-craft__chip"
-                        data-active={active || undefined}
-                        aria-pressed={active}
-                        onClick={() => toggleVibe(chip.id)}
-                      >
-                        {chip.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </>
-            ) : (
-              <p className="lab-craft__hint">{craft.pickTemplateFirst}</p>
-            )}
-          </div>
-
-          {/* Cell: RARITY indicator (center middle) */}
-          <div
-            className="lab-craft__slot lab-craft__slot--rarity"
-            data-rarity={rarity}
-            aria-live="polite"
-          >
-            <span className="lab-craft__rarity-stars" aria-hidden="true">
-              {rarity === 'legendary' ? '★★★★★'
-                : rarity === 'epic'      ? '★★★★☆'
-                : rarity === 'rare'      ? '★★★☆☆'
-                : rarity === 'uncommon'  ? '★★☆☆☆'
-                                         : '★☆☆☆☆'}
-            </span>
-            <span className="lab-craft__rarity-label">{rarityLabel}</span>
-            <span className="lab-craft__rarity-counter">{counterText}</span>
-          </div>
-
-          {/* Cell: REFERENCE */}
-          <div className="lab-craft__slot lab-craft__slot--ref">
-            <label className="lab-craft__label" htmlFor="lab-ref">
-              <span className="lab-craft__slot-icon" aria-hidden="true">⌘</span>
-              {craft.slotLabels.reference}
-            </label>
-            <input
-              id="lab-ref"
-              className="lab-craft__input"
-              type="text"
-              value={form.reference}
-              onChange={onField('reference')}
-              placeholder={referencePlaceholder}
-            />
-          </div>
-
-          {/* Cell: CONTACT */}
-          <div className="lab-craft__slot lab-craft__slot--contact" data-essential="true">
-            <label className="lab-craft__label" htmlFor="lab-contact">
-              <span className="lab-craft__slot-icon" aria-hidden="true">✉</span>
-              {contactLabel}
-              <span className="lab-craft__req" aria-hidden="true">*</span>
-            </label>
-            <input
-              id="lab-contact"
-              className="lab-craft__input"
-              type={form.contactMethod === 'email' ? 'email' : 'tel'}
-              inputMode={form.contactMethod === 'email' ? 'email' : 'tel'}
-              value={form.contactValue}
-              onChange={onField('contactValue')}
-              placeholder={contactPlaceholder}
-              required
-              aria-required="true"
-              aria-invalid={contactInvalid || undefined}
-              data-invalid={contactInvalid || undefined}
-            />
-          </div>
-
-          {/* Cell: METHOD (radio) */}
-          <fieldset className="lab-craft__slot lab-craft__slot--method">
-            <legend className="lab-craft__label">
-              <span className="lab-craft__slot-icon" aria-hidden="true">⇆</span>
-              {brief.fields.contactMethod.label}
-            </legend>
-            <div className="lab-craft__methods" role="radiogroup">
-              <label className="lab-craft__method">
-                <input
-                  type="radio"
-                  name="lab-contact-method"
-                  value="whatsapp"
-                  checked={form.contactMethod === 'whatsapp'}
-                  onChange={() => onMethodChange('whatsapp')}
-                />
-                <span>{brief.fields.contactMethod.whatsapp}</span>
-              </label>
-              <label className="lab-craft__method">
-                <input
-                  type="radio"
-                  name="lab-contact-method"
-                  value="email"
-                  checked={form.contactMethod === 'email'}
-                  onChange={() => onMethodChange('email')}
-                />
-                <span>{brief.fields.contactMethod.email}</span>
-              </label>
-            </div>
-          </fieldset>
-
-          {/* Cell: SUBMIT */}
-          <div className="lab-craft__slot lab-craft__slot--submit">
-            <button
-              type="submit"
-              className="mp-cta mp-cta--primary mp-cta--block lab-craft__submit"
-              data-ready={allEssentialsFilled || undefined}
-              data-legendary={rarity === 'legendary' || undefined}
+          {/* Avatar + bubble */}
+          <div className="lab-quest__chat">
+            <div
+              className="lab-quest__avatar"
+              aria-label={quest.avatarName}
+              data-typing={typing || undefined}
             >
-              {submitLabel}
-            </button>
-            <p
-              id="lab-craft-status"
-              className="lab-craft__status"
-              role="status"
+              <span className="lab-quest__avatar-letter">ב</span>
+            </div>
+            <div
+              className="lab-quest__bubble"
               aria-live="polite"
             >
-              {status}
-            </p>
-            <button
-              type="button"
-              className="lab-craft__link-btn"
-              onClick={onMailFallback}
-            >
-              {brief.mailFallback}
-            </button>
+              {typing ? (
+                <span className="lab-quest__typing" aria-label={quest.typingHint}>
+                  <span /><span /><span />
+                </span>
+              ) : (
+                <>
+                  <p className="lab-quest__prompt">{currentBeat?.prompt}</p>
+                  {currentBeat?.hint ? (
+                    <p className="lab-quest__hint">{currentBeat.hint}</p>
+                  ) : null}
+                </>
+              )}
+            </div>
           </div>
-        </form>
 
+          {/* Chips */}
+          {!typing && currentBeat?.chips ? (
+            <div
+              className="lab-quest__chips"
+              role={currentBeat.id === CONTACT_METHOD_BEAT_ID ? 'radiogroup' : 'group'}
+              aria-label={quest.pickAnswer}
+            >
+              {currentBeat.chips.map((chip, i) => {
+                const isActive =
+                  currentBeat.id === CONTACT_METHOD_BEAT_ID
+                    ? contact.method === chip.value
+                    : currentValue === chip.value;
+                return (
+                  <button
+                    key={chip.value}
+                    type="button"
+                    className="lab-quest__chip"
+                    style={{ animationDelay: reducedMotion ? undefined : `${i * 50}ms` }}
+                    data-active={isActive || undefined}
+                    aria-pressed={currentBeat.id !== CONTACT_METHOD_BEAT_ID ? isActive : undefined}
+                    aria-checked={currentBeat.id === CONTACT_METHOD_BEAT_ID ? isActive : undefined}
+                    role={currentBeat.id === CONTACT_METHOD_BEAT_ID ? 'radio' : undefined}
+                    onClick={() => onChipPick(chip.value)}
+                  >
+                    {chip.label}
+                  </button>
+                );
+              })}
+            </div>
+          ) : null}
+
+          {/* Freeform input — hidden for the contact-method beat */}
+          {!typing && currentBeat && currentBeat.id !== CONTACT_METHOD_BEAT_ID ? (
+            <div className="lab-quest__input-wrap">
+              {currentBeat.inputType === 'textarea' ? (
+                <textarea
+                  ref={inputRef as React.RefObject<HTMLTextAreaElement>}
+                  className="lab-quest__input lab-quest__input--textarea"
+                  value={currentValue}
+                  onChange={(e) => setCurrentValue(e.target.value)}
+                  onKeyDown={onInputKeyDown}
+                  placeholder={currentBeat.placeholder}
+                  rows={3}
+                  aria-label={currentBeat.prompt}
+                  aria-required={currentBeat.required || undefined}
+                />
+              ) : (
+                <input
+                  ref={inputRef as React.RefObject<HTMLInputElement>}
+                  className="lab-quest__input"
+                  type={
+                    currentBeat.id === CONTACT_VALUE_BEAT_ID && contact.method === 'email'
+                      ? 'email'
+                      : currentBeat.id === CONTACT_VALUE_BEAT_ID
+                        ? 'tel'
+                        : 'text'
+                  }
+                  inputMode={
+                    currentBeat.id === CONTACT_VALUE_BEAT_ID && contact.method === 'email'
+                      ? 'email'
+                      : currentBeat.id === CONTACT_VALUE_BEAT_ID
+                        ? 'tel'
+                        : 'text'
+                  }
+                  value={currentValue}
+                  onChange={(e) => setCurrentValue(e.target.value)}
+                  onKeyDown={onInputKeyDown}
+                  placeholder={currentBeat.placeholder}
+                  aria-label={currentBeat.prompt}
+                  aria-required={currentBeat.required || undefined}
+                />
+              )}
+            </div>
+          ) : null}
+
+          {/* Nav footer */}
+          {!typing ? (
+            <footer className="lab-quest__nav">
+              <button
+                type="button"
+                className="mp-cta mp-cta--secondary lab-quest__nav-btn"
+                onClick={onBack}
+                disabled={step === 0}
+              >
+                ← {quest.back}
+              </button>
+              {!currentBeat?.required && !isLastStep ? (
+                <button
+                  type="button"
+                  className="mp-cta mp-cta--secondary lab-quest__nav-btn lab-quest__nav-skip"
+                  onClick={onSkip}
+                >
+                  {quest.skip} →
+                </button>
+              ) : null}
+              {isLastStep ? (
+                <button
+                  type="button"
+                  className="mp-cta mp-cta--primary lab-quest__nav-btn lab-quest__nav-send"
+                  onClick={onSend}
+                  disabled={!canAdvance}
+                  data-ready={canAdvance || undefined}
+                >
+                  {quest.send}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="mp-cta mp-cta--primary lab-quest__nav-btn lab-quest__nav-next"
+                  onClick={onNext}
+                  disabled={!canAdvance}
+                  data-ready={canAdvance || undefined}
+                >
+                  {quest.next} →
+                </button>
+              )}
+            </footer>
+          ) : null}
+
+          {isLastStep && !typing ? (
+            <p className="lab-quest__done">{quest.done} {quest.doneHint}</p>
+          ) : null}
+
+          <button
+            type="button"
+            className="lab-quest__mail-fallback"
+            onClick={onMailFallback}
+          >
+            {brief.mailFallback}
+          </button>
+        </div>
+
+        {/* Live brief preview — sidebar on desktop, sticky bottom on mobile */}
         <aside
-          className="lab-craft__output mp-card"
-          data-rarity={rarity}
-          aria-label={craft.outputHeading}
+          className="lab-quest__preview mp-card"
+          aria-label={quest.previewHeading}
         >
-          {outputBody}
+          <header className="lab-quest__preview-head">
+            <span className="lab-quest__preview-title">
+              {quest.previewHeading}
+            </span>
+          </header>
+          <div className="lab-quest__preview-body" aria-live="polite">
+            <p className="lab-quest__preview-type">
+              <strong>{pickedItem.title}</strong>
+            </p>
+            {beats.filter((b) => b.id !== CONTACT_METHOD_BEAT_ID).map((b) => {
+              const v = answers[b.id]?.trim();
+              if (!v) return null;
+              return (
+                <p className="lab-quest__preview-line" key={b.id}>
+                  <span className="lab-quest__preview-key">{b.prompt}</span>
+                  <span className="lab-quest__preview-val">{v}</span>
+                </p>
+              );
+            })}
+            {!Object.values(answers).some((v) => v?.trim()) ? (
+              <p className="lab-quest__preview-line lab-quest__preview-line--ghost">
+                {quest.previewEmpty}
+              </p>
+            ) : null}
+          </div>
         </aside>
       </div>
-
-      {/* Mobile-only sticky peek bar. Always visible at viewport bottom,
-          shows compact rarity + counter + opens the dialog when tapped.
-          Hidden on tablet/desktop where the aside lives in-page. */}
-      <button
-        ref={sheetPeekRef}
-        type="button"
-        className="lab-craft__sheet-peek"
-        onClick={openSheet}
-        aria-haspopup="dialog"
-        aria-label={craft.outputHeading}
-        data-rarity={rarity}
-      >
-        <span className="lab-craft__sheet-peek-rarity">
-          <span className="lab-craft__sheet-peek-stars" aria-hidden="true">
-            {rarity === 'legendary' ? '★★★★★'
-              : rarity === 'epic'      ? '★★★★☆'
-              : rarity === 'rare'      ? '★★★☆☆'
-              : rarity === 'uncommon'  ? '★★☆☆☆'
-                                       : '★☆☆☆☆'}
-          </span>
-          <span className="lab-craft__sheet-peek-label">{rarityLabel}</span>
-        </span>
-        <span className="lab-craft__sheet-peek-count">{counterText}</span>
-        <span className="lab-craft__sheet-peek-arrow" aria-hidden="true">↑</span>
-      </button>
-
-      {/* Mobile-only bottom-sheet dialog. Native <dialog> gives us focus
-          trap, ESC handling, and backdrop for free. */}
-      <dialog
-        ref={sheetDialogRef}
-        className="lab-craft__sheet-dialog"
-        aria-label={craft.outputHeading}
-      >
-        <header className="lab-craft__sheet-grip" aria-hidden="true">
-          <span className="lab-craft__sheet-grip-bar" />
-        </header>
-        <div className="lab-craft__sheet-content mp-card" data-rarity={rarity}>
-          {outputBody}
-        </div>
-        <footer className="lab-craft__sheet-actions">
-          <button
-            type="button"
-            className="mp-cta mp-cta--secondary"
-            onClick={closeSheet}
-          >
-            {/* Reuses i18n: the editing/back affordance. */}
-            ↓
-          </button>
-          <button
-            type="button"
-            className="mp-cta mp-cta--primary mp-cta--block lab-craft__sheet-send"
-            onClick={onSheetSend}
-            data-ready={allEssentialsFilled || undefined}
-            data-legendary={rarity === 'legendary' || undefined}
-          >
-            {submitLabel}
-          </button>
-        </footer>
-      </dialog>
     </section>
   );
+}
+
+/** Returns true if the user prefers reduced motion. */
+function useReducedMotionPref() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduced(mq.matches);
+    const handler = () => setReduced(mq.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+  return reduced;
 }

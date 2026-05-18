@@ -24,27 +24,32 @@ export const HE_RANDOM_WEIGHT = 0.7;
 
 export type ContactMethodKey = 'whatsapp' | 'email';
 
-/** Per-template placeholder hints, one per craft-grid slot. */
-export type SlotHints = {
-  what: string;
-  who: string;
-  reference: string;
-};
+/** A quick-pick suggestion underneath a dialogue prompt. */
+export type Chip = { value: string; label: string };
 
-/** Optional vibe tag a visitor can tap to flavor the brief. */
-export type VibeChip = {
+/** One question in the Quest Dialogue flow. */
+export type Beat = {
   id: string;
-  label: string;
+  /** What Bar asks. */
+  prompt: string;
+  /** Optional helper sentence under the prompt. */
+  hint?: string;
+  /** Optional quick-pick chips. Picking one auto-fills the freeform input. */
+  chips?: Chip[];
+  /** Placeholder for the freeform input. */
+  placeholder?: string;
+  required: boolean;
+  /** 'text' or 'textarea'. Defaults to 'text'. */
+  inputType?: 'text' | 'textarea';
 };
 
 export type TemplateItem = {
   slug: string;
   title: string;
   summary: string;
-  /** Per-template hints piped into each crafting slot's placeholder. */
-  slotHints: SlotHints;
-  /** Vibe chips appended to the brief and bumping it toward "legendary". */
-  vibeChips: VibeChip[];
+  /** Per-template sequence of dialogue beats (3-4 questions). The two
+   *  universal contact beats are appended at runtime in LabIntake. */
+  beats: Beat[];
 };
 
 export type Dict = {
@@ -121,31 +126,28 @@ export type Dict = {
       vibe: string;
     };
     templatePickedPrefix: string;
-    /** Crafting grid copy. */
-    craft: {
-      gridLabel: string;
-      slotLabels: {
-        what: string;
-        who: string;
-        reference: string;
-        vibe: string;
-        contact: string;
-      };
+    /** Quest Dialogue copy. */
+    quest: {
       pickTemplateFirst: string;
-      vibeHint: string;
-      vibeSelected: string;
-      essentialsCount: string;
-      essentialsAll: string;
-      submit: string;
-      submitReady: string;
-      rarity: {
-        common: string;
-        uncommon: string;
-        rare: string;
-        legendary: string;
-      };
-      outputHeading: string;
-      outputEmpty: string;
+      avatarName: string;
+      typingHint: string;
+      progressLabel: string;
+      next: string;
+      back: string;
+      skip: string;
+      send: string;
+      sendReady: string;
+      pickAnswer: string;
+      contactMethodPrompt: string;
+      contactMethodChips: { whatsapp: string; email: string };
+      contactValuePromptWhatsapp: string;
+      contactValuePromptEmail: string;
+      done: string;
+      doneHint: string;
+      sentTitle: string;
+      sentBody: string;
+      previewHeading: string;
+      previewEmpty: string;
     };
   };
   qa: {
@@ -213,170 +215,362 @@ const HE: Dict = {
         slug: 'mvp',
         title: 'גרסה ראשונה למיזם',
         summary: 'מרעיון למוצר עובד, מהר. גרסה ראשונה שמספיק טובה להראות.',
-        slotHints: {
-          what: 'פלטפורמה שמחברת בין מעצבים פרילנסרים ללקוחות, עם תיאום ותשלום בנאמנות',
-          who: 'יזמים סולו, צוותים קטנים, מי שרץ לסבב גיוס',
-          reference: 'כמו Toptal אבל סולו, בלי עמלת סוכנות',
-        },
-        vibeChips: [
-          { id: 'fast', label: 'פאסט' },
-          { id: 'niche', label: 'נישתי' },
-          { id: 'broad', label: 'רחב' },
-          { id: 'premium', label: 'פרימיום' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'אז יש לך רעיון לגרסה ראשונה. מה אנחנו בונים?',
+            hint: 'משפט אחד או שלושה.',
+            placeholder: 'פלטפורמה, אפליקציה, MVP, ברעיון אחד...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'who',
+            prompt: 'מי המשתמש הראשון שאם הוא יאהב, נדע שזה הכיוון?',
+            chips: [
+              { value: 'יזמ.ית סולו', label: 'יזמ.ית סולו' },
+              { value: 'צוות קטן', label: 'צוות קטן' },
+              { value: 'סטארטאפ צעיר', label: 'סטארטאפ צעיר' },
+              { value: 'לקוחות עסקיים', label: 'לקוחות עסקיים' },
+            ],
+            placeholder: 'תאר במשפט מי הם',
+            required: true,
+          },
+          {
+            id: 'whyNow',
+            prompt: 'ולמה דווקא עכשיו?',
+            chips: [
+              { value: 'סבב גיוס', label: 'סבב גיוס' },
+              { value: 'תאריך פיץ׳', label: 'תאריך פיץ׳' },
+              { value: 'נמאס לחכות', label: 'נמאס לחכות' },
+            ],
+            placeholder: 'או משהו אחר שדוחף',
+            required: false,
+          },
         ],
       },
       {
         slug: 'brand',
         title: 'אתר משלך, לא מתבנית',
         summary: 'מעוצב ונבנה אישית. טיפוגרפיה, צבעים ואנימציות שמתאימים לך.',
-        slotHints: {
-          what: 'אתר לסטודיו קרמיקה, שקט ומוזיאוני, גלריה שמרגישה כמו חדר תצוגה',
-          who: 'אספנים מעיצוב, גלריסטים, סקרנים מאינסטגרם',
-          reference: 'כמו אתר של סטודיו עיצוב מאופק, אותה רמת איפוק',
-        },
-        vibeChips: [
-          { id: 'minimal', label: 'מינימלי' },
-          { id: 'maximal', label: 'מקסימלי' },
-          { id: 'y2k', label: 'Y2K' },
-          { id: 'street', label: 'רחוב' },
-          { id: 'boutique', label: 'בוטיק' },
-          { id: 'corporate', label: 'תאגידי' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'איזה מותג / אתר אנחנו בונים?',
+            placeholder: 'סטודיו קרמיקה, פרילנס עם זהות, מותג חדש...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'vibe',
+            prompt: 'איך זה צריך להרגיש בשלוש שניות?',
+            hint: 'בחר אחד או יותר, או כתוב משלך.',
+            chips: [
+              { value: 'מינימלי', label: 'מינימלי' },
+              { value: 'מקסימלי', label: 'מקסימלי' },
+              { value: 'Y2K', label: 'Y2K' },
+              { value: 'רחוב', label: 'רחוב' },
+              { value: 'בוטיק', label: 'בוטיק' },
+              { value: 'תאגידי', label: 'תאגידי' },
+            ],
+            placeholder: 'או תאר במילים שלך',
+            required: true,
+          },
+          {
+            id: 'audience',
+            prompt: 'מי נוחת באתר?',
+            chips: [
+              { value: 'אספנים', label: 'אספנים' },
+              { value: 'גלריסטים', label: 'גלריסטים' },
+              { value: 'מאינסטגרם', label: 'מאינסטגרם' },
+              { value: 'לקוחות קיימים', label: 'לקוחות קיימים' },
+            ],
+            placeholder: 'או תאר בקצרה',
+            required: false,
+          },
         ],
       },
       {
         slug: 'ecommerce',
         title: 'חנות אונליין מעוצבת אישית',
         summary: 'חנות עם אופי. לא קטלוג גנרי.',
-        slotHints: {
-          what: 'חנות לספלי קרמיקה בעבודת יד, ארבעה דגמים, סיפור של היוצר על כל מוצר',
-          who: 'גילאי 30 עד 50, מודעים לעיצוב, מגיעים מאינסטגרם והמלצות',
-          reference: 'מותגי D2C קטנים עם דפי מוצר חכמים',
-        },
-        vibeChips: [
-          { id: 'premium', label: 'פרימיום' },
-          { id: 'indie', label: 'אינדי' },
-          { id: 'boutique', label: 'בוטיק' },
-          { id: 'fast', label: 'מהירה' },
-          { id: 'wholesale', label: 'סיטונאי' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'מה מוכרים, ולמי?',
+            placeholder: 'ספלי קרמיקה, ארבעה דגמים, סיפור של היוצר...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'range',
+            prompt: 'באיזה טווח מחיר?',
+            chips: [
+              { value: 'זול', label: 'זול' },
+              { value: 'בינוני', label: 'בינוני' },
+              { value: 'פרימיום', label: 'פרימיום' },
+              { value: 'יוקרה', label: 'יוקרה' },
+            ],
+            required: true,
+          },
+          {
+            id: 'channel',
+            prompt: 'מאיפה הלקוחות מגיעים?',
+            chips: [
+              { value: 'אינסטגרם', label: 'אינסטגרם' },
+              { value: 'המלצות', label: 'המלצות' },
+              { value: 'חיפוש', label: 'חיפוש בגוגל' },
+              { value: 'מותג קיים', label: 'מותג קיים' },
+            ],
+            placeholder: 'או דרך אחרת',
+            required: false,
+          },
         ],
       },
       {
         slug: 'ai-agent',
         title: 'סוכן AI שעובד בשבילך',
         summary: 'צ׳אט ללקוחות, מענה לפי מסמכים שלך, סוכן שעובר על מיילים.',
-        slotHints: {
-          what: 'סוכן שקורא מיילים נכנסים, מתייג לפי כוונה (דמו / תמחור / ספאם) ומציע טיוטת תשובה',
-          who: 'שני אנשי תפעול מכירות שעוברים על מאות מיילים ביום',
-          reference: 'עוזר שמנסח טיוטות במקום שאלה פתוחה, אותה רמת איפוק',
-        },
-        vibeChips: [
-          { id: 'quiet', label: 'שקט' },
-          { id: 'chatty', label: 'שיחתי' },
-          { id: 'autonomous', label: 'אוטונומי' },
-          { id: 'explainer', label: 'מסביר' },
-          { id: 'proactive', label: 'יוזם' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'איזו פעולה אנושית הסוכן יחליף?',
+            hint: 'תאר אותו כאילו אתה מסביר לעובד חדש ביום הראשון.',
+            placeholder: 'קורא מיילים, מתייג לפי כוונה, מציע טיוטת תשובה...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'who',
+            prompt: 'מי משתמש בסוכן?',
+            chips: [
+              { value: 'צוות מכירות', label: 'צוות מכירות' },
+              { value: 'שירות לקוחות', label: 'שירות לקוחות' },
+              { value: 'לקוח קצה', label: 'לקוח קצה' },
+              { value: 'פנימי', label: 'צוות פנימי' },
+            ],
+            required: true,
+          },
+          {
+            id: 'context',
+            prompt: 'באיזה context הוא ירוץ?',
+            chips: [
+              { value: 'מייל', label: 'מייל' },
+              { value: 'צ׳אט', label: 'צ׳אט' },
+              { value: 'סלאק', label: 'סלאק' },
+              { value: 'API', label: 'API' },
+              { value: 'דשבורד', label: 'דשבורד' },
+            ],
+            required: false,
+          },
         ],
       },
       {
         slug: 'ai-video',
         title: 'סטודיו יצירתי מבוסס AI',
         summary: 'כלים לגרפיקה, תמונות, סרטונים, מהרעיון לתוצר.',
-        slotHints: {
-          what: 'כלי שמקבל כותרת חדשות בבוקר ומייצר סרטון אנכי קצר עם הקראה ורקע מתאים',
-          who: 'רשתות חברתיות, גילאי 16 עד 30, פורמט קצר',
-          reference: 'קישור או דוגמה לסגנון שאני רוצה לכוון אליו',
-        },
-        vibeChips: [
-          { id: 'viral', label: 'ויראלי' },
-          { id: 'series', label: 'סדרתי' },
-          { id: 'aesthetic', label: 'אסתטי' },
-          { id: 'informative', label: 'אינפורמטיבי' },
-          { id: 'polished', label: 'מלוטש' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'איזה תוכן ויזואלי אנחנו מייצרים?',
+            hint: 'מקור ← טרנספורם ← פלט.',
+            placeholder: 'סרטונים אנכיים, גרפיקות יומיות, סטוריז...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'frequency',
+            prompt: 'באיזו תדירות?',
+            chips: [
+              { value: 'יומי', label: 'יומי' },
+              { value: 'שבועי', label: 'שבועי' },
+              { value: 'חד פעמי', label: 'חד פעמי' },
+              { value: 'לקמפיין', label: 'לקמפיין' },
+            ],
+            required: true,
+          },
+          {
+            id: 'style',
+            prompt: 'איזה סטייל ויזואלי?',
+            placeholder: 'מינימלי, רטרו, צבעוני, אסתטי...',
+            required: false,
+          },
         ],
       },
       {
         slug: 'audio',
         title: 'מוזיקה, סאונד וכל מה שביניהם',
         summary: 'פלאגינים, כלי הפקה, סינתזה, אפקטים בזמן אמת.',
-        slotHints: {
-          what: 'סאונד אינטראקטיבי לאתר גלריה, אקורדים שמשתנים תוך כדי גלילה בין סקציות',
-          who: 'מבקרים של אתר גלריה, רובם דסקטופ, אוזניות עליהם',
-          reference: 'קישור לאתר/פלאגין שאתה אוהב, והתחושה שלו',
-        },
-        vibeChips: [
-          { id: 'synthetic', label: 'סינתי' },
-          { id: 'acoustic', label: 'אקוסטי' },
-          { id: 'ambient', label: 'אמביינט' },
-          { id: 'electronic', label: 'אלקטרוני' },
-          { id: 'cinematic', label: 'קולנועי' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'איזו חוויה מוזיקלית או מנוע אודיו?',
+            hint: 'איך זה צריך להרגיש לאוזן?',
+            placeholder: 'פס-קול לאתר, פלאגין, כלי הפקה...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'mood',
+            prompt: 'איזה מצב רוח?',
+            chips: [
+              { value: 'סינתי', label: 'סינתי' },
+              { value: 'אקוסטי', label: 'אקוסטי' },
+              { value: 'אמביינט', label: 'אמביינט' },
+              { value: 'אלקטרוני', label: 'אלקטרוני' },
+              { value: 'קולנועי', label: 'קולנועי' },
+            ],
+            required: true,
+          },
+          {
+            id: 'context',
+            prompt: 'איפה זה ינוגן?',
+            chips: [
+              { value: 'אתר', label: 'אתר' },
+              { value: 'אולפן', label: 'אולפן' },
+              { value: 'הופעה חיה', label: 'הופעה חיה' },
+              { value: 'אפליקציה', label: 'אפליקציה' },
+            ],
+            required: false,
+          },
         ],
       },
       {
         slug: 'game',
         title: 'משחק דפדפן או חוויה אינטראקטיבית',
         summary: 'משחקון לקמפיין, חוויה לסטוריז, או גרסה ראשונה למשחק אינדי.',
-        slotHints: {
-          what: 'משחק קטן ושיתופי לקמפיין מותג, לחיצה מהירה, טבלת שיאים, שיתוף תוצאה',
-          who: 'גילאי 16 עד 35 בסלולרי, מגיעים מסטוריז אינסטגרם',
-          reference: 'משחק קטן עם אנימציה וצליל, אותה רמת ליטוש',
-        },
-        vibeChips: [
-          { id: 'arcade', label: 'ארקייד' },
-          { id: 'puzzle', label: 'פאזל' },
-          { id: 'trivia', label: 'טריוויה' },
-          { id: 'casual', label: 'קז׳ואל' },
-          { id: 'competitive', label: 'תחרותי' },
-          { id: 'coop', label: 'שיתופי' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'איזה משחק או חוויה?',
+            hint: 'מה המכניקה הראשית במשפט?',
+            placeholder: 'משחק לחיצה, פאזל, טריוויה, חוויה אינטראקטיבית...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'context',
+            prompt: 'מה ההקשר?',
+            chips: [
+              { value: 'קמפיין מותג', label: 'קמפיין מותג' },
+              { value: 'סטוריז', label: 'סטוריז' },
+              { value: 'פרויקט צד', label: 'פרויקט צד' },
+              { value: 'הפעלת מותג', label: 'הפעלת מותג' },
+            ],
+            required: true,
+          },
+          {
+            id: 'audience',
+            prompt: 'מי השחקנים?',
+            chips: [
+              { value: 'ילדים', label: 'ילדים' },
+              { value: 'נוער', label: 'נוער' },
+              { value: 'מבוגרים', label: 'מבוגרים' },
+              { value: 'כולם', label: 'כולם' },
+            ],
+            required: false,
+          },
         ],
       },
       {
         slug: 'realtime',
         title: 'דשבורד שמתעדכן בזמן אמת',
         summary: 'פאנל ניהול עם הרשאות, נתונים חיים, התראות, ייצוא.',
-        slotHints: {
-          what: 'דשבורד למחסן, תחנות, הזמנות פתוחות, התראה כשתחנה רגועה יותר מחמש דקות',
-          who: 'מנהל רצפה על מסך גדול, שישה מפקחים שמסתכלים בסלולרי',
-          reference: 'מסך מצב פרויקטים, תצוגת בריאות מערכת, פשוט וברור',
-        },
-        vibeChips: [
-          { id: 'compact', label: 'קומפקטי' },
-          { id: 'detailed', label: 'מפורט' },
-          { id: 'alerts', label: 'אזעקות' },
-          { id: 'classic', label: 'קלאסי' },
-          { id: 'bigscreen', label: 'מסך גדול' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'איזה דשבורד או מערכת בזמן אמת?',
+            hint: 'אילו נתונים זורמים פנימה וכל כמה זמן?',
+            placeholder: 'דשבורד מחסן, מצב פרויקטים, נתוני מכירות...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'who',
+            prompt: 'מי צופה בדשבורד?',
+            chips: [
+              { value: 'מנהל תפעול', label: 'מנהל תפעול' },
+              { value: 'צוות בשטח', label: 'צוות בשטח' },
+              { value: 'לקוחות', label: 'לקוחות' },
+              { value: 'הנהלה בכירה', label: 'הנהלה בכירה' },
+            ],
+            required: true,
+          },
+          {
+            id: 'alerts',
+            prompt: 'אילו התראות צריך לשלוח?',
+            chips: [
+              { value: 'על תקלות', label: 'על תקלות' },
+              { value: 'על אבני דרך', label: 'על אבני דרך' },
+              { value: 'על שיאים', label: 'על שיאים' },
+              { value: 'ללא התראות', label: 'ללא התראות' },
+            ],
+            required: false,
+          },
         ],
       },
       {
         slug: 'mobile',
         title: 'אפליקציה לטלפון',
         summary: 'אפליקציה שעובדת על כל טלפון. התראות, מצב לא מקוון, התחברות.',
-        slotHints: {
-          what: 'אפליקציה לחובבי ציפורים, לוג של תצפית בשלוש הקשות, גרף ומה נצפה בסביבה היום',
-          who: 'משתמשים שהיום משתמשים בגרסת ווב במובייל ומתלוננים שהיא מסורבלת',
-          reference: 'אפליקציה עם פיד חברתי וזרימת לכידה מהירה, הצירוף הזה',
-        },
-        vibeChips: [
-          { id: 'ios', label: 'iOS' },
-          { id: 'android', label: 'אנדרואיד' },
-          { id: 'both', label: 'שתיהן' },
-          { id: 'daily', label: 'יומיומי' },
-          { id: 'campaign', label: 'מבצעי' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'איזו אפליקציה? מה הפעולה היומיומית הראשית בה?',
+            hint: 'דמיין משתמש פותח אותה בתחנת אוטובוס.',
+            placeholder: 'אפליקציה ללוג, מעקב, מסחר, שיתוף...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'platform',
+            prompt: 'איזו פלטפורמה?',
+            chips: [
+              { value: 'iOS', label: 'iOS' },
+              { value: 'אנדרואיד', label: 'אנדרואיד' },
+              { value: 'שתיהן', label: 'שתיהן' },
+              { value: 'לא משנה', label: 'לא משנה' },
+            ],
+            required: true,
+          },
+          {
+            id: 'offline',
+            prompt: 'צריך לעבוד אופליין?',
+            chips: [
+              { value: 'כן', label: 'כן, חובה' },
+              { value: 'חלקית', label: 'חלקית' },
+              { value: 'לא', label: 'לא צריך' },
+            ],
+            required: false,
+          },
         ],
       },
       {
         slug: 'other',
         title: 'משהו אחר לגמרי',
         summary: 'יש לך רעיון מוזר? מעולה. הדברים הטובים מתחילים ככה.',
-        slotHints: {
-          what: 'תאר את הרעיון כמו שאתה מספר אותו לחבר. מוזר זה בברכה.',
-          who: 'אפילו נישה של חמישים אנשים זה בסדר. החדים יוצאים לאוויר.',
-          reference: 'משהו שדומה ברוח, אפילו רק במעט',
-        },
-        vibeChips: [
-          { id: 'weird', label: 'מוזר' },
-          { id: 'daily', label: 'יומיומי' },
-          { id: 'operational', label: 'תפעולי' },
-          { id: 'experimental', label: 'ניסיוני' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'אז ספר. מה הרעיון, ולמה הוא צריך להיות קיים?',
+            hint: 'מוזר זה בברכה. הקצוות המוזרות עושות את הפרויקטים הכי טובים.',
+            placeholder: 'תאר כמו שאתה מספר לחבר',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'who',
+            prompt: 'למי זה?',
+            hint: 'אפילו נישה של חמישים זה בסדר.',
+            placeholder: 'מתרגלי חלימה צלולה, אספני קלטות, מי שזה לא יהיה',
+            required: false,
+          },
+          {
+            id: 'why',
+            prompt: 'למה זה צריך להיבנות עכשיו?',
+            placeholder: 'מה השתנה, או למה אף אחד עוד לא בנה את זה',
+            required: false,
+          },
         ],
       },
     ],
@@ -474,30 +668,27 @@ const HE: Dict = {
       vibe: '*וייב*',
     },
     templatePickedPrefix: 'סוג נבחר',
-    craft: {
-      gridLabel: 'משבצות הקראפט',
-      slotLabels: {
-        what: 'מה לבנות',
-        who: 'בשביל מי',
-        reference: 'השראה',
-        vibe: 'וייב',
-        contact: 'איך לחזור אליך',
-      },
-      pickTemplateFirst: 'בחר סוג למעלה כדי לפתוח את המשבצות.',
-      vibeHint: 'לחץ על תגית להוסיף נופך לבריף.',
-      vibeSelected: 'נופך נבחר',
-      essentialsCount: '{n} מתוך {total} משבצות חובה',
-      essentialsAll: 'כל המשבצות מלאות, מוכן לקראפט!',
-      submit: '⚒ צור את הבריף',
-      submitReady: '⚒ שלח את הבריף',
-      rarity: {
-        common: 'רגיל',
-        uncommon: 'נדיר',
-        rare: 'נדיר מאוד',
-        legendary: 'אגדי',
-      },
-      outputHeading: 'הבריף שייצר',
-      outputEmpty: 'תתחיל למלא משבצות, הבריף ייבנה פה.',
+    quest: {
+      pickTemplateFirst: 'בחר סוג למעלה כדי להתחיל.',
+      avatarName: 'בר',
+      typingHint: 'בר כותב…',
+      progressLabel: 'שאלה {n} מתוך {total}',
+      next: 'הבא',
+      back: 'אחורה',
+      skip: 'דלג',
+      send: '✦ שלח את הבריף',
+      sendReady: '✦ שלח את הבריף',
+      pickAnswer: 'בחר אחד או כתוב משלך',
+      contactMethodPrompt: 'איך הכי נוח לחזור אליך?',
+      contactMethodChips: { whatsapp: 'וואטסאפ', email: 'מייל' },
+      contactValuePromptWhatsapp: 'תן לי את מספר הוואטסאפ',
+      contactValuePromptEmail: 'תן לי את כתובת המייל',
+      done: 'הבריף מוכן.',
+      doneHint: 'בדוק שזה נראה כמו שאתה רוצה, ולחץ שלח.',
+      sentTitle: 'נשלח!',
+      sentBody: 'נפתח לך וואטסאפ עם הבריף מסודר. אפשר עוד להוסיף קישורים או צילומים לפני שמשלחים.',
+      previewHeading: 'הבריף שלך',
+      previewEmpty: 'הבריף ייבנה כאן תוך כדי שיחה.',
     },
   },
   qa: {
@@ -593,170 +784,362 @@ const EN: Dict = {
         slug: 'mvp',
         title: 'First version of a venture',
         summary: 'From idea to a working product, fast. Solid enough to show.',
-        slotHints: {
-          what: 'a platform connecting freelance designers and clients, with booking and escrow payment',
-          who: 'solo founders, small teams, anyone running to a funding round',
-          reference: 'like Toptal but solo, no agency markup',
-        },
-        vibeChips: [
-          { id: 'fast', label: 'fast' },
-          { id: 'niche', label: 'niche' },
-          { id: 'broad', label: 'broad' },
-          { id: 'premium', label: 'premium' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'So you have an idea for a first version. What are we building?',
+            hint: 'One sentence or three.',
+            placeholder: 'A platform, an app, an MVP, in one idea...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'who',
+            prompt: 'Who is the first user, the one whose love means the direction is real?',
+            chips: [
+              { value: 'solo founder', label: 'solo founder' },
+              { value: 'small team', label: 'small team' },
+              { value: 'young startup', label: 'young startup' },
+              { value: 'business customers', label: 'business customers' },
+            ],
+            placeholder: 'Describe in a sentence',
+            required: true,
+          },
+          {
+            id: 'whyNow',
+            prompt: 'And why now?',
+            chips: [
+              { value: 'funding round', label: 'funding round' },
+              { value: 'pitch deadline', label: 'pitch deadline' },
+              { value: 'tired of waiting', label: 'tired of waiting' },
+            ],
+            placeholder: 'Or something else pushing it',
+            required: false,
+          },
         ],
       },
       {
         slug: 'brand',
         title: 'A site of your own, not from a template',
         summary: 'Designed and built personally. Typography, colors, animations chosen for you.',
-        slotHints: {
-          what: 'a site for a ceramics studio, quiet and museum quality, a gallery that feels like a viewing room',
-          who: 'collectors, gallerists, curious from Instagram',
-          reference: 'like a clean design studio site, that level of restraint',
-        },
-        vibeChips: [
-          { id: 'minimal', label: 'minimal' },
-          { id: 'maximal', label: 'maximal' },
-          { id: 'y2k', label: 'Y2K' },
-          { id: 'street', label: 'street' },
-          { id: 'boutique', label: 'boutique' },
-          { id: 'corporate', label: 'corporate' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'What brand or site are we building?',
+            placeholder: 'A ceramics studio, a freelancer with identity, a new brand...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'vibe',
+            prompt: 'How should it feel in three seconds?',
+            hint: 'Pick one or more, or write your own.',
+            chips: [
+              { value: 'minimal', label: 'minimal' },
+              { value: 'maximal', label: 'maximal' },
+              { value: 'Y2K', label: 'Y2K' },
+              { value: 'street', label: 'street' },
+              { value: 'boutique', label: 'boutique' },
+              { value: 'corporate', label: 'corporate' },
+            ],
+            placeholder: 'Or describe in your own words',
+            required: true,
+          },
+          {
+            id: 'audience',
+            prompt: 'Who lands on this site?',
+            chips: [
+              { value: 'collectors', label: 'collectors' },
+              { value: 'gallerists', label: 'gallerists' },
+              { value: 'from Instagram', label: 'from Instagram' },
+              { value: 'existing customers', label: 'existing customers' },
+            ],
+            placeholder: 'Or describe briefly',
+            required: false,
+          },
         ],
       },
       {
         slug: 'ecommerce',
         title: 'A custom online store',
         summary: 'A store with identity. Not a generic catalogue.',
-        slotHints: {
-          what: 'a shop for hand thrown ceramic mugs, four styles, a story from the maker on every item',
-          who: 'design curious, 30 to 50, mostly from Instagram and word of mouth',
-          reference: 'small D2C brands with smart product pages',
-        },
-        vibeChips: [
-          { id: 'premium', label: 'premium' },
-          { id: 'indie', label: 'indie' },
-          { id: 'boutique', label: 'boutique' },
-          { id: 'fast', label: 'fast' },
-          { id: 'wholesale', label: 'wholesale' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'What are you selling, and to whom?',
+            placeholder: 'Hand thrown ceramic mugs, four styles, maker’s story on every item...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'range',
+            prompt: 'What price range?',
+            chips: [
+              { value: 'budget', label: 'budget' },
+              { value: 'mid range', label: 'mid range' },
+              { value: 'premium', label: 'premium' },
+              { value: 'luxury', label: 'luxury' },
+            ],
+            required: true,
+          },
+          {
+            id: 'channel',
+            prompt: 'Where do customers come from?',
+            chips: [
+              { value: 'Instagram', label: 'Instagram' },
+              { value: 'word of mouth', label: 'word of mouth' },
+              { value: 'Google search', label: 'Google search' },
+              { value: 'existing brand', label: 'existing brand' },
+            ],
+            placeholder: 'Or another channel',
+            required: false,
+          },
         ],
       },
       {
         slug: 'ai-agent',
         title: 'Private AI assistant / agent',
         summary: 'Customer chat, answers grounded in your docs, an agent that triages email.',
-        slotHints: {
-          what: 'an agent that reads incoming sales emails, tags them by intent (demo / pricing / spam), and drafts a first reply',
-          who: 'two sales ops people triaging hundreds of emails a day',
-          reference: 'an assistant that drafts a task instead of asking an open question, that restraint',
-        },
-        vibeChips: [
-          { id: 'quiet', label: 'quiet' },
-          { id: 'chatty', label: 'chatty' },
-          { id: 'autonomous', label: 'autonomous' },
-          { id: 'explainer', label: 'explainer' },
-          { id: 'proactive', label: 'proactive' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'What human action will the agent replace?',
+            hint: 'Describe it like you’re telling a new hire on day one.',
+            placeholder: 'Reads emails, tags by intent, drafts first reply...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'who',
+            prompt: 'Who uses the agent?',
+            chips: [
+              { value: 'sales team', label: 'sales team' },
+              { value: 'customer support', label: 'customer support' },
+              { value: 'end customer', label: 'end customer' },
+              { value: 'internal staff', label: 'internal staff' },
+            ],
+            required: true,
+          },
+          {
+            id: 'context',
+            prompt: 'In what context will it run?',
+            chips: [
+              { value: 'email', label: 'email' },
+              { value: 'chat', label: 'chat' },
+              { value: 'Slack', label: 'Slack' },
+              { value: 'API', label: 'API' },
+              { value: 'dashboard', label: 'dashboard' },
+            ],
+            required: false,
+          },
         ],
       },
       {
         slug: 'ai-video',
         title: 'AI creative & visual toolkit',
         summary: 'Graphics, images, video, from idea to finished asset.',
-        slotHints: {
-          what: 'a tool that takes a morning news headline and produces a short vertical video with narration and background footage',
-          who: 'social, ages 16 to 30, short format',
-          reference: 'a link or example, the style I want to aim for',
-        },
-        vibeChips: [
-          { id: 'viral', label: 'viral' },
-          { id: 'series', label: 'series' },
-          { id: 'aesthetic', label: 'aesthetic' },
-          { id: 'informative', label: 'informative' },
-          { id: 'polished', label: 'polished' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'What visual content are we producing?',
+            hint: 'Source → transform → output.',
+            placeholder: 'Vertical videos, daily graphics, stories...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'frequency',
+            prompt: 'How often?',
+            chips: [
+              { value: 'daily', label: 'daily' },
+              { value: 'weekly', label: 'weekly' },
+              { value: 'one off', label: 'one off' },
+              { value: 'for a campaign', label: 'for a campaign' },
+            ],
+            required: true,
+          },
+          {
+            id: 'style',
+            prompt: 'What visual style?',
+            placeholder: 'Minimal, retro, colorful, aesthetic...',
+            required: false,
+          },
         ],
       },
       {
         slug: 'audio',
         title: 'Music, sound, and the tools in between',
         summary: 'Plugins, production tools, synthesis, live effects.',
-        slotHints: {
-          what: 'an interactive soundtrack for a gallery site, chords shift as you scroll between sections',
-          who: 'visitors of a gallery site, mostly desktop, headphones on',
-          reference: 'a link to a site or plugin and the feel of it',
-        },
-        vibeChips: [
-          { id: 'synthetic', label: 'synthetic' },
-          { id: 'acoustic', label: 'acoustic' },
-          { id: 'ambient', label: 'ambient' },
-          { id: 'electronic', label: 'electronic' },
-          { id: 'cinematic', label: 'cinematic' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'What kind of musical experience or audio engine?',
+            hint: 'How should it feel to the ear?',
+            placeholder: 'Soundtrack for a site, plugin, production tool...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'mood',
+            prompt: 'What mood?',
+            chips: [
+              { value: 'synthetic', label: 'synthetic' },
+              { value: 'acoustic', label: 'acoustic' },
+              { value: 'ambient', label: 'ambient' },
+              { value: 'electronic', label: 'electronic' },
+              { value: 'cinematic', label: 'cinematic' },
+            ],
+            required: true,
+          },
+          {
+            id: 'context',
+            prompt: 'Where will it play?',
+            chips: [
+              { value: 'a site', label: 'a site' },
+              { value: 'studio', label: 'studio' },
+              { value: 'live show', label: 'live show' },
+              { value: 'an app', label: 'an app' },
+            ],
+            required: false,
+          },
         ],
       },
       {
         slug: 'game',
         title: 'Browser game / interactive experience',
         summary: 'A small game for a campaign, a viral piece, or a first version of an indie game.',
-        slotHints: {
-          what: 'a shareable small game for a brand campaign, fast click, leaderboard, share result',
-          who: 'ages 16 to 35 on phones, arriving from Instagram stories',
-          reference: 'a small game with animation and sound, that level of polish',
-        },
-        vibeChips: [
-          { id: 'arcade', label: 'arcade' },
-          { id: 'puzzle', label: 'puzzle' },
-          { id: 'trivia', label: 'trivia' },
-          { id: 'casual', label: 'casual' },
-          { id: 'competitive', label: 'competitive' },
-          { id: 'coop', label: 'co op' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'What kind of game or experience?',
+            hint: 'What’s the one line core mechanic?',
+            placeholder: 'Click game, puzzle, trivia, interactive experience...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'context',
+            prompt: 'What’s the context?',
+            chips: [
+              { value: 'brand campaign', label: 'brand campaign' },
+              { value: 'stories', label: 'stories' },
+              { value: 'side project', label: 'side project' },
+              { value: 'brand activation', label: 'brand activation' },
+            ],
+            required: true,
+          },
+          {
+            id: 'audience',
+            prompt: 'Who are the players?',
+            chips: [
+              { value: 'kids', label: 'kids' },
+              { value: 'teens', label: 'teens' },
+              { value: 'adults', label: 'adults' },
+              { value: 'everyone', label: 'everyone' },
+            ],
+            required: false,
+          },
         ],
       },
       {
         slug: 'realtime',
         title: 'Dashboard / live system',
         summary: 'Admin panel with permissions, live data, alerts, exports.',
-        slotHints: {
-          what: 'a warehouse dashboard, stations, open orders, alert when a station idles over five minutes',
-          who: 'floor manager on a big screen, six supervisors checking on phones',
-          reference: 'a clean project status screen, a clear system health view, simple and obvious',
-        },
-        vibeChips: [
-          { id: 'compact', label: 'compact' },
-          { id: 'detailed', label: 'detailed' },
-          { id: 'alerts', label: 'alerts' },
-          { id: 'classic', label: 'classic' },
-          { id: 'bigscreen', label: 'big screen' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'What kind of dashboard or live system?',
+            hint: 'What data flows in and how often?',
+            placeholder: 'Warehouse dashboard, project status, sales data...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'who',
+            prompt: 'Who watches the dashboard?',
+            chips: [
+              { value: 'operations manager', label: 'operations manager' },
+              { value: 'field team', label: 'field team' },
+              { value: 'customers', label: 'customers' },
+              { value: 'senior leadership', label: 'senior leadership' },
+            ],
+            required: true,
+          },
+          {
+            id: 'alerts',
+            prompt: 'What alerts should it send?',
+            chips: [
+              { value: 'on failures', label: 'on failures' },
+              { value: 'on milestones', label: 'on milestones' },
+              { value: 'on records', label: 'on records' },
+              { value: 'no alerts', label: 'no alerts' },
+            ],
+            required: false,
+          },
         ],
       },
       {
         slug: 'mobile',
         title: 'Mobile app',
         summary: 'An app for every phone. Notifications, offline mode, sign in.',
-        slotHints: {
-          what: 'an app for amateur birders, log a sighting in three taps, see what was spotted nearby today',
-          who: 'people using a mobile web version today, complaining it’s clunky',
-          reference: 'an app with a social feed and a fast capture flow, that combination',
-        },
-        vibeChips: [
-          { id: 'ios', label: 'iOS' },
-          { id: 'android', label: 'Android' },
-          { id: 'both', label: 'both' },
-          { id: 'daily', label: 'daily use' },
-          { id: 'campaign', label: 'campaign' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'What kind of mobile app? What’s the one daily action inside it?',
+            hint: 'Imagine the user opening it at a bus stop.',
+            placeholder: 'Logging app, tracker, commerce, sharing...',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'platform',
+            prompt: 'Which platform?',
+            chips: [
+              { value: 'iOS', label: 'iOS' },
+              { value: 'Android', label: 'Android' },
+              { value: 'both', label: 'both' },
+              { value: 'no preference', label: 'no preference' },
+            ],
+            required: true,
+          },
+          {
+            id: 'offline',
+            prompt: 'Does it need to work offline?',
+            chips: [
+              { value: 'yes', label: 'yes, required' },
+              { value: 'partly', label: 'partly' },
+              { value: 'no', label: 'not needed' },
+            ],
+            required: false,
+          },
         ],
       },
       {
         slug: 'other',
         title: 'Something else entirely',
         summary: 'Got a weird idea? Great. The good ones start that way.',
-        slotHints: {
-          what: 'describe it like you’d tell a friend. Weird is welcome.',
-          who: 'even a niche of fifty is fine. The sharp ones get shipped.',
-          reference: 'something that feels close in spirit',
-        },
-        vibeChips: [
-          { id: 'weird', label: 'weird' },
-          { id: 'daily', label: 'daily' },
-          { id: 'operational', label: 'operational' },
-          { id: 'experimental', label: 'experimental' },
+        beats: [
+          {
+            id: 'what',
+            prompt: 'Tell me. What is it, and why does it need to exist?',
+            hint: 'Weird is welcome. Strange edges make the best projects.',
+            placeholder: 'Describe it like you’re telling a friend',
+            inputType: 'textarea',
+            required: true,
+          },
+          {
+            id: 'who',
+            prompt: 'Who is it for?',
+            hint: 'Even a niche of fifty is fine.',
+            placeholder: 'Lucid dream practitioners, tape collectors, whoever it is',
+            required: false,
+          },
+          {
+            id: 'why',
+            prompt: 'Why does this need to be built now?',
+            placeholder: 'What changed, or why has nobody built it yet',
+            required: false,
+          },
         ],
       },
     ],
@@ -854,30 +1237,27 @@ const EN: Dict = {
       vibe: '*Vibe*',
     },
     templatePickedPrefix: 'Type picked',
-    craft: {
-      gridLabel: 'Crafting slots',
-      slotLabels: {
-        what: 'What to build',
-        who: 'For who',
-        reference: 'Inspired by',
-        vibe: 'Vibe',
-        contact: 'How to reach you',
-      },
-      pickTemplateFirst: 'Pick a type above to unlock the slots.',
-      vibeHint: 'Tap a tag to flavor the brief.',
-      vibeSelected: 'Vibe picked',
-      essentialsCount: '{n} of {total} essential slots',
-      essentialsAll: 'All slots filled, ready to craft!',
-      submit: '⚒ Forge the brief',
-      submitReady: '⚒ Send the brief',
-      rarity: {
-        common: 'common',
-        uncommon: 'uncommon',
-        rare: 'rare',
-        legendary: 'legendary',
-      },
-      outputHeading: 'The forged brief',
-      outputEmpty: 'Start filling slots, the brief assembles here.',
+    quest: {
+      pickTemplateFirst: 'Pick a type above to start.',
+      avatarName: 'Bar',
+      typingHint: 'Bar is typing…',
+      progressLabel: 'Question {n} of {total}',
+      next: 'Next',
+      back: 'Back',
+      skip: 'Skip',
+      send: '✦ Send the brief',
+      sendReady: '✦ Send the brief',
+      pickAnswer: 'Pick one or write your own',
+      contactMethodPrompt: 'How’s best to reach you?',
+      contactMethodChips: { whatsapp: 'WhatsApp', email: 'Email' },
+      contactValuePromptWhatsapp: 'Give me your WhatsApp number',
+      contactValuePromptEmail: 'Give me your email address',
+      done: 'Brief is ready.',
+      doneHint: 'Check it looks right, then hit send.',
+      sentTitle: 'Sent!',
+      sentBody: 'WhatsApp opened with the brief tidied up. You can still add links or screenshots before sending.',
+      previewHeading: 'Your brief',
+      previewEmpty: 'The brief will assemble here as we talk.',
     },
   },
   qa: {
