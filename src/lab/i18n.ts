@@ -714,7 +714,7 @@ const HE: Dict = {
       {
         q: 'באיזה כלים אתה משתמש?',
         a:
-          'תלוי בפרויקט. אני עובד AI-native ומהיר עם Cursor ו-Claude Code, ועם ה-skills וה-workflow שפיתחתי לעצמי. לפעמים אני פורס על Base44 או Lovable, אבל לא משתמש בהם ככלי vibe coding. הכלי משרת את הפרויקט, לא להפך.',
+          'תלוי בפרויקט. עובד AI-native ומהיר עם מגוון: צ׳אט, תמונות, וידאו, אודיו, Claude Code עם skills ו-workflow משלי. הכלי משרת את הפרויקט.',
       },
       {
         q: 'אני בכלל לא טכני, זה בעיה?',
@@ -1283,7 +1283,7 @@ const EN: Dict = {
       {
         q: 'What tools do you use?',
         a:
-          'Depends on the project. I work AI-native and fast with Cursor and Claude Code, plus the custom skills and workflow I built for myself. Sometimes I’ll deploy on Base44 or Lovable, but I don’t use them as vibe coding tools. The tool serves the project, not the other way around.',
+          'Depends on the project. I work AI-native and fast across a range: chat, images, video, audio, Claude Code with my own skills and workflow. The tool serves the project.',
       },
       {
         q: 'I’m not technical at all, is that a problem?',
