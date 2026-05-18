@@ -124,6 +124,51 @@ export type Dict = {
       timeline: string;
       howHeard: string;
     };
+    quest: {
+      chapters: {
+        spark: string;
+        you: string;
+        detail: string;
+        when: string;
+        send: string;
+      };
+      nav: {
+        next: string;
+        back: string;
+        skip: string;
+        edit: string;
+        send: string;
+        sendAgain: string;
+      };
+      counter: string;
+      liveStep: string;
+      liveCommitted: string;
+      liveBriefLabel: string;
+      letterIntro: string;
+      letterEmpty: string;
+      reviewTitle: string;
+      reviewIntro: string;
+      sentTitle: string;
+      sentBody: string;
+      tapToEdit: string;
+      keyboardHint: string;
+      prompts: {
+        template: string;
+        idea: string;
+        ideaByTemplate?: Record<string, string>;
+        name: string;
+        contact: string;
+        whyNow: string;
+        whyNowByTemplate?: Record<string, string>;
+        audience: string;
+        audienceByTemplate?: Record<string, string>;
+        problem: string;
+        references: string;
+        timeline: string;
+        howHeard: string;
+        review: string;
+      };
+    };
   };
   qa: {
     number: string;
@@ -387,6 +432,71 @@ const HE: Dict = {
       references: '*השראה / דוגמאות*',
       timeline: '*לוח זמנים*',
       howHeard: '*איך הגיע אליי*',
+    },
+    quest: {
+      chapters: {
+        spark: 'הניצוץ',
+        you: 'מי אתה',
+        detail: 'פרטים',
+        when: 'מתי',
+        send: 'שליחה',
+      },
+      nav: {
+        next: 'הבא',
+        back: 'חזרה',
+        skip: 'דילוג',
+        edit: 'עריכה',
+        send: 'לשלוח את הבריף',
+        sendAgain: 'לפתוח שוב את וואטסאפ',
+      },
+      counter: 'שאלה {step} מתוך {total}',
+      liveStep: 'שאלה {step} מתוך {total}, פרק {chapter}',
+      liveCommitted: 'תשובה נשמרה.',
+      liveBriefLabel: 'הבריף שלך, נבנה בזמן אמת',
+      letterIntro: 'הבריף עד עכשיו',
+      letterEmpty: 'עדיין ריק. השאלה הראשונה משמאל.',
+      reviewTitle: 'הבריף מוכן',
+      reviewIntro: 'זה מה שייפתח אצלך בוואטסאפ. אפשר עוד לערוך כל סעיף בלחיצה.',
+      sentTitle: 'נשלח. תודה.',
+      sentBody: 'נפתח חלון וואטסאפ עם הבריף המסודר. אפשר עוד להוסיף קישורים או צילומי מסך לפני שמשלחים.',
+      tapToEdit: 'עריכה',
+      keyboardHint: 'Enter להמשך · Esc לחזרה · Alt+S לדילוג',
+      prompts: {
+        template: 'נתחיל קל — איזה סוג פרויקט יש לך בראש?',
+        idea: 'ספר לי על הרעיון. משפט אחד או שלושה.',
+        ideaByTemplate: {
+          mvp: 'איזה MVP אתה רוצה לבנות? מה החלק הקטן ביותר שכבר מספיק כדי לבדוק את ההנחה?',
+          brand: 'איזה מותג אנחנו בונים? מה הוא צריך לגרום למבקרים להרגיש?',
+          ecommerce: 'איזו חנות אתה רוצה לפתוח? מה את/ה מוכר/ת ולמי?',
+          'ai-agent': 'איזה אסיסטנט או סוכן AI? איזו פעולה אנושית הוא ימחק?',
+          'ai-video': 'איזה תוכן וידאו אוטומטי? איך הוא מתחיל ומה יוצא בסוף?',
+          audio: 'איזו חוויה מוזיקלית או מנוע אודיו? איך זה צריך להרגיש לאוזן?',
+          game: 'איזה משחק או חוויה אינטראקטיבית? מה החוויה הראשית?',
+          realtime: 'איזה דשבורד? אילו נתונים זורמים אליו וכמה מהר?',
+          mobile: 'איזו אפליקציית מובייל? מה הפעולה היומיומית הראשית בה?',
+          other: 'תאר את הרעיון. מה הוא — ולמה הוא צריך להיות קיים?',
+        },
+        name: 'איך נכון לפנות אליך?',
+        contact: 'מה הדרך הכי נוחה לחזור אליך?',
+        whyNow: 'למה דווקא עכשיו? מה השתנה לאחרונה?',
+        whyNowByTemplate: {
+          mvp: 'מה דחוף ב-MVP הזה — סבב גיוס, תאריך לוח שנה, או עייפות מלחכות?',
+          brand: 'למה המותג צריך אתר חדש דווקא עכשיו?',
+          'ai-agent': 'מה השתנה ב-AI או בעסק שגורם לזה להיות עכשיו ולא בעוד שנה?',
+        },
+        audience: 'מי המשתמש?',
+        audienceByTemplate: {
+          mvp: 'מי המשתמש הראשון של ה-MVP? האדם שאם הוא יאהב — תדע שיש כיוון?',
+          ecommerce: 'מי הלקוח שלך? לאן הוא נכנס לפני שהוא נכנס אליך?',
+          'ai-agent': 'מי משתמש באסיסטנט הזה? עובד פנימי, לקוח קצה, מנהל?',
+          game: 'מי השחקן? באיזה הקשר הוא משחק — סטוריז, סלולרי בתור?',
+        },
+        problem: 'איזו בעיה זה פותר? מה כואב היום בלי זה?',
+        references: 'יש משהו דומה שאהבת? קישור, צילום, "כמו X אבל בלי Y".',
+        timeline: 'מתי אתה צריך את זה?',
+        howHeard: 'איך הגעת אליי? סתם סקרנות.',
+        review: 'זה הבריף. אישור אחרון לפני שהוא נופל ישר לוואטסאפ שלי.',
+      },
     },
   },
   qa: {
@@ -668,6 +778,71 @@ const EN: Dict = {
       references: '*Inspiration / examples*',
       timeline: '*Timeline*',
       howHeard: '*How they found me*',
+    },
+    quest: {
+      chapters: {
+        spark: 'The spark',
+        you: 'You',
+        detail: 'Detail',
+        when: 'When',
+        send: 'Send',
+      },
+      nav: {
+        next: 'Next',
+        back: 'Back',
+        skip: 'Skip',
+        edit: 'Edit',
+        send: 'Send the brief',
+        sendAgain: 'Open WhatsApp again',
+      },
+      counter: 'Question {step} of {total}',
+      liveStep: 'Question {step} of {total}, chapter {chapter}',
+      liveCommitted: 'Answer saved.',
+      liveBriefLabel: 'Your brief, assembled in real time',
+      letterIntro: 'The brief so far',
+      letterEmpty: 'Empty for now. The first question is on the other side.',
+      reviewTitle: 'Your brief is ready',
+      reviewIntro: 'This is exactly what will open in WhatsApp. Tap any line to edit it.',
+      sentTitle: 'Sent. Thanks.',
+      sentBody: 'WhatsApp opened with the tidy brief. You can still add links or screenshots before you hit send.',
+      tapToEdit: 'Edit',
+      keyboardHint: 'Enter to continue · Esc for back · Alt+S to skip',
+      prompts: {
+        template: 'Easy one to start — what kind of project do you have in mind?',
+        idea: 'Tell me about the idea. One sentence or three.',
+        ideaByTemplate: {
+          mvp: 'What MVP do you want to build? What’s the smallest slice that already tests the bet?',
+          brand: 'What brand are we building? What should it make visitors feel?',
+          ecommerce: 'What store do you want to open? What are you selling and to whom?',
+          'ai-agent': 'What kind of AI assistant or agent? Which human action does it erase?',
+          'ai-video': 'What automated video content? How does it start and what comes out?',
+          audio: 'What kind of musical experience or audio engine? How should it feel to the ear?',
+          game: 'What game or interactive piece? What’s the core experience?',
+          realtime: 'What dashboard? What data flows into it and how fast?',
+          mobile: 'What mobile app? What’s the daily action inside it?',
+          other: 'Describe the idea. What is it — and why does it need to exist?',
+        },
+        name: 'What should I call you?',
+        contact: 'Best way to reach you?',
+        whyNow: 'Why now? What changed recently?',
+        whyNowByTemplate: {
+          mvp: 'What’s urgent about this MVP — a funding round, a calendar date, or tired of waiting?',
+          brand: 'Why does the brand need a new site now, specifically?',
+          'ai-agent': 'What changed in AI or in the business that makes this now and not next year?',
+        },
+        audience: 'Who will use it?',
+        audienceByTemplate: {
+          mvp: 'Who’s the first user of this MVP? The person whose love means the direction is real?',
+          ecommerce: 'Who’s the customer? Where do they go before they come to you?',
+          'ai-agent': 'Who uses this assistant? An internal employee, an end customer, a manager?',
+          game: 'Who’s the player? In what context — a story, phone in line, browser at work?',
+        },
+        problem: 'What problem does it solve? What hurts today without it?',
+        references: 'Anything similar you liked? A link, a screenshot, "like X but without Y".',
+        timeline: 'When do you need it?',
+        howHeard: 'How did you find me? Just curious.',
+        review: 'This is the brief. Last look before it drops straight into my WhatsApp.',
+      },
     },
   },
   qa: {

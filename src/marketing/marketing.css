@@ -942,6 +942,520 @@ html.dark .mp-cover__glyph { opacity: 0.16; }
 }
 
 /* =============================================================
+   Section 04 — Quest (interactive intake)
+   ----------------------------------------------------------------
+   Replaces the flat form with a one-question-at-a-time flow.
+   The "card" holds the active beat; the "letter" assembles the
+   brief in the margin as the user commits each answer. All
+   typography and color comes from the existing --mp-* tokens.
+   ============================================================= */
+.mp-quest__stage {
+  display: grid;
+  gap: clamp(20px, 4vw, 32px);
+}
+
+.mp-quest__chapters {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 14px 0 18px;
+  border-top: 1px solid var(--mp-rule-strong);
+  border-bottom: 1px solid var(--mp-rule);
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px clamp(8px, 2vw, 24px);
+  font-family: var(--mp-sans);
+}
+.mp-quest__chapter {
+  display: grid;
+  gap: 4px;
+  align-content: start;
+  border-top: 2px solid var(--mp-rule);
+  padding-top: 10px;
+  transition: border-color .25s, color .25s;
+  color: var(--mp-ink-soft);
+  min-width: 0;
+}
+.mp-quest__chapter[data-state="done"] {
+  border-top-color: var(--mp-ink);
+  color: var(--mp-ink-soft);
+}
+.mp-quest__chapter[data-state="active"] {
+  border-top-color: var(--mp-accent);
+  color: var(--mp-ink);
+}
+.mp-quest__chapter-num {
+  font-family: var(--mp-serif);
+  font-weight: 800;
+  font-size: .82rem;
+  font-feature-settings: 'lnum' 1, 'tnum' 1;
+  letter-spacing: .04em;
+  color: inherit;
+}
+.mp-quest__chapter[data-state="active"] .mp-quest__chapter-num,
+.mp-quest__chapter[data-state="done"] .mp-quest__chapter-num {
+  color: var(--mp-accent);
+}
+.mp-quest__chapter-name {
+  font-weight: 600;
+  font-size: .85rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mp-quest__progress {
+  display: none;
+}
+
+.mp-quest__board {
+  display: grid;
+  gap: clamp(20px, 4vw, 36px);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+@media (min-width: 920px) {
+  .mp-quest__board {
+    grid-template-columns: minmax(0, 3fr) minmax(260px, 1fr);
+  }
+}
+
+.mp-quest__card-wrap {
+  min-width: 0;
+}
+.mp-quest__card {
+  position: relative;
+  display: grid;
+  gap: clamp(14px, 2.5vw, 22px);
+  padding: clamp(20px, 3.5vw, 36px) clamp(16px, 3vw, 32px);
+  background: var(--mp-paper);
+  border: 1px solid var(--mp-rule);
+  border-radius: 2px;
+  box-shadow:
+    0 1px 0 var(--mp-rule),
+    0 18px 32px -28px oklch(0 0 0 / 0.18);
+}
+.mp-quest__card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--mp-rule);
+  font-family: var(--mp-sans);
+  font-size: .75rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--mp-ink-soft);
+}
+.mp-quest__counter {
+  margin: 0;
+  font-weight: 600;
+  font-feature-settings: 'lnum' 1, 'tnum' 1;
+  color: var(--mp-accent);
+}
+.mp-quest__chapter-tag {
+  margin: 0;
+  font-weight: 500;
+}
+.mp-quest__prompt {
+  margin: 0;
+  font-family: var(--mp-serif);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 3.4vw, 2.2rem);
+  line-height: 1.15;
+  letter-spacing: -.018em;
+  color: var(--mp-ink);
+}
+.mp-quest__hint {
+  margin: 0;
+  font-family: var(--mp-serif);
+  font-style: italic;
+  font-size: clamp(.98rem, 1.6vw, 1.1rem);
+  line-height: 1.5;
+  color: var(--mp-ink-soft);
+}
+.mp-quest__control {
+  display: grid;
+  gap: 14px;
+}
+.mp-quest__sublabel {
+  display: block;
+  font-family: var(--mp-sans);
+  font-weight: 600;
+  font-size: .85rem;
+  letter-spacing: .02em;
+  color: var(--mp-ink-soft);
+  margin-bottom: 8px;
+}
+
+.mp-quest__input,
+.mp-quest__textarea {
+  appearance: none;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid var(--mp-rule-strong);
+  border-radius: 0;
+  padding: 12px 4px;
+  font-family: var(--mp-sans);
+  font-size: clamp(1.05rem, 2vw, 1.2rem);
+  color: var(--mp-ink);
+  transition: border-color .15s;
+  min-height: 52px;
+}
+.mp-quest__textarea {
+  min-height: 110px;
+  line-height: 1.5;
+  resize: vertical;
+}
+.mp-quest__input:focus,
+.mp-quest__textarea:focus {
+  outline: none;
+  border-bottom-color: var(--mp-accent);
+}
+.mp-quest__input::placeholder,
+.mp-quest__textarea::placeholder {
+  color: var(--mp-ink-soft);
+  opacity: .55;
+}
+.mp-quest__input[aria-invalid="true"],
+.mp-quest__textarea[aria-invalid="true"] {
+  border-bottom-color: oklch(0.55 0.22 25);
+}
+
+.mp-quest__field {
+  display: block;
+  margin: 0;
+}
+
+.mp-quest__chips {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.mp-quest__chip-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+.mp-quest__chip-grid--inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+.mp-quest__chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 12px 14px;
+  min-height: 48px;
+  background: var(--mp-bg);
+  color: var(--mp-ink);
+  border: 1.5px solid var(--mp-rule-strong);
+  border-radius: 2px;
+  font-family: var(--mp-sans);
+  font-weight: 500;
+  font-size: .98rem;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: color .15s, border-color .15s, background .15s, transform .15s;
+}
+.mp-quest__chip:hover {
+  color: var(--mp-accent);
+  border-color: var(--mp-accent);
+}
+.mp-quest__chip:has(input[type="radio"]:focus-visible) {
+  outline: 2px solid var(--mp-accent);
+  outline-offset: 3px;
+}
+.mp-quest__chip input[type="radio"] {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.mp-quest__chip[data-selected] {
+  color: var(--mp-accent-ink);
+  background: var(--mp-ink);
+  border-color: var(--mp-ink);
+  font-weight: 700;
+}
+.mp-quest__chip[data-selected]::before {
+  content: '✓';
+  color: var(--mp-accent);
+  font-weight: 700;
+  font-size: .9rem;
+}
+
+.mp-quest__contact {
+  display: grid;
+  gap: 18px;
+}
+
+.mp-quest__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--mp-rule);
+}
+.mp-quest__nav-btn {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 10px 12px;
+  min-height: 44px;
+  font-family: var(--mp-sans);
+  font-weight: 500;
+  font-size: .95rem;
+  color: var(--mp-ink-soft);
+  cursor: pointer;
+  border-bottom: 1.5px solid transparent;
+  transition: color .15s, border-color .15s;
+}
+.mp-quest__nav-btn:hover,
+.mp-quest__nav-btn:focus-visible {
+  color: var(--mp-ink);
+  border-bottom-color: var(--mp-ink);
+  outline: none;
+}
+.mp-quest__nav-btn[disabled] {
+  opacity: .4;
+  cursor: not-allowed;
+}
+.mp-quest__nav-btn--skip {
+  font-style: italic;
+  font-family: var(--mp-serif);
+}
+.mp-quest__primary {
+  appearance: none;
+  margin-inline-start: auto;
+  background: var(--mp-ink);
+  color: var(--mp-accent-ink);
+  border: 0;
+  padding: 14px 24px;
+  min-height: 48px;
+  font-family: var(--mp-sans);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: .02em;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background .15s, color .15s, transform .15s;
+}
+.mp-quest__primary:hover,
+.mp-quest__primary:focus-visible {
+  background: var(--mp-accent);
+  color: var(--mp-accent-ink);
+  outline: none;
+  transform: translateY(-1px);
+}
+.mp-quest__primary--send {
+  font-size: 1.05rem;
+  padding: 16px 28px;
+  min-height: 52px;
+}
+.mp-quest__keyboard {
+  margin: 0;
+  font-family: var(--mp-sans);
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--mp-ink-soft);
+  opacity: .65;
+}
+
+/* ── Live "letter" — the brief assembling in the margin ─────── */
+.mp-quest__letter {
+  position: relative;
+  padding: clamp(18px, 3vw, 26px) clamp(16px, 2.5vw, 22px);
+  background: var(--mp-bg);
+  border: 1px dashed var(--mp-rule-strong);
+  border-radius: 2px;
+  min-height: 200px;
+  font-family: var(--mp-serif);
+  color: var(--mp-ink);
+}
+@media (min-width: 920px) {
+  .mp-quest__letter {
+    position: sticky;
+    top: 24px;
+    max-height: calc(100svh - 48px);
+    overflow-y: auto;
+  }
+}
+.mp-quest__letter-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--mp-rule);
+  font-family: var(--mp-sans);
+  font-size: .75rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--mp-ink-soft);
+}
+.mp-quest__letter-head p {
+  margin: 0;
+}
+.mp-quest__letter-pen {
+  color: var(--mp-accent);
+  font-size: 1.1rem;
+}
+.mp-quest__letter-empty {
+  margin: 0;
+  font-family: var(--mp-serif);
+  font-style: italic;
+  font-size: .95rem;
+  color: var(--mp-ink-soft);
+  line-height: 1.5;
+}
+.mp-quest__letter-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+.mp-quest__letter-line {
+  display: block;
+}
+.mp-quest__letter-edit {
+  display: grid;
+  width: 100%;
+  gap: 4px;
+  text-align: start;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-inline-start: 2px solid var(--mp-rule);
+  padding: 4px 10px;
+  cursor: pointer;
+  color: inherit;
+  transition: border-color .15s, transform .15s;
+}
+.mp-quest__letter-edit:hover,
+.mp-quest__letter-edit:focus-visible {
+  border-inline-start-color: var(--mp-accent);
+  outline: none;
+  transform: translateX(2px);
+}
+[dir="rtl"] .mp-quest__letter-edit:hover,
+[dir="rtl"] .mp-quest__letter-edit:focus-visible {
+  transform: translateX(-2px);
+}
+.mp-quest__letter-label {
+  display: block;
+  font-family: var(--mp-sans);
+  font-weight: 600;
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--mp-accent);
+}
+.mp-quest__letter-value {
+  display: block;
+  font-family: var(--mp-serif);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--mp-ink);
+  /* Long answers stay readable without breaking the layout. */
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* ── Review (final beat) ────────────────────────────────────── */
+.mp-quest__review {
+  display: grid;
+  gap: 16px;
+}
+.mp-quest__review-intro {
+  margin: 0;
+  font-family: var(--mp-serif);
+  font-style: italic;
+  color: var(--mp-ink-soft);
+}
+.mp-quest__brief-out {
+  margin: 0;
+  padding: clamp(16px, 2.5vw, 22px);
+  background: var(--mp-bg);
+  border: 1px solid var(--mp-rule-strong);
+  border-radius: 2px;
+  font-family: var(--mp-sans);
+  font-size: .95rem;
+  line-height: 1.55;
+  color: var(--mp-ink);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 360px;
+  overflow-y: auto;
+}
+.mp-quest__review-edit-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+}
+.mp-quest__send {
+  display: grid;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--mp-rule);
+}
+
+/* ── Sent confirmation ──────────────────────────────────────── */
+.mp-quest__stage--sent {
+  display: grid;
+  place-items: center;
+}
+.mp-quest__card--sent {
+  max-width: 520px;
+  text-align: center;
+}
+.mp-quest__card--sent .mp-quest__counter {
+  font-size: 2.4rem;
+  color: var(--mp-accent);
+}
+.mp-quest__card--sent .mp-quest__nav {
+  flex-direction: column;
+  align-items: stretch;
+  border-top: 0;
+  padding-top: 0;
+}
+.mp-quest__card--sent .mp-quest__primary {
+  margin-inline-start: 0;
+}
+
+/* ── Reduced motion: neutralize entrance / transform tweens.
+   The card and letter still render at full opacity because the
+   `clearProps` on each fromTo() removes any inline style after
+   the tween settles, but matchMedia gates skip the tween entirely
+   under prefers-reduced-motion: reduce. ────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .mp-quest__card,
+  .mp-quest__letter-line,
+  .mp-quest__chip,
+  .mp-quest__primary,
+  .mp-quest__letter-edit,
+  .mp-quest__chapter {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+/* =============================================================
    Running footer — magazine-style hairline strip at the bottom
    of each section. Section number on one side, issue tag in the
    middle, contacts on the other. Small + low-contrast. Doesn't

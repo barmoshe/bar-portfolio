@@ -5,6 +5,8 @@ export function scrollToIntake() {
   if (!target) return;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
-  const firstField = target.querySelector<HTMLElement>('textarea, input');
-  firstField?.focus({ preventScroll: true });
+  const focusTarget =
+    target.querySelector<HTMLElement>('[data-quest-focus]') ??
+    target.querySelector<HTMLElement>('textarea, input, button');
+  focusTarget?.focus({ preventScroll: true });
 }
