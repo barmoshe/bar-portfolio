@@ -1398,6 +1398,10 @@ html.dark .mp-root {
   font: 800 .92rem/1 var(--mp-font-display);
   cursor: pointer;
   transition: transform .12s ease, box-shadow .12s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 .mp-quest__nav-btn:hover, .mp-quest__nav-btn:focus-visible {
   transform: translate(2px, -2px);
@@ -1789,6 +1793,9 @@ html.dark .mp-root {
 .mp-final__credit a {
   color: var(--mp-primary-ink);
   text-decoration-color: color-mix(in oklch, var(--mp-primary-ink) 50%, transparent);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
 }
 
 /* ---------------------------------------------------------------
