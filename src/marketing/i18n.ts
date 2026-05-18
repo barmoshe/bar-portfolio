@@ -296,7 +296,7 @@ const HE: Dict = {
         slug: 'ecommerce',
         title: 'חנות אונליין שזה לא תבנית',
         summary:
-          'שופיפיי שעוצב מאפס, מערכת תשלומים משלך, או חנות־בוטיק שלמה בקוד. למותג עם אופי - לא לעוד קטלוג גנרי.',
+          'חנות שעוצבה מאפס על תשתית קיימת, מערכת תשלומים משלך, או חנות־בוטיק שלמה בקוד. למותג עם אופי - לא לעוד קטלוג גנרי.',
         fits: ['מותג קטן', 'יצירה עצמאית', 'חנות־בוטיק'],
       },
       {
@@ -331,7 +331,7 @@ const HE: Dict = {
         slug: 'realtime',
         title: 'דשבורד שמתעדכן בזמן אמת',
         summary:
-          'פאנל ניהול עם הרשאות, BI חי, מערכת ניטור בזמן אמת. גרפים, פילטרים, ייצוא ל-CSV. כל מה שהצוות שלך עושה היום באקסל - רק שזה עובד.',
+          'פאנל ניהול עם הרשאות, BI חי, מערכת ניטור בזמן אמת. גרפים, פילטרים, ייצוא נתונים. כל מה שהצוות שלך עושה היום באקסל - רק שזה עובד.',
         fits: ['חברה', 'סטארטאפ ב-scale', 'צוות נתונים / ops'],
       },
       {
@@ -582,7 +582,7 @@ const HE: Dict = {
               'ספלי קרמיקה בעבודת יד, 4 דגמים, 30 ליחידה. הקונה צריך להרגיש שהוא קונה מהיוצר, לא ממותג חסר פנים.',
           },
           whyNow: {
-            prompt: 'למה לפתוח או לבנות מחדש עכשיו? קו מוצר חדש, שופיפיי תקוע, עונת שיא?',
+            prompt: 'למה לפתוח או לבנות מחדש עכשיו? קו מוצר חדש, חנות קיימת שתקועה, עונת שיא?',
             placeholder: 'Black Friday בעוד 8 שבועות ואנחנו עדיין על Etsy.',
           },
           audience: {
@@ -915,7 +915,7 @@ const EN: Dict = {
         slug: 'ecommerce',
         title: 'Custom online store',
         summary:
-          'Shopify rebuilt from the ground up, a private checkout system, or a full boutique store from code. Right for a brand with identity - not a generic catalogue.',
+          'A store redesigned from scratch on an existing platform, a private checkout system, or a full boutique store from code. Right for a brand with identity - not a generic catalogue.',
         fits: ['Small brand', 'Independent maker', 'Boutique shop'],
       },
       {
@@ -950,7 +950,7 @@ const EN: Dict = {
         slug: 'realtime',
         title: 'Dashboard / real-time system',
         summary:
-          'Admin panel with permissions, live BI, a real-time monitoring system. Charts, filters, CSV export. Everything your team is doing in Excel right now.',
+          'Admin panel with permissions, live BI, a real-time monitoring system. Charts, filters, data export. Everything your team is doing in Excel right now.',
         fits: ['Company', 'Scaling startup', 'Data / ops team'],
       },
       {
@@ -1203,7 +1203,7 @@ const EN: Dict = {
               'Hand-thrown ceramic mugs, 4 styles, 30 per unit. Shoppers should feel they’re buying from the maker, not a faceless brand.',
           },
           whyNow: {
-            prompt: 'Why open or rebuild now? New product line, busted Shopify, peak season?',
+            prompt: 'Why open or rebuild now? New product line, an existing store that\'s stuck, peak season?',
             placeholder: 'Black Friday is 8 weeks out and we’re still on Etsy.',
           },
           audience: {
