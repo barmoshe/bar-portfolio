@@ -207,7 +207,7 @@ const HE: Dict = {
     kicker: 'מה אפשר לבנות',
     title: 'אז מה רץ לך בראש?',
     standfirst:
-      'כמה דוגמאות. תבחר את הקרוב ביותר, או פשוט תכתוב משלך. הטופס נפתח עם פלייסהולדר שמתאים לסוג.',
+      '10 כיוונים. כל אחד פותח את הטופס בכיוון אחר. אם משהו לא כאן, יש "אחר".',
     items: [
       {
         slug: 'mvp',
@@ -387,25 +387,25 @@ const HE: Dict = {
     kicker: 'איך זה עובד',
     title: 'שלושה שלבים, אפס מחויבות',
     standfirst:
-      'בלי חוזים. בלי הצעת מחיר. בלי שאלות. שולח, בונה, מחליטים.',
+      'שולח. בונה. מחליטים. בלי חוזה, בלי הצעת מחיר, בלי שאלות.',
     steps: [
       {
         num: '01',
         title: 'שולח',
         body:
-          'טופס קצר. שלושה שדות. עברית רגילה. בלי באזוורדס, בלי הכנה. ייקח לך פחות מדקה.',
+          'טופס קצר במשבצות. עברית רגילה. בלי באזוורדס, בלי הכנה. ייקח דקה.',
       },
       {
         num: '02',
         title: 'אני בונה',
         body:
-          'כמה ימים. גרסה ראשונה חיה, באוויר, עם לינק שאפשר לשלוח. חינם. בלי חוזה, בלי שאלות.',
+          'כמה ימים. גרסה ראשונה חיה, באוויר, עם לינק שאפשר לשלוח לחבר.',
       },
       {
         num: '03',
         title: 'מחליטים',
         body:
-          'רוצים להמשיך יחד? מדברים. לא רוצים? יצאת עם מוצר ביד. No strings attached.',
+          'רוצים להמשיך יחד? נדבר אז. לא רוצים? יצאת עם מוצר. שום דבר לא נסגר מראש.',
       },
     ],
   },
@@ -417,15 +417,15 @@ const HE: Dict = {
       'אני אוהב לבנות. ובא לי לבנות לא רק לעצמי.',
       'היום כולם בונים הכל עם AI. קשה לעקוב, וכולם מרגישים קצת בפיגור. וזה גם די נכון. אבל רוב מה שאנשים באמת צריכים זה דברים פשוטים, אתר לעסק, אפליקציה קטנה, כלי שיחסוך שעות בעבודה.',
       'הכלים החדשים (Base44, Lovable וכאלה) הם הדרך הקלה לעבוד עם AI לבד, והם מצוינים. אבל לפעמים מה שחסר זה בנאדם באמצע, מישהו שמבין צורך, מוצר ופיתוח, לא רק את הפרומפט.',
-      'אז זה מה שאני מציע פה: רעיון שלך, בנייה עליי, אפס מחויבות.',
+      'למטה כמה דוגמאות לדברים שאני אוהב לבנות. בחר אחת שמרגישה קרוב, או דלג ישר לטופס.',
     ],
   },
   brief: {
-    number: '04',
+    number: '03',
     kicker: 'הבריף',
     title: 'מה אתה רוצה לבנות?',
     standfirst:
-      'שלוש שורות בעברית רגילה. הטופס נוחת אצלי בוואטסאפ. אם רוצים לערוך לפני שליחה, אפשר.',
+      'מלא משבצות. הבריף מורכב פה תוך כדי, ונפתח בוואטסאפ או במייל מסודר. אפשר עוד לערוך לפני שליחה.',
     fields: {
       idea: {
         label: 'הרעיון',
@@ -501,7 +501,7 @@ const HE: Dict = {
     },
   },
   qa: {
-    number: '05',
+    number: '04',
     kicker: 'שאלות',
     title: 'מה שואלים אותי',
     items: [
@@ -533,7 +533,7 @@ const HE: Dict = {
     ],
   },
   colophon: {
-    number: '06',
+    number: '05',
     kicker: 'הסוף',
     title: 'יאללה, בוא נבנה משהו.',
     pullQuote:
@@ -587,7 +587,7 @@ const EN: Dict = {
     kicker: 'What we can build',
     title: 'So what’s on your mind?',
     standfirst:
-      'A few examples. Pick the closest, or write your own. The form opens with a matching placeholder.',
+      '10 directions. Each one opens the form in a different direction. If yours isn’t here, there’s "other".',
     items: [
       {
         slug: 'mvp',
@@ -767,25 +767,25 @@ const EN: Dict = {
     kicker: 'How it works',
     title: 'Three steps, zero commitment',
     standfirst:
-      'No contracts. No quotes. No questions. You send, I build, we decide.',
+      'You send. I build. We decide. No contract, no quote, no questions.',
     steps: [
       {
         num: '01',
         title: 'You send',
         body:
-          'A short brief. Three fields. Plain English. No buzzwords, no prep. Under a minute.',
+          'A short brief in slots. Plain words. No buzzwords, no prep. Takes a minute.',
       },
       {
         num: '02',
         title: 'I build',
         body:
-          'A few days. A live first version, online, with a link you can share. Free. No contract, no questions.',
+          'A few days. A live first version, online, with a link you can send to a friend.',
       },
       {
         num: '03',
         title: 'We decide',
         body:
-          'Want to keep going together? Let’s talk. Don’t? You walked away with a product. No strings attached.',
+          'Want to keep going together? We talk then. Don’t? You walked away with a product. Nothing is locked in advance.',
       },
     ],
   },
@@ -797,15 +797,15 @@ const EN: Dict = {
       'I love building. And I want to build for others, not just myself.',
       'Today everyone builds everything with AI. Hard to follow, easy to feel behind. That’s also kind of true. But most of what people actually need stays simple, a small site, a small app, a tool that saves hours.',
       'The new tools (Base44, Lovable and the like) are the easy way to work with AI alone, and they’re great. But sometimes what’s missing is a human in the middle, someone who understands need, product, and development, not just the prompt.',
-      'So here’s what I’m offering: your idea, my build, zero commitment.',
+      'Below are a few examples of things I love to build. Pick one that feels close, or skip straight to the brief.',
     ],
   },
   brief: {
-    number: '04',
+    number: '03',
     kicker: 'The brief',
     title: 'What do you want to build?',
     standfirst:
-      'Three lines in plain English. The brief lands in my WhatsApp. You can still edit before sending.',
+      'Fill slots. The brief assembles here as you go, then opens in WhatsApp or as a tidy email. You can still edit before sending.',
     fields: {
       idea: {
         label: 'The idea',
@@ -881,7 +881,7 @@ const EN: Dict = {
     },
   },
   qa: {
-    number: '05',
+    number: '04',
     kicker: 'Q&A',
     title: 'What people ask',
     items: [
@@ -913,7 +913,7 @@ const EN: Dict = {
     ],
   },
   colophon: {
-    number: '06',
+    number: '05',
     kicker: 'The end',
     title: 'Alright, let’s build something.',
     pullQuote:
