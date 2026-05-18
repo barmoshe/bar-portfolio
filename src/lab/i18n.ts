@@ -714,7 +714,7 @@ const HE: Dict = {
       {
         q: 'באיזה כלים אתה משתמש?',
         a:
-          'תלוי בפרויקט. הכלי הראשי שלי הוא Claude Code: מסביר, הוא בונה, אני מכוון. סביבו AI לצ׳אט, תמונות, וידאו ואודיו. מהר וממוקד.',
+          'אני בונה עם Claude Code: מסביר מה לבנות, הוא בונה, ואני סוקר ומכוון. סביבו AI לצ׳אט, תמונות, וידאו ואודיו, לפי מה שצריך.',
       },
       {
         q: 'אני בכלל לא טכני, זה בעיה?',
@@ -1283,7 +1283,7 @@ const EN: Dict = {
       {
         q: 'What tools do you use?',
         a:
-          'Depends on the project. My main tool is Claude Code: I explain, it builds, I steer. Plus AI for chat, images, video, and audio. Fast and focused.',
+          'I build with Claude Code: I describe what to build, it builds, I review and steer. Plus AI for chat, images, video, and audio, whatever the project needs.',
       },
       {
         q: 'I’m not technical at all, is that a problem?',
