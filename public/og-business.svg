@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Bar Moshe — בונה לך אבטיפוס על חשבוני">
+  <title>Bar Moshe — בונה לך אבטיפוס על חשבוני</title>
+  <desc>Marketing OG card: BOARD/ticket motif. Ticket #BAR-001, status DOING. Hebrew headline: תאר. אבנה. תחליט.</desc>
+
+  <!-- Paper background, matches marketing light theme (cream) -->
+  <rect width="1200" height="630" fill="#f5f1e8"/>
+
+  <!-- Grid texture (light kanban hatch) -->
+  <g opacity="0.06" fill="#0f0f10">
+    <rect x="0" y="0" width="1200" height="1"/>
+    <rect x="0" y="120" width="1200" height="1"/>
+    <rect x="0" y="240" width="1200" height="1"/>
+    <rect x="0" y="360" width="1200" height="1"/>
+    <rect x="0" y="480" width="1200" height="1"/>
+    <rect x="0" y="600" width="1200" height="1"/>
+  </g>
+
+  <!-- BOARD ticket card -->
+  <g transform="translate(80,90)">
+    <!-- Ticket shadow (pop) -->
+    <rect x="8" y="8" width="1040" height="450" rx="6" fill="oklch(0.52 0.20 350)"/>
+    <!-- Ticket body -->
+    <rect x="0" y="0" width="1040" height="450" rx="6" fill="#ffffff" stroke="#0f0f10" stroke-width="3"/>
+
+    <!-- Ticket header row -->
+    <g transform="translate(40,40)">
+      <!-- Ticket id -->
+      <text x="0" y="0" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" font-weight="700" fill="#0f0f10" dominant-baseline="hanging">#BAR-001</text>
+
+      <!-- Status pill: DOING (orange / --mp-accent-2) -->
+      <g transform="translate(160,-4)">
+        <rect x="0" y="0" width="140" height="34" rx="17" fill="oklch(0.74 0.15 55)"/>
+        <text x="70" y="22" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="700" fill="oklch(0.20 0.03 265)" dominant-baseline="middle">DOING</text>
+      </g>
+
+      <!-- Issue meta on the right -->
+      <text x="960" y="0" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="500" fill="#0f0f10" opacity="0.6" dominant-baseline="hanging">ISSUE 01 · 2025 / 26</text>
+    </g>
+
+    <!-- Hebrew headline. Suez One fallback to system serif so social previews
+         still render even without the webfont. -->
+    <g transform="translate(40,140)">
+      <text x="1000" y="0" text-anchor="end" font-family="'Suez One', 'David', 'Frank Ruhl Libre', Georgia, serif" font-size="110" font-weight="700" fill="#0f0f10" dominant-baseline="hanging" direction="rtl">תאר. אבנה. תחליט.</text>
+    </g>
+
+    <!-- Subline -->
+    <g transform="translate(40,290)">
+      <text x="1000" y="0" text-anchor="end" font-family="'Rubik', 'Heebo', system-ui, -apple-system, sans-serif" font-size="36" font-weight="500" fill="#0f0f10" opacity="0.85" dominant-baseline="hanging" direction="rtl">בונה לך אבטיפוס על חשבוני</text>
+    </g>
+
+    <!-- Three-dot checklist (RTL) -->
+    <g transform="translate(40,370)" font-family="'Rubik', 'Heebo', system-ui, -apple-system, sans-serif" font-size="22" font-weight="500" fill="#0f0f10">
+      <text x="1000" y="0" text-anchor="end" dominant-baseline="hanging" direction="rtl">תוך שבוע · בלי תשלום מראש · בלי התחייבות</text>
+    </g>
+  </g>
+
+  <!-- Footer brand strip -->
+  <g transform="translate(80,580)">
+    <text x="0" y="0" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="20" font-weight="700" fill="#0f0f10" dominant-baseline="hanging">BAR MOSHE</text>
+    <text x="1040" y="0" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="20" font-weight="500" fill="#0f0f10" opacity="0.6" dominant-baseline="hanging">barmoshe.github.io/bar-portfolio/business</text>
+  </g>
+</svg>
