@@ -285,9 +285,9 @@ const HE: Dict = {
       },
       {
         slug: 'brand',
-        title: 'אתר שזוכרים',
+        title: 'אתר משלך, לא מתבנית',
         summary:
-          'לא עוד תבנית. אנימציות, פלטה משלך, אינטראקציות שנשארות בראש. בערך כמו האתר הזה - רק שלך.',
+          'מעוצב ונבנה אישית. טיפוגרפיה, צבעים ואנימציות שמתאימים לך - לא לעוד פלטה גנרית. בערך כמו האתר הזה.',
         fits: ['מותג חדש', 'פרילנס עם זהות', 'סטודיו'],
       },
       {
@@ -911,9 +911,9 @@ const EN: Dict = {
       },
       {
         slug: 'brand',
-        title: 'Brand site with character',
+        title: 'A site of your own, not from a template',
         summary:
-          'Not a template. Animations, a palette of your own, interactions that make people remember you. Like this site - only yours.',
+          'Designed and built personally. Typography, colors, and animations chosen for you - not a generic palette pulled off the shelf. Roughly like this site.',
         fits: ['New brand', 'Freelancer with identity', 'Studio'],
       },
       {
