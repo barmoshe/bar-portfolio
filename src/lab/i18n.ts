@@ -203,7 +203,7 @@ const HE: Dict = {
     langSwitchedTo: 'השפה הוחלפה לעברית',
   },
   contents: {
-    number: '02',
+    number: '03',
     kicker: 'מה אפשר לבנות',
     title: 'אז מה רץ לך בראש?',
     standfirst:
@@ -410,7 +410,7 @@ const HE: Dict = {
     ],
   },
   about: {
-    number: '03',
+    number: '02',
     kicker: 'מי אני',
     title: 'אני אוהב לבנות',
     paragraphs: [
@@ -583,7 +583,7 @@ const EN: Dict = {
     langSwitchedTo: 'Language switched to English',
   },
   contents: {
-    number: '02',
+    number: '03',
     kicker: 'What we can build',
     title: 'So what’s on your mind?',
     standfirst:
@@ -790,7 +790,7 @@ const EN: Dict = {
     ],
   },
   about: {
-    number: '03',
+    number: '02',
     kicker: 'Who I am',
     title: 'I love building',
     paragraphs: [
