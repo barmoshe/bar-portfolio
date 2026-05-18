@@ -203,7 +203,7 @@ const HE: Dict = {
     langSwitchedTo: 'השפה הוחלפה לעברית',
   },
   contents: {
-    number: '01',
+    number: '02',
     kicker: 'מה אפשר לבנות',
     title: 'אז מה רץ לך בראש?',
     standfirst:
@@ -383,7 +383,7 @@ const HE: Dict = {
     pickedLabel: 'נבחר',
   },
   method: {
-    number: '02',
+    number: '01',
     kicker: 'איך זה עובד',
     title: 'שלושה שלבים, אפס מחויבות',
     standfirst:
@@ -583,7 +583,7 @@ const EN: Dict = {
     langSwitchedTo: 'Language switched to English',
   },
   contents: {
-    number: '01',
+    number: '02',
     kicker: 'What we can build',
     title: 'So what’s on your mind?',
     standfirst:
@@ -763,7 +763,7 @@ const EN: Dict = {
     pickedLabel: 'Picked',
   },
   method: {
-    number: '02',
+    number: '01',
     kicker: 'How it works',
     title: 'Three steps, zero commitment',
     standfirst:

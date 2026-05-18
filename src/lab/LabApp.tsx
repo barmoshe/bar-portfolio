@@ -28,8 +28,8 @@ export default function LabApp() {
         <LabHeader />
         <main id="main" tabIndex={-1}>
           <LabCover />
-          <LabProjectTemplates selected={selectedTemplate} onPick={setSelectedTemplate} />
           <Process />
+          <LabProjectTemplates selected={selectedTemplate} onPick={setSelectedTemplate} />
           <About />
           <LabIntake selectedTemplate={selectedTemplate} />
           <LabFAQ />
