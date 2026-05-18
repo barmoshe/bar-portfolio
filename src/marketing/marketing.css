@@ -310,9 +310,9 @@ html.dark .mp-root {
 
 .mp-column__header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 10px;
   margin-block-end: 16px;
   padding-block-end: 12px;
   border-block-end: 2px dashed var(--mp-ink);
@@ -330,6 +330,10 @@ html.dark .mp-root {
   font-weight: 800;
   font-size: .78rem;
   color: var(--mp-ink-soft);
+  padding: 2px 8px;
+  border: 1.5px solid var(--mp-ink);
+  border-radius: 999px;
+  background: var(--mp-surface);
 }
 
 .mp-column__list {
