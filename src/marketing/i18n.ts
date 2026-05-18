@@ -384,7 +384,7 @@ const HE: Dict = {
       'מפתח מאז 2020. בניתי כבר עשרות פרויקטים, מאתרי מותג ועד מערכות AI - וכל פרויקט מביא איתו אתגר אחר. בזכות זה אני עדיין נהנה.',
       'התחלתי לבנות הרבה לפני שזה הפך לפרנסה. אני מחליט מהר כי מוצר שעובד קל לתקן, ובריף שלא הפך למוצר - כמעט אי אפשר. בגלל זה אני מתחיל מלבנות: ככה אני יודע מה לבנות, ואתה רואה מה אתה מקבל - לפני שצריך להחליט משהו.',
       'זה גם פשוט ממה שזה נשמע: לבנות זה ההובי שלי מאז שאני זוכר את עצמי. אני לא לוקח פרויקטים שלא בא לי לבנות - אז גם אם לא נמשיך, יצא לי לבנות עוד משהו שאהבתי לבנות.',
-      'אני בישראל, עובד עם לקוחות בכל העולם - בעברית ובאנגלית. כדאי לכתוב לי לפני שרצים לכל חברות הפיתוח: אם זה לא מתאים, אגיד לך מראש. כך לא נבזבז זמן לאף אחד.',
+      'אני בישראל, פתוח לעבודה בעברית ובאנגלית. כדאי לכתוב לי לפני שרצים לכל חברות הפיתוח: אם זה לא מתאים, אגיד לך מראש. כך לא נבזבז זמן לאף אחד.',
     ],
   },
   brief: {
@@ -803,12 +803,12 @@ const HE: Dict = {
       {
         q: 'ומה לגבי הצד הטכני - אני אקבל את מה שנבנה?',
         a:
-          'כן. כל מה שנבנה שייך לך, וכשתרצה - אעביר לך את קוד המקור והגישה לכל מה שצריך. אתה לא נעול אליי. רוב הלקוחות לא נוגעים בזה אף פעם, אבל זה שם.',
+          'כן. כל מה שנבנה שייך לך, וכשתרצה - אעביר לך את קוד המקור והגישה לכל מה שצריך. אתה לא נעול אליי. סביר שלא תיגע בזה אף פעם, אבל זה שם.',
       },
       {
         q: 'אני בכלל לא טכני - זה בעיה?',
         a:
-          'הפוך. רוב הלקוחות שלי לא מתכנתים. אם תוכל לתאר במילים מה אתה רוצה שיקרה - יש לי מספיק לעבוד איתו. השפה הטכנית היא הצד שלי.',
+          'הפוך. אתה לא צריך להיות טכני. אם תוכל לתאר במילים מה אתה רוצה שיקרה - יש לי מספיק לעבוד איתו. השפה הטכנית היא הצד שלי.',
       },
       {
         q: 'מה קורה אחרי שיש גרסה ראשונה?',
@@ -1010,7 +1010,7 @@ const EN: Dict = {
       'Developer since 2020. I’ve built dozens of projects, from brand sites to AI systems - and every project brings a different challenge. That’s why I’m still here.',
       'I build because it was the hobby before it was the job. I decide quickly because it’s much easier to fix a product that sort of works than a brief that never became a product. That’s why I start by building: I learn what to build, and you see what you’re getting - before you have to decide anything.',
       'It’s also simpler than it sounds: building has been my hobby since I can remember. I don’t take on projects I don’t actually want to build - so even if we don’t continue, I got to build one more thing I enjoyed building.',
-      'Based in Israel, working with clients around the world in Hebrew and English. Write before you check the big software shops - if it isn’t a fit, I’ll tell you.',
+      'Based in Israel, available to work in Hebrew and English. Write before you check the big software shops - if it isn’t a fit, I’ll tell you.',
     ],
   },
   brief: {
@@ -1428,12 +1428,12 @@ const EN: Dict = {
       {
         q: 'And the technical side - do I get what gets built?',
         a:
-          'Yes. Everything that gets built is yours, and whenever you want it, I hand over the source and any access you need. You’re not locked in. Most clients never touch it - but it’s yours.',
+          'Yes. Everything that gets built is yours, and whenever you want it, I hand over the source and any access you need. You’re not locked in. You probably won’t touch it - but it’s yours.',
       },
       {
         q: 'I’m not technical at all - is that a problem?',
         a:
-          'The opposite. Most of my clients don’t code. If you can describe in words what you want to happen, I have enough to work with. The technical side is on me.',
+          'The opposite. You don’t need to be technical. If you can describe in words what you want to happen, I have enough to work with. The technical side is on me.',
       },
       {
         q: 'What happens after there’s a first version?',
