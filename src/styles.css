@@ -457,6 +457,7 @@
   .bio .byline::before{content:"// ";color:var(--green)}
   .bio h1{font-family:var(--display);font-weight:700;line-height:1;font-size:clamp(2.4rem,6vw,4.4rem);margin:10px 0 0;letter-spacing:-.02em}
   .bio h1 em{font-style:italic;color:var(--green)}
+  .bio p.dek{font-family:var(--serif);font-size:1.1rem;line-height:1.55;color:var(--ink-soft);margin:14px 0 0;max-width:60ch}
   .bio .drop{margin-top:28px}
   .drop p{font-family:var(--serif);font-size:clamp(1.05rem,1.3vw,1.15rem);line-height:1.65;margin:0;max-width:60ch;color:var(--ink)}
   .drop p::first-letter{font-size:inherit;color:inherit;float:none;padding:0;font-weight:inherit;font-family:inherit}

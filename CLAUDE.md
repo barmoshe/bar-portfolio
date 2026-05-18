@@ -33,6 +33,7 @@ All four share `src/styles.css` (root tokens + theme) and the same `bm:theme` / 
 - Design critique → `prompts/design-critique.md`
 - Skill bundle that routes intents → `skills/portfolio-curator/SKILL.md`
 - Marketing/business SEO + sharing audit → `knowledge/08-seo-sharing.md`
+- Entity disambiguation, Person JSON-LD strategy ("Bar Moshe / בר משה") → `knowledge/09-entity-discoverability.md`
 
 Slash commands: `/new-project`, `/theme-preview`, `/deploy-check`, `/typecheck` — see `.claude/commands/`.
 
