@@ -27,6 +27,22 @@ declare global {
   }
 }
 
+/** A quick-pick suggestion underneath a dialogue prompt. */
+export type Chip = { value: string; label: string };
+
+/** One question in the Quest Dialogue flow. */
+export type Beat = {
+  id: string;
+  prompt: string;
+  hint?: string;
+  chips?: Chip[];
+  placeholder?: string;
+  required: boolean;
+  inputType?: 'text' | 'textarea';
+};
+
+export type ContactMethodKey = 'whatsapp' | 'email';
+
 export type Dict = {
   meta: { title: string; description: string };
   masthead: {
@@ -154,6 +170,18 @@ export type Dict = {
       sentBody: string;
       tapToEdit: string;
       keyboardHint: string;
+      /** Quest Dialogue extras used by the new sequential intake. */
+      dialogue: {
+        avatarName: string;
+        typingHint: string;
+        pickAnswer: string;
+        contactMethodPrompt: string;
+        contactValuePromptWhatsapp: string;
+        contactValuePromptEmail: string;
+        done: string;
+        doneHint: string;
+        progressLabel: string;
+      };
       prompts: {
         template: string;
         idea: string;
@@ -270,7 +298,7 @@ const HE: Dict = {
     ctaBrowse: 'מה אני בונה',
   },
   contents: {
-    number: '01',
+    number: '03',
     kicker: 'התוכן',
     title: 'אז מה בונים?',
     standfirst:
@@ -350,7 +378,7 @@ const HE: Dict = {
     pickedLabel: 'נבחר',
   },
   method: {
-    number: '02',
+    number: '01',
     kicker: 'איך זה עובד',
     title: 'איך בונים יחד',
     standfirst:
@@ -377,7 +405,7 @@ const HE: Dict = {
     ],
   },
   about: {
-    number: '03',
+    number: '02',
     kicker: 'מי אני',
     title: 'בר משה',
     paragraphs: [
@@ -496,6 +524,17 @@ const HE: Dict = {
       sentBody: 'נפתח חלון וואטסאפ עם הבריף המסודר. אפשר עוד להוסיף קישורים או צילומים לפני שמשלחים.',
       tapToEdit: 'עריכה',
       keyboardHint: 'Enter להמשך · Esc לחזרה · Alt+S לדילוג',
+      dialogue: {
+        avatarName: 'בר',
+        typingHint: 'בר כותב…',
+        pickAnswer: 'בחר אחד או כתוב משלך',
+        contactMethodPrompt: 'איך הכי נוח לחזור אליך?',
+        contactValuePromptWhatsapp: 'תן לי את מספר הוואטסאפ',
+        contactValuePromptEmail: 'תן לי את כתובת המייל',
+        done: 'הבריף מוכן.',
+        doneHint: 'בדוק שזה נראה כמו שאתה רוצה, ולחץ שלח.',
+        progressLabel: 'שאלה {n} מתוך {total}',
+      },
       prompts: {
         template: 'נתחיל קל - איזה סוג פרויקט יש לך בראש?',
         idea: 'אז מה הרעיון? משפט-שניים מספיק. נחדד יחד.',
@@ -896,7 +935,7 @@ const EN: Dict = {
     ctaBrowse: 'See what I build',
   },
   contents: {
-    number: '01',
+    number: '03',
     kicker: 'Contents',
     title: 'Where to start',
     standfirst:
@@ -976,7 +1015,7 @@ const EN: Dict = {
     pickedLabel: 'Picked',
   },
   method: {
-    number: '02',
+    number: '01',
     kicker: 'The method',
     title: 'How we build together',
     standfirst:
@@ -1003,7 +1042,7 @@ const EN: Dict = {
     ],
   },
   about: {
-    number: '03',
+    number: '02',
     kicker: 'Who I am',
     title: 'Bar Moshe',
     paragraphs: [
@@ -1123,6 +1162,17 @@ const EN: Dict = {
       sentBody: 'WhatsApp opened with the tidy brief. You can still add links or screenshots before you hit send.',
       tapToEdit: 'Edit',
       keyboardHint: 'Enter to continue · Esc for back · Alt+S to skip',
+      dialogue: {
+        avatarName: 'Bar',
+        typingHint: 'Bar is typing…',
+        pickAnswer: 'Pick one or write your own',
+        contactMethodPrompt: 'How’s best to reach you?',
+        contactValuePromptWhatsapp: 'Give me your WhatsApp number',
+        contactValuePromptEmail: 'Give me your email address',
+        done: 'Brief is ready.',
+        doneHint: 'Check it looks right, then hit send.',
+        progressLabel: 'Question {n} of {total}',
+      },
       prompts: {
         template: 'Easy one to start - what kind of project do you have in mind?',
         idea: 'Tell me about the idea. One sentence or three.',

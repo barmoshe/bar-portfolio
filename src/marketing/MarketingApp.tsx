@@ -35,9 +35,9 @@ export default function MarketingApp() {
         <MarketingHeader />
         <main id="main" tabIndex={-1}>
           <Cover />
-          <ProjectTemplates selected={selectedTemplate} onPick={setSelectedTemplate} />
           <Process />
           <About />
+          <ProjectTemplates selected={selectedTemplate} onPick={setSelectedTemplate} />
           <Intake selectedTemplate={selectedTemplate} />
           <FAQ />
           <ContactCTA />

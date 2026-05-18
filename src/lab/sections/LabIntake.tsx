@@ -40,9 +40,13 @@ const CONTACT_METHOD_BEAT_ID = '__contactMethod';
 const CONTACT_VALUE_BEAT_ID = '__contactValue';
 
 export default function LabIntake({ selectedTemplate }: Props) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { brief, contents, board } = t;
   const { quest } = brief;
+  const isRTL = lang === 'he';
+  // In RTL, "previous" lives visually on the right, so flip the affordances.
+  const backArrow = isRTL ? '→' : '←';
+  const nextArrow = isRTL ? '←' : '→';
 
   const pickedItem = useMemo(
     () => contents.items.find((i) => i.slug === selectedTemplate),
@@ -349,7 +353,9 @@ export default function LabIntake({ selectedTemplate }: Props) {
               aria-label={quest.avatarName}
               data-typing={typing || undefined}
             >
-              <span className="lab-quest__avatar-letter">ב</span>
+              <span className="lab-quest__avatar-letter">
+                {isRTL ? 'ב' : 'B'}
+              </span>
             </div>
             <div
               className="lab-quest__bubble"
@@ -408,6 +414,7 @@ export default function LabIntake({ selectedTemplate }: Props) {
                 <textarea
                   ref={inputRef as React.RefObject<HTMLTextAreaElement>}
                   className="lab-quest__input lab-quest__input--textarea"
+                  dir="auto"
                   value={currentValue}
                   onChange={(e) => setCurrentValue(e.target.value)}
                   onKeyDown={onInputKeyDown}
@@ -420,6 +427,7 @@ export default function LabIntake({ selectedTemplate }: Props) {
                 <input
                   ref={inputRef as React.RefObject<HTMLInputElement>}
                   className="lab-quest__input"
+                  dir="auto"
                   type={
                     currentBeat.id === CONTACT_VALUE_BEAT_ID && contact.method === 'email'
                       ? 'email'
@@ -454,7 +462,7 @@ export default function LabIntake({ selectedTemplate }: Props) {
                 onClick={onBack}
                 disabled={step === 0}
               >
-                ← {quest.back}
+                {backArrow} {quest.back}
               </button>
               {!currentBeat?.required && !isLastStep ? (
                 <button
@@ -462,7 +470,7 @@ export default function LabIntake({ selectedTemplate }: Props) {
                   className="mp-cta mp-cta--secondary lab-quest__nav-btn lab-quest__nav-skip"
                   onClick={onSkip}
                 >
-                  {quest.skip} →
+                  {quest.skip} {nextArrow}
                 </button>
               ) : null}
               {isLastStep ? (
@@ -483,7 +491,7 @@ export default function LabIntake({ selectedTemplate }: Props) {
                   disabled={!canAdvance}
                   data-ready={canAdvance || undefined}
                 >
-                  {quest.next} →
+                  {quest.next} {nextArrow}
                 </button>
               )}
             </footer>
@@ -522,7 +530,7 @@ export default function LabIntake({ selectedTemplate }: Props) {
               return (
                 <p className="lab-quest__preview-line" key={b.id}>
                   <span className="lab-quest__preview-key">{b.prompt}</span>
-                  <span className="lab-quest__preview-val">{v}</span>
+                  <span className="lab-quest__preview-val" dir="auto">{v}</span>
                 </p>
               );
             })}
