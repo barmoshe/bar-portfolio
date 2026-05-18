@@ -75,6 +75,32 @@ const BEATS: Beat[] = [
 
 const CHAPTERS: ChapterId[] = ['spark', 'you', 'detail', 'when', 'send'];
 
+const beatIndex = (id: BeatId) => BEATS.findIndex((b) => b.id === id);
+
+const lookup = <T extends { id?: string; slug?: string }>(
+  list: readonly T[],
+  id: string,
+): T | undefined => list.find((it) => it.id === id || it.slug === id);
+
+type FreeTextBeat = 'idea' | 'whyNow' | 'audience' | 'problem' | 'references' | 'howHeard' | 'name';
+
+type FreeTextConfig = {
+  kind: 'input' | 'textarea';
+  rows?: number;
+  required?: boolean;
+  autoComplete?: string;
+};
+
+const FREE_TEXT_CONFIG: Record<FreeTextBeat, FreeTextConfig> = {
+  idea:       { kind: 'textarea', rows: 4, required: true },
+  name:       { kind: 'input',                required: true, autoComplete: 'given-name' },
+  whyNow:     { kind: 'textarea', rows: 3 },
+  audience:   { kind: 'input' },
+  problem:    { kind: 'textarea', rows: 3 },
+  references: { kind: 'textarea', rows: 3 },
+  howHeard:   { kind: 'input' },
+};
+
 type Props = { selectedTemplate: string };
 
 export default function Intake({ selectedTemplate }: Props) {
@@ -84,13 +110,20 @@ export default function Intake({ selectedTemplate }: Props) {
 
   const [form, setForm] = useState<FormState>(INITIAL);
   const [stepIndex, setStepIndex] = useState(0);
-  const [committed, setCommitted] = useState<Set<BeatId>>(() => new Set());
+  // Highest beat index the user has moved past. Combined with content
+  // presence, this derives whether a beat is "committed" — eliminates a
+  // separate Set state and the empty-value-in-letter bug it introduced.
+  const [highestStep, setHighestStep] = useState(0);
   const [invalidBeat, setInvalidBeat] = useState<BeatId | null>(null);
   const [status, setStatus] = useState('');
   const [phase, setPhase] = useState<'questioning' | 'sent'>('questioning');
 
   const stageRef = useRef<HTMLDivElement | null>(null);
   const focusRef = useRef<HTMLElement | null>(null);
+
+  const setFocusNode = useCallback((node: HTMLElement | null) => {
+    focusRef.current = node;
+  }, []);
 
   const beat = BEATS[stepIndex];
   const total = BEATS.length;
@@ -103,29 +136,43 @@ export default function Intake({ selectedTemplate }: Props) {
     [invalidBeat],
   );
 
-  // External template selection from ProjectTemplates flows in. Auto-commit it
-  // and, if the user is still on the template beat, advance to the idea beat
-  // so picking from the contents list feels like answering question 1.
+  // Selecting a template elsewhere on the page should land us on the
+  // next beat as if the user had just answered question 1.
   useEffect(() => {
     if (!selectedTemplate || selectedTemplate === form.template) return;
     setForm((f) => ({ ...f, template: selectedTemplate }));
-    setCommitted((c) => {
-      const n = new Set(c);
-      n.add('template');
-      return n;
-    });
     setStepIndex((idx) => (idx === 0 ? 1 : idx));
+    setHighestStep((h) => Math.max(h, 1));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTemplate]);
 
-  // Build the brief text — kept byte-identical to the previous form's output
-  // so the WhatsApp message that lands on Bar's phone looks unchanged.
-  const builtBrief = useMemo(() => {
-    const lookup = <T extends { id?: string; slug?: string }>(
-      list: readonly T[],
-      id: string,
-    ): T | undefined => list.find((it) => it.id === id || it.slug === id);
+  const beatHasContent = useCallback(
+    (id: BeatId): boolean => {
+      switch (id) {
+        case 'template':   return !!form.template;
+        case 'idea':       return !!form.idea.trim();
+        case 'name':       return !!form.name.trim();
+        case 'contact':    return !!form.contactValue.trim();
+        case 'whyNow':     return !!form.whyNow.trim();
+        case 'audience':   return !!form.audience.trim();
+        case 'problem':    return !!form.problem.trim();
+        case 'references': return !!form.references.trim();
+        case 'timeline':   return !!form.timeline;
+        case 'howHeard':   return !!form.howHeard.trim();
+        default:           return false;
+      }
+    },
+    [form],
+  );
 
+  const committedHas = useCallback(
+    (id: BeatId): boolean => beatIndex(id) < highestStep && beatHasContent(id),
+    [highestStep, beatHasContent],
+  );
+
+  // Recipient (Bar) reads Hebrew; signature labels stay HE regardless of UI lang
+  // so the WhatsApp message looks the same as the previous form's output.
+  const builtBrief = useMemo(() => {
     const tpl = lookup(contents.items, form.template);
     const templateLabel = tpl ? tpl.title : '—';
     const timelineLabel = lookup(brief.timelines, form.timeline)?.label ?? '';
@@ -160,41 +207,13 @@ export default function Intake({ selectedTemplate }: Props) {
     [brief.mailSubject, builtBrief],
   );
 
-  const beatHasContent = useCallback(
-    (id: BeatId): boolean => {
-      switch (id) {
-        case 'template':   return !!form.template;
-        case 'idea':       return !!form.idea.trim();
-        case 'name':       return !!form.name.trim();
-        case 'contact':    return !!form.contactValue.trim();
-        case 'whyNow':     return !!form.whyNow.trim();
-        case 'audience':   return !!form.audience.trim();
-        case 'problem':    return !!form.problem.trim();
-        case 'references': return !!form.references.trim();
-        case 'timeline':   return !!form.timeline;
-        case 'howHeard':   return !!form.howHeard.trim();
-        default:           return false;
-      }
-    },
-    [form],
-  );
-
-  const goTo = useCallback(
-    (idx: number) => {
-      const clamped = Math.max(0, Math.min(BEATS.length - 1, idx));
-      setStepIndex(clamped);
+  const jumpTo = useCallback((id: BeatId) => {
+    const idx = beatIndex(id);
+    if (idx >= 0) {
+      setStepIndex(idx);
       setInvalidBeat(null);
-    },
-    [],
-  );
-
-  const jumpTo = useCallback(
-    (id: BeatId) => {
-      const idx = BEATS.findIndex((b) => b.id === id);
-      if (idx >= 0) goTo(idx);
-    },
-    [goTo],
-  );
+    }
+  }, []);
 
   const next = useCallback(() => {
     if (beat.id === 'review') return;
@@ -204,34 +223,25 @@ export default function Intake({ selectedTemplate }: Props) {
       focusRef.current?.focus({ preventScroll: true });
       return;
     }
-    setCommitted((c) => {
-      const n = new Set(c);
-      if (beatHasContent(beat.id)) {
-        n.add(beat.id);
-      } else {
-        n.delete(beat.id);
-      }
-      return n;
-    });
     if (stepIndex < BEATS.length - 1) {
       setStatus(quest.liveCommitted);
       setStepIndex(stepIndex + 1);
+      setHighestStep((h) => Math.max(h, stepIndex + 1));
     }
   }, [beat, beatHasContent, stepIndex, brief.liveError, quest.liveCommitted]);
 
   const back = useCallback(() => {
-    if (stepIndex > 0) goTo(stepIndex - 1);
-  }, [stepIndex, goTo]);
+    if (stepIndex > 0) {
+      setStepIndex(stepIndex - 1);
+      setInvalidBeat(null);
+    }
+  }, [stepIndex]);
 
   const skip = useCallback(() => {
     if (beat.required || beat.id === 'review') return;
-    setCommitted((c) => {
-      const n = new Set(c);
-      n.delete(beat.id);
-      return n;
-    });
     if (stepIndex < BEATS.length - 1) {
       setStepIndex(stepIndex + 1);
+      setHighestStep((h) => Math.max(h, stepIndex + 1));
     }
   }, [beat, stepIndex]);
 
@@ -243,7 +253,6 @@ export default function Intake({ selectedTemplate }: Props) {
       !form.contactValue.trim();
     if (missing) {
       setStatus(brief.liveError);
-      // Jump back to the first required-but-empty beat
       if (!form.template) jumpTo('template');
       else if (!form.idea.trim()) jumpTo('idea');
       else if (!form.name.trim()) jumpTo('name');
@@ -255,7 +264,6 @@ export default function Intake({ selectedTemplate }: Props) {
     setPhase('sent');
   }, [form, builtBrief, brief.liveError, brief.liveSuccess, jumpTo]);
 
-  // Focus the primary control of the current beat after every step change.
   useEffect(() => {
     const id = requestAnimationFrame(() => {
       focusRef.current?.focus({ preventScroll: true });
@@ -263,7 +271,6 @@ export default function Intake({ selectedTemplate }: Props) {
     return () => cancelAnimationFrame(id);
   }, [stepIndex, phase]);
 
-  // Card entrance animation — fade + slide. Guarded by motion preference.
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
@@ -285,8 +292,8 @@ export default function Intake({ selectedTemplate }: Props) {
     { dependencies: [stepIndex, phase], scope: stageRef },
   );
 
-  // Letter line append animation — new last line ink-bleeds in.
-  const committedCount = committed.size;
+  // Highest-step grows monotonically as the user commits, so the
+  // newest letter line is always `:last-of-type` when this fires.
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
@@ -306,44 +313,41 @@ export default function Intake({ selectedTemplate }: Props) {
       });
       return () => mm.kill();
     },
-    { dependencies: [committedCount], scope: stageRef },
+    { dependencies: [highestStep], scope: stageRef },
   );
 
-  // Document-level keyboard shortcuts (Esc to go back, Alt+S to skip,
-  // Ctrl/Cmd+Enter inside a textarea to advance). Scoped: only fires
-  // when focus is somewhere inside the stage so the rest of the page
-  // is unaffected. Enter on inputs is handled by native form submit.
+  // Stable keydown listener — install once, read current callbacks via a
+  // ref instead of re-attaching on every form keystroke.
+  const handlersRef = useRef({ back, skip, next, submit, beat });
+  handlersRef.current = { back, skip, next, submit, beat };
   useEffect(() => {
     const onKey = (e: globalThis.KeyboardEvent) => {
       const root = stageRef.current;
       if (!root || !root.contains(document.activeElement)) return;
+      const h = handlersRef.current;
       const target = e.target as HTMLElement | null;
       const isTextarea = target?.tagName === 'TEXTAREA';
       if (e.key === 'Escape') {
         e.preventDefault();
-        back();
+        h.back();
       } else if (
         e.altKey &&
         (e.key === 's' || e.key === 'S') &&
-        !beat.required &&
-        beat.id !== 'review'
+        !h.beat.required &&
+        h.beat.id !== 'review'
       ) {
         e.preventDefault();
-        skip();
+        h.skip();
       } else if (e.key === 'Enter' && isTextarea && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        if (beat.id === 'review') submit();
-        else next();
+        if (h.beat.id === 'review') h.submit();
+        else h.next();
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [back, skip, next, submit, beat]);
+  }, []);
 
-  // Per-beat copy resolution: a template-specific override always wins,
-  // then the generic prompt from quest.prompts. The same shape covers
-  // hint and placeholder so every input box reads on-topic for the
-  // chosen project type.
   const tplOverride = useMemo(() => {
     const tpl = form.template;
     if (!tpl) return undefined;
@@ -365,8 +369,8 @@ export default function Intake({ selectedTemplate }: Props) {
     }
   }, [beat.id, tplOverride]);
 
-  // The override union has different optional fields per beat; TS won't
-  // narrow well across the union, so we read with an explicit cast.
+  // The override union has different optional fields per beat; TS can't
+  // narrow across the union, so we read with a cast.
   const overrideRead = beatOverride as
     | { prompt?: string; hint?: string; placeholder?: string }
     | undefined;
@@ -398,11 +402,10 @@ export default function Intake({ selectedTemplate }: Props) {
     }
   }, [beat.id, overrideRead, brief]);
 
-  // Falls back to the generic field placeholder for inputs whose beat
-  // has no template-specific override (e.g. name / contact / timeline).
-  const placeholderCopy = useMemo<string | undefined>(() => {
-    return overrideRead?.placeholder || undefined;
-  }, [overrideRead]);
+  const placeholderCopy = useMemo<string | undefined>(
+    () => overrideRead?.placeholder || undefined,
+    [overrideRead],
+  );
 
   const liveAnnouncement = useMemo(() => {
     if (phase === 'sent') return brief.liveSuccess;
@@ -413,21 +416,14 @@ export default function Intake({ selectedTemplate }: Props) {
       .replace('{chapter}', quest.chapters[beat.chapter]);
   }, [phase, status, beat, stepIndex, total, quest, brief.liveError, brief.liveSuccess]);
 
-  // Map each committed beat to its letter line. Name + contact get merged
-  // into a single signature line so the visible letter mirrors the brief
-  // sent to WhatsApp.
   const letterEntries = useMemo(() => {
-    const lookup = <T extends { id?: string; slug?: string }>(
-      list: readonly T[],
-      id: string,
-    ) => list.find((it) => it.id === id || it.slug === id);
     const tpl = lookup(contents.items, form.template);
     const timelineLabel = lookup(brief.timelines, form.timeline)?.label ?? '';
     const s = brief.briefSections;
     const out: { jumpId: BeatId; label: string; value: string }[] = [];
     for (const b of BEATS) {
       if (b.id === 'review' || b.id === 'name' || b.id === 'contact') continue;
-      if (!committed.has(b.id)) continue;
+      if (!committedHas(b.id)) continue;
       switch (b.id) {
         case 'template':
           if (tpl) out.push({ jumpId: b.id, label: s.type, value: tpl.title });
@@ -455,8 +451,7 @@ export default function Intake({ selectedTemplate }: Props) {
           break;
       }
     }
-    // Signature line is shown if either name or contact has been committed.
-    if (committed.has('name') || committed.has('contact')) {
+    if (committedHas('name') || committedHas('contact')) {
       const contactKind =
         form.contactMethod === 'whatsapp'
           ? brief.fields.contactMethod.whatsapp
@@ -466,20 +461,13 @@ export default function Intake({ selectedTemplate }: Props) {
         ? `${contactKind}: ${form.contactValue.trim()}`
         : contactKind;
       out.push({
-        jumpId: committed.has('name') ? 'name' : 'contact',
+        jumpId: committedHas('name') ? 'name' : 'contact',
         label: '— —',
         value: `${namePart} · ${contactPart}`,
       });
     }
     return out;
-  }, [committed, form, contents, brief]);
-
-  const chapterProgress = useMemo(() => {
-    const idx = CHAPTERS.indexOf(beat.chapter);
-    return (idx + 1) / CHAPTERS.length;
-  }, [beat.chapter]);
-
-  const overallProgress = (stepIndex + 1) / total;
+  }, [committedHas, form, contents, brief]);
 
   const counterCopy = quest.counter
     .replace('{step}', String(stepIndex + 1))
@@ -520,9 +508,7 @@ export default function Intake({ selectedTemplate }: Props) {
                   );
                 }}
                 data-quest-focus
-                ref={(node) => {
-                  focusRef.current = node;
-                }}
+                ref={setFocusNode}
               >
                 {quest.nav.sendAgain} →
               </button>
@@ -553,16 +539,6 @@ export default function Intake({ selectedTemplate }: Props) {
                 </li>
               );
             })}
-            <li
-              className="mp-quest__progress"
-              aria-hidden="true"
-              style={
-                {
-                  ['--mp-progress' as string]: chapterProgress,
-                  ['--mp-progress-overall' as string]: overallProgress,
-                } as React.CSSProperties
-              }
-            />
           </ol>
 
           <div className="mp-quest__board">
@@ -598,7 +574,7 @@ export default function Intake({ selectedTemplate }: Props) {
                     form={form}
                     update={update}
                     t={t}
-                    focusRef={focusRef}
+                    setFocusNode={setFocusNode}
                     invalid={isInvalid}
                     builtBrief={builtBrief}
                     onSubmit={submit}
@@ -655,9 +631,9 @@ export default function Intake({ selectedTemplate }: Props) {
                 <p className="mp-quest__letter-empty">{quest.letterEmpty}</p>
               ) : (
                 <ul className="mp-quest__letter-list">
-                  {letterEntries.map((entry, i) => (
+                  {letterEntries.map((entry) => (
                     <li
-                      key={`${entry.jumpId}-${i}`}
+                      key={entry.jumpId}
                       className="mp-quest__letter-line"
                     >
                       <button
@@ -697,29 +673,17 @@ type BeatControlProps = {
   form: FormState;
   update: <K extends keyof FormState>(key: K, value: FormState[K]) => void;
   t: ReturnType<typeof useLang>['t'];
-  focusRef: { current: HTMLElement | null };
+  setFocusNode: (node: HTMLElement | null) => void;
   invalid: boolean;
   builtBrief: string;
   onSubmit: () => void;
   onJump: (id: BeatId) => void;
   letterEntries: { jumpId: BeatId; label: string; value: string }[];
-  /** Template-specific example text to show inside the active beat's input. */
   placeholderOverride?: string;
 };
 
-function BeatControl({
-  beat,
-  form,
-  update,
-  t,
-  focusRef,
-  invalid,
-  builtBrief,
-  onSubmit,
-  onJump,
-  letterEntries,
-  placeholderOverride,
-}: BeatControlProps) {
+function BeatControl(props: BeatControlProps) {
+  const { beat, form, update, t, setFocusNode, invalid, builtBrief, onSubmit, onJump, letterEntries, placeholderOverride } = props;
   const { brief, contents } = t;
   const quest = brief.quest;
 
@@ -743,7 +707,7 @@ function BeatControl({
                     value={tpl.slug}
                     checked={checked}
                     onChange={() => update('template', tpl.slug)}
-                    ref={i === 0 ? (node) => { focusRef.current = node; } : undefined}
+                    ref={i === 0 ? setFocusNode : undefined}
                     data-quest-focus={i === 0 || undefined}
                   />
                   <span className="mp-quest__chip-label">{tpl.title}</span>
@@ -752,39 +716,6 @@ function BeatControl({
             })}
           </div>
         </fieldset>
-      );
-
-    case 'idea':
-      return (
-        <textarea
-          className="mp-quest__textarea"
-          value={form.idea}
-          onChange={(e) => update('idea', e.target.value)}
-          placeholder={placeholderOverride ?? brief.fields.idea.placeholder}
-          rows={4}
-          aria-required="true"
-          aria-invalid={invalid}
-          aria-label={brief.fields.idea.label}
-          data-quest-focus
-          ref={(node) => { focusRef.current = node; }}
-        />
-      );
-
-    case 'name':
-      return (
-        <input
-          type="text"
-          className="mp-quest__input"
-          value={form.name}
-          onChange={(e) => update('name', e.target.value)}
-          placeholder={brief.fields.name.placeholder}
-          autoComplete="given-name"
-          aria-required="true"
-          aria-invalid={invalid}
-          aria-label={brief.fields.name.label}
-          data-quest-focus
-          ref={(node) => { focusRef.current = node; }}
-        />
       );
 
     case 'contact':
@@ -838,66 +769,10 @@ function BeatControl({
               aria-required="true"
               aria-invalid={invalid}
               data-quest-focus
-              ref={(node) => { focusRef.current = node; }}
+              ref={setFocusNode}
             />
           </label>
         </div>
-      );
-
-    case 'whyNow':
-      return (
-        <textarea
-          className="mp-quest__textarea"
-          value={form.whyNow}
-          onChange={(e) => update('whyNow', e.target.value)}
-          placeholder={placeholderOverride ?? brief.fields.whyNow.placeholder}
-          rows={3}
-          aria-label={brief.fields.whyNow.label}
-          data-quest-focus
-          ref={(node) => { focusRef.current = node; }}
-        />
-      );
-
-    case 'audience':
-      return (
-        <input
-          type="text"
-          className="mp-quest__input"
-          value={form.audience}
-          onChange={(e) => update('audience', e.target.value)}
-          placeholder={placeholderOverride ?? brief.fields.audience.placeholder}
-          aria-label={brief.fields.audience.label}
-          data-quest-focus
-          ref={(node) => { focusRef.current = node; }}
-        />
-      );
-
-    case 'problem':
-      return (
-        <textarea
-          className="mp-quest__textarea"
-          value={form.problem}
-          onChange={(e) => update('problem', e.target.value)}
-          placeholder={placeholderOverride ?? brief.fields.problem.placeholder}
-          rows={3}
-          aria-label={brief.fields.problem.label}
-          data-quest-focus
-          ref={(node) => { focusRef.current = node; }}
-        />
-      );
-
-    case 'references':
-      return (
-        <textarea
-          className="mp-quest__textarea"
-          value={form.references}
-          onChange={(e) => update('references', e.target.value)}
-          placeholder={placeholderOverride ?? brief.fields.references.placeholder}
-          rows={3}
-          aria-label={brief.fields.references.label}
-          data-quest-focus
-          ref={(node) => { focusRef.current = node; }}
-        />
       );
 
     case 'timeline':
@@ -919,7 +794,7 @@ function BeatControl({
                     value={tl.id}
                     checked={checked}
                     onChange={() => update('timeline', tl.id)}
-                    ref={i === 0 ? (node) => { focusRef.current = node; } : undefined}
+                    ref={i === 0 ? setFocusNode : undefined}
                     data-quest-focus={i === 0 || undefined}
                   />
                   <span className="mp-quest__chip-label">{tl.label}</span>
@@ -928,20 +803,6 @@ function BeatControl({
             })}
           </div>
         </fieldset>
-      );
-
-    case 'howHeard':
-      return (
-        <input
-          type="text"
-          className="mp-quest__input"
-          value={form.howHeard}
-          onChange={(e) => update('howHeard', e.target.value)}
-          placeholder={placeholderOverride ?? brief.fields.howHeard.placeholder}
-          aria-label={brief.fields.howHeard.label}
-          data-quest-focus
-          ref={(node) => { focusRef.current = node; }}
-        />
       );
 
     case 'review':
@@ -953,8 +814,8 @@ function BeatControl({
           </pre>
           {letterEntries.length > 0 && (
             <ul className="mp-quest__review-edit-list">
-              {letterEntries.map((entry, i) => (
-                <li key={`${entry.jumpId}-${i}`}>
+              {letterEntries.map((entry) => (
+                <li key={entry.jumpId}>
                   <button
                     type="button"
                     className="mp-quest__nav-btn"
@@ -972,7 +833,7 @@ function BeatControl({
               className="mp-quest__primary mp-quest__primary--send"
               onClick={onSubmit}
               data-quest-focus
-              ref={(node) => { focusRef.current = node; }}
+              ref={setFocusNode}
             >
               {quest.nav.send} →
             </button>
@@ -986,5 +847,80 @@ function BeatControl({
           </div>
         </div>
       );
+
+    case 'idea':
+    case 'name':
+    case 'whyNow':
+    case 'audience':
+    case 'problem':
+    case 'references':
+    case 'howHeard':
+      return (
+        <QuestField
+          name={beat.id}
+          form={form}
+          update={update}
+          brief={brief}
+          invalid={invalid}
+          setFocusNode={setFocusNode}
+          placeholderOverride={placeholderOverride}
+        />
+      );
   }
+}
+
+type QuestFieldProps = {
+  name: FreeTextBeat;
+  form: FormState;
+  update: <K extends keyof FormState>(key: K, value: FormState[K]) => void;
+  brief: ReturnType<typeof useLang>['t']['brief'];
+  invalid: boolean;
+  setFocusNode: (node: HTMLElement | null) => void;
+  placeholderOverride?: string;
+};
+
+function QuestField({
+  name,
+  form,
+  update,
+  brief,
+  invalid,
+  setFocusNode,
+  placeholderOverride,
+}: QuestFieldProps) {
+  const cfg = FREE_TEXT_CONFIG[name];
+  const field = brief.fields[name];
+  const placeholder = placeholderOverride ?? field.placeholder;
+
+  if (cfg.kind === 'textarea') {
+    return (
+      <textarea
+        className="mp-quest__textarea"
+        value={form[name]}
+        onChange={(e) => update(name, e.target.value)}
+        placeholder={placeholder}
+        rows={cfg.rows}
+        aria-required={cfg.required || undefined}
+        aria-invalid={cfg.required ? invalid : undefined}
+        aria-label={field.label}
+        data-quest-focus
+        ref={setFocusNode}
+      />
+    );
+  }
+  return (
+    <input
+      type="text"
+      className="mp-quest__input"
+      value={form[name]}
+      onChange={(e) => update(name, e.target.value)}
+      placeholder={placeholder}
+      autoComplete={cfg.autoComplete}
+      aria-required={cfg.required || undefined}
+      aria-invalid={cfg.required ? invalid : undefined}
+      aria-label={field.label}
+      data-quest-focus
+      ref={setFocusNode}
+    />
+  );
 }

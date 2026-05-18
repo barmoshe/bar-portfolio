@@ -1005,9 +1005,6 @@ html.dark .mp-cover__glyph { opacity: 0.16; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.mp-quest__progress {
-  display: none;
-}
 
 .mp-quest__board {
   display: grid;
