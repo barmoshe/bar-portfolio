@@ -1807,10 +1807,14 @@ html.dark .mp-root {
   font-style: normal;
   font-size: .9rem;
   line-height: 1.5;
+  text-align: start;
+  text-transform: none;
+  letter-spacing: 0;
 }
 .mp-root .a11y-panel .dek em {
   font-style: italic;
   color: var(--mp-ink);
+  font-family: var(--mp-font-body);
 }
 
 .mp-root .a11y-panel fieldset {
@@ -1876,8 +1880,16 @@ html.dark .mp-root {
   border-radius: var(--mp-radius-sm);
   box-shadow: var(--mp-shadow-sm);
   cursor: pointer;
+  font-family: var(--mp-font-body);
   font-size: .92rem;
   line-height: 1.4;
+  text-align: start;
+}
+.mp-root .a11y-panel .a11y-toggle span {
+  font-family: var(--mp-font-body);
+  font-style: normal;
+  letter-spacing: 0;
+  text-transform: none;
 }
 .mp-root .a11y-panel .a11y-toggle input[type="checkbox"] {
   appearance: none;
