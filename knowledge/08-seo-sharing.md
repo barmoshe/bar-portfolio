@@ -40,7 +40,7 @@ Snapshot after this audit's fixes; line numbers refer to
 | Twitter card + handles | `business/index.html:28–34` | `summary_large_image`, `@barmoshe1`, Hebrew alt |
 | `AboutPage` JSON-LD | `business/index.html:35–47` | Cross-references portfolio's `#person` / `#website` |
 | `FAQPage` JSON-LD | `business/index.html:48–106` | 6 HE Q&A items from `src/marketing/i18n.ts:788–824` |
-| `Service` JSON-LD | `business/index.html:107–146` | Provider `@id` → `#person`; two `Offer`s (free prototype + paid milestone build) |
+| `Service` JSON-LD | `business/index.html:107–144` | Provider `@id` → `#person`; two `Offer`s (first working version + continued build), no advertised price |
 | Pre-paint lang resolution | `business/index.html:147–179` | Sets `html.lang` / `html.dir` and `window.__bmLang` before React mount; 70/30 random pick on first visit |
 | EN canonical mirror | `business/en/index.html` | Same React app, EN-only pre-paint, EN OG/JSON-LD |
 | Sitemap | `public/sitemap.xml` | Both URLs with mutual `xhtml:link` hreflang alternates |
@@ -141,8 +141,10 @@ the sitemap doesn't reinforce the signal.
 - `FAQPage` JSON-LD block sourced from `src/marketing/i18n.ts` HE
   `qa.items` (6 items).
 - `Service` JSON-LD block: provider `@id` → portfolio's `#person`,
-  `serviceType` "Web and app prototype development", two `Offer`s
-  (free prototype `price: "0"` and paid milestone build).
+  `serviceType` "Web and app development", two `Offer`s (first working
+  version + continued build). Neither carries a `price`/`priceCurrency`
+  — the marketing copy intentionally avoids advertising "free" or
+  fixed-price terms; the descriptions describe the flow.
 
 ### New file `business/en/index.html`
 The English-canonical mirror. Same React app, but the head declares
@@ -211,9 +213,11 @@ the URL still owns the canonical signal, and a refresh resets to EN.
 - Keep the pre-paint script (`business/index.html:104–136`) and
   `og:locale` in agreement: today both default to Hebrew. If the 70/30
   weighting flips, change `og:locale` to match the majority.
-- Keep `Service.offers` aligned with the FAQ Q&A about payment terms.
-  Today both reflect: free first prototype (3–7 days), then fixed-price
-  milestone work. If the offer changes, update both.
+- Keep `Service.offers` aligned with the FAQ Q&A around the build flow.
+  Today both reflect: build a first working version (3–7 days), then
+  agree the continuation in a conversation — no advertised price, no
+  hard payment terms in the public copy. If that framing changes,
+  update both.
 
 ## Verification
 
