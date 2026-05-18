@@ -317,7 +317,7 @@ const HE: Dict = {
         slug: 'audio',
         title: 'הכל מסביב לסאונד אינטראקטיבי',
         summary:
-          'סינתזה, מיקסר רב־ערוצי, אפקטים בזמן אמת. כמו ה-Mixtape בפורטפוליו שלי. למוצר שהסאונד הוא חלק מהחוויה - לא רק רעש רקע.',
+          'סינתזה, מיקסר רב־ערוצי, אפקטים בזמן אמת. למוצר שהסאונד הוא חלק מהחוויה - לא רק רעש רקע.',
         fits: ['אמן.ית', 'מותג מוזיקלי', 'סטארטאפ אודיו'],
       },
       {
@@ -675,7 +675,7 @@ const HE: Dict = {
             placeholder: 'תחושת חדר, של נוכחות איפשהו במקום לחיצה בין דפים.',
           },
           references: {
-            prompt: 'אתרים או אפליקציות מבוססי סאונד שאתה אוהב? Mixtape, Endel, Marpi.',
+            prompt: 'אתרים או אפליקציות מבוססי סאונד שאתה אוהב? Endel, Marpi, או כל דוגמה אחרת.',
             placeholder: 'https://marpi.studio - התחושה הזו.',
           },
           timeline: { prompt: 'מתי זה צריך להיות חי?' },
@@ -936,7 +936,7 @@ const EN: Dict = {
         slug: 'audio',
         title: 'Audio engine / musical interaction',
         summary:
-          'Synthesis, multi-channel mixer, real-time effects. Like the Mixtape in my portfolio. Right for a product whose sound is part of the experience - not just background noise.',
+          'Synthesis, multi-channel mixer, real-time effects. Right for a product whose sound is part of the experience - not just background noise.',
         fits: ['Artist', 'Music brand', 'Audio startup'],
       },
       {
@@ -1296,7 +1296,7 @@ const EN: Dict = {
             placeholder: 'Sense of room, of being present somewhere instead of clicking through pages.',
           },
           references: {
-            prompt: 'Sound-driven sites or apps you love? Mixtape, Endel, Marpi.',
+            prompt: 'Sound-driven sites or apps you love? Endel, Marpi, or any other example.',
             placeholder: 'https://marpi.studio - that feel.',
           },
           timeline: { prompt: 'When does it need to be live?' },
