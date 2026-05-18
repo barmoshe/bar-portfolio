@@ -2140,3 +2140,220 @@ html.dark .mp-root {
     transition: none;
   }
 }
+
+/* ---------------------------------------------------------------- */
+/* The Lab — sub-brand layer on top of the marketing BOARD chrome.   */
+/* `.mp-lab` is an additive class on the root: amber promotes to     */
+/* primary, magenta demotes to a secondary accent, and DONE shifts   */
+/* to electric violet. Status pill colors are re-mapped so the       */
+/* kanban triad still has three distinct colors. WhatsApp green is   */
+/* intentionally untouched (cross-page reserved color).              */
+/* ---------------------------------------------------------------- */
+.mp-lab {
+  --mp-primary:      oklch(0.74 0.15 55);
+  --mp-primary-ink:  oklch(0.20 0.03 265);
+  --mp-accent-2:     oklch(0.52 0.20 350);
+  --mp-accent-2-ink: oklch(0.99 0.015 350);
+  --mp-accent-3:     oklch(0.55 0.20 295);
+  --mp-accent-3-ink: oklch(0.99 0.015 295);
+  --mp-shadow-pop:   8px 8px 0 var(--mp-primary);
+}
+html.dark .mp-lab {
+  --mp-primary:      oklch(0.78 0.16 60);
+  --mp-primary-ink:  oklch(0.18 0.03 60);
+  --mp-accent-2:     oklch(0.62 0.20 350);
+  --mp-accent-2-ink: oklch(0.99 0.015 350);
+  --mp-accent-3:     oklch(0.66 0.22 295);
+  --mp-accent-3-ink: oklch(0.99 0.015 295);
+  --mp-shadow-pop:   8px 8px 0 var(--mp-primary);
+}
+/* Restore distinct kanban triad inside .mp-lab so TODO/DOING/DONE
+   stay visually separable after the token swap (amber would otherwise
+   collide between primary/TODO and accent-2/DOING). */
+.mp-lab .mp-status--todo     { background: var(--mp-accent-2); color: var(--mp-accent-2-ink); }
+.mp-lab .mp-status--doing    { background: var(--mp-primary);  color: var(--mp-primary-ink); }
+.mp-lab .mp-status--done     { background: var(--mp-accent-3); color: var(--mp-accent-3-ink); }
+.mp-lab .mp-status--selected { background: var(--mp-accent-2); color: var(--mp-accent-2-ink); }
+
+/* ---------------------------------------------------------------- */
+/* LabIntake — simpler one-screen form with adjacent live preview.   */
+/* Mobile-first stack, switches to a 2-column grid on wider screens. */
+/* Reuses .mp-card chrome for both the form and preview panes.       */
+/* ---------------------------------------------------------------- */
+.lab-intake__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: start;
+}
+@media (min-width: 820px) {
+  .lab-intake__grid {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 24px;
+  }
+}
+.lab-intake__form {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.lab-intake__picked {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.lab-intake__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.lab-intake__label {
+  font-weight: 700;
+  font-size: 0.96rem;
+  color: var(--mp-ink);
+}
+.lab-intake__hint {
+  margin: 0;
+  font-size: 0.86rem;
+  color: color-mix(in oklch, var(--mp-ink) 70%, transparent);
+}
+.lab-intake__req {
+  color: var(--mp-accent-2);
+  font-weight: 800;
+}
+.lab-intake__input {
+  font: inherit;
+  font-size: 1rem;
+  padding: 10px 12px;
+  border: 2px solid var(--mp-ink);
+  border-radius: 10px;
+  background: var(--mp-surface);
+  color: var(--mp-ink);
+  box-shadow: var(--mp-shadow-sm);
+  min-height: 44px;
+}
+.lab-intake__input:focus-visible {
+  outline: 3px solid var(--mp-primary);
+  outline-offset: 2px;
+}
+.lab-intake__input[data-invalid="true"] {
+  border-color: var(--mp-accent-2);
+  box-shadow: 3px 3px 0 var(--mp-accent-2);
+}
+.lab-intake__textarea {
+  min-height: 88px;
+  resize: vertical;
+  line-height: 1.5;
+}
+.lab-intake__methods-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-block-start: 4px;
+}
+.lab-intake__method {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 2px solid var(--mp-ink);
+  border-radius: 999px;
+  background: var(--mp-surface);
+  cursor: pointer;
+  min-height: 44px;
+  font-weight: 600;
+  box-shadow: var(--mp-shadow-sm);
+}
+.lab-intake__method input {
+  accent-color: var(--mp-primary);
+  width: 16px;
+  height: 16px;
+}
+.lab-intake__method:has(input:checked) {
+  background: color-mix(in oklch, var(--mp-primary) 14%, var(--mp-surface));
+  box-shadow: 3px 3px 0 var(--mp-primary);
+}
+.lab-intake__methods legend {
+  font-weight: 700;
+  font-size: 0.96rem;
+  color: var(--mp-ink);
+  padding: 0;
+}
+.lab-intake__status {
+  margin: 0;
+  min-height: 1.25em;
+  font-size: 0.92rem;
+  color: var(--mp-ink);
+}
+.lab-intake__mail-fallback {
+  margin: 4px 0 0;
+}
+.lab-intake__link-btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--mp-accent-3);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  min-height: 44px;
+}
+.lab-intake__link-btn:hover { color: var(--mp-primary); }
+.lab-intake__link-btn:focus-visible {
+  outline: 3px solid var(--mp-primary);
+  outline-offset: 2px;
+}
+
+.lab-intake__preview {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+@media (min-width: 820px) {
+  .lab-intake__preview { position: sticky; top: 88px; }
+}
+.lab-intake__preview-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.lab-intake__preview-title {
+  font-weight: 700;
+  font-size: 0.96rem;
+}
+.lab-intake__preview-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 0;
+  border-top: 1.5px dashed color-mix(in oklch, var(--mp-ink) 30%, transparent);
+  border-bottom: 1.5px dashed color-mix(in oklch, var(--mp-ink) 30%, transparent);
+  min-height: 80px;
+}
+.lab-intake__preview-line {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 0.98rem;
+  color: var(--mp-ink);
+}
+.lab-intake__preview-line--ghost {
+  color: color-mix(in oklch, var(--mp-ink) 45%, transparent);
+  font-style: italic;
+}
+.lab-intake__preview-foot {
+  margin: 0;
+  font-size: 0.88rem;
+  color: color-mix(in oklch, var(--mp-ink) 65%, transparent);
+}

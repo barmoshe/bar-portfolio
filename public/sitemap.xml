@@ -25,4 +25,22 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://barmoshe.github.io/bar-portfolio/business/en/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://barmoshe.github.io/bar-portfolio/business/"/>
   </url>
+  <url>
+    <loc>https://barmoshe.github.io/bar-portfolio/lab/</loc>
+    <lastmod>2026-05-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://barmoshe.github.io/bar-portfolio/lab/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://barmoshe.github.io/bar-portfolio/lab/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barmoshe.github.io/bar-portfolio/lab/"/>
+  </url>
+  <url>
+    <loc>https://barmoshe.github.io/bar-portfolio/lab/en/</loc>
+    <lastmod>2026-05-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://barmoshe.github.io/bar-portfolio/lab/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://barmoshe.github.io/bar-portfolio/lab/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://barmoshe.github.io/bar-portfolio/lab/"/>
+  </url>
 </urlset>
