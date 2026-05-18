@@ -2176,59 +2176,125 @@ html.dark .mp-lab {
 .mp-lab .mp-status--selected { background: var(--mp-accent-2); color: var(--mp-accent-2-ink); }
 
 /* ---------------------------------------------------------------- */
-/* LabIntake — simpler one-screen form with adjacent live preview.   */
-/* Mobile-first stack, switches to a 2-column grid on wider screens. */
-/* Reuses .mp-card chrome for both the form and preview panes.       */
+/* LabIntake — "Crafting Recipe" form: 3x3 grid of slots, live       */
+/* output card with rarity color escalation, vibe chip multipliers.  */
+/* Inspired by inventory crafting UIs (Minecraft / Stardew). Mobile  */
+/* stacks all slots vertically; tablet+ uses the 3-col grid.         */
 /* ---------------------------------------------------------------- */
-.lab-intake__grid {
+.lab-craft {
   display: grid;
   grid-template-columns: 1fr;
   gap: 18px;
   align-items: start;
 }
-@media (min-width: 820px) {
-  .lab-intake__grid {
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+@media (min-width: 980px) {
+  .lab-craft {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
     gap: 24px;
   }
 }
-.lab-intake__form {
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.lab-intake__picked {
-  margin: 0 0 4px;
-  font-size: 0.95rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-}
-.lab-intake__field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin: 0;
+
+/* The crafting grid itself. Mobile = 1 col, ≥640px = 3 cols. */
+.lab-craft__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
   padding: 0;
+  margin: 0;
   border: 0;
 }
-.lab-intake__label {
+@media (min-width: 640px) {
+  .lab-craft__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-areas:
+      "what what  who"
+      "vibe rarity ref"
+      "contact method submit";
+    gap: 14px;
+  }
+}
+
+/* Map each slot to its grid-area on wide screens. */
+.lab-craft__slot--what    { grid-area: what; }
+.lab-craft__slot--type    { display: none; }
+.lab-craft__slot--who     { grid-area: who; }
+.lab-craft__slot--vibe    { grid-area: vibe; }
+.lab-craft__slot--rarity  { grid-area: rarity; }
+.lab-craft__slot--ref     { grid-area: ref; }
+.lab-craft__slot--contact { grid-area: contact; }
+.lab-craft__slot--method  { grid-area: method; }
+.lab-craft__slot--submit  { grid-area: submit; }
+
+/* On narrow screens the TYPE chip is visible inline above WHAT. */
+@media (max-width: 639px) {
+  .lab-craft__slot--type { display: flex; }
+}
+@media (min-width: 640px) {
+  /* Re-add TYPE as a small inline chip inside the WHAT slot via ::before
+     is too fiddly; instead render the type chip BELOW the rarity stars
+     on wide screens. */
+  .lab-craft__slot--type {
+    display: flex;
+    grid-area: rarity;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    pointer-events: auto;
+    margin-block-start: 8px;
+  }
+}
+
+/* Common slot chrome — a sticker card. */
+.lab-craft__slot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  border: 2px solid var(--mp-ink);
+  border-radius: 14px;
+  background: var(--mp-surface);
+  box-shadow: var(--mp-shadow-sm);
+  min-height: 88px;
+  position: relative;
+  transition: box-shadow .18s ease, transform .18s ease;
+}
+.lab-craft__slot[data-essential="true"]::after {
+  content: "";
+  position: absolute;
+  inset-block-start: -6px;
+  inset-inline-end: -6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--mp-primary);
+  border: 2px solid var(--mp-ink);
+}
+.lab-craft__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-weight: 700;
-  font-size: 0.96rem;
+  font-size: 0.92rem;
   color: var(--mp-ink);
+  padding: 0;
 }
-.lab-intake__hint {
-  margin: 0;
-  font-size: 0.86rem;
-  color: color-mix(in oklch, var(--mp-ink) 70%, transparent);
+.lab-craft__slot-icon {
+  font-size: 1.05rem;
+  color: var(--mp-primary);
 }
-.lab-intake__req {
+.lab-craft__req {
   color: var(--mp-accent-2);
   font-weight: 800;
 }
-.lab-intake__input {
+.lab-craft__hint {
+  margin: 0;
+  font-size: 0.82rem;
+  color: color-mix(in oklch, var(--mp-ink) 65%, transparent);
+}
+.lab-craft__input {
   font: inherit;
   font-size: 1rem;
   padding: 10px 12px;
@@ -2239,121 +2305,270 @@ html.dark .mp-lab {
   box-shadow: var(--mp-shadow-sm);
   min-height: 44px;
 }
-.lab-intake__input:focus-visible {
+.lab-craft__input:focus-visible {
   outline: 3px solid var(--mp-primary);
   outline-offset: 2px;
 }
-.lab-intake__input[data-invalid="true"] {
+.lab-craft__input[data-invalid="true"] {
   border-color: var(--mp-accent-2);
   box-shadow: 3px 3px 0 var(--mp-accent-2);
 }
-.lab-intake__textarea {
-  min-height: 88px;
+.lab-craft__input--textarea {
+  min-height: 72px;
   resize: vertical;
-  line-height: 1.5;
+  line-height: 1.45;
 }
-.lab-intake__methods-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-block-start: 4px;
-}
-.lab-intake__method {
+
+/* TYPE chip */
+.lab-craft__type-chip {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   padding: 8px 14px;
   border: 2px solid var(--mp-ink);
   border-radius: 999px;
-  background: var(--mp-surface);
-  cursor: pointer;
-  min-height: 44px;
-  font-weight: 600;
+  background: color-mix(in oklch, var(--mp-primary) 14%, var(--mp-surface));
+  font-weight: 700;
+  font-size: 0.92rem;
   box-shadow: var(--mp-shadow-sm);
 }
-.lab-intake__method input {
+.lab-craft__type-mini {
+  font-size: 1rem;
+  color: var(--mp-primary);
+}
+.lab-craft__type-empty {
+  font-size: 0.86rem;
+  color: color-mix(in oklch, var(--mp-ink) 60%, transparent);
+  text-align: center;
+}
+
+/* Vibe chips */
+.lab-craft__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-block-start: 4px;
+}
+.lab-craft__chip {
+  font: inherit;
+  font-size: 0.88rem;
+  padding: 6px 12px;
+  border: 2px solid var(--mp-ink);
+  border-radius: 999px;
+  background: var(--mp-surface);
+  color: var(--mp-ink);
+  box-shadow: var(--mp-shadow-sm);
+  cursor: pointer;
+  min-height: 36px;
+  font-weight: 600;
+  transition: background .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+.lab-craft__chip:hover { transform: translate(-1px, -1px); }
+.lab-craft__chip:focus-visible {
+  outline: 3px solid var(--mp-primary);
+  outline-offset: 2px;
+}
+.lab-craft__chip[data-active="true"] {
+  background: color-mix(in oklch, var(--mp-primary) 22%, var(--mp-surface));
+  box-shadow: 3px 3px 0 var(--mp-primary);
+}
+
+/* Rarity indicator cell */
+.lab-craft__slot--rarity {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 4px;
+  background: color-mix(in oklch, var(--mp-ink) 4%, var(--mp-surface));
+}
+.lab-craft__rarity-stars {
+  font-size: 1.3rem;
+  letter-spacing: 4px;
+  color: color-mix(in oklch, var(--mp-ink) 30%, transparent);
+}
+.lab-craft__slot--rarity[data-rarity="uncommon"]  .lab-craft__rarity-stars { color: oklch(0.55 0.16 145); }
+.lab-craft__slot--rarity[data-rarity="rare"]      .lab-craft__rarity-stars { color: oklch(0.55 0.18 270); }
+.lab-craft__slot--rarity[data-rarity="epic"]      .lab-craft__rarity-stars { color: var(--mp-primary); }
+.lab-craft__slot--rarity[data-rarity="legendary"] .lab-craft__rarity-stars { color: oklch(0.72 0.18 80); }
+.lab-craft__rarity-label {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  letter-spacing: 1.5px;
+}
+.lab-craft__rarity-counter {
+  font-size: 0.82rem;
+  color: color-mix(in oklch, var(--mp-ink) 70%, transparent);
+}
+
+/* Method radios */
+.lab-craft__slot--method {
+  margin: 0;
+}
+.lab-craft__methods {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-block-start: 4px;
+}
+.lab-craft__method {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 2px solid var(--mp-ink);
+  border-radius: 10px;
+  background: var(--mp-surface);
+  cursor: pointer;
+  min-height: 40px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  box-shadow: var(--mp-shadow-sm);
+}
+.lab-craft__method input {
   accent-color: var(--mp-primary);
   width: 16px;
   height: 16px;
 }
-.lab-intake__method:has(input:checked) {
+.lab-craft__method:has(input:checked) {
   background: color-mix(in oklch, var(--mp-primary) 14%, var(--mp-surface));
   box-shadow: 3px 3px 0 var(--mp-primary);
 }
-.lab-intake__methods legend {
-  font-weight: 700;
-  font-size: 0.96rem;
-  color: var(--mp-ink);
-  padding: 0;
+
+/* SUBMIT slot */
+.lab-craft__slot--submit {
+  align-items: stretch;
+  justify-content: center;
+  background: color-mix(in oklch, var(--mp-primary) 6%, var(--mp-surface));
 }
-.lab-intake__status {
-  margin: 0;
+.lab-craft__submit {
+  font-weight: 800;
+}
+.lab-craft__submit[data-ready] {
+  background: color-mix(in oklch, var(--mp-primary) 80%, oklch(0.48 0.15 150));
+}
+.lab-craft__submit[data-legendary] {
+  animation: lab-craft-pulse 1.6s ease-in-out infinite;
+  background: oklch(0.72 0.18 80);
+  color: oklch(0.18 0.02 80);
+  box-shadow: 8px 8px 0 oklch(0.55 0.18 80);
+}
+@keyframes lab-craft-pulse {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-2px, -2px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lab-craft__submit[data-legendary] { animation: none; }
+}
+.lab-craft__status {
+  margin: 6px 0 0;
   min-height: 1.25em;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   color: var(--mp-ink);
+  text-align: center;
 }
-.lab-intake__mail-fallback {
-  margin: 4px 0 0;
-}
-.lab-intake__link-btn {
+.lab-craft__link-btn {
   background: none;
   border: 0;
-  padding: 0;
+  padding: 6px 0;
   font: inherit;
+  font-size: 0.86rem;
   color: var(--mp-accent-3);
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
   cursor: pointer;
-  min-height: 44px;
+  margin: 4px auto 0;
+  display: block;
 }
-.lab-intake__link-btn:hover { color: var(--mp-primary); }
-.lab-intake__link-btn:focus-visible {
+.lab-craft__link-btn:hover { color: var(--mp-primary); }
+.lab-craft__link-btn:focus-visible {
   outline: 3px solid var(--mp-primary);
   outline-offset: 2px;
 }
 
-.lab-intake__preview {
+/* Output card — the "forged item". */
+.lab-craft__output {
   padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   position: relative;
+  transition: box-shadow .25s ease, border-color .25s ease;
 }
-@media (min-width: 820px) {
-  .lab-intake__preview { position: sticky; top: 88px; }
+@media (min-width: 980px) {
+  .lab-craft__output { position: sticky; top: 88px; }
 }
-.lab-intake__preview-head {
+.lab-craft__output[data-rarity="uncommon"]  { box-shadow: 6px 6px 0 oklch(0.55 0.16 145); }
+.lab-craft__output[data-rarity="rare"]      { box-shadow: 6px 6px 0 oklch(0.55 0.18 270); }
+.lab-craft__output[data-rarity="epic"]      { box-shadow: 6px 6px 0 var(--mp-primary); }
+.lab-craft__output[data-rarity="legendary"] {
+  box-shadow: 8px 8px 0 oklch(0.72 0.18 80);
+  border-color: oklch(0.55 0.18 80);
+}
+.lab-craft__output-head {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
   align-items: center;
   gap: 10px;
+  padding-block-end: 8px;
+  border-block-end: 1.5px dashed color-mix(in oklch, var(--mp-ink) 30%, transparent);
 }
-.lab-intake__preview-title {
+.lab-craft__output-rarity {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  letter-spacing: 1.5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--mp-ink) 6%, var(--mp-surface));
+}
+.lab-craft__output-rarity[data-rarity="uncommon"]  { background: color-mix(in oklch, oklch(0.55 0.16 145) 18%, var(--mp-surface)); color: oklch(0.32 0.13 145); }
+.lab-craft__output-rarity[data-rarity="rare"]      { background: color-mix(in oklch, oklch(0.55 0.18 270) 18%, var(--mp-surface)); color: oklch(0.32 0.16 270); }
+.lab-craft__output-rarity[data-rarity="epic"]      { background: color-mix(in oklch, var(--mp-primary) 18%, var(--mp-surface));     color: var(--mp-primary-ink); }
+.lab-craft__output-rarity[data-rarity="legendary"] { background: color-mix(in oklch, oklch(0.72 0.18 80) 22%, var(--mp-surface)); color: oklch(0.28 0.10 80); }
+.lab-craft__output-title {
   font-weight: 700;
-  font-size: 0.96rem;
+  font-size: 0.92rem;
 }
-.lab-intake__preview-body {
+.lab-craft__output-body {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 10px 0;
-  border-top: 1.5px dashed color-mix(in oklch, var(--mp-ink) 30%, transparent);
-  border-bottom: 1.5px dashed color-mix(in oklch, var(--mp-ink) 30%, transparent);
-  min-height: 80px;
+  gap: 6px;
+  min-height: 100px;
 }
-.lab-intake__preview-line {
+.lab-craft__output-type {
+  margin: 0;
+  font-size: 0.95rem;
+}
+.lab-craft__output-line {
   margin: 0;
   line-height: 1.5;
   font-size: 0.98rem;
-  color: var(--mp-ink);
 }
-.lab-intake__preview-line--ghost {
+.lab-craft__output-line--ghost {
   color: color-mix(in oklch, var(--mp-ink) 45%, transparent);
   font-style: italic;
 }
-.lab-intake__preview-foot {
+.lab-craft__output-vibes {
+  margin: 6px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.lab-craft__output-vibe {
+  font-size: 0.82rem;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--mp-primary) 18%, var(--mp-surface));
+  color: var(--mp-primary-ink);
+  font-weight: 600;
+}
+.lab-craft__output-foot {
   margin: 0;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   color: color-mix(in oklch, var(--mp-ink) 65%, transparent);
+  padding-block-start: 8px;
+  border-block-start: 1.5px dashed color-mix(in oklch, var(--mp-ink) 30%, transparent);
 }
