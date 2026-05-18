@@ -155,19 +155,31 @@ export type Dict = {
       prompts: {
         template: string;
         idea: string;
-        ideaByTemplate?: Record<string, string>;
         name: string;
         contact: string;
         whyNow: string;
-        whyNowByTemplate?: Record<string, string>;
         audience: string;
-        audienceByTemplate?: Record<string, string>;
         problem: string;
         references: string;
         timeline: string;
         howHeard: string;
         review: string;
       };
+      /**
+       * Per-template overrides for every beat that benefits from being
+       * tuned to the chosen project type. Any field left unset falls back
+       * to the generic `prompts` / `fields.*` copy.
+       */
+      byTemplate: Record<string, {
+        idea?:       { prompt?: string; hint?: string; placeholder?: string };
+        whyNow?:     { prompt?: string; hint?: string; placeholder?: string };
+        audience?:   { prompt?: string; placeholder?: string };
+        problem?:    { prompt?: string; placeholder?: string };
+        references?: { prompt?: string; placeholder?: string };
+        timeline?:   { prompt?: string };
+        howHeard?:   { prompt?: string; placeholder?: string };
+        review?:     { prompt?: string };
+      }>;
     };
   };
   qa: {
@@ -464,38 +476,289 @@ const HE: Dict = {
       prompts: {
         template: 'נתחיל קל — איזה סוג פרויקט יש לך בראש?',
         idea: 'ספר לי על הרעיון. משפט אחד או שלושה.',
-        ideaByTemplate: {
-          mvp: 'איזה MVP אתה רוצה לבנות? מה החלק הקטן ביותר שכבר מספיק כדי לבדוק את ההנחה?',
-          brand: 'איזה מותג אנחנו בונים? מה הוא צריך לגרום למבקרים להרגיש?',
-          ecommerce: 'איזו חנות אתה רוצה לפתוח? מה את/ה מוכר/ת ולמי?',
-          'ai-agent': 'איזה אסיסטנט או סוכן AI? איזו פעולה אנושית הוא ימחק?',
-          'ai-video': 'איזה תוכן וידאו אוטומטי? איך הוא מתחיל ומה יוצא בסוף?',
-          audio: 'איזו חוויה מוזיקלית או מנוע אודיו? איך זה צריך להרגיש לאוזן?',
-          game: 'איזה משחק או חוויה אינטראקטיבית? מה החוויה הראשית?',
-          realtime: 'איזה דשבורד? אילו נתונים זורמים אליו וכמה מהר?',
-          mobile: 'איזו אפליקציית מובייל? מה הפעולה היומיומית הראשית בה?',
-          other: 'תאר את הרעיון. מה הוא — ולמה הוא צריך להיות קיים?',
-        },
         name: 'איך נכון לפנות אליך?',
         contact: 'מה הדרך הכי נוחה לחזור אליך?',
         whyNow: 'למה דווקא עכשיו? מה השתנה לאחרונה?',
-        whyNowByTemplate: {
-          mvp: 'מה דחוף ב-MVP הזה — סבב גיוס, תאריך לוח שנה, או עייפות מלחכות?',
-          brand: 'למה המותג צריך אתר חדש דווקא עכשיו?',
-          'ai-agent': 'מה השתנה ב-AI או בעסק שגורם לזה להיות עכשיו ולא בעוד שנה?',
-        },
         audience: 'מי המשתמש?',
-        audienceByTemplate: {
-          mvp: 'מי המשתמש הראשון של ה-MVP? האדם שאם הוא יאהב — תדע שיש כיוון?',
-          ecommerce: 'מי הלקוח שלך? לאן הוא נכנס לפני שהוא נכנס אליך?',
-          'ai-agent': 'מי משתמש באסיסטנט הזה? עובד פנימי, לקוח קצה, מנהל?',
-          game: 'מי השחקן? באיזה הקשר הוא משחק — סטוריז, סלולרי בתור?',
-        },
         problem: 'איזו בעיה זה פותר? מה כואב היום בלי זה?',
         references: 'יש משהו דומה שאהבת? קישור, צילום, "כמו X אבל בלי Y".',
         timeline: 'מתי אתה צריך את זה?',
         howHeard: 'איך הגעת אליי? סתם סקרנות.',
         review: 'זה הבריף. אישור אחרון לפני שהוא נופל ישר לוואטסאפ שלי.',
+      },
+      byTemplate: {
+        mvp: {
+          idea: {
+            prompt: 'איזה MVP אתה רוצה לבנות? מה החלק הקטן ביותר שכבר מספיק כדי לבדוק את ההנחה?',
+            hint: 'משפט אחד מספיק. נחדד יחד.',
+            placeholder:
+              'פלטפורמה שמעצבים פרילנסרים מציגים בה פרויקטים קטנים, לקוחות מזמינים פגישת 30 דקות, התשלום בנאמנות עד מסירה.',
+          },
+          whyNow: {
+            prompt: 'למה דווקא עכשיו? סבב גיוס, תאריך לוח שנה, או נמאס לחכות?',
+            placeholder: 'אנחנו מציגים ל-YC בעוד 5 שבועות ורוצים דמו אמיתי, לא מצגת.',
+          },
+          audience: {
+            prompt: 'מי המשתמש הראשון — האדם שאם הוא יאהב, תדע שיש כיוון?',
+            placeholder: 'מעצבי פרודקט בני 25-40 שעובדים בערבים כפרילנסרים.',
+          },
+          problem: {
+            prompt: 'מה כואב היום בלי ה-MVP הזה?',
+            placeholder: 'מעצבים רודפים אחרי שינויי סקופ בוואטסאפ ומקבלים תשלום באיחור.',
+          },
+          references: {
+            prompt: 'ראית משהו שקרוב לזה? קישור, צילום, "כמו X אבל בלי Y".',
+            placeholder: 'כמו Toptal אבל ליוצרים סולו, בלי עמלת סוכנות.',
+          },
+          timeline: { prompt: 'מתי אתה צריך POC עובד ביד?' },
+          howHeard: { prompt: 'איך הגעת אליי? סקרנות.' },
+          review: { prompt: 'זה הבריף של ה-MVP. אישור אחרון לפני שזה נופל בוואטסאפ?' },
+        },
+        brand: {
+          idea: {
+            prompt: 'איזה מותג אנחנו בונים? מה האתר צריך לגרום למבקר להרגיש בשלוש השניות הראשונות?',
+            hint: 'אם לאתר היה ז\'אנר מוזיקלי — מה הוא היה?',
+            placeholder:
+              'סטודיו לקרמיקה לאספנים — שקט, איטי, כמו חדר במוזיאון שמצאת במקרה.',
+          },
+          whyNow: {
+            prompt: 'למה אתר חדש דווקא עכשיו? השקה, ריבריידינג, או פשוט נמאס מהקיים?',
+            placeholder: 'אנחנו מציגים בפריז באוקטובר והאתר הנוכחי הוא רק תמונות סטוק.',
+          },
+          audience: {
+            prompt: 'מי נוחת באתר? אספנים, גלריסטים, סקרנים מאינסטגרם?',
+            placeholder: 'אספנים שעוקבים אחרינו באינסטגרם ורוצים לראות את העבודות בגדול.',
+          },
+          problem: {
+            prompt: 'מה האתר הנוכחי עולה לך?',
+            placeholder: 'אנשים שולחים מייל עם אותן שלוש שאלות כי שום דבר באתר לא ניתן למצוא.',
+          },
+          references: {
+            prompt: 'אתרים ששמרת? לוחות פינטרסט, קישורים, "מרגיש כמו X".',
+            placeholder: 'studio.bruno-mars, kvadrat.dk — אותה רמת איפוק.',
+          },
+          timeline: { prompt: 'מתי אתה רוצה להיות באתר החדש?' },
+          howHeard: { prompt: 'איך הגעת אליי?' },
+          review: { prompt: 'זה הבריף של המותג. פותחים וואטסאפ?' },
+        },
+        ecommerce: {
+          idea: {
+            prompt: 'מה אתה מוכר ולמי? מה הופך את החנות הזו ליותר מקטלוג?',
+            hint: 'פסקה קצרה על קו המוצר מספיקה.',
+            placeholder:
+              'ספלי קרמיקה בעבודת יד, 4 דגמים, 30 ליחידה. הקונה צריך להרגיש שהוא קונה מהיוצר, לא ממותג חסר פנים.',
+          },
+          whyNow: {
+            prompt: 'למה לפתוח או לבנות מחדש עכשיו? קו מוצר חדש, שופיפיי תקוע, עונת שיא?',
+            placeholder: 'Black Friday בעוד 8 שבועות ואנחנו עדיין על Etsy.',
+          },
+          audience: {
+            prompt: 'מי הקונה? מאיפה הוא מגיע אליך?',
+            placeholder: 'גילאי 30-50, מודעים לעיצוב, רובם מאינסטגרם ובהמלצות חברים.',
+          },
+          problem: {
+            prompt: 'מה שבור בהגדרה הנוכחית?',
+            placeholder: 'עמלות Etsy אוכלות 12% ואין לנו מושג מי הלקוחות שלנו.',
+          },
+          references: {
+            prompt: 'חנויות אחרות שאתה אוהב? אפילו פיצ\'רים שהיית גונב.',
+            placeholder: 'Flow של Goodfair, דפי המוצר של Smol.',
+          },
+          timeline: { prompt: 'מתי החנות צריכה להיות חיה?' },
+          howHeard: { prompt: 'איך הגעת אליי?' },
+          review: { prompt: 'זה הבריף של החנות. לשלוח?' },
+        },
+        'ai-agent': {
+          idea: {
+            prompt: 'איזה אסיסטנט או סוכן AI? איזו פעולה אנושית הוא מבטל?',
+            hint: 'תתאר אותו כאילו אתה מסביר לעובד חדש ביום הראשון.',
+            placeholder:
+              'סוכן שקורא מיילי מכירות נכנסים, מתייג לפי כוונה (דמו / תמחור / ספאם) וכותב טיוטת תשובה ראשונה בקול שלנו.',
+          },
+          whyNow: {
+            prompt: 'מה השתנה — ב-AI או בעסק — שגורם לזה להיות עכשיו?',
+            placeholder: 'ה-SDR שלנו עזב ונדרש שהאינבוקס ימשיך לזוז.',
+          },
+          audience: {
+            prompt: 'מי משתמש בסוכן? עובד פנימי, לקוח קצה, מנהל?',
+            placeholder: 'שני אנשי sales ops שעוברים על 200 מיילים ביום כל אחד.',
+          },
+          problem: {
+            prompt: 'מה העלות של הגרסה הידנית היום?',
+            placeholder: 'בערך 6 שעות ביום על פני הצוות, עם פיגור של 12 שעות בתשובות.',
+          },
+          references: {
+            prompt: 'מוצרי AI שניסית שכמעט קלעו?',
+            placeholder: 'ה-AI של Linear לטיוטת issues — אותה רמת איפוק.',
+          },
+          timeline: { prompt: 'מתי הסוכן צריך לרוץ?' },
+          howHeard: { prompt: 'איך הגעת אליי?' },
+          review: { prompt: 'זה הבריף של הסוכן. מוכן לשליחה?' },
+        },
+        'ai-video': {
+          idea: {
+            prompt: 'איזה תוכן וידאו אתה רוצה שייוצר אוטומטית? איך הוא מתחיל ומה יוצא בסוף?',
+            hint: 'מקור → טרנספורם → פלט. שורה לכל אחד.',
+            placeholder:
+              'כותרת חדשות יומית → סרטון אנכי של 30 שניות עם הקראה סינתטית + b-roll, מתפרסם בטיקטוק ב-8 בבוקר.',
+          },
+          whyNow: {
+            prompt: 'למה לאוטומט עכשיו — מכסת תוכן, צוות חסר, פלטפורמה חדשה?',
+            placeholder: 'הבטחנו 5 שורטים בשבוע לספונסר והעורך שלנו מצליח רק שניים.',
+          },
+          audience: {
+            prompt: 'מי צופה בפלט? גודל קהל, פלטפורמה, אורך קשב?',
+            placeholder: 'TikTok / Reels, גילאי 16-30, 30 שניות מקסימום.',
+          },
+          problem: {
+            prompt: 'מה העלות של ייצור ידני היום?',
+            placeholder: 'עורך אחד, 4 שעות לסרטון, 7 בשבוע = משרה מלאה.',
+          },
+          references: {
+            prompt: 'מערכות אוטו-וידאו או סגנונות שאתה אוהב?',
+            placeholder: 'כמו Opus Clip אבל לסקריפטים מקוריים, לא רק לעיבוד מחדש.',
+          },
+          timeline: { prompt: 'מתי הצנרת צריכה לייצר?' },
+          howHeard: { prompt: 'איך הגעת אליי?' },
+          review: { prompt: 'זה הבריף לצנרת הוידאו. לשלוח?' },
+        },
+        audio: {
+          idea: {
+            prompt: 'איזו חוויה מוזיקלית או מנוע אודיו? איך זה צריך להרגיש לאוזן?',
+            hint: 'אם היה לזה מבחן עיניים-עצומות — מה המשתמש שומע?',
+            placeholder:
+              'פס-קול אינטראקטיבי לאתר גלריה — אקורדים משתנים תוך כדי גלילה בין סקציות.',
+          },
+          whyNow: {
+            prompt: 'למה עכשיו — תערוכה, השקה, רעיון לכלי נגינה חדש?',
+            placeholder: 'ערב פתיחה במרץ והפס-קול הוא כל ההצגה.',
+          },
+          audience: {
+            prompt: 'מי שומע את זה? מבקרים של איזה אתר או אפליקציה?',
+            placeholder: 'מבקרים של אתר גלריית אמנות, רובם דסקטופ, אוזניות עליהם.',
+          },
+          problem: {
+            prompt: 'מה המבקר מקבל מהצליל שאי אפשר לקבל מהוויזואל?',
+            placeholder: 'תחושת חדר, של נוכחות איפשהו במקום לחיצה בין דפים.',
+          },
+          references: {
+            prompt: 'אתרים או אפליקציות מבוססי סאונד שאתה אוהב? Mixtape, Endel, Marpi.',
+            placeholder: 'https://marpi.studio — התחושה הזו.',
+          },
+          timeline: { prompt: 'מתי זה צריך להיות חי?' },
+          howHeard: { prompt: 'איך הגעת אליי?' },
+          review: { prompt: 'זה הבריף האודיו. לשלוח לבר?' },
+        },
+        game: {
+          idea: {
+            prompt: 'איזה משחק או חוויה אינטראקטיבית? מה המכניקה הראשית במשפט?',
+            hint: 'אם זה היה ארון משחקים בלונה פארק — מה היה כתוב על המדבקה?',
+            placeholder:
+              'משחק דפדפן ללחיצה על עגבניות — שחקנים מצילים עגבנייה נופלת בלחיצה לפני שהיא פוגעת ברצפה, טבלת שיאים בסוף.',
+          },
+          whyNow: {
+            prompt: 'למה עכשיו — השקת קמפיין, הפעלת מותג, פרויקט-צד?',
+            placeholder:
+              'אנחנו ספונסרים של פסטיבל אוכל בעוד 6 שבועות ורוצים מיני-משחק שאפשר לחלוק על האתר של המותג.',
+          },
+          audience: {
+            prompt: 'מי השחקן? באיזה הקשר — סטוריז, דפדפן בעבודה, סלולרי בתור?',
+            placeholder: 'גילאי 16-35 בסלולרי, מגיעים מסטוריז אינסטגרם.',
+          },
+          problem: {
+            prompt: 'למה משחק ולא וידאו או הגרלה?',
+            placeholder: 'אנחנו רוצים זמן באתר ורגע שאפשר לשתף, לא צפייה פסיבית.',
+          },
+          references: {
+            prompt: 'משחקי דפדפן או חוויות אינטראקטיביות שתפסו אותך?',
+            placeholder: 'כמו Patatap — אותה רמת ליטוש.',
+          },
+          timeline: { prompt: 'מתי המשחק צריך להיות אפשר-לשחק?' },
+          howHeard: { prompt: 'איך הגעת אליי?' },
+          review: { prompt: 'הבריף של המשחק מוכן. לוחצים שלח?' },
+        },
+        realtime: {
+          idea: {
+            prompt: 'איזה דשבורד או מערכת בזמן אמת? אילו נתונים זורמים פנימה וכל כמה זמן?',
+            hint: 'מקור → דשבורד → מי פועל לפי זה.',
+            placeholder:
+              'דשבורד חי של תחנות ליקוט במחסן: תחנות, הזמנות נוכחיות, ליקוטים, התרעות כשתחנה רגועה יותר מ-5 דקות.',
+          },
+          whyNow: {
+            prompt: 'למה לעבור מאקסל / Looker / משהו ביתי דווקא עכשיו?',
+            placeholder:
+              'ה-COO שלנו עושה התרעות ידני בסלאק והכפלנו עכשיו את נפח ההזמנות.',
+          },
+          audience: {
+            prompt: 'מי צופה בדשבורד? מנהל תפעול על מסך, צוות בשטח על סלולרי?',
+            placeholder: 'מנהל רצפה על מסך גדול, ועוד 6 מפקחים שמסתכלים בסלולרי.',
+          },
+          problem: {
+            prompt: 'מה משתבש היום כי הנתונים לא בזמן אמת?',
+            placeholder: 'אנחנו מבחינים בתחנות רגועות באיחור של 30 דקות ומפספסים SLA.',
+          },
+          references: {
+            prompt: 'דשבורדים או מערכות חיות שראית עושים נכון?',
+            placeholder: 'סטטוס פרויקט של Linear, תצוגת deploy של Vercel.',
+          },
+          timeline: { prompt: 'מתי הדשבורד צריך להיות פעיל?' },
+          howHeard: { prompt: 'איך הגעת אליי?' },
+          review: { prompt: 'הבריף של הדשבורד מוכן. לשלוח?' },
+        },
+        mobile: {
+          idea: {
+            prompt: 'איזו אפליקציית מובייל? מה הפעולה היומיומית הראשית בה?',
+            hint: 'דמיין משתמש פותח את האפליקציה בתחנת אוטובוס — מה הוא עושה?',
+            placeholder:
+              'אפליקציית מובייל לחובבי ציפורים: לוג של תצפית ב-3 הקשות, ראייה של מה נצפה בסביבה היום.',
+          },
+          whyNow: {
+            prompt: 'למה מובייל עכשיו ולא רק תצוגת web במובייל?',
+            placeholder: 'אנחנו צריכים מצלמה + GPS + אופליין, וגם Apple Watch בעוד שנה.',
+          },
+          audience: {
+            prompt: 'מי מתקין את האפליקציה? לקוחות נאמנים, צוות פנימי, או הציבור?',
+            placeholder: 'חובבי ציפורים בני 35+, שמשתמשים היום ב-eBird ורוצים משהו פחות קליני.',
+          },
+          problem: {
+            prompt: 'מה הם לא יכולים לעשות היום בגרסת ה-web?',
+            placeholder: 'ללכוד תצפית בשדה בלי סיגנל, עם GPS שמתויג אוטומטית.',
+          },
+          references: {
+            prompt: 'אפליקציות שתפנה אליהן בתור נורת צפון?',
+            placeholder: 'Strava לפיד החברתי, Merlin Bird ID לזרימת הלכידה.',
+          },
+          timeline: { prompt: 'מתי האפליקציה צריכה להישלח לחנויות?' },
+          howHeard: { prompt: 'איך הגעת אליי?' },
+          review: { prompt: 'הבריף של האפליקציה מוכן. לשלוח?' },
+        },
+        other: {
+          idea: {
+            prompt: 'תאר את הרעיון. מה הוא — ולמה הוא צריך להיות קיים?',
+            hint: 'מוזר זה בברכה. הקצוות המוזרות עושות את הפרויקטים הכי טובים.',
+            placeholder:
+              'יומן מעקב שינה שמדרג חלומות לפי לוסידיות, נתפר כל בוקר מהקלטות קוליות שמלמלת ב-4 לפנות בוקר.',
+          },
+          whyNow: {
+            prompt: 'למה זה צריך להיבנות עכשיו? או למה אף אחד עוד לא בנה את זה?',
+            placeholder: 'תמלול קולי סוף סוף מספיק טוב למלמולים של חצי-ער.',
+          },
+          audience: {
+            prompt: 'למי זה? אפילו נישה של 50 איש זה בסדר — החדים יוצאים לאוויר.',
+            placeholder: 'מתרגלי חלימה צלולה וביבליופילים שמנהלים יומני חלומות.',
+          },
+          problem: {
+            prompt: 'איזו בעיה או סקרנות זה מגרד?',
+            placeholder: 'אני שוכח את החלומות שלי בשתי דקות והאפליקציות הקיימות קליניות מדי.',
+          },
+          references: {
+            prompt: 'משהו ביקום שדומה ברוח?',
+            placeholder: 'כמו Day One אבל לחלומות. או כמו Daylio מצולב עם מולסקין מהודר.',
+          },
+          timeline: { prompt: 'מתי תרצה גרסה ראשונה?' },
+          howHeard: { prompt: 'איך הגעת אליי?' },
+          review: { prompt: 'הבריף המוזר מוכן. לשלוח לבר?' },
+        },
       },
     },
   },
@@ -810,38 +1073,287 @@ const EN: Dict = {
       prompts: {
         template: 'Easy one to start — what kind of project do you have in mind?',
         idea: 'Tell me about the idea. One sentence or three.',
-        ideaByTemplate: {
-          mvp: 'What MVP do you want to build? What’s the smallest slice that already tests the bet?',
-          brand: 'What brand are we building? What should it make visitors feel?',
-          ecommerce: 'What store do you want to open? What are you selling and to whom?',
-          'ai-agent': 'What kind of AI assistant or agent? Which human action does it erase?',
-          'ai-video': 'What automated video content? How does it start and what comes out?',
-          audio: 'What kind of musical experience or audio engine? How should it feel to the ear?',
-          game: 'What game or interactive piece? What’s the core experience?',
-          realtime: 'What dashboard? What data flows into it and how fast?',
-          mobile: 'What mobile app? What’s the daily action inside it?',
-          other: 'Describe the idea. What is it — and why does it need to exist?',
-        },
         name: 'What should I call you?',
         contact: 'Best way to reach you?',
         whyNow: 'Why now? What changed recently?',
-        whyNowByTemplate: {
-          mvp: 'What’s urgent about this MVP — a funding round, a calendar date, or tired of waiting?',
-          brand: 'Why does the brand need a new site now, specifically?',
-          'ai-agent': 'What changed in AI or in the business that makes this now and not next year?',
-        },
         audience: 'Who will use it?',
-        audienceByTemplate: {
-          mvp: 'Who’s the first user of this MVP? The person whose love means the direction is real?',
-          ecommerce: 'Who’s the customer? Where do they go before they come to you?',
-          'ai-agent': 'Who uses this assistant? An internal employee, an end customer, a manager?',
-          game: 'Who’s the player? In what context — a story, phone in line, browser at work?',
-        },
         problem: 'What problem does it solve? What hurts today without it?',
         references: 'Anything similar you liked? A link, a screenshot, "like X but without Y".',
         timeline: 'When do you need it?',
         howHeard: 'How did you find me? Just curious.',
         review: 'This is the brief. Last look before it drops straight into my WhatsApp.',
+      },
+      byTemplate: {
+        mvp: {
+          idea: {
+            prompt: 'What MVP do you want to build? What’s the smallest slice that already tests the bet?',
+            hint: 'One sentence is plenty. We’ll sharpen it together.',
+            placeholder:
+              'A platform where solo designers list 1-off projects, clients book a 30-min slot, payment held in escrow until delivery.',
+          },
+          whyNow: {
+            prompt: 'Why now? A funding round, a calendar date, or tired of waiting?',
+            placeholder: 'We pitch to YC interviewers in 5 weeks and want a real demo, not slides.',
+          },
+          audience: {
+            prompt: 'Who’s the first user — the one whose love means the direction is real?',
+            placeholder: 'Solo product designers, 25–40, freelancing evenings.',
+          },
+          problem: {
+            prompt: 'What hurts today without this MVP?',
+            placeholder: 'Designers chase scope changes on WhatsApp and get paid late.',
+          },
+          references: {
+            prompt: 'Anything you’ve seen that’s close? A link, a screenshot, "like X but without Y".',
+            placeholder: 'Like Toptal but solo-creator, no agency markup.',
+          },
+          timeline: { prompt: 'When do you need a working POC in hand?' },
+          howHeard: { prompt: 'How did you find me? Curious.' },
+          review: { prompt: 'This is the MVP brief. Last check before it lands in WhatsApp?' },
+        },
+        brand: {
+          idea: {
+            prompt: 'What brand are we building? What should it make visitors feel in the first three seconds?',
+            hint: 'If the site had a music genre, what would it be?',
+            placeholder:
+              'A ceramics studio for collectors — quiet, slow, like a museum room you stumble into.',
+          },
+          whyNow: {
+            prompt: 'Why a new site now? Launch, rebrand, finally tired of Squarespace?',
+            placeholder: 'We show in Paris in October and the current site is a wall of stock photos.',
+          },
+          audience: {
+            prompt: 'Who lands here? Collectors, gallerists, curious-from-Instagram?',
+            placeholder: 'Collectors who already follow us on Instagram and want to see the work bigger.',
+          },
+          problem: {
+            prompt: 'What is the current site costing you?',
+            placeholder: 'People email asking the same three questions because nothing is findable.',
+          },
+          references: {
+            prompt: 'Sites you’ve saved? Pinterest boards, links, "feels like X".',
+            placeholder: 'studio.bruno-mars, kvadrat.dk — that level of restraint.',
+          },
+          timeline: { prompt: 'When do you want to be on the new site?' },
+          howHeard: { prompt: 'How did you find me?' },
+          review: { prompt: 'This is the brand brief. Open WhatsApp?' },
+        },
+        ecommerce: {
+          idea: {
+            prompt: 'What are you selling and to whom? What makes the store more than a catalogue?',
+            hint: 'A short paragraph on the product line is enough.',
+            placeholder:
+              'Hand-thrown ceramic mugs, 4 styles, 30 per unit. Shoppers should feel they’re buying from the maker, not a faceless brand.',
+          },
+          whyNow: {
+            prompt: 'Why open or rebuild now? New product line, busted Shopify, peak season?',
+            placeholder: 'Black Friday is 8 weeks out and we’re still on Etsy.',
+          },
+          audience: {
+            prompt: 'Who buys? Where do they come from before they land on you?',
+            placeholder: 'Design-curious, 30–50, mostly from Instagram and word of mouth.',
+          },
+          problem: {
+            prompt: 'What’s broken about the current setup?',
+            placeholder: 'Etsy fees eat 12% and we have no idea who our customers are.',
+          },
+          references: {
+            prompt: 'Other stores you admire? Even features you’d steal.',
+            placeholder: 'Goodfair’s checkout flow, Smol’s product pages.',
+          },
+          timeline: { prompt: 'When does the store need to be live?' },
+          howHeard: { prompt: 'How did you find me?' },
+          review: { prompt: 'This is the store brief. Send it?' },
+        },
+        'ai-agent': {
+          idea: {
+            prompt: 'What kind of AI assistant or agent? Which human action does it erase?',
+            hint: 'Pretend you’re describing it to a new hire on day one.',
+            placeholder:
+              'An agent that reads incoming sales emails, tags them by intent (demo / pricing / spam), and drafts a first reply in our voice.',
+          },
+          whyNow: {
+            prompt: 'What changed — in AI or in the business — that makes this now?',
+            placeholder: 'Our SDR just left and the inbox needs to keep moving.',
+          },
+          audience: {
+            prompt: 'Who uses this assistant? Internal staff, end customer, manager?',
+            placeholder: 'Two sales-ops people who currently triage 200 emails a day each.',
+          },
+          problem: {
+            prompt: 'What does the manual version cost today?',
+            placeholder: 'About 6 hours/day across the team, with a 12-hour reply lag.',
+          },
+          references: {
+            prompt: 'Any AI products you’ve tried that almost got it right?',
+            placeholder: 'Linear’s AI for drafting issues — that kind of restraint.',
+          },
+          timeline: { prompt: 'When does the agent need to be running?' },
+          howHeard: { prompt: 'How did you find me?' },
+          review: { prompt: 'This is the agent brief. Ready to send?' },
+        },
+        'ai-video': {
+          idea: {
+            prompt: 'What video content do you want produced automatically? How does it start and what comes out?',
+            hint: 'Source → transform → output. One line each.',
+            placeholder:
+              'Daily news headline → 30-second vertical with synthetic VO + b-roll, posted to TikTok at 8am.',
+          },
+          whyNow: {
+            prompt: 'Why automate now — content quota, headcount, new platform?',
+            placeholder: 'We promised 5 shorts/week to a sponsor and our editor can do two.',
+          },
+          audience: {
+            prompt: 'Who watches the output? Audience size, platform, attention span?',
+            placeholder: 'TikTok / Reels, 16–30, 30 seconds max.',
+          },
+          problem: {
+            prompt: 'What’s the cost of doing it manually today?',
+            placeholder: 'One editor, 4 hours per video, 7 a week — that’s a full-time hire.',
+          },
+          references: {
+            prompt: 'Any auto-video systems or styles you like?',
+            placeholder: 'Like Opus Clip but for original scripts, not repurposing.',
+          },
+          timeline: { prompt: 'When does the pipeline need to be producing?' },
+          howHeard: { prompt: 'How did you find me?' },
+          review: { prompt: 'This is the video brief. Send?' },
+        },
+        audio: {
+          idea: {
+            prompt: 'What kind of musical experience or audio engine? How should it feel to the ear?',
+            hint: 'If it had a closing-the-eyes test, what would the user hear?',
+            placeholder:
+              'An interactive ambient soundtrack for an art-gallery site — chords change as you scroll past sections.',
+          },
+          whyNow: {
+            prompt: 'Why now — an exhibition, a launch, a new instrument idea?',
+            placeholder: 'Opening night is in March and the soundtrack is the whole show.',
+          },
+          audience: {
+            prompt: 'Who hears this? Visitors of what kind of site or app?',
+            placeholder: 'Visitors of a fine-art gallery site, mostly desktop, headphones on.',
+          },
+          problem: {
+            prompt: 'What does the visitor get from sound that they can’t from visuals?',
+            placeholder: 'Sense of room, of being present somewhere instead of clicking through pages.',
+          },
+          references: {
+            prompt: 'Sound-driven sites or apps you love? Mixtape, Endel, Marpi.',
+            placeholder: 'https://marpi.studio — that feel.',
+          },
+          timeline: { prompt: 'When does it need to be live?' },
+          howHeard: { prompt: 'How did you find me?' },
+          review: { prompt: 'This is the audio brief. Send to Bar?' },
+        },
+        game: {
+          idea: {
+            prompt: 'What game or interactive piece? What’s the one-line core mechanic?',
+            hint: 'If it were an arcade cabinet, what would the sticker say?',
+            placeholder:
+              'Click-the-tomato browser game — players save a falling tomato by clicking before it hits the floor, leaderboard at the end.',
+          },
+          whyNow: {
+            prompt: 'Why now — a campaign launch, a brand activation, a side-project?',
+            placeholder: 'We’re sponsoring a food festival in 6 weeks and want a shareable mini-game on the brand site.',
+          },
+          audience: {
+            prompt: 'Who’s the player? In what context — story tap, browser at work, phone in line?',
+            placeholder: '16–35 on phones, arriving from Instagram stories.',
+          },
+          problem: {
+            prompt: 'Why a game and not, say, a video or a giveaway?',
+            placeholder: 'We want time-on-site and a shareable moment, not a passive view.',
+          },
+          references: {
+            prompt: 'Any browser games or interactive pieces that nailed it?',
+            placeholder: 'Like Patatap — that level of polish.',
+          },
+          timeline: { prompt: 'When does the game need to be playable?' },
+          howHeard: { prompt: 'How did you find me?' },
+          review: { prompt: 'Game brief is ready. Hit send?' },
+        },
+        realtime: {
+          idea: {
+            prompt: 'What dashboard or live system? What data flows in and how often?',
+            hint: 'Source → dashboard → who acts on it.',
+            placeholder:
+              'Live dashboard of warehouse pick-and-pack stations: stations, current orders, pickers, alerts when a station idles >5min.',
+          },
+          whyNow: {
+            prompt: 'Why move off Excel / Looker / homegrown thing now?',
+            placeholder: 'Our COO is doing alerts manually over Slack and we just doubled order volume.',
+          },
+          audience: {
+            prompt: 'Who watches the dashboard? Ops manager on a screen, field team on phones?',
+            placeholder: 'Floor manager on a wall TV, plus 6 supervisors checking on phones.',
+          },
+          problem: {
+            prompt: 'What goes wrong today because data isn’t live?',
+            placeholder: 'We notice idle stations 30 minutes late and miss the SLA.',
+          },
+          references: {
+            prompt: 'Other dashboards or live systems done well?',
+            placeholder: 'Linear’s project status, Vercel’s deploy view.',
+          },
+          timeline: { prompt: 'When does the dashboard need to be operational?' },
+          howHeard: { prompt: 'How did you find me?' },
+          review: { prompt: 'Dashboard brief is ready. Send it?' },
+        },
+        mobile: {
+          idea: {
+            prompt: 'What mobile app? What’s the one daily action inside it?',
+            hint: 'Imagine the user opening the app at a bus stop — what do they do?',
+            placeholder:
+              'A mobile app for amateur birders: log a sighting in 3 taps, see what’s been spotted nearby today.',
+          },
+          whyNow: {
+            prompt: 'Why native now and not just a mobile web view?',
+            placeholder: 'We need camera + GPS + offline, and an Apple Watch app within a year.',
+          },
+          audience: {
+            prompt: 'Who installs the app? Loyal customers, internal team, the public?',
+            placeholder: 'Birding hobbyists, 35+, currently using eBird and wanting something less clinical.',
+          },
+          problem: {
+            prompt: 'What can’t they do today on the web version?',
+            placeholder: 'Capture a sighting in the field without signal, with GPS auto-tagged.',
+          },
+          references: {
+            prompt: 'Any apps you’d point to as a north star?',
+            placeholder: 'Strava for the social feed pattern, Merlin Bird ID for capture flow.',
+          },
+          timeline: { prompt: 'When does the app need to be submitted to the stores?' },
+          howHeard: { prompt: 'How did you find me?' },
+          review: { prompt: 'App brief is ready. Send?' },
+        },
+        other: {
+          idea: {
+            prompt: 'Describe the idea. What is it — and why does it need to exist?',
+            hint: 'Weird is welcome. Strange edges make the best projects.',
+            placeholder:
+              'A sleep-tracking journal that ranks your dreams by lucidity, stitched together each morning from voice notes you mumbled at 4am.',
+          },
+          whyNow: {
+            prompt: 'Why does this need to be built now? Or why has nobody built it yet?',
+            placeholder: 'Voice transcription is finally good enough for half-asleep mumbling.',
+          },
+          audience: {
+            prompt: 'Who’s it for? Even a niche of 50 is fine — the sharpest gets shipped.',
+            placeholder: 'Lucid-dream practitioners and bibliophiles who keep dream journals.',
+          },
+          problem: {
+            prompt: 'What problem or curiosity is this scratching?',
+            placeholder: 'I forget my dreams in two minutes and the existing apps are clinical.',
+          },
+          references: {
+            prompt: 'Anything in the universe that’s close in spirit?',
+            placeholder: 'Like Day One but for dreams. Or Daylio crossed with a fancy Moleskine.',
+          },
+          timeline: { prompt: 'When would you want a first version?' },
+          howHeard: { prompt: 'How did you find me?' },
+          review: { prompt: 'The weird brief is ready. Send it to Bar?' },
+        },
       },
     },
   },

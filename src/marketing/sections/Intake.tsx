@@ -340,12 +340,40 @@ export default function Intake({ selectedTemplate }: Props) {
     return () => window.removeEventListener('keydown', onKey);
   }, [back, skip, next, submit, beat]);
 
-  const promptCopy = useMemo(() => {
+  // Per-beat copy resolution: a template-specific override always wins,
+  // then the generic prompt from quest.prompts. The same shape covers
+  // hint and placeholder so every input box reads on-topic for the
+  // chosen project type.
+  const tplOverride = useMemo(() => {
     const tpl = form.template;
+    if (!tpl) return undefined;
+    return quest.byTemplate?.[tpl];
+  }, [form.template, quest]);
+
+  const beatOverride = useMemo(() => {
+    if (!tplOverride) return undefined;
+    switch (beat.id) {
+      case 'idea':       return tplOverride.idea;
+      case 'whyNow':     return tplOverride.whyNow;
+      case 'audience':   return tplOverride.audience;
+      case 'problem':    return tplOverride.problem;
+      case 'references': return tplOverride.references;
+      case 'timeline':   return tplOverride.timeline;
+      case 'howHeard':   return tplOverride.howHeard;
+      case 'review':     return tplOverride.review;
+      default:           return undefined;
+    }
+  }, [beat.id, tplOverride]);
+
+  // The override union has different optional fields per beat; TS won't
+  // narrow well across the union, so we read with an explicit cast.
+  const overrideRead = beatOverride as
+    | { prompt?: string; hint?: string; placeholder?: string }
+    | undefined;
+
+  const promptCopy = useMemo<string>(() => {
+    if (overrideRead?.prompt) return overrideRead.prompt;
     const p = quest.prompts;
-    if (beat.id === 'idea' && tpl && p.ideaByTemplate?.[tpl]) return p.ideaByTemplate[tpl];
-    if (beat.id === 'whyNow' && tpl && p.whyNowByTemplate?.[tpl]) return p.whyNowByTemplate[tpl];
-    if (beat.id === 'audience' && tpl && p.audienceByTemplate?.[tpl]) return p.audienceByTemplate[tpl];
     switch (beat.id) {
       case 'template':   return p.template;
       case 'idea':       return p.idea;
@@ -359,15 +387,22 @@ export default function Intake({ selectedTemplate }: Props) {
       case 'howHeard':   return p.howHeard;
       case 'review':     return p.review;
     }
-  }, [beat.id, form.template, quest]);
+  }, [beat.id, overrideRead, quest]);
 
-  const hintCopy = useMemo(() => {
+  const hintCopy = useMemo<string>(() => {
+    if (overrideRead?.hint) return overrideRead.hint;
     switch (beat.id) {
       case 'idea':   return brief.fields.idea.hint;
       case 'whyNow': return brief.fields.whyNow.hint;
       default:       return '';
     }
-  }, [beat.id, brief]);
+  }, [beat.id, overrideRead, brief]);
+
+  // Falls back to the generic field placeholder for inputs whose beat
+  // has no template-specific override (e.g. name / contact / timeline).
+  const placeholderCopy = useMemo<string | undefined>(() => {
+    return overrideRead?.placeholder || undefined;
+  }, [overrideRead]);
 
   const liveAnnouncement = useMemo(() => {
     if (phase === 'sent') return brief.liveSuccess;
@@ -569,6 +604,7 @@ export default function Intake({ selectedTemplate }: Props) {
                     onSubmit={submit}
                     onJump={jumpTo}
                     letterEntries={letterEntries}
+                    placeholderOverride={placeholderCopy}
                   />
                 </div>
 
@@ -667,6 +703,8 @@ type BeatControlProps = {
   onSubmit: () => void;
   onJump: (id: BeatId) => void;
   letterEntries: { jumpId: BeatId; label: string; value: string }[];
+  /** Template-specific example text to show inside the active beat's input. */
+  placeholderOverride?: string;
 };
 
 function BeatControl({
@@ -680,6 +718,7 @@ function BeatControl({
   onSubmit,
   onJump,
   letterEntries,
+  placeholderOverride,
 }: BeatControlProps) {
   const { brief, contents } = t;
   const quest = brief.quest;
@@ -721,7 +760,7 @@ function BeatControl({
           className="mp-quest__textarea"
           value={form.idea}
           onChange={(e) => update('idea', e.target.value)}
-          placeholder={brief.fields.idea.placeholder}
+          placeholder={placeholderOverride ?? brief.fields.idea.placeholder}
           rows={4}
           aria-required="true"
           aria-invalid={invalid}
@@ -811,7 +850,7 @@ function BeatControl({
           className="mp-quest__textarea"
           value={form.whyNow}
           onChange={(e) => update('whyNow', e.target.value)}
-          placeholder={brief.fields.whyNow.placeholder}
+          placeholder={placeholderOverride ?? brief.fields.whyNow.placeholder}
           rows={3}
           aria-label={brief.fields.whyNow.label}
           data-quest-focus
@@ -826,7 +865,7 @@ function BeatControl({
           className="mp-quest__input"
           value={form.audience}
           onChange={(e) => update('audience', e.target.value)}
-          placeholder={brief.fields.audience.placeholder}
+          placeholder={placeholderOverride ?? brief.fields.audience.placeholder}
           aria-label={brief.fields.audience.label}
           data-quest-focus
           ref={(node) => { focusRef.current = node; }}
@@ -839,7 +878,7 @@ function BeatControl({
           className="mp-quest__textarea"
           value={form.problem}
           onChange={(e) => update('problem', e.target.value)}
-          placeholder={brief.fields.problem.placeholder}
+          placeholder={placeholderOverride ?? brief.fields.problem.placeholder}
           rows={3}
           aria-label={brief.fields.problem.label}
           data-quest-focus
@@ -853,7 +892,7 @@ function BeatControl({
           className="mp-quest__textarea"
           value={form.references}
           onChange={(e) => update('references', e.target.value)}
-          placeholder={brief.fields.references.placeholder}
+          placeholder={placeholderOverride ?? brief.fields.references.placeholder}
           rows={3}
           aria-label={brief.fields.references.label}
           data-quest-focus
@@ -898,7 +937,7 @@ function BeatControl({
           className="mp-quest__input"
           value={form.howHeard}
           onChange={(e) => update('howHeard', e.target.value)}
-          placeholder={brief.fields.howHeard.placeholder}
+          placeholder={placeholderOverride ?? brief.fields.howHeard.placeholder}
           aria-label={brief.fields.howHeard.label}
           data-quest-focus
           ref={(node) => { focusRef.current = node; }}
