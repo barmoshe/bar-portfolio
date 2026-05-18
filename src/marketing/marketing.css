@@ -8,21 +8,24 @@
    ============================================================= */
 
 .mp-root {
-  /* ── Palette: cream paper, dense ink, single saffron accent ── */
+  /* ── Palette: cream paper, dense ink, saffron accent + mono surface ── */
   --mp-bg:         oklch(0.96 0.012 80);     /* warm cream */
   --mp-paper:      oklch(0.98 0.008 80);     /* lighter inset surface */
+  --mp-mono-bg:    oklch(0.93 0.014 80);     /* code surface — a step down from --mp-bg */
   --mp-ink:        oklch(0.18 0.018 60);     /* near-black ink */
   --mp-ink-soft:   oklch(0.40 0.018 60);     /* secondary text */
   --mp-rule:       oklch(0.18 0.018 60 / 0.18);
   --mp-rule-strong:oklch(0.18 0.018 60 / 0.45);
-  --mp-accent:     oklch(0.55 0.18 45);      /* saffron / oxblood-amber */
+  --mp-accent:     oklch(0.55 0.18 45);      /* saffron / oxblood-amber — "live" signal */
   --mp-accent-ink: oklch(0.98 0.008 80);
+  --mp-pending:    oklch(0.55 0.018 60);     /* muted slate for [pending] status */
 
   --mp-grid-max:   1240px;
   --mp-gutter:     clamp(20px, 4vw, 56px);
 
   --mp-serif:      'Frank Ruhl Libre', 'David', serif;
   --mp-sans:       'Assistant', system-ui, sans-serif;
+  --mp-mono:       'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   font-family: var(--mp-sans);
   font-feature-settings: 'kern', 'liga', 'calt';
@@ -41,12 +44,14 @@
 html.dark .mp-root {
   --mp-bg:         oklch(0.16 0.016 60);
   --mp-paper:      oklch(0.20 0.016 60);
+  --mp-mono-bg:    oklch(0.22 0.016 60);     /* a touch lighter than --mp-paper for contrast */
   --mp-ink:        oklch(0.94 0.012 80);
   --mp-ink-soft:   oklch(0.72 0.012 80);
   --mp-rule:       oklch(0.94 0.012 80 / 0.22);
   --mp-rule-strong:oklch(0.94 0.012 80 / 0.50);
   --mp-accent:     oklch(0.72 0.17 55);
   --mp-accent-ink: oklch(0.16 0.016 60);
+  --mp-pending:    oklch(0.68 0.012 80);
 }
 
 /* ── Paper grain overlay (SVG fractal noise) ──────────────── */
@@ -84,12 +89,21 @@ html.dark .mp-grain {
   margin-inline-end: auto;
   min-width: 0;
 }
-.mp-bar__name {
-  font-family: var(--mp-serif);
-  font-weight: 900;
-  font-size: clamp(1.1rem, 2.4vw, 1.45rem);
+.mp-bar__mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  font-family: var(--mp-mono);
+  font-weight: 700;
+  font-size: clamp(1.05rem, 2.4vw, 1.35rem);
   letter-spacing: -.01em;
   white-space: nowrap;
+  color: var(--mp-ink);
+}
+.mp-bar__mark-text { color: inherit; }
+.mp-bar__mark-caret {
+  display: inline-block;
+  transform: translateY(-0.04em);
 }
 .mp-bar__tag {
   font-family: var(--mp-sans);
@@ -102,11 +116,10 @@ html.dark .mp-grain {
   .mp-bar__tag { display: inline; }
 }
 .mp-bar__issue {
-  font-family: var(--mp-sans);
-  font-weight: 600;
-  font-size: .72rem;
-  letter-spacing: .18em;
-  text-transform: uppercase;
+  font-family: var(--mp-mono);
+  font-weight: 500;
+  font-size: .78rem;
+  letter-spacing: .04em;
   color: var(--mp-ink-soft);
   display: none;
 }
@@ -223,169 +236,7 @@ html.dark .mp-grain {
   font-size: .95rem;
 }
 
-/* ── LTR overrides for the marketing route ─────────────────
-   The page was designed RTL-first. Under [dir="ltr"] hide the
-   decorative Hebrew bet glyph — it’s a brand motif specific to
-   the Hebrew framing and a Latin equivalent would feel forced.
-   The rest of the layout uses logical properties (margin-inline,
-   border-inline-start, etc.) and doesn’t need extra rules. */
-html[dir="ltr"] .mp-dropcap,
-html[dir="ltr"] .mp-colophon__glyph,
-html[dir="ltr"] .mp-cover__glyph {
-  display: none;
-}
-
-/* =============================================================
-   Cover (hero)
-   ============================================================= */
-.mp-cover {
-  position: relative;
-  /* viewport minus the masthead height; svh handles iOS dynamic UI. */
-  min-height: calc(100svh - 72px);
-  padding: clamp(32px, 6vh, 80px) clamp(16px, 5vw, 56px) clamp(32px, 5vh, 64px);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  align-content: end;
-  isolation: isolate;
-  overflow: hidden;
-}
-/* The big ב glyph is the cover's graphic anchor. Bleeds off the
-   right edge in RTL, sliced by the viewport. On mobile we shrink
-   and pin it to the top half so it never crowds the headline. */
-.mp-cover__glyph {
-  position: absolute;
-  pointer-events: none;
-  z-index: -1;
-  inset-inline-end: -14vw;
-  top: -4vh;
-  height: 52vh;
-  width: auto;
-  color: var(--mp-accent);
-  opacity: 0.09;
-}
-@media (min-width: 720px) {
-  .mp-cover__glyph {
-    inset-inline-end: -8vw;
-    top: clamp(-40px, -5vh, -20px);
-    height: clamp(60vh, 110vh, 1200px);
-    opacity: 0.10;
-  }
-}
-html.dark .mp-cover__glyph { opacity: 0.16; }
-
-.mp-cover__inner {
-  max-width: var(--mp-grid-max);
-  margin-inline: auto;
-  width: 100%;
-  display: grid;
-  gap: clamp(20px, 3vw, 32px);
-}
-.mp-cover__issue {
-  margin: 0;
-  font-family: var(--mp-sans);
-  font-weight: 600;
-  font-size: .82rem;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: var(--mp-ink-soft);
-}
-.mp-cover__h {
-  margin: 0;
-  font-family: var(--mp-serif);
-  font-weight: 900;
-  font-size: clamp(2.8rem, 14vw, 11rem);
-  line-height: 0.92;
-  letter-spacing: -.025em;
-  color: var(--mp-ink);
-  display: grid;
-  /* Defensive: prevent overflow if a single word ever exceeds viewport width. */
-  overflow-wrap: break-word;
-  word-break: keep-all;
-}
-.mp-cover__h-line {
-  display: block;
-  /* Clip the per-character slide-up animation. Padding/negative-margin
-     pair keeps the descender area visible without affecting the line
-     stack (Hebrew has no real descenders but we keep a tiny buffer). */
-  overflow: hidden;
-  padding-bottom: 0.08em;
-  margin-bottom: -0.08em;
-}
-.mp-cover__h-line:last-child {
-  color: var(--mp-accent);
-  font-style: italic;
-}
-.mp-cover__h-char {
-  display: inline-block;
-  will-change: transform, opacity;
-}
-.mp-cover__standfirst {
-  margin: 0;
-  max-width: 56ch;
-  font-family: var(--mp-serif);
-  font-weight: 500;
-  font-size: clamp(1.05rem, 2vw, 1.3rem);
-  line-height: 1.45;
-  color: var(--mp-ink);
-}
-.mp-cover__byline {
-  margin: 0;
-  font-family: var(--mp-sans);
-  font-weight: 500;
-  font-size: .9rem;
-  color: var(--mp-ink-soft);
-  letter-spacing: .04em;
-  padding-top: 14px;
-  border-top: 1px solid var(--mp-rule);
-}
-.mp-cover__foot {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
-  margin-top: clamp(20px, 4vh, 40px);
-  font-family: var(--mp-sans);
-  font-weight: 500;
-  font-size: .92rem;
-}
-@media (min-width: 560px) {
-  .mp-cover__foot {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 20px;
-  }
-}
-.mp-cover__hint,
-.mp-cover__brief {
-  text-decoration: none;
-  color: var(--mp-ink);
-  display: inline-flex; align-items: center; gap: 10px;
-  border-bottom: 1.5px solid var(--mp-ink);
-  padding: 6px 0;
-  min-height: 32px;
-  transition: color .15s, border-color .15s;
-}
-.mp-cover__hint:hover,
-.mp-cover__brief:hover,
-.mp-cover__hint:focus-visible,
-.mp-cover__brief:focus-visible {
-  color: var(--mp-accent);
-  border-bottom-color: var(--mp-accent);
-  outline: none;
-}
-.mp-cover__hint-arrow {
-  font-size: 1.1rem;
-  animation: mp-bob 2.4s ease-in-out infinite;
-  display: inline-block;
-}
-@keyframes mp-bob {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(4px); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .mp-cover__hint-arrow { animation: none; }
-}
+/* Cover styles live in the Build Log block at the bottom of this file. */
 
 /* =============================================================
    Section frame & heading
@@ -597,24 +448,6 @@ html.dark .mp-cover__glyph { opacity: 0.16; }
   max-width: 64ch;
 }
 
-/* Illuminated drop-cap ב on the first paragraph of Method.
-   Floats inline-start so text wraps around it like an editorial
-   opening initial. Saffron, scaled to ~5 lines of body text. */
-.mp-dropcap {
-  float: inline-start;
-  width: auto;
-  height: 4.6em;
-  color: var(--mp-accent);
-  margin-inline-end: 14px;
-  margin-block-start: 0.08em;
-  margin-block-end: 0;
-  shape-outside: margin-box;
-  shape-margin: 4px;
-}
-@media (max-width: 559px) {
-  .mp-dropcap { height: 3.6em; margin-inline-end: 10px; }
-}
-
 .mp-pull {
   margin: clamp(36px, 6vw, 56px) 0 0;
   padding: clamp(28px, 5vw, 48px) 0;
@@ -662,16 +495,6 @@ html.dark .mp-cover__glyph { opacity: 0.16; }
   font-size: clamp(1.05rem, 1.9vw, 1.25rem);
   line-height: 1.55;
   color: var(--mp-ink);
-}
-.mp-about__p:first-child::first-letter {
-  font-family: var(--mp-serif);
-  font-weight: 900;
-  font-size: 3em;
-  line-height: 0.85;
-  float: inline-start;
-  color: var(--mp-accent);
-  margin-inline-end: 6px;
-  margin-block-start: 0.05em;
 }
 .mp-about__stats {
   margin: clamp(24px, 4vw, 40px) 0 0;
@@ -1570,25 +1393,6 @@ html.dark .mp-cover__glyph { opacity: 0.16; }
 html.dark .mp-colophon {
   background: oklch(0.10 0.012 60);
 }
-.mp-colophon__glyph {
-  position: absolute;
-  z-index: -1;
-  inset-inline-start: -18vw;
-  bottom: -6vh;
-  height: 60vh;
-  width: auto;
-  color: var(--mp-accent);
-  opacity: 0.12;
-  pointer-events: none;
-}
-@media (min-width: 720px) {
-  .mp-colophon__glyph {
-    inset-inline-start: -10vw;
-    bottom: -8vh;
-    height: clamp(60vh, 100vh, 1000px);
-    opacity: 0.14;
-  }
-}
 .mp-colophon__inner {
   max-width: var(--mp-grid-max);
   margin-inline: auto;
@@ -1703,22 +1507,14 @@ html.dark .mp-colophon {
 }
 
 /* =============================================================
-   Ambient motion — ב glyph drift + scroll-driven section reveal
+   Ambient motion — scroll-driven section reveal
    ----------------------------------------------------------------
-   Both are progressive enhancements: if the browser doesn't honor
-   them or motion is reduced, sections render statically at full
-   opacity. The 2025-01 reveal-bug taught us never to make sections
-   invisible without a guaranteed un-hide path — `animation: ... both`
-   only applies if the @supports query matches, so default state is
-   always visible.
+   Progressive enhancement: if the browser doesn't honor view()
+   animation-timeline or motion is reduced, sections render at
+   full opacity. The 2025-01 reveal-bug taught us never to make
+   sections invisible without a guaranteed un-hide path.
    ============================================================= */
 @media (prefers-reduced-motion: no-preference) {
-  .mp-cover__glyph,
-  .mp-colophon__glyph {
-    animation: mp-bet-drift 32s ease-in-out infinite;
-    transform-origin: 50% 50%;
-  }
-
   @supports (animation-timeline: view()) {
     .mp-section {
       animation: mp-fade-up linear both;
@@ -1726,12 +1522,6 @@ html.dark .mp-colophon {
       animation-range: cover 0% cover 30%;
     }
   }
-}
-
-@keyframes mp-bet-drift {
-  0%   { transform: rotate(-2.5deg) translate3d(0, 0, 0); }
-  50%  { transform: rotate(2.5deg) translate3d(1.5%, -1%, 0); }
-  100% { transform: rotate(-2.5deg) translate3d(0, 0, 0); }
 }
 
 @keyframes mp-fade-up {
@@ -1753,3 +1543,615 @@ html.dark .mp-colophon {
 .mp-root main:focus {
   outline: none;
 }
+
+/* =============================================================
+   ╔══════════════════════════════════════════════════════════╗
+   ║  BUILD LOG SYSTEM                                        ║
+   ║  ----------------------------------------------------    ║
+   ║  Replaces the old "editorial Hebrew brutalism" hero      ║
+   ║  and footer. The page reads like a compile run: a        ║
+   ║  prompt with a blinking caret, build-log rows with       ║
+   ║  status tags, an ASCII pipeline, and bracketed           ║
+   ║  commands as CTAs. Mono carries the chrome; the          ║
+   ║  existing --mp-* palette carries the warmth so the       ║
+   ║  page doesn't feel like a terminal hostage.              ║
+   ╚══════════════════════════════════════════════════════════╝
+   ============================================================= */
+
+/* ── Caret ─────────────────────────────────────────────────
+   Block-cursor character (▌) in a fixed-width slot so the
+   blink doesn't reflow surrounding text. Reduced-motion gates
+   the animation to a steady half-opacity glow.
+   ---------------------------------------------------------- */
+.mp-caret {
+  display: inline-block;
+  width: 0.6ch;
+  text-align: center;
+  color: var(--mp-accent);
+  font-family: var(--mp-mono);
+  line-height: 1;
+}
+.mp-caret__block {
+  display: inline-block;
+  animation: mp-caret-blink 1.05s steps(2, end) infinite;
+  font-weight: 700;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mp-caret__block {
+    animation: none;
+    opacity: 0.65;
+  }
+}
+@keyframes mp-caret-blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* ── Prompt sigil ($) + body ────────────────────────────── */
+.mp-prompt {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5ch;
+  font-family: var(--mp-mono);
+}
+.mp-prompt__sigil {
+  color: var(--mp-accent);
+  font-weight: 700;
+}
+.mp-prompt__body {
+  color: var(--mp-ink);
+  font-weight: 500;
+}
+
+/* ── BuildLine ─────────────────────────────────────────────
+   `> label.................. [status]` — leader dots are a
+   repeating background image so they always fill the gap
+   regardless of width. Status state colors come from tokens.
+   ---------------------------------------------------------- */
+.mp-buildline {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6ch;
+  font-family: var(--mp-mono);
+  font-size: clamp(.85rem, 1.6vw, 1rem);
+  line-height: 1.6;
+  color: var(--mp-ink-soft);
+  padding: 1px 0;
+}
+.mp-buildline__arrow {
+  color: var(--mp-accent);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.mp-buildline__label {
+  color: var(--mp-ink);
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.mp-buildline__leader {
+  flex: 1 1 auto;
+  min-width: 1.6ch;
+  align-self: end;
+  height: 1.5em;
+  background-image: radial-gradient(
+    circle at center,
+    currentColor 0.6px,
+    transparent 1.2px
+  );
+  background-size: 6px 100%;
+  background-repeat: repeat-x;
+  background-position: 0 78%;
+  opacity: 0.45;
+}
+.mp-buildline__status {
+  color: var(--mp-accent);
+  font-weight: 600;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.mp-buildline[data-state="pending"] .mp-buildline__status {
+  color: var(--mp-pending);
+}
+.mp-buildline[data-state="pending"] .mp-buildline__arrow {
+  color: var(--mp-pending);
+}
+.mp-buildline[data-state="live"] .mp-buildline__status {
+  color: var(--mp-accent);
+  position: relative;
+}
+.mp-buildline[data-state="live"] .mp-buildline__status::after {
+  content: '';
+  display: inline-block;
+  width: 0.55em;
+  height: 0.55em;
+  margin-inline-start: 0.5ch;
+  border-radius: 50%;
+  background: var(--mp-accent);
+  vertical-align: middle;
+  animation: mp-live-pulse 1.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mp-buildline[data-state="live"] .mp-buildline__status::after {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+@keyframes mp-live-pulse {
+  0%, 100% { transform: scale(1);   opacity: 0.55; }
+  50%      { transform: scale(1.3); opacity: 1;    }
+}
+
+/* ── Pipeline ──────────────────────────────────────────────
+   Horizontal flow of stage cards joined by `──▶` arrows. Stacks
+   to vertical at narrow widths so it never trips overflow.
+   ---------------------------------------------------------- */
+.mp-pipeline {
+  margin: 0;
+  padding: clamp(20px, 3vw, 28px) clamp(16px, 3vw, 24px);
+  background: var(--mp-mono-bg);
+  border: 1px solid var(--mp-rule);
+  border-radius: 2px;
+  overflow-x: auto;
+}
+.mp-pipeline__row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 14px clamp(10px, 2vw, 18px);
+  justify-content: flex-start;
+}
+.mp-pipeline__node {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2vw, 18px);
+  min-width: 0;
+}
+.mp-pipeline__cell {
+  display: grid;
+  gap: 4px;
+  padding: 10px 14px;
+  background: var(--mp-bg);
+  border: 1.5px solid var(--mp-rule-strong);
+  border-radius: 2px;
+  min-width: 130px;
+  font-family: var(--mp-mono);
+}
+.mp-pipeline__num {
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: var(--mp-accent);
+}
+.mp-pipeline__label {
+  font-family: var(--mp-sans);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--mp-ink);
+}
+.mp-pipeline__status {
+  font-family: var(--mp-mono);
+  font-size: .78rem;
+  color: var(--mp-ink-soft);
+}
+.mp-pipeline__arrow {
+  font-family: var(--mp-mono);
+  font-weight: 700;
+  color: var(--mp-accent);
+  letter-spacing: -0.1em;
+  align-self: center;
+  flex-shrink: 0;
+}
+[dir="rtl"] .mp-pipeline__arrow {
+  /* Reading flow is right-to-left, but the pipeline is a temporal
+     left→right sequence (describe → build → decide). Mirror the
+     arrow glyph so it points along the visual order in RTL. */
+  transform: scaleX(-1);
+}
+
+/* ── Cover (hero) — rewritten as a build log ──────────────── */
+.mp-cover {
+  position: relative;
+  min-height: calc(100svh - 72px);
+  padding: clamp(32px, 6vh, 80px) clamp(16px, 5vw, 56px) clamp(40px, 6vh, 80px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  isolation: isolate;
+  overflow: hidden;
+}
+.mp-cover__inner {
+  max-width: var(--mp-grid-max);
+  margin-inline: auto;
+  width: 100%;
+  display: grid;
+  gap: clamp(18px, 2.8vw, 28px);
+}
+.mp-cover__build-id {
+  margin: 0;
+  font-family: var(--mp-mono);
+  font-weight: 500;
+  font-size: .82rem;
+  letter-spacing: .04em;
+  color: var(--mp-ink-soft);
+}
+.mp-cover__prompt-row {
+  margin: 0;
+  font-family: var(--mp-mono);
+  font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+  font-weight: 600;
+  color: var(--mp-ink);
+  display: flex;
+  align-items: baseline;
+  gap: 0.2ch;
+  flex-wrap: wrap;
+}
+.mp-cover__prompt-row .mp-prompt {
+  font-size: inherit;
+}
+.mp-cover__prompt-arg {
+  color: var(--mp-ink-soft);
+  font-weight: 500;
+}
+.mp-cover__caret {
+  font-size: inherit;
+}
+.mp-cover__buildlines {
+  list-style: none;
+  margin: 0;
+  padding: clamp(14px, 2vw, 20px) clamp(16px, 2.5vw, 24px);
+  background: var(--mp-mono-bg);
+  border: 1px solid var(--mp-rule);
+  border-radius: 2px;
+  display: grid;
+  gap: 4px;
+  max-width: 640px;
+}
+/* Code-comment manifesto: the three short lines now read as
+   slash comments in big mono. The slash mark is dimmer than the
+   text so the eye lands on the manifesto words. */
+.mp-cover__h {
+  margin: 0;
+  font-family: var(--mp-mono);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 7vw, 4.4rem);
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  color: var(--mp-ink);
+  display: grid;
+}
+.mp-cover__comment {
+  display: grid;
+  gap: 0.05em;
+}
+.mp-cover__comment-line {
+  display: block;
+  overflow-wrap: break-word;
+}
+.mp-cover__comment-mark {
+  display: inline-block;
+  width: 2ch;
+  color: var(--mp-accent);
+  opacity: 0.7;
+  font-weight: 500;
+}
+.mp-cover__standfirst {
+  margin: 0;
+  max-width: 60ch;
+  font-family: var(--mp-sans);
+  font-weight: 500;
+  font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+  line-height: 1.55;
+  color: var(--mp-ink);
+}
+.mp-cover__byline {
+  margin: 0;
+  font-family: var(--mp-mono);
+  font-size: .78rem;
+  letter-spacing: .03em;
+  color: var(--mp-ink-soft);
+  padding-top: 14px;
+  border-top: 1px dashed var(--mp-rule);
+}
+.mp-cover__cmds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  margin-top: clamp(8px, 1.5vw, 14px);
+}
+.mp-cover__cmd {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4ch;
+  padding: 14px 16px;
+  min-height: 48px;
+  font-family: var(--mp-mono);
+  font-weight: 600;
+  font-size: clamp(.95rem, 1.6vw, 1.05rem);
+  text-decoration: none;
+  color: var(--mp-ink);
+  background: transparent;
+  border: 1.5px solid var(--mp-ink);
+  border-radius: 2px;
+  transition: background .15s, color .15s, transform .15s;
+}
+.mp-cover__cmd:hover,
+.mp-cover__cmd:focus-visible {
+  background: var(--mp-ink);
+  color: var(--mp-bg);
+  outline: none;
+  transform: translateY(-1px);
+}
+.mp-cover__cmd--primary {
+  background: var(--mp-ink);
+  color: var(--mp-bg);
+}
+.mp-cover__cmd--primary:hover,
+.mp-cover__cmd--primary:focus-visible {
+  background: var(--mp-accent);
+  color: var(--mp-accent-ink);
+  border-color: var(--mp-accent);
+}
+.mp-cover__cmd-bracket {
+  color: var(--mp-accent);
+  font-weight: 700;
+}
+.mp-cover__cmd--primary .mp-cover__cmd-bracket {
+  color: var(--mp-accent-ink);
+}
+.mp-cover__cmd--primary:hover .mp-cover__cmd-bracket,
+.mp-cover__cmd--primary:focus-visible .mp-cover__cmd-bracket {
+  color: var(--mp-bg);
+}
+.mp-cover__cmd-arrow {
+  font-weight: 700;
+}
+[dir="rtl"] .mp-cover__cmd-arrow { /* arrow flips to follow RTL reading */
+  transform: scaleX(-1);
+  display: inline-block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mp-cover__cmd {
+    transition: none;
+    transform: none !important;
+  }
+}
+
+/* ── Method pipeline + per-step build line ───────────────── */
+.mp-step__build {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mp-step__title {
+  /* Lift from saffron serif to mono accent — keeps step titles
+     in the build-log family without losing their hierarchy. */
+  font-family: var(--mp-mono);
+  font-weight: 700;
+  text-transform: lowercase;
+  letter-spacing: -.01em;
+}
+
+/* ── TOC: each row gets the `$ bar build <slug>` command line ─ */
+.mp-toc__cmd {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5ch;
+  font-family: var(--mp-mono);
+  font-size: .82rem;
+  color: var(--mp-ink-soft);
+  margin-bottom: 4px;
+  letter-spacing: 0;
+}
+.mp-toc__cmd-sigil {
+  color: var(--mp-accent);
+  font-weight: 700;
+}
+.mp-toc__cmd-prefix {
+  color: var(--mp-ink-soft);
+}
+.mp-toc__cmd-slug {
+  color: var(--mp-ink);
+  font-weight: 600;
+}
+.mp-toc__btn[data-selected] .mp-toc__cmd-slug,
+.mp-toc__btn:hover .mp-toc__cmd-slug,
+.mp-toc__btn:focus-visible .mp-toc__cmd-slug {
+  color: var(--mp-accent);
+}
+.mp-toc__cta {
+  font-family: var(--mp-mono);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: var(--mp-ink-soft);
+}
+.mp-toc__btn[data-selected] .mp-toc__cta,
+.mp-toc__btn:hover .mp-toc__cta,
+.mp-toc__btn:focus-visible .mp-toc__cta {
+  color: var(--mp-accent);
+  transform: none;
+}
+[dir="rtl"] .mp-toc__btn:hover .mp-toc__cta,
+[dir="rtl"] .mp-toc__btn:focus-visible .mp-toc__cta {
+  transform: none;
+}
+
+/* ── About stats: render label as mono comment ──────────── */
+.mp-about__stat-comment {
+  display: block;
+  font-family: var(--mp-mono);
+  font-weight: 500;
+  font-size: .82rem;
+  color: var(--mp-ink-soft);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ── FAQ: collapsible `man` pages ─────────────────────────── */
+.mp-qa__row {
+  display: block;            /* override the 2-col grid from base — details handle layout */
+  grid-template-columns: none !important;
+  padding: 0;
+  border-bottom: 1px solid var(--mp-rule);
+}
+.mp-qa__row-details {
+  padding: clamp(18px, 3vw, 24px) 0;
+}
+.mp-qa__row-details[open] {
+  background: linear-gradient(
+    to bottom,
+    transparent 0,
+    var(--mp-mono-bg) 24px,
+    var(--mp-mono-bg) calc(100% - 8px),
+    transparent 100%
+  );
+  padding-inline: clamp(14px, 2vw, 20px);
+  border-radius: 2px;
+}
+.mp-qa__q {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--mp-mono);
+  font-weight: 700;
+  font-size: clamp(1.05rem, 1.9vw, 1.25rem);
+  line-height: 1.3;
+  color: var(--mp-ink);
+}
+.mp-qa__q::-webkit-details-marker { display: none; }
+.mp-qa__q::marker { content: ''; }
+.mp-qa__q:hover,
+.mp-qa__q:focus-visible {
+  color: var(--mp-accent);
+  outline: none;
+}
+.mp-qa__q-num {
+  font-family: var(--mp-mono);
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--mp-accent);
+  letter-spacing: 0;
+  flex-shrink: 0;
+}
+.mp-qa__q-text {
+  flex: 1 1 auto;
+  font-family: var(--mp-sans);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 1.9vw, 1.25rem);
+  color: inherit;
+}
+.mp-qa__q-toggle {
+  flex-shrink: 0;
+  font-family: var(--mp-mono);
+  font-weight: 700;
+  color: var(--mp-accent);
+  width: 1.5ch;
+  text-align: center;
+  transition: transform .15s;
+}
+.mp-qa__row-details[open] .mp-qa__q-toggle {
+  transform: rotate(45deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .mp-qa__q-toggle { transition: none; }
+}
+.mp-qa__a {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 14px;
+  margin: 14px 0 0;
+  font-family: var(--mp-sans);
+  font-weight: 400;
+  font-size: clamp(.98rem, 1.6vw, 1.08rem);
+  line-height: 1.6;
+  color: var(--mp-ink-soft);
+}
+.mp-qa__a-mark {
+  font-family: var(--mp-mono);
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--mp-accent);
+  align-self: start;
+  padding-top: 2px;
+}
+
+/* ── Colophon (footer CTA) — deploy command treatment ─────── */
+.mp-colophon__kicker {
+  font-family: var(--mp-mono);
+  font-weight: 500;
+  font-size: .82rem;
+  letter-spacing: .04em;
+  text-transform: none;
+}
+.mp-colophon__prompt {
+  margin: 0;
+  font-family: var(--mp-mono);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  color: var(--mp-bg);
+  display: flex;
+  align-items: baseline;
+  gap: 0.2ch;
+  flex-wrap: wrap;
+}
+.mp-colophon__prompt .mp-prompt__sigil {
+  color: var(--mp-accent);
+}
+.mp-colophon__prompt .mp-prompt__body {
+  color: var(--mp-bg);
+}
+.mp-colophon__caret { color: var(--mp-accent); }
+.mp-colophon__h {
+  font-family: var(--mp-mono);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  max-width: 22ch;
+}
+.mp-colophon__comment {
+  margin: 0;
+  font-family: var(--mp-mono);
+  font-size: clamp(.92rem, 1.6vw, 1.05rem);
+  line-height: 1.55;
+  color: oklch(0.94 0.012 80 / 0.62);
+  max-width: 60ch;
+}
+.mp-colophon__primary {
+  font-family: var(--mp-mono);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4ch;
+}
+
+/* ── Running foot: mono section number ───────────────────── */
+.mp-foot {
+  font-family: var(--mp-mono);
+  text-transform: none;
+  letter-spacing: .04em;
+}
+.mp-foot__section {
+  font-family: var(--mp-mono);
+  letter-spacing: 0;
+}
+
+/* ── Visually-hidden helper (used by Cover SR-only headline) ── */
+.mp-root .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+

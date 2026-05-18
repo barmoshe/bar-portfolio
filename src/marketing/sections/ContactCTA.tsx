@@ -1,11 +1,12 @@
 import { useLang } from '../LangContext';
 import { mailtoHref, whatsappHref } from '../contact';
-import HebrewBet from '../components/HebrewBet';
+import Prompt from '../components/Prompt';
+import Caret from '../components/Caret';
 import { scrollToIntake } from '../scrollToIntake';
 
 export default function ContactCTA() {
   const { t } = useLang();
-  const { colophon } = t;
+  const { colophon, build } = t;
 
   const onPrimary = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -14,19 +15,27 @@ export default function ContactCTA() {
 
   return (
     <section
-      className="mp-colophon"
+      className="mp-colophon mp-buildlog"
       id="colophon"
       aria-labelledby="colophon-headline"
     >
-      <HebrewBet className="mp-colophon__glyph" />
-
       <div className="mp-colophon__inner">
         <p className="mp-colophon__kicker" aria-hidden="true">
-          {colophon.number} · {colophon.kicker}
+          [ {colophon.number} ] · {colophon.kicker}
         </p>
+
+        <p className="mp-colophon__prompt" aria-hidden="true">
+          <Prompt>{build.deployCmd}</Prompt>
+          <Caret className="mp-colophon__caret" />
+        </p>
+
         <h2 className="mp-colophon__h" id="colophon-headline">
           {colophon.title}
         </h2>
+
+        <p className="mp-colophon__comment" aria-hidden="true">
+          {build.deployComment}
+        </p>
 
         <p className="mp-colophon__pull">{colophon.pullQuote}</p>
 
@@ -36,7 +45,9 @@ export default function ContactCTA() {
             href="#brief"
             onClick={onPrimary}
           >
-            {colophon.ctaPrimary} →
+            <span aria-hidden="true">[</span>
+            <span>{colophon.ctaPrimary}</span>
+            <span aria-hidden="true">→]</span>
           </a>
           <div className="mp-colophon__alt">
             <a href={whatsappHref} target="_blank" rel="noreferrer noopener">

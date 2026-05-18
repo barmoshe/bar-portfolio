@@ -205,6 +205,37 @@ export type Dict = {
     mail: string;
     issueLabel: string;
   };
+  /**
+   * "Build Log" visual system — mono labels for the redesigned hero,
+   * pipeline diagram, templates-as-commands, and deploy CTA. These
+   * intentionally lean Latin-mono: function names, brackets, and
+   * status tags stay in code regardless of `lang`, only the human
+   * status words translate.
+   */
+  build: {
+    brandMark: string;       // mono brand text, e.g. "$ bar"
+    buildId: string;         // mono kicker, e.g. "build #042"
+    promptCmd: string;       // hero prompt argument, e.g. "bar build"
+    buildLines: {
+      label: string;
+      status: string;
+      state: 'ok' | 'pending' | 'live';
+    }[];
+    pipeline: {
+      caption: string;
+      stages: { num: string; label: string; status: string }[];
+    };
+    startCmd: string;        // primary hero CTA label
+    browseCmd: string;       // secondary hero CTA label
+    deployCmd: string;       // colophon prompt argument
+    deployComment: string;   // colophon code-comment subtitle
+    statsComments: string[]; // 3 short comments paired with about stats
+    templateCmdPrefix: string;     // before each TOC slug, e.g. "bar build"
+    templateStatusReady: string;   // "[ready]"
+    templateStatusSelected: string; // "[selected]"
+    faqExpand: string;       // FAQ collapsible label
+    faqCollapse: string;     // FAQ collapsible label
+  };
 };
 
 const HE: Dict = {
@@ -802,6 +833,34 @@ const HE: Dict = {
     mail: 'מייל',
     issueLabel: 'גליון 01',
   },
+  build: {
+    brandMark: '$ bar',
+    buildId: 'build #042',
+    promptCmd: 'bar build',
+    buildLines: [
+      { label: 'describe.compile()',  status: 'מוכן',     state: 'ok' },
+      { label: 'build.poc()',         status: '3-7 ימים', state: 'live' },
+      { label: 'you.decide()',        status: 'ממתין',    state: 'pending' },
+    ],
+    pipeline: {
+      caption: 'שלבי הבנייה: לתאר, אבנה, את.ה מחליט.ה',
+      stages: [
+        { num: '01', label: 'לתאר',  status: 'את.ה'   },
+        { num: '02', label: 'אבנה',  status: '3-7 ימים' },
+        { num: '03', label: 'לראות', status: 'את.ה'   },
+      ],
+    },
+    startCmd: 'התחל בנייה',
+    browseCmd: 'דפדף בסוגי פרויקטים',
+    deployCmd: 'bar deploy --whatsapp',
+    deployComment: '// הבריף נוחת אצלי בוואטסאפ כהודעה מסודרת. תוך ימים, יש קוד שעובד.',
+    statsComments: ['// שנות בנייה', '// POCים שהתשגרו', '// תשלום מראש'],
+    templateCmdPrefix: 'bar build',
+    templateStatusReady: 'מוכן',
+    templateStatusSelected: 'נבחר',
+    faqExpand: 'הרחב',
+    faqCollapse: 'סגור',
+  },
 };
 
 const EN: Dict = {
@@ -1396,6 +1455,34 @@ const EN: Dict = {
     whatsapp: 'WhatsApp',
     mail: 'Email',
     issueLabel: 'Issue 01',
+  },
+  build: {
+    brandMark: '$ bar',
+    buildId: 'build #042',
+    promptCmd: 'bar build',
+    buildLines: [
+      { label: 'describe.compile()', status: 'ready',   state: 'ok' },
+      { label: 'build.poc()',        status: '3-7d',    state: 'live' },
+      { label: 'you.decide()',       status: 'pending', state: 'pending' },
+    ],
+    pipeline: {
+      caption: 'Three stages: describe, build, decide',
+      stages: [
+        { num: '01', label: 'describe', status: 'you'  },
+        { num: '02', label: 'build',    status: '3-7d' },
+        { num: '03', label: 'decide',   status: 'you'  },
+      ],
+    },
+    startCmd: 'start a build',
+    browseCmd: 'browse templates',
+    deployCmd: 'bar deploy --whatsapp',
+    deployComment: '// the brief lands in my WhatsApp as a tidy message. Within days, working code.',
+    statsComments: ['// years building', '// pocs shipped', '// upfront cost'],
+    templateCmdPrefix: 'bar build',
+    templateStatusReady: 'ready',
+    templateStatusSelected: 'selected',
+    faqExpand: 'expand',
+    faqCollapse: 'collapse',
   },
 };
 

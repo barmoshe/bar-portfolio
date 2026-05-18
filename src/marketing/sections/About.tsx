@@ -4,11 +4,11 @@ import RunningFoot from '../components/RunningFoot';
 
 export default function About() {
   const { t } = useLang();
-  const { about } = t;
+  const { about, build } = t;
 
   return (
     <section
-      className="mp-section mp-about"
+      className="mp-section mp-about mp-buildlog"
       id="about"
       aria-labelledby="about-headline"
     >
@@ -28,10 +28,15 @@ export default function About() {
       </div>
 
       <dl className="mp-about__stats">
-        {about.stats.map((s) => (
+        {about.stats.map((s, i) => (
           <div className="mp-about__stat" key={s.label}>
             <dt className="mp-about__stat-value">{s.value}</dt>
-            <dd className="mp-about__stat-label">{s.label}</dd>
+            <dd className="mp-about__stat-label">
+              <span className="mp-about__stat-comment" aria-hidden="true">
+                {build.statsComments[i] ?? `// ${s.label}`}
+              </span>
+              <span className="visually-hidden">{s.label}</span>
+            </dd>
           </div>
         ))}
       </dl>

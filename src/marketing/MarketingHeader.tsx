@@ -3,12 +3,13 @@ import AccessibilityPanel from '../components/AccessibilityPanel';
 import { useTheme } from '../hooks/useTheme';
 import { useLang } from './LangContext';
 import LangToggle from './components/LangToggle';
+import Caret from './components/Caret';
 import { scrollToIntake } from './scrollToIntake';
 
 export default function MarketingHeader() {
   const { pref, set } = useTheme();
   const { t } = useLang();
-  const { masthead } = t;
+  const { masthead, build } = t;
   const a11yBtnRef = useRef<HTMLButtonElement | null>(null);
   const [a11yOpen, setA11yOpen] = useState(false);
 
@@ -28,13 +29,16 @@ export default function MarketingHeader() {
         {masthead.skip}
       </a>
       <header className="mp-bar">
-        <a className="mp-bar__brand" href="#top">
-          <span className="mp-bar__name">{masthead.brandName}</span>
-          <span className="mp-bar__tag">{masthead.brandTagline}</span>
+        <a className="mp-bar__brand" href="#top" aria-label={masthead.brandName}>
+          <span className="mp-bar__mark">
+            <span className="mp-bar__mark-text">{build.brandMark}</span>
+            <Caret className="mp-bar__mark-caret" />
+          </span>
+          <span className="mp-bar__tag" aria-hidden="true">{masthead.brandTagline}</span>
         </a>
 
         <span className="mp-bar__issue" aria-hidden="true">
-          {masthead.issueNumber}
+          {build.buildId}
         </span>
 
         <nav className="mp-bar__nav" aria-label="navigation">
