@@ -7,11 +7,14 @@ export default defineConfig({
   build: {
     rollupOptions: {
       // Multi-page: index.html is the portfolio app; business/index.html is
-      // the separate Hebrew marketing page (src/marketing/*). Folder layout
-      // gives a clean /business/ URL on GitHub Pages instead of /business.html.
+      // the Hebrew marketing page (src/marketing/*); business/en/index.html is
+      // its English canonical mirror (same React app, EN-only pre-paint script,
+      // EN OG/JSON-LD) for crawlers and English-language link previews. Folder
+      // layout gives clean /business/ and /business/en/ URLs on GitHub Pages.
       input: {
         main: 'index.html',
         business: 'business/index.html',
+        businessEn: 'business/en/index.html',
         backoffice: 'backoffice/index.html',
       },
     },

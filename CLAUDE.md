@@ -4,15 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-`bar-portfolio` is a React 19 + Vite 6 + TypeScript site deployed to GitHub Pages at https://barmoshe.github.io/bar-portfolio/ via GitHub Actions on push to `main`. It is **three Vite entries served from one deploy** (see `vite.config.ts`):
+`bar-portfolio` is a React 19 + Vite 6 + TypeScript site deployed to GitHub Pages at https://barmoshe.github.io/bar-portfolio/ via GitHub Actions on push to `main`. It is **four Vite entries served from one deploy** (see `vite.config.ts`):
 
 | Entry | URL | Source | Role |
 |---|---|---|---|
 | `index.html` | `/bar-portfolio/` | `src/main.tsx` → `App.tsx` | English portfolio (single-page, hash-nav: `#intro`, `#background`, `#mixtape`, `#repos`, `#letter`). |
-| `business/index.html` | `/bar-portfolio/business/` | `src/marketing/main.tsx` → `MarketingApp.tsx` | Marketing landing. Bilingual HE/EN with `bm:lang` persistence; first-visit pick is weighted random (70/30 HE/EN), resolved in the pre-paint script. |
+| `business/index.html` | `/bar-portfolio/business/` | `src/marketing/main.tsx` → `MarketingApp.tsx` | Hebrew-canonical marketing landing. Bilingual HE/EN React app with `bm:lang` persistence; first-visit pick is weighted random (70/30 HE/EN), resolved in the pre-paint script. |
+| `business/en/index.html` | `/bar-portfolio/business/en/` | `src/marketing/main.tsx` → `MarketingApp.tsx` | English-canonical mirror of the marketing landing. Same React app; pre-paint script forces `bm:lang="en"` so crawlers and link previews always see EN. Mutually hreflang-linked with the HE URL. See `knowledge/08-seo-sharing.md`. |
 | `backoffice/index.html` | `/bar-portfolio/backoffice/` | `src/backoffice/main.tsx` → `Backoffice.tsx` | Fictional Hebrew CRM demo (leads / invoices / calendar). `robots: noindex`. Storage-backed; no real backend. |
 
-All three share `src/styles.css` (root tokens + theme) and the same `bm:theme` / a11y prefs via the inline pre-paint script that lives in each `<head>`.
+All four share `src/styles.css` (root tokens + theme) and the same `bm:theme` / a11y prefs via the inline pre-paint script that lives in each `<head>`.
 
 ## Routing (open these first when relevant)
 
@@ -31,6 +32,7 @@ All three share `src/styles.css` (root tokens + theme) and the same `bm:theme` /
 - Accessibility check (run after design changes) → `recipes/a11y-check.md`
 - Design critique → `prompts/design-critique.md`
 - Skill bundle that routes intents → `skills/portfolio-curator/SKILL.md`
+- Marketing/business SEO + sharing audit → `knowledge/08-seo-sharing.md`
 
 Slash commands: `/new-project`, `/theme-preview`, `/deploy-check`, `/typecheck` — see `.claude/commands/`.
 
@@ -97,7 +99,7 @@ Small flat WebAudio engine backed by pre-rendered MP3s under `public/audio/{side
 6. **Accessibility floor (WCAG 2.2 AA)** — `npm run lint` (jsx-a11y/recommended) runs in CI and **blocks the deploy** (`.github/workflows/deploy.yml`). `@axe-core/react` runs in dev only via `src/main.tsx` and `src/marketing/main.tsx`. Skip link, `<main id="main" tabIndex={-1}>`, hash-nav focus handoff, and `:focus-within` on the Repos card pattern are intentional — don't unwind. Run `recipes/a11y-check.md` after any change to navigation, focus, semantic structure, animation, color tokens, or audio controls.
 7. **Accessibility panel parity** — `AccessibilityPanel` ↔ `usePreferences` ↔ pre-paint scripts must stay in sync. Do not install a third-party a11y overlay (UserWay, accessiBe). `HeroSlides` has a keyboard-accessible Pause button (WCAG 2.2.2); `Boot` has a focus trap.
 8. **`InkDefs` first child of `App.tsx`** — filter lookups in `attachInkBleed` go through DOM id resolution; reordering blanks every filter effect.
-9. **Vite multi-entry** — `vite.config.ts` declares three inputs. Removing `business/` or `backoffice/` from `rollupOptions.input` drops them from `dist/`.
+9. **Vite multi-entry** — `vite.config.ts` declares four inputs (`main`, `business`, `businessEn`, `backoffice`). Removing `business/`, `business/en/`, or `backoffice/` from `rollupOptions.input` drops them from `dist/`. The two `business/` entries must stay paired — they are mutually hreflang-linked.
 
 Full rationale and anti-patterns: `knowledge/99-caveats.md`.
 
@@ -117,7 +119,7 @@ npm install        # once
 npm run dev        # http://localhost:5173/  (note: vite dev does NOT prefix base; visit /, /business/, /backoffice/)
 npm run lint       # eslint . — required to pass in CI before deploy
 npm run typecheck  # tsc -b --noEmit
-npm run build      # tsc -b && vite build → dist/  (builds all three entries)
+npm run build      # tsc -b && vite build → dist/  (builds all four entries)
 npm run preview    # http://localhost:4173/bar-portfolio/  (preview DOES use base path)
 ```
 

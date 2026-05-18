@@ -1,0 +1,21 @@
+{
+  "name": "Bar Moshe — תאר. אבנה. תחליט.",
+  "short_name": "Bar Moshe",
+  "description": "תכתוב לי בכמה שורות מה אתה רוצה. אני בונה גרסה ראשונה עובדת לפני שאנחנו סוגרים משהו - תראה, תחליט, נמשיך משם.",
+  "start_url": "/bar-portfolio/business/",
+  "scope": "/bar-portfolio/business/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "lang": "he",
+  "dir": "rtl",
+  "theme_color": "#0f0f10",
+  "background_color": "#f5f1e8",
+  "icons": [
+    {
+      "src": "/bar-portfolio/og-cover.jpg",
+      "sizes": "1200x630",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
