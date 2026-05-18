@@ -58,7 +58,7 @@ export default function LabContactCTA() {
 
       <p className="mp-final__credit">
         {colophon.credit} ·{' '}
-        <a href="../">
+        <a href="/bar-portfolio/">
           <span className="mp-arrow" aria-hidden="true">←</span> {colophon.portfolioLink}
         </a>
       </p>

@@ -51,7 +51,7 @@ export default function ContactCTA() {
           {colophon.ctaPrimary} <span className="mp-arrow" aria-hidden="true">→</span>
         </a>{' '}
         ·{' '}
-        <a href="../">
+        <a href="/bar-portfolio/">
           <span className="mp-arrow" aria-hidden="true">←</span> {colophon.portfolioLink}
         </a>
       </p>

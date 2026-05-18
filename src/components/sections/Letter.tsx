@@ -265,6 +265,7 @@ export default function Letter() {
       const headline = root.querySelector<HTMLElement>('.headline');
       const dek = root.querySelector<HTMLElement>('.dek');
       const footer = root.querySelector<HTMLElement>('.letter-footer');
+      const elsewhere = root.querySelector<HTMLElement>('.letter-elsewhere');
       const bigCards = Array.from(bigGrid.children) as HTMLElement[];
       const chips = Array.from(smallRow.children) as HTMLElement[];
 
@@ -299,6 +300,15 @@ export default function Letter() {
             { opacity: 0, y: 16 },
             { opacity: 1, y: 0, duration: 0.6 },
             { trigger: footer, start: 'top 90%', staleAfterMs: LETTER_STALE_MS },
+          );
+        }
+
+        if (elsewhere) {
+          createReveal(
+            elsewhere,
+            { opacity: 0, y: 10 },
+            { opacity: 1, y: 0, duration: 0.5, delay: 0.1 },
+            { trigger: elsewhere, start: 'top 92%', staleAfterMs: LETTER_STALE_MS },
           );
         }
 
@@ -480,6 +490,34 @@ export default function Letter() {
         >
           ● available now
         </span>
+      </p>
+
+      <p
+        className="letter-elsewhere"
+        style={{
+          margin: '14px auto 0',
+          maxWidth: 560,
+          fontFamily: 'var(--mono)',
+          fontSize: 12,
+          letterSpacing: '.02em',
+          color: 'var(--ink-soft)',
+          textAlign: 'center',
+        }}
+      >
+        <span style={{ color: 'var(--green)' }}>// elsewhere</span>{' '}
+        <a
+          href="/bar-portfolio/business/"
+          style={{ color: 'var(--ink)', textDecoration: 'underline' }}
+        >
+          work with me
+        </a>
+        {' · '}
+        <a
+          href="/bar-portfolio/lab/"
+          style={{ color: 'var(--ink)', textDecoration: 'underline' }}
+        >
+          bring an idea
+        </a>
       </p>
     </article>
   );

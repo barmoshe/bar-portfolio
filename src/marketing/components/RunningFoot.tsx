@@ -43,6 +43,10 @@ export default function RunningFoot({ sectionNumber }: Props) {
           {runningFoot.mail}
         </a>
         <span aria-hidden="true">·</span>
+        <a className="mp-foot__link" href="/bar-portfolio/">
+          portfolio ↗
+        </a>
+        <span aria-hidden="true">·</span>
         <a className="mp-foot__link" href="#top" onClick={onTop}>
           {runningFoot.backToTop}
         </a>
