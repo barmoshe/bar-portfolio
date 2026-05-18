@@ -65,7 +65,7 @@ export default function DashboardView({ navigate }: { navigate: (r: Route) => vo
     <section className="bo-view">
       <header className="bo-view__head">
         <h1>דשבורד</h1>
-        <p className="bo-view__sub">תמונת מצב חיה — כל הנתונים פיקטיביים, מקומיים בלבד.</p>
+        <p className="bo-view__sub">תמונת מצב חיה - כל הנתונים פיקטיביים, מקומיים בלבד.</p>
       </header>
 
       <div className="bo-kpis">

@@ -168,7 +168,7 @@ export default function LeadsView({
                     <ProgressBar value={lead.progress} />
                   </td>
                   <td className="bo-row__budget">{formatMoney(lead.budget.amount, lead.budget.currency)}</td>
-                  <td>{lead.dueDate ? formatDate(lead.dueDate) : '—'}</td>
+                  <td>{lead.dueDate ? formatDate(lead.dueDate) : '-'}</td>
                   <td>
                     <PriorityDot priority={lead.priority} />
                   </td>

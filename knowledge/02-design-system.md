@@ -79,7 +79,7 @@ Known tight pairings to retest when changing tokens:
 
 ## Marketing color-meaning system (`/business/`)
 
-The marketing route at `/business/` uses its own scoped palette (`.mp-root`, defined in `src/marketing/marketing.css`). Three accents, each with a fixed semantic role — pick the accent that matches the role; do not introduce a fourth.
+The marketing route at `/business/` uses its own scoped palette (`.mp-root`, defined in `src/marketing/marketing.css`). Three accents, each with a fixed semantic role - pick the accent that matches the role; do not introduce a fourth.
 
 | Token | Role | Example use |
 |---|---|---|
@@ -89,4 +89,4 @@ The marketing route at `/business/` uses its own scoped palette (`.mp-root`, def
 
 Audience tiles consume this via the `accent: 'primary' | 'accent2' | 'accent3'` field on `Dict.audience.items` in `src/marketing/i18n.ts`. The class wired on each tile (`.mp-audience--<accent>`) controls box-shadow, kicker color, and CTA underline together so the variant reads as one decision.
 
-Orange `--mp-accent-2 = oklch(0.78 0.17 65)` does not pass 4.5:1 as body text on cream — kicker text uses a darkened `oklch(0.45 0.17 65)` in light mode and `oklch(0.78 0.15 65)` on the elevated dark surface. Re-verify in `#showcase` if either is changed.
+Orange `--mp-accent-2 = oklch(0.78 0.17 65)` does not pass 4.5:1 as body text on cream - kicker text uses a darkened `oklch(0.45 0.17 65)` in light mode and `oklch(0.78 0.15 65)` on the elevated dark surface. Re-verify in `#showcase` if either is changed.

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 // Scroll-spy for the tab bar. In the middle of the page, the active section is
 // the last tracked one whose top has crossed an anchor line ~35% down the
-// viewport — classic "whichever section you most recently scrolled into"
+// viewport - classic "whichever section you most recently scrolled into"
 // behavior, symmetric for up- and down-scroll. At the document edges, pin the
 // first/last tabs explicitly: a short section at the top or bottom physically
 // can't get its top to cross the anchor (the page runs out of scroll before

@@ -21,7 +21,7 @@
 ```
 
 Folio numbers are hand-typed inside each section file (`<b>03</b> // MIXTAPE`).
-If sections are reordered, renumber the `<b>NN</b>` literals too — there is no
+If sections are reordered, renumber the `<b>NN</b>` literals too - there is no
 auto-numbering. The folio fade is handled by `useFolioScrub`, which queries
 `.page .folio` from the DOM and is sequence-agnostic.
 
@@ -42,7 +42,7 @@ auto-numbering. The folio fade is handled by `useFolioScrub`, which queries
 | `HoverCard.tsx` | Interactive card primitive. Used by `Letter` for contact cards. | - |
 | `CodeArt.tsx` | Ascii/code-glyph display for project cards. Uses `iconFor` from `data/portfolio.ts`. | - |
 
-Reveal animations are not a wrapper component anymore — sections call
+Reveal animations are not a wrapper component anymore - sections call
 `createReveal` from `src/lib/scrollReveal.ts` directly inside `useGSAP` blocks,
 gated on `FULL_MOTION_QUERY` (and `MOBILE_QUERY` / `DESKTOP_QUERY` where the
 choreography differs by viewport).
@@ -56,7 +56,7 @@ One component per section id. The section id is set on the **outermost element**
 | `Intro.tsx` | `intro` | Hero intro with `HeroSlides`, taped ID card, byline, drop paragraph, credo card. | folio 01 // WHOAMI |
 | `Background.tsx` | `background` | Work + education cards: Joomsy, Self-directed, Afeka, plus a small grid for Wochit, Wix, Coding Academy, BPM College. All inline (no `data/`-driven list). | folio 02 // BACKGROUND |
 | `Mixtape.tsx` | `mixtape` | Vinyl-themed "tracks" section. Inline `TRACKS` array (typed as `TrackBase[]`) + `shuffleAndAssignSides()` that pins the first track to A1 and Fisher-Yates the rest into balanced A/B halves on each mount. Sketch rig (`Rig`) with RPM knob + start/stop button + side toggle, optional mini preview vinyls (`TrackVinyl`, image- or monogram-label), Web Audio SFX. | folio 03 // MIXTAPE |
-| `Repos.tsx` | `repos` | Project grid. **Collapsible** — always starts closed; the toggle button (`.repos-toggle`) is the only way to expand. Body wraps `<div id="repos-body">`. Cards open `Lightbox` via `onOpen(idx)`. Reads `projects` from `data/portfolio.ts`. | folio 04 // REPOS, uses `CodeArt` |
+| `Repos.tsx` | `repos` | Project grid. **Collapsible** - always starts closed; the toggle button (`.repos-toggle`) is the only way to expand. Body wraps `<div id="repos-body">`. Cards open `Lightbox` via `onOpen(idx)`. Reads `projects` from `data/portfolio.ts`. | folio 04 // REPOS, uses `CodeArt` |
 | `Letter.tsx` | `letter` | Contact cards (`HoverCard` per channel: email, phone, LinkedIn, Instagram, WhatsApp, GitHub). Inline `CARDS` array; the `contact` object in `data/portfolio.ts` is for cross-section reuse. | folio 05 // PING |
 
 ## Where state lives

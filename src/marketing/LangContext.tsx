@@ -24,7 +24,7 @@ import {
  * mounts in the correct locale with no FOUC.
  *
  * The fallbacks in `readInitial` only fire if the pre-paint script
- * itself failed (e.g., localStorage blocked by an extension) — they
+ * itself failed (e.g., localStorage blocked by an extension) - they
  * keep the page bilingual even in that degraded state.
  */
 

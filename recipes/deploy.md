@@ -9,7 +9,7 @@ Deploys are fully automated from `main`. `.github/workflows/deploy.yml` installs
 The workflow uses `concurrency: { group: pages, cancel-in-progress: false }`,
 so back-to-back pushes **queue** rather than cancel each other. This avoids
 the `actions/deploy-pages` 400-error trap; full rationale in
-`knowledge/99-caveats.md`. Practically: rapid pushes are safe — the second
+`knowledge/99-caveats.md`. Practically: rapid pushes are safe - the second
 deploy waits for the first to finish.
 
 ## 1. Pre-flight

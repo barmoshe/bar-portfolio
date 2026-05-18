@@ -11,7 +11,7 @@ import { INTAKE_ID } from '../scrollToIntake';
 import { gsap, useGSAP, FULL_MOTION_QUERY } from '../../lib/gsap';
 import { useLongPress } from '../hooks/useLongPress';
 
-// SectionHeading + RunningFoot are intentionally NOT imported — the
+// SectionHeading + RunningFoot are intentionally NOT imported - the
 // BOARD redesign uses ticket-style chrome instead. See `mp-h` /
 // `mp-final` in marketing.css for the replacement primitives.
 
@@ -125,7 +125,7 @@ export default function Intake({ selectedTemplate }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTemplate]);
 
-  // Build the brief text — kept byte-identical to the previous form's output
+  // Build the brief text - kept byte-identical to the previous form's output
   // so the WhatsApp message that lands on Bar's phone looks unchanged.
   const builtBrief = useMemo(() => {
     const lookup = <T extends { id?: string; slug?: string }>(
@@ -134,7 +134,7 @@ export default function Intake({ selectedTemplate }: Props) {
     ): T | undefined => list.find((it) => it.id === id || it.slug === id);
 
     const tpl = lookup(contents.items, form.template);
-    const templateLabel = tpl ? tpl.title : '—';
+    const templateLabel = tpl ? tpl.title : '-';
     const timelineLabel = lookup(brief.timelines, form.timeline)?.label ?? '';
     const contactKind =
       form.contactMethod === 'whatsapp'
@@ -154,7 +154,7 @@ export default function Intake({ selectedTemplate }: Props) {
     if (timelineLabel) blocks.push([s.timeline, timelineLabel]);
     if (form.howHeard.trim()) blocks.push([s.howHeard, form.howHeard.trim()]);
     blocks.push([
-      '— —',
+      '- -',
       `שם: ${form.name.trim()}`,
       `יצירת קשר (${contactKind}): ${form.contactValue.trim()}`,
     ]);
@@ -220,7 +220,7 @@ export default function Intake({ selectedTemplate }: Props) {
       }
       return n;
     });
-    // Border-bloom trigger — flashes the brief row that just landed.
+    // Border-bloom trigger - flashes the brief row that just landed.
     if (beatHasContent(beat.id)) setLastCommit(beat.id);
     if (stepIndex < BEATS.length - 1) {
       setStatus(quest.liveCommitted);
@@ -272,7 +272,7 @@ export default function Intake({ selectedTemplate }: Props) {
     return () => cancelAnimationFrame(id);
   }, [stepIndex, phase]);
 
-  // Card entrance animation — fade + slide. Guarded by motion preference.
+  // Card entrance animation - fade + slide. Guarded by motion preference.
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
@@ -294,7 +294,7 @@ export default function Intake({ selectedTemplate }: Props) {
     { dependencies: [stepIndex, phase], scope: stageRef },
   );
 
-  // Letter line append animation — new last line ink-bleeds in.
+  // Letter line append animation - new last line ink-bleeds in.
   const committedCount = committed.size;
   useGSAP(
     () => {
@@ -470,13 +470,13 @@ export default function Intake({ selectedTemplate }: Props) {
         form.contactMethod === 'whatsapp'
           ? brief.fields.contactMethod.whatsapp
           : brief.fields.contactMethod.email;
-      const namePart = form.name.trim() || '—';
+      const namePart = form.name.trim() || '-';
       const contactPart = form.contactValue.trim()
         ? `${contactKind}: ${form.contactValue.trim()}`
         : contactKind;
       out.push({
         jumpId: committed.has('name') ? 'name' : 'contact',
-        label: '— —',
+        label: '- -',
         value: `${namePart} · ${contactPart}`,
       });
     }
@@ -990,7 +990,7 @@ function ReviewBlock({
     ms: 600,
     onConfirm: onSubmit,
   });
-  // SVG ring geometry — circumference ≈ 100, easy to drive via dasharray.
+  // SVG ring geometry - circumference ≈ 100, easy to drive via dasharray.
   const RING_LEN = 100;
   const dashOffset = RING_LEN * (1 - progress);
 
@@ -1022,7 +1022,7 @@ function ReviewBlock({
           data-quest-focus
           data-holding={holding || undefined}
           ref={(node) => { focusRef.current = node; }}
-          aria-label={`${quest.nav.send} — ${board.ringHold}`}
+          aria-label={`${quest.nav.send} - ${board.ringHold}`}
           {...bind}
         >
           <span>{quest.nav.send} <span className="mp-arrow" aria-hidden="true">→</span></span>

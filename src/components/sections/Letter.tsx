@@ -239,7 +239,7 @@ const chipLabelStyle: CSSProperties = {
   textOverflow: 'ellipsis',
 };
 
-// Fan-in scatter offsets per big card (4 entries — one per big card).
+// Fan-in scatter offsets per big card (4 entries - one per big card).
 const DESKTOP_SCATTER = [
   { x: -120, y: -40, r: -20 },
   { x: 140, y: -50, r: 24 },
@@ -386,7 +386,7 @@ export default function Letter() {
         className="dek"
         style={{ textAlign: 'center', marginLeft: 'auto', marginRight: 'auto' }}
       >
-        Email, phone, or DM — whichever's easiest. I usually reply the same day.
+        Email, phone, or DM - whichever's easiest. I usually reply the same day.
       </p>
 
       <div

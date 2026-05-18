@@ -1,6 +1,6 @@
-# Marketing site (`/business/`) — As-Built
+# Marketing site (`/business/`) - As-Built
 
-> Direction: **"לוח / BOARD"** — kanban-as-narrative.
+> Direction: **"לוח / BOARD"** - kanban-as-narrative.
 > Mobile-first, RTL-native, GSAP + CSS + SVG only.
 > Implemented 2026-05-18.
 
@@ -8,7 +8,7 @@ The page is a working sticker-kanban: every visible block is a card
 with a status pill (`לעשות` / `בעבודה` / `בוצע`), sections are
 columns, and the intake form is one live ticket the visitor fills
 and "ships" via a 600 ms long-press on the dispatch button. The
-medium IS the pitch — the page demonstrates the build-first
+medium IS the pitch - the page demonstrates the build-first
 workflow it sells.
 
 ---
@@ -61,7 +61,7 @@ src/hooks/useTheme.ts          ← theme cycle + ink-wipe transition
   `--mp-accent-2` (warm amber) = DOING,
   `--mp-accent-3` (deep teal-cobalt) = DONE.
   WhatsApp green (`--mp-whatsapp`) is reserved for the dispatch CTA.
-- **DOING pulse**: `box-shadow` + `opacity` only — no `filter`
+- **DOING pulse**: `box-shadow` + `opacity` only - no `filter`
   keyframes (mobile-battery friendly). `data-alive` is toggled by an
   IntersectionObserver so off-screen pulses stop. Cap: 1 concurrent
   pulser on the page.
@@ -95,7 +95,7 @@ src/hooks/useTheme.ts          ← theme cycle + ink-wipe transition
 - **The intake form** in `sections/Intake.tsx`. The quest flow,
   validation, letter assembly, and WhatsApp/mail dispatch all
   work. Re-skin the chrome; don't touch the logic. The visible
-  keyboard-shortcut hint was deliberately removed — keep it out.
+  keyboard-shortcut hint was deliberately removed - keep it out.
 - **Theme system** (`useTheme.ts` + the `.ink-wipe` overlay).
 - **Pre-paint script** inline in `business/index.html` `<head>`.
   Sets theme + lang + a11y prefs synchronously to prevent FOUC.
@@ -124,7 +124,7 @@ src/hooks/useTheme.ts          ← theme cycle + ink-wipe transition
 
 ## Available infra (mostly unused by BOARD)
 
-Files left in `src/marketing/components/` from earlier attempts —
+Files left in `src/marketing/components/` from earlier attempts -
 not currently mounted, available if a future direction needs them:
 
 | File | What it is |
@@ -156,7 +156,7 @@ Deploys go live on push to `main` via GitHub Actions.
 - [ ] Hero shows three offset cards above the fold on 390×844.
 - [ ] DOING card pulses; only one element pulses at a time.
 - [ ] Process step pills are static (Step 1 DONE, Step 2 DOING,
-      Step 3 TODO) — no scroll-driven morph.
+      Step 3 TODO) - no scroll-driven morph.
 - [ ] Intake header pill morphs across chapters; brief sidebar is
       a sticky `<details>` on mobile, true sidebar from 820px up.
 - [ ] Field commit triggers a border-bloom on the matching brief row.
@@ -175,4 +175,4 @@ Deploys go live on push to `main` via GitHub Actions.
 | 2026-05-17 | Editorial Hebrew brutalism (Issue 01) | Magazine framing felt formal; not the right voice for a builder-for-hire pitch. |
 | 2026-05-18 AM | "Build Log" terminal motif | Too dev-coded for non-technical leads (~50% of the audience). |
 | 2026-05-18 PM | "Liquid Drift" gooey blobs | Loud and pretty but didn't say anything about what the page is selling. |
-| 2026-05-18 PM | **"BOARD" — current** | The medium IS the pitch: you describe a card, watch it get built, decide. |
+| 2026-05-18 PM | **"BOARD" - current** | The medium IS the pitch: you describe a card, watch it get built, decide. |

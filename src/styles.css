@@ -733,7 +733,7 @@
     .bio h1{font-size:clamp(2rem,8vw,2.8rem)}
 
     /* Kill all card rotations to stop visual chaos + overflow.
-       #letter > div > a is intentionally excluded — the contact cards use
+       #letter > div > a is intentionally excluded - the contact cards use
        GSAP-driven transforms for the paired-entry reveal on mobile, so we let
        their inline transform win. Their rotation is set to 0 at rest by the
        reveal's final state, so they still read as a flat 2-col grid. */
@@ -782,7 +782,7 @@
        supporting roles (Wochit / Wix / Coding Academy / BPM) read as a
        cluster, not as more full-width cards below the big ones.
        Neutralises the padding/box-shadow from the #background > div > div
-       rule below — the wrapper is a grid container, not a card. */
+       rule below - the wrapper is a grid container, not a card. */
     #background > div > div[style*="grid"]{
       grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
       gap:12px !important;
@@ -928,7 +928,7 @@
     .tabbar a{font-size:9px;padding:6px 2px;gap:2px}
     .tabbar svg{width:18px;height:18px}
 
-    /* 2-col small-cards grid is too cramped here — drop back to 1 col. */
+    /* 2-col small-cards grid is too cramped here - drop back to 1 col. */
     #background > div > div[style*="grid"]{
       grid-template-columns:1fr !important;
     }
@@ -1316,7 +1316,7 @@
   }
 
   /* ──────────────────────────────────────────────────────────────────────
-     Marketing page (/business/) — RTL + Hebrew typography.
+     Marketing page (/business/) - RTL + Hebrew typography.
      Scoped to [dir="rtl"] so nothing here affects the English portfolio.
      The page reuses .page, .headline, .dek, .enter, .strip, etc. and only
      needs (a) Hebrew web fonts, (b) a few logical-property fixes, and
@@ -1365,7 +1365,7 @@
     outline:3px solid var(--green);outline-offset:3px;
   }
 
-  /* Hebrew-page hero questions — give them a green prefix instead of bullet */
+  /* Hebrew-page hero questions - give them a green prefix instead of bullet */
   [dir="rtl"] .hero-questions li{
     border-inline-start:3px solid var(--green);
     padding-inline-start:14px;

@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
  * a finger drag past `cancelDistance`, or `onPointerCancel` aborts.
  *
  * Keyboard accessibility floor: Enter on the focused element fires
- * `onConfirm` immediately — keyboard users never have to hold.
+ * `onConfirm` immediately - keyboard users never have to hold.
  *
  * Reduced-motion: fires on simple click (no ring draw, no hold).
  *
@@ -108,7 +108,7 @@ export function useLongPress({
 
   const onPointerDown = useCallback(
     (e: React.PointerEvent) => {
-      // Only react to primary button / touch / pen — ignore right-click etc.
+      // Only react to primary button / touch / pen - ignore right-click etc.
       if (e.button !== undefined && e.button !== 0) return;
       if (prefersReducedMotion()) return;
       e.currentTarget.setPointerCapture?.(e.pointerId);

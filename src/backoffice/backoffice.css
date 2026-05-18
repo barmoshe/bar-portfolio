@@ -2,16 +2,16 @@
  * bar-portfolio · backoffice.css
  *
  * Scoped styles for the /backoffice/ Hebrew RTL admin mock.
- * INCOMPLETE — placeholder shell only. See HANDOFF in the PR body /
+ * INCOMPLETE - placeholder shell only. See HANDOFF in the PR body /
  * conversation for the full class inventory and visual brief.
  *
  * All class names prefixed `bo-`. Status semantic tokens are scoped to
  * `.bo-root` so they do not leak into the portfolio's :root / html.dark.
- * Color tokens come from src/styles.css (oklch only — do not hardcode).
+ * Color tokens come from src/styles.css (oklch only - do not hardcode).
  * ====================================================================== */
 
 .bo-root {
-  /* Status semantic aliases — scoped, do not leak. */
+  /* Status semantic aliases - scoped, do not leak. */
   --status-new: var(--blue);
   --status-discovery: var(--cyan);
   --status-proposal: var(--purple);

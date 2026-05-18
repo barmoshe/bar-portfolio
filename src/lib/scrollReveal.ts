@@ -8,7 +8,7 @@
  * animation replays from its initial state. Short continuous scrolls back up
  * are a no-op, so the section doesn't thrash on casual scroll.
  *
- * Pitfalls: do NOT use with `scrub` — staleness replay assumes discrete play,
+ * Pitfalls: do NOT use with `scrub` - staleness replay assumes discrete play,
  * not scrub progress. Scrub animations (see InkTimeline's path) stay on the
  * plain ScrollTrigger API.
  */

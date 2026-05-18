@@ -19,7 +19,7 @@ type Rpm = 33 | 45 | 78;
 const RPM_OPTIONS: Rpm[] = [33, 45, 78];
 const RPM_LABEL: Record<Rpm, string> = { 33: '33⅓', 45: '45', 78: '78' };
 const RPM_RATE: Record<Rpm, number> = { 33: 1, 45: 1.35, 78: 2.34 };
-// Disc rotation period in seconds — 33⅓ rpm = 1.8 s/rev, scaled for the SVG.
+// Disc rotation period in seconds - 33⅓ rpm = 1.8 s/rev, scaled for the SVG.
 const RPM_SPIN: Record<Rpm, string> = { 33: '3s', 45: '2.22s', 78: '1.28s' };
 // Angle of each detent notch on the knob rim (degrees from the bottom of
 // the knob, positive clockwise). Three-click stop: 33 sweeps left, 78
@@ -59,7 +59,7 @@ type TrackBase = Omit<Track, 'n' | 'side'>;
 // Source list. Side ('A'/'B') and track number ('A1', 'B2', ...) are assigned
 // at runtime by `shuffleAndAssignSides` so each page load gets a fresh layout
 // with a balanced split (counts differ by at most 1). The first entry is
-// pinned to A1 — keep the Temporal track on top.
+// pinned to A1 - keep the Temporal track on top.
 const TRACKS: TrackBase[] = [
   {
     kind: 'post',
@@ -90,9 +90,9 @@ const TRACKS: TrackBase[] = [
     kind: 'post',
     date: 'FEB 2026',
     tag: '// launch',
-    title: 'Shipping Joomsy — meaningful moments across the distance.',
+    title: 'Shipping Joomsy - meaningful moments across the distance.',
     body:
-      'Kids connect with grandparents, family, and friends through interactive video calls — reading books together, playing gesture-based games, with more coming. Over 35 million US grandparents live more than 200 miles from a grandchild. Joomsy helps close that distance.',
+      'Kids connect with grandparents, family, and friends through interactive video calls - reading books together, playing gesture-based games, with more coming. Over 35 million US grandparents live more than 200 miles from a grandchild. Joomsy helps close that distance.',
     hashtags: '#startup   #product   #video',
     href: 'https://www.linkedin.com/feed/update/urn:li:activity:7421903131573366784/',
     preview: 'tracks/joomsy.jpg',
@@ -102,7 +102,7 @@ const TRACKS: TrackBase[] = [
     kind: 'experiment',
     date: 'MAR 2023',
     tag: 'Tech-Music Hack · Afeka × Rimon',
-    title: 'MIDI Violin — Arduino hack, 3rd place.',
+    title: 'MIDI Violin - Arduino hack, 3rd place.',
     body:
       'Second year at the Afeka × Rimon Tech-Music Hackathon. My first time using an Arduino. After 24 hours, the team had wired a real violin into a MIDI controller that handles vibrato and glissando (mostly). We added fairy lights for fun. Placed third.',
     hashtags: '#arduino   #midi   #hackathon',
@@ -114,7 +114,7 @@ const TRACKS: TrackBase[] = [
     kind: 'post',
     date: 'AUG 2024',
     tag: '// bootcamp final',
-    title: 'Israelify — our Spotify-clone final project.',
+    title: 'Israelify - our Spotify-clone final project.',
     body:
       'Final project from Coding Academy Israel. Built in a pair over a few weeks: a music streaming platform with real-time collaboration and personalized recommendations. Node.js and MongoDB backend, React frontend. Demo and repos in the post.',
     hashtags: '#react   #nodejs   #mongodb   #bootcamp',
@@ -126,7 +126,7 @@ const TRACKS: TrackBase[] = [
     kind: 'experiment',
     date: 'APR 2026',
     tag: 'Self-directed · 2026',
-    title: 'Biome Synth — five-biome browser instrument.',
+    title: 'Biome Synth - five-biome browser instrument.',
     body:
       'Started as a Claude skill I wrote that interviews you with AskUserQuestion to build a full project brief, no technical background needed. I used that brief to build the app: a browser instrument with five biomes and an AI DJ that moves through five states (DRIFT, PULSE, BLOOM, SURGE, DISSOLVE). Built with Tone.js, Three.js, and Canvas2D, polished in Lovable.',
     hashtags: '#tonejs   #threejs   #webaudio   #synth   #claude',
@@ -144,7 +144,7 @@ const TRACKS: TrackBase[] = [
     kind: 'experiment',
     date: 'JAN 2025',
     tag: 'Global Game Jam · 2025',
-    title: 'Hamster Bubbles — my first Global Game Jam, on audio.',
+    title: 'Hamster Bubbles - my first Global Game Jam, on audio.',
     body:
       'My first Global Game Jam: 48 hours to build a game around a secret theme announced at the start of the weekend. The theme was "Bubbles." First time taking on sound design and music for a project. Big thanks to Yuval Dorfman, Noam Goldfarb, Yotam Goren, and Yuval Beck for getting through the chaos with me.',
     hashtags: '#ggj   #sfx   #gamejam   #audio',
@@ -156,7 +156,7 @@ const TRACKS: TrackBase[] = [
     kind: 'experiment',
     date: 'FEB 2026',
     tag: 'Global Game Jam · 2026',
-    title: 'Masking Through — adaptive score for a cardboard-doctor short.',
+    title: 'Masking Through - adaptive score for a cardboard-doctor short.',
     body:
       'Second year doing audio. A cut-out cardboard world: tie-wearing doctor, smiling pink flowers, a hand-lettered title card. Scored in Unity and FMOD with layered stems that respond to player state (vertical layers, horizontal cues). I had Cursor write the sound-effect code (C# synth, mixer, effects chain) while I directed. One 48-hour weekend, no manual setup.',
     hashtags: '#ggj2026   #fmod   #unity   #cursor   #adaptive',
@@ -199,7 +199,7 @@ export default function Mixtape() {
   const tracks = useMemo(() => shuffleAndAssignSides(TRACKS), []);
   const visible = tracks.filter((t) => t.side === side);
 
-  // Intentionally session-only — every page load starts muted/stopped so the
+  // Intentionally session-only - every page load starts muted/stopped so the
   // user's first gesture is always the explicit Start button. A previously
   // persisted "on" combined with the old auto-unlock-on-any-click listener
   // let audio start without the user pressing Start; that felt like autoplay.
@@ -237,7 +237,7 @@ export default function Mixtape() {
 
   const [announce, setAnnounce] = useState('');
   // Re-announce identical strings (e.g. two consecutive volume tweaks at the
-  // same percentage) by appending a zero-width space — the screen reader
+  // same percentage) by appending a zero-width space - the screen reader
   // sees a "different" value and re-reads it.
   const announceRef = useRef(0);
   const announceMessage = (msg: string) => {
@@ -367,7 +367,7 @@ export default function Mixtape() {
     const ms = navigator.mediaSession;
     try {
       ms.metadata = new MediaMetadata({
-        title: `Bar's Mixtape — Side ${side}`,
+        title: `Bar's Mixtape - Side ${side}`,
         artist: 'Bar Moshe',
         album: 'bar-portfolio',
         artwork: [{ src: `${import.meta.env.BASE_URL}og-cover.jpg`, sizes: '1200x630', type: 'image/jpeg' }],

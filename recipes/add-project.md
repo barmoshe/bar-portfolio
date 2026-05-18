@@ -38,7 +38,7 @@ npm run dev
 ```
 
 Visit `http://localhost:5173/#repos`. The Repos section is **collapsible and
-always starts closed** — click the "Show N projects ↓" toggle to expand it.
+always starts closed** - click the "Show N projects ↓" toggle to expand it.
 Find your new card. Verify:
 
 - Glyph renders (not `{ }` unless that's intended).

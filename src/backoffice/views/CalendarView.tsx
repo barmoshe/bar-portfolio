@@ -96,7 +96,7 @@ export default function CalendarView({ navigate }: { navigate: (r: Route) => voi
                   type="button"
                   className="bo-cal__day"
                   onClick={() => setOpenDay(cell.date)}
-                  aria-label={`${formatDateLong(isoDate)} — ${cell.items.length} פריטים`}
+                  aria-label={`${formatDateLong(isoDate)} - ${cell.items.length} פריטים`}
                   disabled={cell.items.length === 0}
                 >
                   <span className="bo-cal__num">{cell.date.getDate()}</span>

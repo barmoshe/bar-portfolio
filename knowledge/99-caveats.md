@@ -89,7 +89,7 @@ the **workflow run** without cancelling the **Pages deployment** the run
 already kicked off via `actions/deploy-pages`. The next push's deploy step
 then fails with `HTTP 400 Deployment request failed for <sha> due to in
 progress deployment. Please cancel <other-sha> first or wait for it to
-complete.` — and there is no clean way to cancel that orphaned deployment
+complete.` - and there is no clean way to cancel that orphaned deployment
 from inside a subsequent workflow.
 
 Keep `cancel-in-progress: false`. Pushes queue cleanly behind any in-flight

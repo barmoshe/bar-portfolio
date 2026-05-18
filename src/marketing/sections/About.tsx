@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useLang } from '../LangContext';
 
 /**
- * About — bio sticker card with a "BUILDING" pill in the corner +
+ * About - bio sticker card with a "BUILDING" pill in the corner +
  * three stat sub-tickets in a micro-grid. Stat numbers animate from
  * zero on entry (rAF, single loop for all three, IO-gated).
  */

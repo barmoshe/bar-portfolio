@@ -60,7 +60,7 @@ function delay(): Promise<void> {
 async function simulate<T>(fn: () => T, errorChance = 0.05): Promise<T> {
   await delay();
   if (!stable && Math.random() < errorChance) {
-    throw new Error('שגיאת רשת מדומה — נסי שוב');
+    throw new Error('שגיאת רשת מדומה - נסי שוב');
   }
   return fn();
 }
@@ -122,7 +122,7 @@ export function setLeadStatus(id: string, status: LeadStatus): Promise<Lead> {
     const lead = leadById(id);
     const before = lead.status;
     lead.status = status;
-    pushActivity(id, 'status_changed', `סטטוס שונה ל"${STATUS_LABEL[status]}" — ${lead.client.company} (היה: ${STATUS_LABEL[before]})`);
+    pushActivity(id, 'status_changed', `סטטוס שונה ל"${STATUS_LABEL[status]}" - ${lead.client.company} (היה: ${STATUS_LABEL[before]})`);
     persist();
     notify();
     return clone(lead);
@@ -134,7 +134,7 @@ export function setProgress(id: string, progress: number): Promise<Lead> {
     const lead = leadById(id);
     const next = Math.max(0, Math.min(100, Math.round(progress)));
     lead.progress = next;
-    pushActivity(id, 'progress_changed', `התקדמות עודכנה ל־${next}% — ${lead.client.company}`);
+    pushActivity(id, 'progress_changed', `התקדמות עודכנה ל־${next}% - ${lead.client.company}`);
     persist();
     notify();
     return clone(lead);
@@ -191,7 +191,7 @@ export function addNote(leadId: string, body: string): Promise<Note> {
       createdAt: new Date().toISOString(),
     };
     lead.notes = [note, ...lead.notes];
-    pushActivity(leadId, 'note_added', `הערה חדשה נוספה — ${lead.client.company}`);
+    pushActivity(leadId, 'note_added', `הערה חדשה נוספה - ${lead.client.company}`);
     persist();
     notify();
     return clone(note);
@@ -204,7 +204,7 @@ export function markInvoicePaid(leadId: string, invoiceId: string): Promise<Invo
     const inv = lead.invoices.find((i) => i.id === invoiceId);
     if (!inv) throw new Error('חשבונית לא נמצאה');
     inv.status = 'paid';
-    pushActivity(leadId, 'invoice_paid', `חשבונית ${inv.number} סומנה כשולמה — ${lead.client.company}`);
+    pushActivity(leadId, 'invoice_paid', `חשבונית ${inv.number} סומנה כשולמה - ${lead.client.company}`);
     persist();
     notify();
     return clone(inv);
@@ -217,7 +217,7 @@ export function sendInvoice(leadId: string, invoiceId: string): Promise<Invoice>
     const inv = lead.invoices.find((i) => i.id === invoiceId);
     if (!inv) throw new Error('חשבונית לא נמצאה');
     inv.status = 'sent';
-    pushActivity(leadId, 'invoice_sent', `חשבונית ${inv.number} נשלחה — ${lead.client.company}`);
+    pushActivity(leadId, 'invoice_sent', `חשבונית ${inv.number} נשלחה - ${lead.client.company}`);
     persist();
     notify();
     return clone(inv);

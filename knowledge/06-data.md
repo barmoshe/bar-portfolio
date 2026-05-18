@@ -92,7 +92,7 @@ Same file, `contact` object. The email is consumed by `Letter.tsx` (copy-to-clip
 - Education and work history live in `Background.tsx` (replaced the older
   `Story` / `Experience` split).
 - Mixtape tracks live in the inline `TRACKS: TrackBase[]` array at the top of
-  `Mixtape.tsx`. Each entry omits `n` and `side` — those are assigned at
+  `Mixtape.tsx`. Each entry omits `n` and `side` - those are assigned at
   runtime by `shuffleAndAssignSides()`. The first entry in `TRACKS` is
   **pinned to A1**; the rest Fisher-Yates into the remaining slots, split
   into balanced A/B halves (counts differ by at most 1). To re-pin a

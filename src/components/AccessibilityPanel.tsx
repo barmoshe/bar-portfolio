@@ -1,10 +1,10 @@
 /**
  * Self-built in-page accessibility settings panel. NOT an overlay widget.
  * Surfaces the personalization controls disabled users actually want:
- *   - Theme (auto / light / dark) — wraps existing useTheme.cycle
- *   - Contrast (auto / on / off) — overrides prefers-contrast per-site
- *   - Text size (100/110/125/150 %) — multiplies a --text-scale CSS var
- *   - Readable typography — swaps to a hyperlegible font stack
+ *   - Theme (auto / light / dark) - wraps existing useTheme.cycle
+ *   - Contrast (auto / on / off) - overrides prefers-contrast per-site
+ *   - Text size (100/110/125/150 %) - multiplies a --text-scale CSS var
+ *   - Readable typography - swaps to a hyperlegible font stack
  *
  * Modal pattern: role=dialog, aria-modal=true, Esc closes, focus trapped
  * via Tab/Shift+Tab cycling within the panel, focus returned to opener

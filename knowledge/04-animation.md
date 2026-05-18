@@ -6,7 +6,7 @@ The site has three animation layers: **HeroSlides ink-native fx cycle**, **GSAP 
 
 File: `src/components/HeroSlides.tsx`.
 
-Four transitions, drawn from a Fisher-Yates shuffle bag. The bag holds the four fx names; `pickNextFx` shifts from the front and refills with a fresh shuffle when empty. On refill, if the new bag's first item equals the fx that just played, it swaps with a random later index — so the same fx never plays twice in a row across bag boundaries. All are driven imperatively by a single GSAP timeline per advance; React owns only the resting `.is-active` class and the shuffle order.
+Four transitions, drawn from a Fisher-Yates shuffle bag. The bag holds the four fx names; `pickNextFx` shifts from the front and refills with a fresh shuffle when empty. On refill, if the new bag's first item equals the fx that just played, it swaps with a random later index - so the same fx never plays twice in a row across bag boundaries. All are driven imperatively by a single GSAP timeline per advance; React owns only the resting `.is-active` class and the shuffle order.
 
 ```ts
 const FX = ['bloom', 'brush', 'tear', 'crumple'] as const;
