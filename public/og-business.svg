@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Bar Moshe — בונה לך אבטיפוס על חשבוני">
-  <title>Bar Moshe — בונה לך אבטיפוס על חשבוני</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Bar Moshe — בונה לך גרסה ראשונה לפני שמדברים">
+  <title>Bar Moshe — בונה לך גרסה ראשונה לפני שמדברים</title>
   <desc>Marketing OG card: BOARD/ticket motif. Ticket #BAR-001, status DOING. Hebrew headline: תאר. אבנה. תחליט.</desc>
 
   <!-- Paper background, matches marketing light theme (cream) -->
@@ -46,12 +46,12 @@
 
     <!-- Subline -->
     <g transform="translate(40,290)">
-      <text x="1000" y="0" text-anchor="end" font-family="'Rubik', 'Heebo', system-ui, -apple-system, sans-serif" font-size="36" font-weight="500" fill="#0f0f10" opacity="0.85" dominant-baseline="hanging" direction="rtl">בונה לך אבטיפוס על חשבוני</text>
+      <text x="1000" y="0" text-anchor="end" font-family="'Rubik', 'Heebo', system-ui, -apple-system, sans-serif" font-size="36" font-weight="500" fill="#0f0f10" opacity="0.85" dominant-baseline="hanging" direction="rtl">בונה לך גרסה ראשונה לפני שמדברים</text>
     </g>
 
     <!-- Three-dot checklist (RTL) -->
     <g transform="translate(40,370)" font-family="'Rubik', 'Heebo', system-ui, -apple-system, sans-serif" font-size="22" font-weight="500" fill="#0f0f10">
-      <text x="1000" y="0" text-anchor="end" dominant-baseline="hanging" direction="rtl">תוך שבוע · בלי תשלום מראש · בלי התחייבות</text>
+      <text x="1000" y="0" text-anchor="end" dominant-baseline="hanging" direction="rtl">תאר · אבנה · תחליט</text>
     </g>
   </g>
 
