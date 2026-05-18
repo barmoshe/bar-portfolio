@@ -22,7 +22,9 @@
   <img alt="License MIT"    src="https://img.shields.io/badge/license-MIT-6f42c1">
 </p>
 
-Bar Moshe's portfolio. A single-page paper-and-ink site - cover page, five sections (Intro, Background, Mixtape, Repos, Letter), a portrait slideshow with multiple clip-path transitions, a vinyl-themed mixtape with shuffled tracks, a collapsible project grid that opens into a lightbox, a mobile bottom tab bar, and an oklch design system that flips between light and dark via an ink-wipe GSAP timeline.
+**Bar Moshe** (בר משה) is a software builder and full-stack developer from Israel — web apps, automation, AI-native tools, DevOps, and product-focused software. GitHub: [`barmoshe`](https://github.com/barmoshe) · LinkedIn: [`barmoshe`](https://www.linkedin.com/in/barmoshe/) · Medium: [`@barmoshe`](https://medium.com/@barmoshe).
+
+This is his personal portfolio — a single-page paper-and-ink site with five sections (Intro, Background, Mixtape, Repos, Letter), a portrait slideshow with multiple clip-path transitions, a vinyl-themed mixtape with shuffled tracks, a collapsible project grid that opens into a lightbox, a mobile bottom tab bar, and an oklch design system that flips between light and dark via an ink-wipe GSAP timeline.
 
 **Live:** https://barmoshe.github.io/bar-portfolio/ · **Design showcase:** [/#showcase](https://barmoshe.github.io/bar-portfolio/#showcase) · [/showcase.html](https://barmoshe.github.io/bar-portfolio/showcase.html)
 
