@@ -34,6 +34,7 @@ All four share `src/styles.css` (root tokens + theme) and the same `bm:theme` / 
 - Skill bundle that routes intents → `skills/portfolio-curator/SKILL.md`
 - Marketing/business SEO + sharing audit → `knowledge/08-seo-sharing.md`
 - Entity disambiguation, Person JSON-LD strategy ("Bar Moshe / בר משה") → `knowledge/09-entity-discoverability.md`
+- SEO runbook for an external agent (Search Console, Wikidata, GitHub bio, LinkedIn, Medium, X) → `prompts/seo-agent-runbook.md`
 
 Slash commands: `/new-project`, `/theme-preview`, `/deploy-check`, `/typecheck` — see `.claude/commands/`.
 
