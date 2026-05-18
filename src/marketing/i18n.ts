@@ -315,10 +315,10 @@ const HE: Dict = {
       },
       {
         slug: 'audio',
-        title: 'הכל מסביב לסאונד אינטראקטיבי',
+        title: 'הכל מסביב לסאונד ומוזיקה',
         summary:
-          'סינתזה, מיקסר רב־ערוצי, אפקטים בזמן אמת. למוצר שהסאונד הוא חלק מהחוויה - לא רק רעש רקע.',
-        fits: ['אמן.ית', 'מותג מוזיקלי', 'סטארטאפ אודיו'],
+          'פלאגינים ו-VSTים, כלי הפקה, מערכות לאיוו פרפורמנס, סינתזה, מיקסר רב־ערוצי, אפקטים בזמן אמת. אני גם מנגן ומפיק - אז אני יודע איך זה צריך להרגיש בצד השני של המסך.',
+        fits: ['מוזיקאי.ת', 'מפיק.ה', 'מותג מוזיקלי', 'סטארטאפ אודיו'],
       },
       {
         slug: 'game',
@@ -934,10 +934,10 @@ const EN: Dict = {
       },
       {
         slug: 'audio',
-        title: 'Audio engine / musical interaction',
+        title: 'Anything around sound and music',
         summary:
-          'Synthesis, multi-channel mixer, real-time effects. Right for a product whose sound is part of the experience - not just background noise.',
-        fits: ['Artist', 'Music brand', 'Audio startup'],
+          'Plugins and VSTs, production tools, live-performance rigs, synthesis, multi-channel mixers, real-time effects. I play and produce music too - so I know how it has to feel on the other side of the screen.',
+        fits: ['Musician', 'Producer', 'Music brand', 'Audio startup'],
       },
       {
         slug: 'game',
