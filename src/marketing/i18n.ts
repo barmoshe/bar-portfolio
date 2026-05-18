@@ -317,7 +317,7 @@ const HE: Dict = {
         slug: 'audio',
         title: 'הכל מסביב לסאונד ומוזיקה',
         summary:
-          'פלאגינים ו-VSTים, כלי הפקה, מערכות לאיוו פרפורמנס, סינתזה, מיקסר רב־ערוצי, אפקטים בזמן אמת. אני גם מנגן ומפיק - אז אני יודע איך זה צריך להרגיש בצד השני של המסך.',
+          'פלאגינים לאולפן, כלי הפקה, מערכות לאיוו פרפורמנס, סינתזה, מיקסר רב־ערוצי, אפקטים בזמן אמת. אני גם מנגן ומפיק - אז אני יודע איך זה צריך להרגיש בצד השני של המסך.',
         fits: ['מוזיקאי.ת', 'מפיק.ה', 'מותג מוזיקלי', 'סטארטאפ אודיו'],
       },
       {
@@ -936,7 +936,7 @@ const EN: Dict = {
         slug: 'audio',
         title: 'Anything around sound and music',
         summary:
-          'Plugins and VSTs, production tools, live-performance rigs, synthesis, multi-channel mixers, real-time effects. I play and produce music too - so I know how it has to feel on the other side of the screen.',
+          'Studio plugins, production tools, live-performance rigs, synthesis, multi-channel mixers, real-time effects. I play and produce music too - so I know how it has to feel on the other side of the screen.',
         fits: ['Musician', 'Producer', 'Music brand', 'Audio startup'],
       },
       {
