@@ -39,19 +39,19 @@ export default function Cover() {
   // sourced from i18n.ts.
   const copy = isHe
     ? {
-        eyebrow: 'גליון 01 · בלי תשלום מראש',
+        eyebrow: 'גליון 01 · בונה קודם, מדבר אחר־כך',
         titleA: 'בונה לך',
-        titleB: 'אבטיפוס',
-        titleC: 'על חשבוני.',
+        titleB: 'גרסה ראשונה',
+        titleC: 'לפני שמדברים.',
         lead:
-          'שלח לי בכמה שורות מה אתה רוצה. תוך שבוע יש לך גרסה ראשונה עובדת - על חשבוני. עבד? יאללה ממשיכים. לא? כל אחד לדרכו, בלי שאלות.',
+          'שלח לי בכמה שורות מה אתה רוצה. תוך שבוע יש לך גרסה ראשונה עובדת. עבד? יאללה ממשיכים. לא? כל אחד לדרכו, בלי שאלות.',
         ticketNum: '#BAR-001',
         ticketStatus: t.board.status.doing,
         ticketTitle: 'הפרויקט הבא שלך',
         ticketSub: 'מוכן להפוך למוצר',
         checks: [
           'תיאור - מה אתה רוצה לבנות, ב־3 שורות',
-          'אבטיפוס - שבוע על חשבוני, מוצר אמיתי שרץ',
+          'בנייה - גרסה ראשונה עובדת, מוצר אמיתי שרץ',
           'החלטה - רק אם זה עובד לך, ממשיכים',
         ],
         ctaPrimary: '✦ פתח את הכרטיס שלך',
@@ -59,19 +59,19 @@ export default function Cover() {
         scrollHint: 'גלילה',
       }
     : {
-        eyebrow: 'Issue 01 · No upfront cost',
+        eyebrow: 'Issue 01 · Build before brief',
         titleA: 'I build you',
-        titleB: 'a prototype',
-        titleC: 'on my dime.',
+        titleB: 'a first version',
+        titleC: 'before we talk.',
         lead:
-          'Send me a few lines of what you want. A week later you have a first working version - on me. Worked? Let’s keep going. Didn’t? We part ways, no questions.',
+          'Send me a few lines of what you want. A week later you have a first working version. Worked? Let’s keep going. Didn’t? We part ways, no questions.',
         ticketNum: '#BAR-001',
         ticketStatus: t.board.status.doing,
         ticketTitle: 'Your next project',
         ticketSub: 'Ready to become a product',
         checks: [
           'Describe - what you want built, in 3 lines',
-          'Prototype - one week on me, a real working product',
+          'Build - a first working version, a real product that runs',
           'Decide - keep going only if it works for you',
         ],
         ctaPrimary: '✦ Open your ticket',

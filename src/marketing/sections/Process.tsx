@@ -61,11 +61,6 @@ export default function Process() {
           );
         })}
       </ol>
-
-      <figure className="mp-pull">
-        <blockquote>{method.pullQuote.quote}</blockquote>
-        <figcaption>- {method.pullQuote.cite}</figcaption>
-      </figure>
     </section>
   );
 }

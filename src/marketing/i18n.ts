@@ -74,14 +74,12 @@ export type Dict = {
     title: string;
     standfirst: string;
     steps: { num: string; title: string; body: string }[];
-    pullQuote: { quote: string; cite: string };
   };
   about: {
     number: string;
     kicker: string;
     title: string;
     paragraphs: string[];
-    stats: { value: string; label: string }[];
   };
   brief: {
     number: string;
@@ -242,7 +240,7 @@ const HE: Dict = {
   meta: {
     title: 'בר משה - תאר. אבנה. תחליט.',
     description:
-      'תכתוב לי בכמה שורות מה אתה רוצה. תוך שבוע יש לך גרסה ראשונה עובדת - בלי תשלום מראש, בלי התחייבות.',
+      'תכתוב לי בכמה שורות מה אתה רוצה. אני בונה גרסה ראשונה עובדת לפני שאנחנו סוגרים משהו - תראה, תחליט, נמשיך משם.',
   },
   masthead: {
     issueNumber: 'גליון 01',
@@ -265,7 +263,7 @@ const HE: Dict = {
     // direct, punchy, matches the HTML title.
     headlineLines: ['תאר.', 'אבנה.', 'תחליט.'],
     standfirst:
-      'שלח לי בכמה שורות מה אתה רוצה. תוך שבוע יש לך גרסה ראשונה עובדת - על חשבוני. עבד? יאללה ממשיכים. לא? כל אחד לדרכו, בלי שאלות.',
+      'שלח לי בכמה שורות מה אתה רוצה. תוך שבוע יש לך גרסה ראשונה עובדת. עבד? יאללה ממשיכים. לא? כל אחד לדרכו, בלי שאלות.',
     byline: 'בר משה · בונה דברים מאז 2020',
     scrollHint: 'גלילה למטה',
     ctaStart: 'בוא נתחיל',
@@ -282,7 +280,7 @@ const HE: Dict = {
         slug: 'mvp',
         title: 'גרסה ראשונה למיזם',
         summary:
-          'מרעיון למוצר עובד בתוך שבוע. גרסה ראשונה שמספיק טובה כדי להראות למשתמשים, לרוץ איתה לסבב גיוס, או פשוט להבין שזה לא הכיוון.',
+          'מרעיון למוצר עובד, מהר. גרסה ראשונה שמספיק טובה כדי להראות למשתמשים, לרוץ איתה לסבב גיוס, או פשוט להבין שזה לא הכיוון.',
         fits: ['יזמ.ית סולו', 'סטארטאפ צעיר', 'צוות קטן'],
       },
       {
@@ -324,7 +322,7 @@ const HE: Dict = {
         slug: 'game',
         title: 'משחק דפדפן או חוויה אינטראקטיבית',
         summary:
-          'משחקון לקמפיין, חוויה ויראלית לסטוריז, או אבטיפוס למשחק אינדי שאתה מפתח.',
+          'משחקון לקמפיין, חוויה ויראלית לסטוריז, או גרסה ראשונה למשחק אינדי שאתה מפתח.',
         fits: ['מותג עם קמפיין', 'פיתוח משחקי אינדי', 'סוכנות יצירתית'],
       },
       {
@@ -356,7 +354,7 @@ const HE: Dict = {
     kicker: 'איך זה עובד',
     title: 'איך בונים יחד',
     standfirst:
-      'שלושה שלבים. בלי הצעות על העיוור. בלי "הצעה מותאמת" של 14 עמודים. בלי לחתום על שום דבר לפני שיש משהו אמיתי מול העיניים.',
+      'שלושה שלבים. בלי הצעות על העיוור. בלי "הצעה מותאמת" של 14 עמודים. מתחילים מלבנות - ומשם ממשיכים.',
     steps: [
       {
         num: '01',
@@ -368,19 +366,15 @@ const HE: Dict = {
         num: '02',
         title: 'אבנה',
         body:
-          'תוך 3–7 ימים יש לך אבטיפוס ביד. לא מוקאפ. לא מצגת. מוצר עובד. תפתח, תלחץ, תראה לחבר, ותגיד לי אם זה הכיוון. לא הכיוון? נפרדים כאן. בלי חשבון.',
+          'תוך 3–7 ימים יש לך גרסה ראשונה ביד. לא מוקאפ. לא מצגת. מוצר עובד. תפתח, תלחץ, תראה לחבר, ותגיד לי אם זה הכיוון. לא הכיוון? נפרדים כאן, בלי חשבון.',
       },
       {
         num: '03',
         title: 'תחליט',
         body:
-          'אהבת? יאללה נדבר על המשך: סקופ ברור, מחיר סגור מראש, אבני דרך שבועיות. בלי הפתעות, בלי חשבונות לפי שעות. אני עובד לפי תוצאות, לא לפי שעון.',
+          'אהבת? משם ממשיכים בשיחה. אם לא מתאים - נפרדים כאן וזה בסדר.',
       },
     ],
-    pullQuote: {
-      quote: 'הסיכון הכי גדול הוא לא הכסף - זה הזמן שמתבזבז על הצעות שאף פעם לא הופכות למוצר.',
-      cite: 'בר משה',
-    },
   },
   about: {
     number: '03',
@@ -388,13 +382,9 @@ const HE: Dict = {
     title: 'בר משה',
     paragraphs: [
       'מפתח מאז 2020. בניתי כבר עשרות פרויקטים, מאתרי מותג ועד מערכות AI - וכל פרויקט מביא איתו אתגר אחר. בזכות זה אני עדיין נהנה.',
-      'התחלתי לבנות הרבה לפני שזה הפך לפרנסה. אני מחליט מהר כי מוצר שעובד קל לתקן, ובריף שלא הפך למוצר - כמעט אי אפשר. בגלל זה אני מתחיל מאבטיפוס: ככה אני יודע מה לבנות, ואתה רואה מה אתה מקבל - לפני שצריך להחליט משהו.',
+      'התחלתי לבנות הרבה לפני שזה הפך לפרנסה. אני מחליט מהר כי מוצר שעובד קל לתקן, ובריף שלא הפך למוצר - כמעט אי אפשר. בגלל זה אני מתחיל מלבנות: ככה אני יודע מה לבנות, ואתה רואה מה אתה מקבל - לפני שצריך להחליט משהו.',
+      'זה גם פשוט ממה שזה נשמע: לבנות זה ההובי שלי מאז שאני זוכר את עצמי. אני לא לוקח פרויקטים שלא בא לי לבנות - אז גם אם לא נמשיך, יצא לי לבנות עוד משהו שאהבתי לבנות.',
       'אני בישראל, עובד עם לקוחות בכל העולם - בעברית ובאנגלית. כדאי לכתוב לי לפני שרצים לכל חברות הפיתוח: אם זה לא מתאים, אגיד לך מראש. כך לא נבזבז זמן לאף אחד.',
-    ],
-    stats: [
-      { value: '5+', label: 'שנים של בנייה' },
-      { value: '20+', label: 'אבטיפוסים שנבנו' },
-      { value: '0', label: 'תשלום מראש' },
     ],
   },
   brief: {
@@ -543,7 +533,7 @@ const HE: Dict = {
             prompt: 'ראית משהו שקרוב לזה? קישור, צילום, "כמו X אבל בלי Y".',
             placeholder: 'כמו Toptal אבל ליוצרים סולו, בלי עמלת סוכנות.',
           },
-          timeline: { prompt: 'מתי אתה צריך אבטיפוס עובד ביד?' },
+          timeline: { prompt: 'מתי אתה צריך גרסה ראשונה עובדת ביד?' },
           howHeard: { prompt: 'איך הגעת אליי? סקרנות.' },
           review: { prompt: 'זה הבריף של הגרסה הראשונה. אישור אחרון לפני שזה נופל בוואטסאפ?' },
         },
@@ -801,19 +791,14 @@ const HE: Dict = {
     title: 'מה שואלים אותי לפני שפונים',
     items: [
       {
-        q: 'באמת בלי תשלום על האבטיפוס?',
+        q: 'איך זה עובד מבחינה מעשית - מתי מדברים על כסף?',
         a:
-          'באמת. אני משקיע 3–7 ימים כי זו הדרך הכי טובה שמצאתי להוכיח שאני יכול לבנות את מה שצריך - לפני שמשלמים. לא ממשיכים? הסיכון שלי. ממשיכים? שני הצדדים יודעים בדיוק על מה חתמו.',
+          'קודם כל אני בונה גרסה ראשונה. רק אחרי שראית והחלטת להמשיך - ניגשים להמשך ולמסגרת התשלום. זה עובד כי אני אוהב לבנות גם כשאף אחד לא מסתכל - אז הסיכון עליי, לא עליך.',
       },
       {
         q: 'מה אם הכיוון עדיין לא לגמרי ברור?',
         a:
           'מעולה - זה רוב המקרים. אם ראית מוצר שמרגיז אותך, או יש בעיה יומיומית שכואבת - תכתוב שני משפטים, ואני אבנה את הניחוש הראשון שלי. ברגע שיש משהו לראות, הרבה יותר קל להגיד "כן, אבל…" - וזה בדיוק מה שאני מחפש.',
-      },
-      {
-        q: 'אז איך בעצם משלמים אחרי האבטיפוס?',
-        a:
-          'אני לא עובד לפי שעות. כל פרויקט מקבל סקופ ברור ומחיר סגור מראש - לפי תוצאות. פרויקטים קטנים יוצאים במחיר חבילה. גדולים מתפצלים לאבני דרך, עם תשלום אחרי כל מסירה. אין ריטיינר חודשי, אין חוזה ארוך. נגמרה העבודה - נגמר התשלום.',
       },
       {
         q: 'ומה לגבי הצד הטכני - אני אקבל את מה שנבנה?',
@@ -826,9 +811,9 @@ const HE: Dict = {
           'הפוך. רוב הלקוחות שלי לא מתכנתים. אם תוכל לתאר במילים מה אתה רוצה שיקרה - יש לי מספיק לעבוד איתו. השפה הטכנית היא הצד שלי.',
       },
       {
-        q: 'מה קורה אחרי שהאבטיפוס מוכן - כמה זמן עד מוצר אמיתי?',
+        q: 'מה קורה אחרי שיש גרסה ראשונה?',
         a:
-          'תלוי בגודל. אתר מותג - 2–4 שבועות אחרי האישור. אפליקציה או מערכת מורכבת - 6–12 שבועות, מתפצל לאבני דרך שבועיות עם הדגמה אחרי כל אבן דרך.',
+          'מתיישבים לשיחה. מסתכלים על מה עובד ומה עוד חסר, סוגרים סקופ להמשך ויוצאים לדרך בקצב שעובד לשנינו.',
       },
       {
         q: 'אפשר להחתים על הסכם סודיות?',
@@ -883,7 +868,7 @@ const EN: Dict = {
   meta: {
     title: 'Bar Moshe - Describe. I Build. You Decide.',
     description:
-      'Tell me what you want in a few lines. A week later you have a first working version - no upfront payment, no commitment.',
+      'Tell me what you want in a few lines. I build a first working version before we lock anything down - see it, decide, take it from there.',
   },
   masthead: {
     issueNumber: 'Issue 01',
@@ -904,7 +889,7 @@ const EN: Dict = {
     issueLine: 'Issue 01 · Build before brief',
     headlineLines: ['Describe.', 'I build.', 'You decide.'],
     standfirst:
-      'Send me a few lines of what you want. A week later you have a first working version - on me. Worked? Let’s keep going. Didn’t? We part ways, no questions.',
+      'Send me a few lines of what you want. A week later you have a first working version. Worked? Let’s keep going. Didn’t? We part ways, no questions.',
     byline: 'Bar Moshe · Independent builds · since 2020',
     scrollHint: 'Keep reading',
     ctaStart: 'Start a build',
@@ -921,7 +906,7 @@ const EN: Dict = {
         slug: 'mvp',
         title: 'First version of a venture',
         summary:
-          'From idea to a working product in a week. A first version solid enough to show users, raise on, or decide it’s not the direction.',
+          'From idea to a working product, fast. A first version solid enough to show users, raise on, or decide it’s not the direction.',
         fits: ['Solo founder', 'Young startup', 'Small team'],
       },
       {
@@ -963,7 +948,7 @@ const EN: Dict = {
         slug: 'game',
         title: 'Browser game / interactive experience',
         summary:
-          'A mini-game for a campaign, a viral piece for stories, or a prototype for a game you’re building yourself.',
+          'A mini-game for a campaign, a viral piece for stories, or a first version of a game you’re building yourself.',
         fits: ['Brand with a campaign', 'Indie game dev', 'Creative agency'],
       },
       {
@@ -995,7 +980,7 @@ const EN: Dict = {
     kicker: 'The method',
     title: 'How we build together',
     standfirst:
-      'Three steps with no opening proposals. No 14-page "tailored quote". No signing anything before you see something working.',
+      'Three steps with no opening proposals. No 14-page "tailored quote". We start by building - and take it from there.',
     steps: [
       {
         num: '01',
@@ -1007,20 +992,15 @@ const EN: Dict = {
         num: '02',
         title: 'I build',
         body:
-          'Within 3–7 days I build a first prototype on my own dime. Not a mockup. Not a slide deck. A working product you can open, click, send to a friend, and ask if this is what you imagined. If not, we part ways here. No invoice.',
+          'Within 3–7 days you have a first working version in hand. Not a mockup. Not a slide deck. A real product you can open, click, send to a friend, and tell me whether it’s the direction. Not the direction? We part ways here, no invoice.',
       },
       {
         num: '03',
         title: 'You decide',
         body:
-          'If it works for you, we talk about going further: clear scope, price known up front, weekly milestones, clean handoff. I don’t work by the hour - I work by the outcome.',
+          'You like it? We pick up the conversation from there. If it’s not a fit, we part ways here - that’s fine too.',
       },
     ],
-    pullQuote: {
-      quote:
-        'The biggest risk for the client isn’t the money - it’s the time wasted on a proposal that never ships.',
-      cite: 'Bar Moshe',
-    },
   },
   about: {
     number: '03',
@@ -1028,13 +1008,9 @@ const EN: Dict = {
     title: 'Bar Moshe',
     paragraphs: [
       'Developer since 2020. I’ve built dozens of projects, from brand sites to AI systems - and every project brings a different challenge. That’s why I’m still here.',
-      'I build because it was the hobby before it was the job. I decide quickly because it’s much easier to fix a product that sort of works than a brief that never became a product. That’s why I work prototype-first: I learn what to build, and you see what you’re getting.',
+      'I build because it was the hobby before it was the job. I decide quickly because it’s much easier to fix a product that sort of works than a brief that never became a product. That’s why I start by building: I learn what to build, and you see what you’re getting - before you have to decide anything.',
+      'It’s also simpler than it sounds: building has been my hobby since I can remember. I don’t take on projects I don’t actually want to build - so even if we don’t continue, I got to build one more thing I enjoyed building.',
       'Based in Israel, working with clients around the world in Hebrew and English. Write before you check the big software shops - if it isn’t a fit, I’ll tell you.',
-    ],
-    stats: [
-      { value: '5+', label: 'years building' },
-      { value: '20+', label: 'prototypes shipped' },
-      { value: '0', label: 'upfront payment' },
     ],
   },
   brief: {
@@ -1042,7 +1018,7 @@ const EN: Dict = {
     kicker: 'The brief',
     title: 'What do you want to build',
     standfirst:
-      'This brief goes straight to my WhatsApp as a tidy message. The more detail you give, the sharper the first prototype. Three lines is enough to start.',
+      'This brief goes straight to my WhatsApp as a tidy message. The more detail you give, the sharper the first version. Three lines is enough to start.',
     requiredHint: 'Only 3 required fields: type, idea, and a way to reach you.',
     optionalHeading: 'More detail - optional',
     fields: {
@@ -1184,7 +1160,7 @@ const EN: Dict = {
             prompt: 'Anything you’ve seen that’s close? A link, a screenshot, "like X but without Y".',
             placeholder: 'Like Toptal but solo-creator, no agency markup.',
           },
-          timeline: { prompt: 'When do you need a working prototype in hand?' },
+          timeline: { prompt: 'When do you need a first working version in hand?' },
           howHeard: { prompt: 'How did you find me? Curious.' },
           review: { prompt: 'This is the first-version brief. Last check before it lands in WhatsApp?' },
         },
@@ -1440,19 +1416,14 @@ const EN: Dict = {
     title: 'What people ask before reaching out',
     items: [
       {
-        q: 'Really no payment for the prototype?',
+        q: 'How does this actually work - when do we talk money?',
         a:
-          'Really. I invest 3–7 days because it’s the best way I’ve found to show I can build what you need - before you pay anything. If we don’t continue, that’s my risk. If we do, both sides know exactly what they’re signing up for.',
+          'First I build a first working version. Only after you’ve seen it and decided to continue do we get into terms and payment. It works because I love building even when no one is watching - so the risk is on me, not on you.',
       },
       {
         q: 'What if I don’t know yet exactly what I want?',
         a:
           'Perfect - that’s most cases. Describe in two sentences what you don’t want, or which daily problem is in front of you, and I’ll build my first read of it. Once you see something, it’s much easier to say "yes, but…" - and that’s exactly what I’m after.',
-      },
-      {
-        q: 'So how does payment actually work after the prototype?',
-        a:
-          'I don’t work by the hour. Every project gets a clear scope and a price known up front - outcome-based. Small projects ship at a package price; larger ones break into milestones with payment after each delivery. No monthly retainer, no long contract. Work’s done - payment’s done.',
       },
       {
         q: 'And the technical side - do I get what gets built?',
@@ -1465,9 +1436,9 @@ const EN: Dict = {
           'The opposite. Most of my clients don’t code. If you can describe in words what you want to happen, I have enough to work with. The technical side is on me.',
       },
       {
-        q: 'What happens after the prototype - how long to a real product?',
+        q: 'What happens after there’s a first version?',
         a:
-          'Depends on size. A brand site - 2–4 weeks after approval. An app or complex system - 6–12 weeks, broken into weekly milestones with a demo after each.',
+          'We sit down to talk. Look at what works and what’s still missing, agree the scope for what comes next, and move at a pace that works for both of us.',
       },
       {
         q: 'Can we sign an NDA?',
