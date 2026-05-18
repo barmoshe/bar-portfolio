@@ -282,7 +282,7 @@ const HE: Dict = {
         slug: 'mvp',
         title: 'גרסה ראשונה לסטארטאפ',
         summary:
-          'מרעיון לקוד עובד בתוך שבוע. גרסה ראשונה שמספיק טובה כדי להראות למשתמשים, לרוץ איתה לסבב גיוס, או פשוט להבין שזה לא הכיוון.',
+          'מרעיון למוצר עובד בתוך שבוע. גרסה ראשונה שמספיק טובה כדי להראות למשתמשים, לרוץ איתה לסבב גיוס, או פשוט להבין שזה לא הכיוון.',
         fits: ['ייזום סולו', 'סטארטאפ early-stage', 'צוות קטן'],
       },
       {
@@ -296,7 +296,7 @@ const HE: Dict = {
         slug: 'ecommerce',
         title: 'חנות אונליין שזה לא תבנית',
         summary:
-          'חנות שעוצבה מאפס על תשתית קיימת, מערכת תשלומים משלך, או חנות־בוטיק שלמה בקוד. למותג עם אופי - לא לעוד קטלוג גנרי.',
+          'חנות שעוצבה מאפס על תשתית קיימת, מערכת תשלומים משלך, או חנות־בוטיק שנבנית במיוחד לך. למותג עם אופי - לא לעוד קטלוג גנרי.',
         fits: ['מותג קטן', 'יצירה עצמאית', 'חנות־בוטיק'],
       },
       {
@@ -338,7 +338,7 @@ const HE: Dict = {
         slug: 'mobile',
         title: 'אפליקציה לטלפון',
         summary:
-          'iOS + Android מאותו קוד. push, אופליין, חנות, התחברות. מפתח אחד (אני), שתי פלטפורמות.',
+          'iOS + Android מאותו בסיס. התראות, מצב לא־מקוון, חנות, התחברות. מפתח אחד (אני), שתי פלטפורמות.',
         fits: ['סטארטאפ', 'מוצר B2C', 'עסק עם לקוחות נאמנים'],
       },
       {
@@ -368,7 +368,7 @@ const HE: Dict = {
         num: '02',
         title: 'אבנה',
         body:
-          'תוך 3–7 ימים יש לך אבטיפוס ביד. לא מוקאפ. לא מצגת. קוד עובד. תפתח, תלחץ, תראה לחבר, ותגיד לי אם זה הכיוון. לא הכיוון? נפרדים כאן. בלי חשבון.',
+          'תוך 3–7 ימים יש לך אבטיפוס ביד. לא מוקאפ. לא מצגת. מוצר עובד. תפתח, תלחץ, תראה לחבר, ותגיד לי אם זה הכיוון. לא הכיוון? נפרדים כאן. בלי חשבון.',
       },
       {
         num: '03',
@@ -378,7 +378,7 @@ const HE: Dict = {
       },
     ],
     pullQuote: {
-      quote: 'הסיכון הכי גדול הוא לא הכסף - זה הזמן שמתבזבז על הצעות שאף פעם לא הופכות לקוד.',
+      quote: 'הסיכון הכי גדול הוא לא הכסף - זה הזמן שמתבזבז על הצעות שאף פעם לא הופכות למוצר.',
       cite: 'בר משה',
     },
   },
@@ -388,11 +388,11 @@ const HE: Dict = {
     title: 'בר משה',
     paragraphs: [
       'מפתח מאז 2020. כל פרויקט מביא איתו אתגר אחר - וזה בדיוק מה שמשאיר את העבודה מעניינת. בזכות זה אני עדיין נהנה.',
-      'התחלתי לבנות הרבה לפני שזה הפך לפרנסה. אני מחליט מהר כי קוד שעובד קל לתקן, ובריף שלא הפך לקוד - כמעט אי אפשר. בגלל זה אני מתחיל מאבטיפוס: ככה אני יודע מה לבנות, ואתה רואה מה אתה מקבל - לפני שצריך להחליט משהו.',
+      'התחלתי לבנות הרבה לפני שזה הפך לפרנסה. אני מחליט מהר כי מוצר שעובד קל לתקן, ובריף שלא הפך למוצר - כמעט אי אפשר. בגלל זה אני מתחיל מאבטיפוס: ככה אני יודע מה לבנות, ואתה רואה מה אתה מקבל - לפני שצריך להחליט משהו.',
       'אני בישראל, עובד עם לקוחות בכל העולם - בעברית ובאנגלית. עדיף שתכתוב לי לפני שאתה רץ לכל חברות הפיתוח: אם זה לא מתאים, אגיד לך מראש. כך לא נבזבז זמן לאף אחד.',
     ],
     stats: [
-      { value: '5+', label: 'שנים בקוד' },
+      { value: '5+', label: 'שנים של בנייה' },
       { value: '20+', label: 'אבטיפוסים שנבנו' },
       { value: '0', label: 'תשלום מראש' },
     ],
@@ -622,7 +622,7 @@ const HE: Dict = {
           },
           references: {
             prompt: 'מוצרי AI שניסית שכמעט קלעו?',
-            placeholder: 'ה-AI של Linear לטיוטת issues - אותה רמת איפוק.',
+            placeholder: 'עוזר שמנסח טיוטות במקום שאלה פתוחה - אותה רמת איפוק.',
           },
           timeline: { prompt: 'מתי הסוכן צריך לרוץ?' },
           howHeard: { prompt: 'איך הגעת אליי?' },
@@ -728,11 +728,11 @@ const HE: Dict = {
           },
           problem: {
             prompt: 'מה משתבש היום כי הנתונים לא בזמן אמת?',
-            placeholder: 'אנחנו מבחינים בתחנות רגועות באיחור של 30 דקות ומפספסים SLA.',
+            placeholder: 'אנחנו מבחינים בתקלות באיחור של 30 דקות ומפספסים זמני תגובה ללקוחות.',
           },
           references: {
             prompt: 'דשבורדים או מערכות חיות שראית עושים נכון?',
-            placeholder: 'סטטוס פרויקט של Linear, תצוגת deploy של Vercel.',
+            placeholder: 'מסך מצב פרויקטים, תצוגת בריאות מערכת - פשוט וברור.',
           },
           timeline: { prompt: 'מתי הדשבורד צריך להיות פעיל?' },
           howHeard: { prompt: 'איך הגעת אליי?' },
@@ -901,7 +901,7 @@ const EN: Dict = {
         slug: 'mvp',
         title: 'Startup first version',
         summary:
-          'From idea to working code in a week. A first version solid enough to show users, raise on, or decide it’s not the direction.',
+          'From idea to a working product in a week. A first version solid enough to show users, raise on, or decide it’s not the direction.',
         fits: ['Solo founder', 'Early-stage startup', 'Small team'],
       },
       {
@@ -915,7 +915,7 @@ const EN: Dict = {
         slug: 'ecommerce',
         title: 'Custom online store',
         summary:
-          'A store redesigned from scratch on an existing platform, a private checkout system, or a full boutique store from code. Right for a brand with identity - not a generic catalogue.',
+          'A store redesigned from scratch on an existing platform, a private checkout system, or a full boutique store built custom for you. Right for a brand with identity - not a generic catalogue.',
         fits: ['Small brand', 'Independent maker', 'Boutique shop'],
       },
       {
@@ -957,7 +957,7 @@ const EN: Dict = {
         slug: 'mobile',
         title: 'Mobile app',
         summary:
-          'iOS + Android from one codebase. Push, offline, store, auth. Same team (me), two platforms.',
+          'iOS + Android from one build. Notifications, offline mode, store, sign-in. Same team (me), two platforms.',
         fits: ['Startup', 'B2C product', 'Business with loyal customers'],
       },
       {
@@ -987,7 +987,7 @@ const EN: Dict = {
         num: '02',
         title: 'I build',
         body:
-          'Within 3–7 days I build a first prototype on my own dime. Not a mockup. Not a slide deck. Working code you can open, click, send to a friend, and ask if this is what you imagined. If not, we part ways here. No invoice.',
+          'Within 3–7 days I build a first prototype on my own dime. Not a mockup. Not a slide deck. A working product you can open, click, send to a friend, and ask if this is what you imagined. If not, we part ways here. No invoice.',
       },
       {
         num: '03',
@@ -1008,7 +1008,7 @@ const EN: Dict = {
     title: 'Bar Moshe',
     paragraphs: [
       'Developer since 2020. Every project brings a different challenge - which is exactly what keeps the work interesting. That’s why I’m still here.',
-      'I build because it was the hobby before it was the job. I decide quickly because it’s much easier to fix code that sort of works than a brief that never became code. That’s why I work prototype-first: I learn what to build, and you see what you’re getting.',
+      'I build because it was the hobby before it was the job. I decide quickly because it’s much easier to fix a product that sort of works than a brief that never became a product. That’s why I work prototype-first: I learn what to build, and you see what you’re getting.',
       'Based in Israel, working with clients around the world in Hebrew and English. Write before you check the big software shops - if it isn’t a fit, I’ll tell you.',
     ],
     stats: [
@@ -1243,7 +1243,7 @@ const EN: Dict = {
           },
           references: {
             prompt: 'Any AI products you’ve tried that almost got it right?',
-            placeholder: 'Linear’s AI for drafting issues - that kind of restraint.',
+            placeholder: 'An assistant that drafts a task instead of asking an open question - that kind of restraint.',
           },
           timeline: { prompt: 'When does the agent need to be running?' },
           howHeard: { prompt: 'How did you find me?' },
@@ -1347,11 +1347,11 @@ const EN: Dict = {
           },
           problem: {
             prompt: 'What goes wrong today because data isn’t live?',
-            placeholder: 'We notice idle stations 30 minutes late and miss the SLA.',
+            placeholder: 'We notice problems 30 minutes late and miss our response times to customers.',
           },
           references: {
             prompt: 'Other dashboards or live systems done well?',
-            placeholder: 'Linear’s project status, Vercel’s deploy view.',
+            placeholder: 'A clean project-status screen, a clear system-health view - simple and obvious.',
           },
           timeline: { prompt: 'When does the dashboard need to be operational?' },
           howHeard: { prompt: 'How did you find me?' },
