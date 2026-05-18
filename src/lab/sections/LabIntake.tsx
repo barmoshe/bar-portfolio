@@ -321,7 +321,7 @@ export default function LabIntake({ selectedTemplate }: Props) {
           </div>
 
           <footer className="lab-intake__preview-foot">
-            — {sendingVia}
+            {sendingVia}
           </footer>
         </aside>
       </div>

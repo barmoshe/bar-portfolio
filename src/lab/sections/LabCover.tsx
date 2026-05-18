@@ -34,14 +34,14 @@ export default function LabCover() {
         titleB: 'אני בונה.',
         titleC: 'אפס מחויבות.',
         lead:
-          'שלח לי בריף קצר — שלוש שורות בעברית רגילה. תוך כמה ימים יש לך גרסה ראשונה חיה באוויר. רוצים להמשיך? מדברים. לא? יצאת עם מוצר ביד.',
+          'שלח לי בריף קצר, שלוש שורות בעברית רגילה. תוך כמה ימים יש לך גרסה ראשונה חיה באוויר. רוצים להמשיך? מדברים. לא? יצאת עם מוצר ביד.',
         ticketNum: '#LAB-01',
         ticketStatus: t.board.status.doing,
         ticketTitle: 'הרעיון שלך',
         ticketSub: 'מוכן להפוך לגרסה ראשונה',
         checks: [
           'שלוש שורות בעברית רגילה',
-          'אני בונה — חינם, בלי חוזה, בלי שאלות',
+          'אני בונה, חינם, בלי חוזה, בלי שאלות',
           'אם זה עובד, מדברים. אם לא, יצאת עם מוצר ביד',
         ],
         ctaPrimary: '✦ שלח את הרעיון',
@@ -54,14 +54,14 @@ export default function LabCover() {
         titleB: 'I build.',
         titleC: 'Zero commitment.',
         lead:
-          'Send me a short brief — three lines in plain English. A few days later you have a live first version. Want to keep going? Let’s talk. Don’t? You walked away with a product.',
+          'Send me a short brief, three lines in plain English. A few days later you have a live first version. Want to keep going? Let’s talk. Don’t? You walked away with a product.',
         ticketNum: '#LAB-01',
         ticketStatus: t.board.status.doing,
         ticketTitle: 'Your idea',
         ticketSub: 'Ready to become a first version',
         checks: [
           'Three lines in plain English',
-          'I build — free, no contract, no questions',
+          'I build, free, no contract, no questions',
           'If it works, we talk. If not, you walked away with a product',
         ],
         ctaPrimary: '✦ Send the idea',
