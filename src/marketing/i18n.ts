@@ -303,7 +303,7 @@ const HE: Dict = {
         slug: 'ai-agent',
         title: 'סוכן AI שעובד בשבילך',
         summary:
-          'צ׳אט ללקוחות, RAG על כל המסמכים שלך, או סוכן שעובר על מיילים ופשוט עושה את העבודה. מודל ענן או מודל פתוח - מה שמתאים לעסק שלך.',
+          'צ׳אט ללקוחות, מערכת שעונה על שאלות לפי המסמכים שלך, או סוכן שעובר על מיילים ופשוט עושה את העבודה. מודל ענן או מודל פתוח - מה שמתאים לעסק שלך.',
         fits: ['חברה', 'צוות תפעול / שירות', 'יזמ.ית AI'],
       },
       {
@@ -922,7 +922,7 @@ const EN: Dict = {
         slug: 'ai-agent',
         title: 'Private AI assistant / agent',
         summary:
-          'A chatbot for customers, RAG over all your documents, an autonomous agent that triages email and does the work. Cloud-hosted or open model - whatever fits your data and budget.',
+          'A chatbot for customers, a system that answers questions from your own documents, or an autonomous agent that triages email and does the work. Cloud-hosted or open model - whatever fits your data and budget.',
         fits: ['Company', 'Ops / support team', 'AI founder'],
       },
       {
