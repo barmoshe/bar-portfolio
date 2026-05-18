@@ -303,42 +303,42 @@ const HE: Dict = {
         slug: 'ai-agent',
         title: 'סוכן AI שעובד בשבילך',
         summary:
-          'צ׳אט ללקוחות, RAG על כל המסמכים שלך, או סוכן שעובר על מיילים ופשוט עושה את העבודה. OpenAI, Anthropic, מודל פתוח — מה שמתאים.',
+          'צ׳אט ללקוחות, RAG על כל המסמכים שלך, או סוכן שעובר על מיילים ופשוט עושה את העבודה. מודל ענן או מודל פתוח — מה שמתאים לעסק שלך.',
         fits: ['חברה', 'צוות תפעול / שירות', 'יזמ.ית AI'],
       },
       {
         slug: 'ai-video',
         title: 'מכונה שמייצרת לך וידאו (AI)',
         summary:
-          'מטקסט → סצנות → וידאו מוכן, הכל אוטומטי. Remotion, FFmpeg, ElevenLabs, Runway. לסרטוני הסבר בכמויות, פודקאסט מאויר, או תוכן יומי לרשתות.',
+          'מטקסט → סצנות → וידאו מוכן, הכל אוטומטי. לסרטוני הסבר בכמויות, פודקאסט מאויר, או תוכן יומי לרשתות.',
         fits: ['יוצר.ת תוכן', 'סוכנות שיווק', 'מותג עם סדרה / פודקאסט'],
       },
       {
         slug: 'audio',
         title: 'הכל מסביב לסאונד אינטראקטיבי',
         summary:
-          'WebAudio, סינתזה, מיקסר רב־ערוצי, אפקטים בזמן אמת. כמו ה-Mixtape בפורטפוליו שלי. למוצר שהסאונד הוא חלק מהחוויה — לא רק רעש רקע.',
+          'סינתזה, מיקסר רב־ערוצי, אפקטים בזמן אמת. כמו ה-Mixtape בפורטפוליו שלי. למוצר שהסאונד הוא חלק מהחוויה — לא רק רעש רקע.',
         fits: ['אמן.ית', 'מותג מוזיקלי', 'סטארטאפ אודיו'],
       },
       {
         slug: 'game',
         title: 'משחק דפדפן או חוויה אינטראקטיבית',
         summary:
-          'Canvas, WebGL, Three.js. משחקון לקמפיין, חוויה ויראלית לסטוריז, או אבטיפוס למשחק אינדי שאתה מפתח.',
+          'משחקון לקמפיין, חוויה ויראלית לסטוריז, או אבטיפוס למשחק אינדי שאתה מפתח.',
         fits: ['מותג עם קמפיין', 'פיתוח משחקי אינדי', 'סוכנות יצירתית'],
       },
       {
         slug: 'realtime',
         title: 'דשבורד שמתעדכן בזמן אמת',
         summary:
-          'פאנל ניהול עם הרשאות, BI חי, מערכת ניטור על WebSocket. גרפים, פילטרים, ייצוא ל-CSV. כל מה שהצוות שלך עושה היום באקסל — רק שזה עובד.',
+          'פאנל ניהול עם הרשאות, BI חי, מערכת ניטור בזמן אמת. גרפים, פילטרים, ייצוא ל-CSV. כל מה שהצוות שלך עושה היום באקסל — רק שזה עובד.',
         fits: ['חברה', 'סטארטאפ ב-scale', 'צוות נתונים / ops'],
       },
       {
         slug: 'mobile',
         title: 'אפליקציה לטלפון',
         summary:
-          'iOS + Android מאותו codebase. React Native או PWA. push, אופליין, חנות, התחברות. מפתח אחד (אני), שתי פלטפורמות.',
+          'iOS + Android מאותו קוד. push, אופליין, חנות, התחברות. מפתח אחד (אני), שתי פלטפורמות.',
         fits: ['סטארטאפ', 'מוצר B2C', 'עסק עם לקוחות נאמנים'],
       },
       {
@@ -387,7 +387,7 @@ const HE: Dict = {
     kicker: 'מי אני',
     title: 'בר משה',
     paragraphs: [
-      'מפתח full-stack מאז 2020. רוב היום ב-TypeScript, React ו-Node, אבל בכל פרויקט מתגלגל לי משהו חדש — WebAudio פה, GSAP שם, ולאחרונה הרבה דברים מבוססי LLM. בזכות זה אני עדיין נהנה.',
+      'מפתח מאז 2020. כל פרויקט מביא איתו אתגר אחר — וזה בדיוק מה שמשאיר את העבודה מעניינת. בזכות זה אני עדיין נהנה.',
       'התחלתי לבנות הרבה לפני שזה הפך לפרנסה. אני מחליט מהר כי קוד שעובד קל לתקן, ובריף שלא הפך לקוד — כמעט אי אפשר. בגלל זה אני עובד POC-first: ככה אני יודע מה לבנות, ואתה רואה מה אתה מקבל — לפני שצריך להחליט משהו.',
       'אני בישראל, עובד עם לקוחות בכל העולם — בעברית ובאנגלית. עדיף שתכתוב לי לפני שאתה רץ לכל חברות הפיתוח: אם זה לא מתאים, אגיד לך מראש. כך לא נבזבז זמן לאף אחד.',
     ],
@@ -922,42 +922,42 @@ const EN: Dict = {
         slug: 'ai-agent',
         title: 'Private AI assistant / agent',
         summary:
-          'A GPT chatbot for customers, RAG over all your documents, an autonomous agent that triages email and does the work. OpenAI, Anthropic, or an open model.',
+          'A chatbot for customers, RAG over all your documents, an autonomous agent that triages email and does the work. Cloud-hosted or open model — whatever fits your data and budget.',
         fits: ['Company', 'Ops / support team', 'AI founder'],
       },
       {
         slug: 'ai-video',
         title: 'AI video render pipeline',
         summary:
-          'A system that turns text → scenes → rendered video automatically. Remotion, FFmpeg, ElevenLabs, Runway. Right for explainer videos at scale, an illustrated podcast, or daily content for socials.',
+          'A system that turns text → scenes → rendered video automatically. Right for explainer videos at scale, an illustrated podcast, or daily content for socials.',
         fits: ['Content creator', 'Marketing agency', 'Brand with a series / podcast'],
       },
       {
         slug: 'audio',
         title: 'Audio engine / musical interaction',
         summary:
-          'WebAudio, synthesis, multi-channel mixer, real-time effects. Like the Mixtape in my portfolio. Right for a product whose sound is part of the experience — not just background noise.',
+          'Synthesis, multi-channel mixer, real-time effects. Like the Mixtape in my portfolio. Right for a product whose sound is part of the experience — not just background noise.',
         fits: ['Artist', 'Music brand', 'Audio startup'],
       },
       {
         slug: 'game',
         title: 'Browser game / interactive experience',
         summary:
-          'Canvas, WebGL, Three.js. A mini-game for a campaign, a viral piece for stories, or a prototype for a game you’re building yourself.',
+          'A mini-game for a campaign, a viral piece for stories, or a prototype for a game you’re building yourself.',
         fits: ['Brand with a campaign', 'Indie game dev', 'Creative agency'],
       },
       {
         slug: 'realtime',
         title: 'Dashboard / real-time system',
         summary:
-          'Admin panel with permissions, live BI, a monitoring system on WebSocket. Charts, filters, CSV export. Everything your team is doing in Excel right now.',
+          'Admin panel with permissions, live BI, a real-time monitoring system. Charts, filters, CSV export. Everything your team is doing in Excel right now.',
         fits: ['Company', 'Scaling startup', 'Data / ops team'],
       },
       {
         slug: 'mobile',
         title: 'Mobile app',
         summary:
-          'iOS + Android in the same codebase. React Native or PWA. Push, offline, store, auth. Same team (me), two platforms.',
+          'iOS + Android from one codebase. Push, offline, store, auth. Same team (me), two platforms.',
         fits: ['Startup', 'B2C product', 'Business with loyal customers'],
       },
       {
@@ -1007,7 +1007,7 @@ const EN: Dict = {
     kicker: 'Who I am',
     title: 'Bar Moshe',
     paragraphs: [
-      'Full-stack developer since 2020. Most of the work is TypeScript, React, and Node, but the second line of my CV is always something different: WebAudio, GSAP, Three.js, and lately a lot of LLM-based assistants. Every project is a chance to learn something new — that’s why I’m still here.',
+      'Developer since 2020. Every project brings a different challenge — which is exactly what keeps the work interesting. That’s why I’m still here.',
       'I build because it was the hobby before it was the job. I decide quickly because it’s much easier to fix code that sort of works than a brief that never became code. That’s why I work POC-first: I learn what to build, and you see what you’re getting.',
       'Based in Israel, working with clients around the world in Hebrew and English. Write before you check the big software shops — if it isn’t a fit, I’ll tell you.',
     ],
