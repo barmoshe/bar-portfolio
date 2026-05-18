@@ -815,6 +815,11 @@ const HE: Dict = {
         a:
           'אני לא עובד לפי שעות. כל פרויקט מקבל סקופ ברור ומחיר סגור מראש - לפי תוצאות. פרויקטים קטנים יוצאים במחיר חבילה. גדולים מתפצלים לאבני דרך, עם תשלום אחרי כל מסירה. אין ריטיינר חודשי, אין חוזה ארוך. נגמרה העבודה - נגמר התשלום.',
       },
+      {
+        q: 'ומה לגבי הצד הטכני - אני אקבל את מה שנבנה?',
+        a:
+          'כן. כל מה שנבנה שייך לך, וכשתרצה - אעביר לך את קוד המקור והגישה לכל מה שצריך. אתה לא נעול אליי. רוב הלקוחות לא נוגעים בזה אף פעם, אבל זה שם.',
+      },
     ],
   },
   colophon: {
@@ -1433,6 +1438,11 @@ const EN: Dict = {
         q: 'So how does payment actually work after the prototype?',
         a:
           'I don’t work by the hour. Every project gets a clear scope and a price known up front - outcome-based. Small projects ship at a package price; larger ones break into milestones with payment after each delivery. No monthly retainer, no long contract. Work’s done - payment’s done.',
+      },
+      {
+        q: 'And the technical side - do I get what gets built?',
+        a:
+          'Yes. Everything that gets built is yours, and whenever you want it, I hand over the source and any access you need. You’re not locked in. Most clients never touch it - but it’s yours.',
       },
     ],
   },
