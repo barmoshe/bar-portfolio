@@ -176,13 +176,16 @@ export default function Intro() {
         <p className="byline">
           Builder by default. Stack and field are negotiable.
         </p>
-        <h1>
-          I just <em>build the thing.</em>
-        </h1>
+        <h1>Bar Moshe</h1>
+        <p className="dek">
+          Software builder and full-stack developer from Israel — web apps,
+          automation, AI-native tools, DevOps, and product-focused software.
+        </p>
         <div className="drop">
           <p>
-            I'm Bar. I build software, mostly. Web apps, hardware experiments,
-            game-jam soundtracks, weekend scripts that turn into daily tools.
+            I'm Bar. I just <em>build the thing</em> — web apps, hardware
+            experiments, game-jam soundtracks, weekend scripts that turn into
+            daily tools.
           </p>
         </div>
 
