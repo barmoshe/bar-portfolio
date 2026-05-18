@@ -338,7 +338,7 @@ const HE: Dict = {
         slug: 'mobile',
         title: 'אפליקציה לטלפון',
         summary:
-          'iOS + Android מאותו בסיס. התראות, מצב לא־מקוון, חנות, התחברות. מפתח אחד (אני), שתי פלטפורמות.',
+          'אפליקציה אחת שעובדת על כל טלפון. התראות, מצב לא־מקוון, חנות, התחברות. בנייה אחת, שתי פלטפורמות.',
         fits: ['סטארטאפ', 'מוצר B2C', 'עסק עם לקוחות נאמנים'],
       },
       {
@@ -962,7 +962,7 @@ const EN: Dict = {
         slug: 'mobile',
         title: 'Mobile app',
         summary:
-          'iOS + Android from one build. Notifications, offline mode, store, sign-in. Same team (me), two platforms.',
+          'One app that works on every phone. Notifications, offline mode, store, sign-in. One build, both platforms.',
         fits: ['Startup', 'B2C product', 'Business with loyal customers'],
       },
       {
