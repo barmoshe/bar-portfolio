@@ -793,7 +793,7 @@ const HE: Dict = {
       {
         q: 'איך זה עובד מבחינה מעשית - מתי מדברים על כסף?',
         a:
-          'קודם כל אני בונה גרסה ראשונה. רק אחרי שראית והחלטת להמשיך - ניגשים להמשך ולמסגרת התשלום. זה עובד כי אני אוהב לבנות גם כשאף אחד לא מסתכל - אז הסיכון עליי, לא עליך.',
+          'קודם כל אני בונה גרסה ראשונה. רק אחרי שראית והחלטת להמשיך - ניגשים להמשך ולמסגרת התשלום. זה עובד כי אני אוהב לבנות גם כשאף אחד לא מסתכל - ממילא יוצא לי לבנות עוד משהו שאהבתי לבנות.',
       },
       {
         q: 'מה אם הכיוון עדיין לא לגמרי ברור?',
@@ -1418,7 +1418,7 @@ const EN: Dict = {
       {
         q: 'How does this actually work - when do we talk money?',
         a:
-          'First I build a first working version. Only after you’ve seen it and decided to continue do we get into terms and payment. It works because I love building even when no one is watching - so the risk is on me, not on you.',
+          'First I build a first working version. Only after you’ve seen it and decided to continue do we get into terms and payment. It works because I love building even when no one is watching - I get to build one more thing I enjoyed building either way.',
       },
       {
         q: 'What if I don’t know yet exactly what I want?',
