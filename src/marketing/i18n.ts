@@ -242,7 +242,7 @@ const HE: Dict = {
   meta: {
     title: 'בר משה - תאר. אבנה. תחליט.',
     description:
-      'בונה לך אבטיפוס על חשבוני לפני שמדברים בכלל על מחיר. עבד לך? יאללה ממשיכים. לא? כל אחד הולך לדרכו, בלי שום התחייבות.',
+      'תכתוב לי בכמה שורות מה אתה רוצה. תוך שבוע יש לך גרסה ראשונה עובדת - בלי תשלום מראש, בלי התחייבות.',
   },
   masthead: {
     issueNumber: 'גליון 01',
@@ -265,7 +265,7 @@ const HE: Dict = {
     // direct, punchy, matches the HTML title.
     headlineLines: ['תאר.', 'אבנה.', 'תחליט.'],
     standfirst:
-      'תפסיק עם הבריפים האינסופיים. תכתוב לי בכמה שורות מה אתה רוצה לבנות, ובתוך שבוע אני שולח לך אבטיפוס אמיתי - על חשבוני. אהבת? יאללה ממשיכים. לא אהבת? נפרדים בלי שאלות.',
+      'שלח לי בכמה שורות מה אתה רוצה. תוך שבוע יש לך גרסה ראשונה עובדת - על חשבוני. עבד? יאללה ממשיכים. לא? כל אחד לדרכו, בלי שאלות.',
     byline: 'בר משה · בונה דברים מאז 2020',
     scrollHint: 'גלילה למטה',
     ctaStart: 'בוא נתחיל',
@@ -280,10 +280,10 @@ const HE: Dict = {
     items: [
       {
         slug: 'mvp',
-        title: 'גרסה ראשונה לסטארטאפ',
+        title: 'גרסה ראשונה למיזם',
         summary:
           'מרעיון למוצר עובד בתוך שבוע. גרסה ראשונה שמספיק טובה כדי להראות למשתמשים, לרוץ איתה לסבב גיוס, או פשוט להבין שזה לא הכיוון.',
-        fits: ['ייזום סולו', 'סטארטאפ early-stage', 'צוות קטן'],
+        fits: ['יזמ.ית סולו', 'סטארטאפ צעיר', 'צוות קטן'],
       },
       {
         slug: 'brand',
@@ -294,7 +294,7 @@ const HE: Dict = {
       },
       {
         slug: 'ecommerce',
-        title: 'חנות אונליין שזה לא תבנית',
+        title: 'חנות אונליין מעוצבת אישית',
         summary:
           'חנות שעוצבה מאפס על תשתית קיימת, מערכת תשלומים משלך, או חנות־בוטיק שנבנית במיוחד לך. למותג עם אופי - לא לעוד קטלוג גנרי.',
         fits: ['מותג קטן', 'יצירה עצמאית', 'חנות־בוטיק'],
@@ -310,14 +310,14 @@ const HE: Dict = {
         slug: 'ai-video',
         title: 'סטודיו יצירתי מבוסס AI',
         summary:
-          'כלים לגרפיקה, תמונות, סרטונים ומחקר ויזואלי - מטקסט לתוצר. גנרציית נכסים בכמויות, חקר סגנון, או צינור הפקה לסדרת תוכן שלמה.',
+          'כלים לגרפיקה, תמונות, סרטונים ומחקר ויזואלי - מהרעיון לתוצר המוגמר. ייצור תוכן בכמויות, חקר סגנון, או מערכת שלמה לסדרת תוכן.',
         fits: ['יוצר.ת תוכן', 'סוכנות שיווק', 'מותג עם סדרה / פודקאסט', 'סטודיו יצירתי'],
       },
       {
         slug: 'audio',
-        title: 'הכל מסביב לסאונד ומוזיקה',
+        title: 'מוזיקה, סאונד וכל מה שביניהם',
         summary:
-          'פלאגינים לאולפן, כלי הפקה, מערכות לאיוו פרפורמנס, סינתזה, מיקסר רב־ערוצי, אפקטים בזמן אמת. אני גם מנגן ומפיק - אז אני יודע איך זה צריך להרגיש בצד השני של המסך.',
+          'פלאגינים לאולפן, כלי הפקה, מערכות להופעות חיות, סינתזה, מיקסר רב־ערוצי, אפקטים בזמן אמת. אני גם מנגן ומפיק - אז אני יודע איך זה צריך להרגיש בצד השני של המסך.',
         fits: ['מוזיקאי.ת', 'מפיק.ה', 'מותג מוזיקלי', 'סטארטאפ אודיו'],
       },
       {
@@ -332,14 +332,14 @@ const HE: Dict = {
         title: 'דשבורד שמתעדכן בזמן אמת',
         summary:
           'פאנל ניהול עם הרשאות, דשבורד נתונים חי, מערכת ניטור בזמן אמת. גרפים, פילטרים, ייצוא נתונים. כל מה שהצוות שלך עושה היום באקסל - רק שזה עובד.',
-        fits: ['חברה', 'סטארטאפ ב-scale', 'צוות נתונים / ops'],
+        fits: ['חברה', 'סטארטאפ שגדל', 'צוות נתונים / תפעול'],
       },
       {
         slug: 'mobile',
         title: 'אפליקציה לטלפון',
         summary:
           'אפליקציה שעובדת על כל טלפון, לכל לקוח, בלי קשר למה שיש לו ביד. התראות, מצב לא־מקוון, חנות, התחברות.',
-        fits: ['סטארטאפ', 'מוצר B2C', 'עסק עם לקוחות נאמנים'],
+        fits: ['סטארטאפ', 'מוצר ללקוח קצה', 'עסק עם לקוחות נאמנים'],
       },
       {
         slug: 'other',
@@ -362,7 +362,7 @@ const HE: Dict = {
         num: '01',
         title: 'תאר',
         body:
-          'בריף קצר. שלושה שדות חובה: סוג הפרויקט, הרעיון, ואיך לחזור אליך. השאר רשות. הכל נוחת אצלי בוואטסאפ - בלי שמירה בשרת, בלי "להירשם לניוזלטר", בלי בולשיט.',
+          'טופס קצר. שלושה שדות חובה: סוג הפרויקט, הרעיון, ואיך לחזור אליך. השאר רשות. הכל נוחת אצלי בוואטסאפ - בלי שמירה בשרת, בלי "להירשם לניוזלטר", בלי תרגילים.',
       },
       {
         num: '02',
@@ -387,9 +387,9 @@ const HE: Dict = {
     kicker: 'מי אני',
     title: 'בר משה',
     paragraphs: [
-      'מפתח מאז 2020. כל פרויקט מביא איתו אתגר אחר - וזה בדיוק מה שמשאיר את העבודה מעניינת. בזכות זה אני עדיין נהנה.',
+      'מפתח מאז 2020. בניתי כבר עשרות פרויקטים, מאתרי מותג ועד מערכות AI - וכל פרויקט מביא איתו אתגר אחר. בזכות זה אני עדיין נהנה.',
       'התחלתי לבנות הרבה לפני שזה הפך לפרנסה. אני מחליט מהר כי מוצר שעובד קל לתקן, ובריף שלא הפך למוצר - כמעט אי אפשר. בגלל זה אני מתחיל מאבטיפוס: ככה אני יודע מה לבנות, ואתה רואה מה אתה מקבל - לפני שצריך להחליט משהו.',
-      'אני בישראל, עובד עם לקוחות בכל העולם - בעברית ובאנגלית. עדיף שתכתוב לי לפני שאתה רץ לכל חברות הפיתוח: אם זה לא מתאים, אגיד לך מראש. כך לא נבזבז זמן לאף אחד.',
+      'אני בישראל, עובד עם לקוחות בכל העולם - בעברית ובאנגלית. כדאי לכתוב לי לפני שרצים לכל חברות הפיתוח: אם זה לא מתאים, אגיד לך מראש. כך לא נבזבז זמן לאף אחד.',
     ],
     stats: [
       { value: '5+', label: 'שנים של בנייה' },
@@ -402,7 +402,7 @@ const HE: Dict = {
     kicker: 'תכתוב לי',
     title: 'מה הרעיון שלך?',
     standfirst:
-      'הבריף נוחת ישר אצלי בוואטסאפ, מסודר ומוכן לקריאה. כמה שיותר פירוט - אבטיפוס מדויק יותר. גם שלוש שורות זה התחלה מצוינת.',
+      'הטופס נוחת ישר אצלי בוואטסאפ, מסודר ומוכן לקריאה. כמה שיותר פירוט - גרסה ראשונה מדויקת יותר. גם שלוש שורות זה התחלה מצוינת.',
     requiredHint: 'רק 3 שדות חובה: סוג, רעיון, ואיך לחזור אליך.',
     optionalHeading: 'יש לך עוד? אל תתבייש',
     fields: {
@@ -412,7 +412,7 @@ const HE: Dict = {
       },
       idea: {
         label: 'הרעיון בקצרה',
-        hint: 'משפט אחד או שלושה. ברור עדיף על מנומק.',
+        hint: 'משפט אחד או שלושה. ברור עדיף על מתוחכם.',
         placeholder:
           'לדוגמה: "פלטפורמה שמחברת בין יצרני קרמיקה לחנויות עיצוב - היצרן מעלה קטלוג, החנות מזמינה ישירות, הוא משלם עמלה רק על מכירה."',
       },
@@ -481,7 +481,7 @@ const HE: Dict = {
     quest: {
       chapters: {
         spark: 'הניצוץ',
-        you: 'מי אתה',
+        you: 'עליך',
         detail: 'פרטים',
         when: 'מתי',
         send: 'שליחה',
@@ -568,7 +568,7 @@ const HE: Dict = {
           },
           references: {
             prompt: 'אתרים ששמרת? לוחות פינטרסט, קישורים, "מרגיש כמו X".',
-            placeholder: 'studio.bruno-mars, kvadrat.dk - אותה רמת איפוק.',
+            placeholder: 'אתרים נקיים של סטודיו עיצוב או חברת ריהוט - אותה רמת איפוק.',
           },
           timeline: { prompt: 'מתי אתה רוצה להיות באתר החדש?' },
           howHeard: { prompt: 'איך הגעת אליי?' },
@@ -595,7 +595,7 @@ const HE: Dict = {
           },
           references: {
             prompt: 'חנויות אחרות שאתה אוהב? אפילו פיצ\'רים שהיית גונב.',
-            placeholder: 'Flow של Goodfair, דפי המוצר של Smol.',
+            placeholder: 'מותגי D2C קטנים עם דפי מוצר חכמים.',
           },
           timeline: { prompt: 'מתי החנות צריכה להיות חיה?' },
           howHeard: { prompt: 'איך הגעת אליי?' },
@@ -614,7 +614,7 @@ const HE: Dict = {
           },
           audience: {
             prompt: 'מי משתמש בסוכן? עובד פנימי, לקוח קצה, מנהל?',
-            placeholder: 'שני אנשי sales ops שעוברים על 200 מיילים ביום כל אחד.',
+            placeholder: 'שני אנשי תפעול מכירות שעוברים על 200 מיילים ביום כל אחד.',
           },
           problem: {
             prompt: 'מה העלות של הגרסה הידנית היום?',
@@ -633,7 +633,7 @@ const HE: Dict = {
             prompt: 'איזה תוכן ויזואלי אתה רוצה שייוצר אוטומטית? איך הוא מתחיל ומה יוצא בסוף?',
             hint: 'מקור ← טרנספורם ← פלט. שורה לכל אחד.',
             placeholder:
-              'כותרת חדשות יומית ← גרפיקת רשת או סרטון אנכי קצר עם הקראה ו-b-roll, מתפרסם בבוקר.',
+              'כותרת חדשות יומית ← גרפיקת רשת או סרטון אנכי קצר עם הקראה וצילומי רקע, מתפרסם בבוקר.',
           },
           whyNow: {
             prompt: 'למה לאוטומט עכשיו - מכסת תוכן, צוות חסר, פלטפורמה חדשה?',
@@ -704,7 +704,7 @@ const HE: Dict = {
           },
           references: {
             prompt: 'משחקי דפדפן או חוויות אינטראקטיביות שתפסו אותך?',
-            placeholder: 'כמו Patatap - אותה רמת ליטוש.',
+            placeholder: 'מיני-משחק אינטראקטיבי עם אנימציה וצליל - אותה רמת ליטוש.',
           },
           timeline: { prompt: 'מתי המשחק צריך להיות אפשר-לשחק?' },
           howHeard: { prompt: 'איך הגעת אליי?' },
@@ -718,7 +718,7 @@ const HE: Dict = {
               'דשבורד חי של תחנות ליקוט במחסן: תחנות, הזמנות נוכחיות, ליקוטים, התרעות כשתחנה רגועה יותר מ-5 דקות.',
           },
           whyNow: {
-            prompt: 'למה לעבור מאקסל / Looker / משהו ביתי דווקא עכשיו?',
+            prompt: 'למה לעבור מאקסל, מ-BI ביתי או מדשבורד שכבר לא מספיק - דווקא עכשיו?',
             placeholder:
               'ה-COO שלנו עושה התרעות ידני בסלאק והכפלנו עכשיו את נפח ההזמנות.',
           },
@@ -751,7 +751,7 @@ const HE: Dict = {
           },
           audience: {
             prompt: 'מי מתקין את האפליקציה? לקוחות נאמנים, צוות פנימי, או הציבור?',
-            placeholder: 'חובבי ציפורים בני 35+, שמשתמשים היום ב-eBird ורוצים משהו פחות קליני.',
+            placeholder: 'משתמשים היום בגרסת ווב במובייל ומתלוננים שהיא מסורבלת.',
           },
           problem: {
             prompt: 'מה הם לא יכולים לעשות היום בגרסת ה-web?',
@@ -759,7 +759,7 @@ const HE: Dict = {
           },
           references: {
             prompt: 'אפליקציות שתפנה אליהן בתור נורת צפון?',
-            placeholder: 'Strava לפיד החברתי, Merlin Bird ID לזרימת הלכידה.',
+            placeholder: 'אפליקציה עם פיד חברתי וזרימת לכידה מהירה - הצירוף הזה.',
           },
           timeline: { prompt: 'מתי האפליקציה צריכה להישלח לחנויות?' },
           howHeard: { prompt: 'איך הגעת אליי?' },
@@ -820,6 +820,21 @@ const HE: Dict = {
         a:
           'כן. כל מה שנבנה שייך לך, וכשתרצה - אעביר לך את קוד המקור והגישה לכל מה שצריך. אתה לא נעול אליי. רוב הלקוחות לא נוגעים בזה אף פעם, אבל זה שם.',
       },
+      {
+        q: 'אני בכלל לא טכני - זה בעיה?',
+        a:
+          'הפוך. רוב הלקוחות שלי לא מתכנתים. אם תוכל לתאר במילים מה אתה רוצה שיקרה - יש לי מספיק לעבוד איתו. השפה הטכנית היא הצד שלי.',
+      },
+      {
+        q: 'מה קורה אחרי שהאבטיפוס מוכן - כמה זמן עד מוצר אמיתי?',
+        a:
+          'תלוי בגודל. אתר מותג - 2–4 שבועות אחרי האישור. אפליקציה או מערכת מורכבת - 6–12 שבועות, מתפצל לאבני דרך שבועיות עם הדגמה אחרי כל אבן דרך.',
+      },
+      {
+        q: 'אפשר להחתים על הסכם סודיות?',
+        a:
+          'כן, ללא בעיה. שלח לי את ההסכם שלך או שאשלח לך תבנית סטנדרטית. אני חותם לפני שמדברים על הרעיון לעומק.',
+      },
     ],
   },
   colophon: {
@@ -868,7 +883,7 @@ const EN: Dict = {
   meta: {
     title: 'Bar Moshe - Describe. I Build. You Decide.',
     description:
-      'I build a working prototype on my own dime before we talk price. If it works for you - we keep going. If not - we part ways, no strings attached.',
+      'Tell me what you want in a few lines. A week later you have a first working version - no upfront payment, no commitment.',
   },
   masthead: {
     issueNumber: 'Issue 01',
@@ -889,7 +904,7 @@ const EN: Dict = {
     issueLine: 'Issue 01 · Build before brief',
     headlineLines: ['Describe.', 'I build.', 'You decide.'],
     standfirst:
-      'Instead of a brief that drags on for weeks and a proposal you have to wonder about - describe the idea in the form, and I build a first prototype on my own dime. If it works for you, we keep building together. If not, we part ways, no strings attached.',
+      'Send me a few lines of what you want. A week later you have a first working version - on me. Worked? Let’s keep going. Didn’t? We part ways, no questions.',
     byline: 'Bar Moshe · Independent builds · since 2020',
     scrollHint: 'Keep reading',
     ctaStart: 'Start a build',
@@ -904,10 +919,10 @@ const EN: Dict = {
     items: [
       {
         slug: 'mvp',
-        title: 'Startup first version',
+        title: 'First version of a venture',
         summary:
           'From idea to a working product in a week. A first version solid enough to show users, raise on, or decide it’s not the direction.',
-        fits: ['Solo founder', 'Early-stage startup', 'Small team'],
+        fits: ['Solo founder', 'Young startup', 'Small team'],
       },
       {
         slug: 'brand',
@@ -918,7 +933,7 @@ const EN: Dict = {
       },
       {
         slug: 'ecommerce',
-        title: 'Custom online store',
+        title: 'A custom-designed online store',
         summary:
           'A store redesigned from scratch on an existing platform, a private checkout system, or a full boutique store built custom for you. Right for a brand with identity - not a generic catalogue.',
         fits: ['Small brand', 'Independent maker', 'Boutique shop'],
@@ -934,12 +949,12 @@ const EN: Dict = {
         slug: 'ai-video',
         title: 'AI creative & visual toolkit',
         summary:
-          'Tools for graphics, images, video, and visual research - text to finished asset. Asset generation at scale, style exploration, or a full production pipeline for an ongoing content series.',
+          'Tools for graphics, images, video, and visual research - from idea to finished asset. Content production at scale, style exploration, or a full system for an ongoing content series.',
         fits: ['Content creator', 'Marketing agency', 'Brand with a series / podcast', 'Creative studio'],
       },
       {
         slug: 'audio',
-        title: 'Anything around sound and music',
+        title: 'Music, sound, and the tools in between',
         summary:
           'Studio plugins, production tools, live-performance rigs, synthesis, multi-channel mixers, real-time effects. I play and produce music too - so I know how it has to feel on the other side of the screen.',
         fits: ['Musician', 'Producer', 'Music brand', 'Audio startup'],
@@ -956,14 +971,14 @@ const EN: Dict = {
         title: 'Dashboard / real-time system',
         summary:
           'Admin panel with permissions, a live data dashboard, a real-time monitoring system. Charts, filters, data export. Everything your team is doing in Excel right now.',
-        fits: ['Company', 'Scaling startup', 'Data / ops team'],
+        fits: ['Company', 'Scaling startup', 'Data / operations team'],
       },
       {
         slug: 'mobile',
         title: 'Mobile app',
         summary:
           'An app that works on every phone, for every customer, whatever they happen to be carrying. Notifications, offline mode, store, sign-in.',
-        fits: ['Startup', 'B2C product', 'Business with loyal customers'],
+        fits: ['Startup', 'Consumer product', 'Business with loyal customers'],
       },
       {
         slug: 'other',
@@ -1012,7 +1027,7 @@ const EN: Dict = {
     kicker: 'Who I am',
     title: 'Bar Moshe',
     paragraphs: [
-      'Developer since 2020. Every project brings a different challenge - which is exactly what keeps the work interesting. That’s why I’m still here.',
+      'Developer since 2020. I’ve built dozens of projects, from brand sites to AI systems - and every project brings a different challenge. That’s why I’m still here.',
       'I build because it was the hobby before it was the job. I decide quickly because it’s much easier to fix a product that sort of works than a brief that never became a product. That’s why I work prototype-first: I learn what to build, and you see what you’re getting.',
       'Based in Israel, working with clients around the world in Hebrew and English. Write before you check the big software shops - if it isn’t a fit, I’ll tell you.',
     ],
@@ -1107,7 +1122,7 @@ const EN: Dict = {
     quest: {
       chapters: {
         spark: 'The spark',
-        you: 'You',
+        you: 'About you',
         detail: 'Detail',
         when: 'When',
         send: 'Send',
@@ -1194,7 +1209,7 @@ const EN: Dict = {
           },
           references: {
             prompt: 'Sites you’ve saved? Pinterest boards, links, "feels like X".',
-            placeholder: 'studio.bruno-mars, kvadrat.dk - that level of restraint.',
+            placeholder: 'Clean sites of a design studio or a furniture house - that level of restraint.',
           },
           timeline: { prompt: 'When do you want to be on the new site?' },
           howHeard: { prompt: 'How did you find me?' },
@@ -1221,7 +1236,7 @@ const EN: Dict = {
           },
           references: {
             prompt: 'Other stores you admire? Even features you’d steal.',
-            placeholder: 'Goodfair’s checkout flow, Smol’s product pages.',
+            placeholder: 'Small D2C brands with smart product pages.',
           },
           timeline: { prompt: 'When does the store need to be live?' },
           howHeard: { prompt: 'How did you find me?' },
@@ -1240,7 +1255,7 @@ const EN: Dict = {
           },
           audience: {
             prompt: 'Who uses this assistant? Internal staff, end customer, manager?',
-            placeholder: 'Two sales-ops people who currently triage 200 emails a day each.',
+            placeholder: 'Two sales-operations people who currently triage 200 emails a day each.',
           },
           problem: {
             prompt: 'What does the manual version cost today?',
@@ -1329,7 +1344,7 @@ const EN: Dict = {
           },
           references: {
             prompt: 'Any browser games or interactive pieces that nailed it?',
-            placeholder: 'Like Patatap - that level of polish.',
+            placeholder: 'An interactive mini-experience with animation and sound - that level of polish.',
           },
           timeline: { prompt: 'When does the game need to be playable?' },
           howHeard: { prompt: 'How did you find me?' },
@@ -1343,7 +1358,7 @@ const EN: Dict = {
               'Live dashboard of warehouse pick-and-pack stations: stations, current orders, pickers, alerts when a station idles >5min.',
           },
           whyNow: {
-            prompt: 'Why move off Excel / Looker / homegrown thing now?',
+            prompt: 'Why move off Excel, an in-house BI tool, or a dashboard that no longer fits - now?',
             placeholder: 'Our COO is doing alerts manually over Slack and we just doubled order volume.',
           },
           audience: {
@@ -1375,7 +1390,7 @@ const EN: Dict = {
           },
           audience: {
             prompt: 'Who installs the app? Loyal customers, internal team, the public?',
-            placeholder: 'Birding hobbyists, 35+, currently using eBird and wanting something less clinical.',
+            placeholder: 'People currently using a mobile web version and complaining it’s clunky.',
           },
           problem: {
             prompt: 'What can’t they do today on the web version?',
@@ -1383,7 +1398,7 @@ const EN: Dict = {
           },
           references: {
             prompt: 'Any apps you’d point to as a north star?',
-            placeholder: 'Strava for the social feed pattern, Merlin Bird ID for capture flow.',
+            placeholder: 'An app with a social feed and a fast capture flow - that combination.',
           },
           timeline: { prompt: 'When does the app need to be submitted to the stores?' },
           howHeard: { prompt: 'How did you find me?' },
@@ -1443,6 +1458,21 @@ const EN: Dict = {
         q: 'And the technical side - do I get what gets built?',
         a:
           'Yes. Everything that gets built is yours, and whenever you want it, I hand over the source and any access you need. You’re not locked in. Most clients never touch it - but it’s yours.',
+      },
+      {
+        q: 'I’m not technical at all - is that a problem?',
+        a:
+          'The opposite. Most of my clients don’t code. If you can describe in words what you want to happen, I have enough to work with. The technical side is on me.',
+      },
+      {
+        q: 'What happens after the prototype - how long to a real product?',
+        a:
+          'Depends on size. A brand site - 2–4 weeks after approval. An app or complex system - 6–12 weeks, broken into weekly milestones with a demo after each.',
+      },
+      {
+        q: 'Can we sign an NDA?',
+        a:
+          'Yes, no problem. Send me yours or I’ll send a standard template. I sign before we go deep on the idea.',
       },
     ],
   },

@@ -44,7 +44,7 @@ export default function Cover() {
         titleB: 'אבטיפוס',
         titleC: 'על חשבוני.',
         lead:
-          'תכתוב לי בכמה שורות מה אתה רוצה לבנות. תוך שבוע יש לך אבטיפוס עובד ביד. אהבת? יאללה ממשיכים. לא אהבת? נפרדים בלי שאלות, בלי תשלום, בלי בולשיט.',
+          'שלח לי בכמה שורות מה אתה רוצה. תוך שבוע יש לך גרסה ראשונה עובדת - על חשבוני. עבד? יאללה ממשיכים. לא? כל אחד לדרכו, בלי שאלות.',
         ticketNum: '#BAR-001',
         ticketStatus: t.board.status.doing,
         ticketTitle: 'הפרויקט הבא שלך',
@@ -64,7 +64,7 @@ export default function Cover() {
         titleB: 'a prototype',
         titleC: 'on my dime.',
         lead:
-          'Tell me in a few lines what you want built. A week later you have a working prototype in your hands. Loved it? Let’s keep going. Didn’t? We part ways - no questions, no invoice, no BS.',
+          'Send me a few lines of what you want. A week later you have a first working version - on me. Worked? Let’s keep going. Didn’t? We part ways, no questions.',
         ticketNum: '#BAR-001',
         ticketStatus: t.board.status.doing,
         ticketTitle: 'Your next project',
