@@ -179,7 +179,15 @@ Each principle above traces to a named methodology from the research:
 
 ---
 
-## 11. Decisions locked in this brainstorm
+## 11. Adopted patterns (handoff notes)
+
+The operator flagged these for adoption when the Workshop is built. See `README.md § Patterns worth adopting` for the full handoff list.
+
+- **`/goal <condition>`** — session-scoped Stop hook (Claude Code v2.1.139, May 2026). State the observable outcome, let the small-model evaluator gate session-end. Skills do the work; `/goal` decides when to stop. Detailed treatment in [claude-skills.md § 9](./claude-skills.md#9-the-goal-slash-command--session-scoped-stop-conditions).
+
+---
+
+## 12. Decisions locked in this brainstorm
 
 - The repo is **private**, **Claude-native**, **knowledge + workshop only** (not deploy).
 - The walking-skeleton loop is **capture ↔ retrieve**. The repo is memory.
@@ -192,7 +200,7 @@ Each principle above traces to a named methodology from the research:
 
 ---
 
-## 12. Open questions deferred for the next brainstorm
+## 13. Open questions deferred for the next brainstorm
 
 These are the architectural sub-topics worth a dedicated brainstorm session each:
 

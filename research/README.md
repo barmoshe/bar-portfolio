@@ -31,6 +31,31 @@ Research and design brainstorm for a future private GitHub repository that will 
 - Structure grown by **promotion**, never pre-creation.
 - Recommended name: **Workshop** (HE: סדנה). Avoid "brain" — pretentious, anthropomorphic, attracts maintenance-as-virtue.
 
+## Patterns worth adopting in the Workshop (handoff notes)
+
+These are research findings the operator flagged as worth applying. Pin them here so future sessions (future-Bar or a fresh Claude session) don't have to re-discover them.
+
+### `/goal <condition>` — session-scoped stop conditions ⭐
+
+Claude Code v2.1.139 (May 2026) shipped `/goal`. It sets a session-scoped Stop hook that uses a small fast model to evaluate after each turn whether a stated condition holds. *"A 'no' tells Claude to keep working and includes the reason as guidance for the next turn."*
+
+**Why this matters for the Workshop:** the Workshop is a long-lived knowledge artifact accessed across many sessions. Most useful sessions have a clear "done" state that the operator can name in one sentence. Wrapping a session in `/goal` removes the need for the operator to babysit progress.
+
+**How to use it (the operator's preferred pattern):**
+
+- `/goal until the 3 client retros are written and committed`
+- `/goal until the inbox is empty as of today`
+- `/goal until the CFO charter exists with non-empty content`
+- `/goal until the weekly review is complete and the board update is in /ceo/`
+
+**Discipline:** state the **observable outcome**, not the process. The evaluator only sees what Claude has surfaced in the conversation — no tool runs. So conditions must be verifiable from the transcript alone.
+
+**Composition with skills:** the skill does the work, `/goal` decides when work is finished. Don't bake "stop when done" into a skill — it breaks reusability across sessions with different appetites.
+
+See [claude-skills.md § 9](./claude-skills.md#9-the-goal-slash-command--session-scoped-stop-conditions) for the full treatment.
+
+---
+
 ## Open sub-topics for future brainstorm sessions
 
 1. Lean `CLAUDE.md` design — sections, routing table format, invariants list
