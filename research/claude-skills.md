@@ -151,7 +151,87 @@ The pattern: **start as slash commands** (cheap, explicit). **Graduate to skills
 
 ---
 
-## 9. Open questions for the operator
+## 9. The `/goal` slash command — session-scoped stop conditions
+
+A related Claude Code primitive that's easy to conflate with skills but is its own thing. Launched May 2026 in Claude Code v2.1.139 ([Anthropic — Keep Claude working toward a goal](https://code.claude.com/docs/en/goal)). Important to understand because it changes how skills, sub-agents, and slash commands compose under a goal-driven session.
+
+### What `/goal` is
+
+`/goal <condition>` sets a **session-scoped Stop hook** that uses a small fast model (Haiku by default) to evaluate after every turn whether the condition is met ([Mervin Praison field guide](https://mer.vin/2026/05/claude-code-slash-goal-multi-turn-sessions-until-a-verifiable-finish-line/); [wmedia.es — set the stop condition](https://wmedia.es/en/tips/claude-code-goal-stop-condition)). If the condition holds → session can stop. If not → Claude keeps working, with the evaluator's reason returned as guidance for the next turn.
+
+> *"Each time Claude finishes a turn, the condition and the conversation so far are sent to your configured small fast model... The model returns a yes-or-no decision and a short reason. A 'no' tells Claude to keep working and includes the reason as guidance for the next turn."* ([Mervin Praison](https://mer.vin/2026/05/claude-code-slash-goal-multi-turn-sessions-until-a-verifiable-finish-line/))
+
+Clear by typing `/goal clear` (or `stop`, `off`, `reset`, `none`, `cancel` as aliases) ([Apiyi.com goal mode guide](https://help.apiyi.com/en/claude-code-goal-mode-keep-working-until-done-guide-en.html)).
+
+### How `/goal` differs from a persistent Stop hook
+
+| Aspect | `/goal` | Persistent Stop hook |
+|---|---|---|
+| **Scope** | This session only | Every session in the hook's settings scope |
+| **Definition** | Typed at the prompt | In `settings.json` |
+| **Evaluator** | Small fast model (judges what's been said) | Script (deterministic) OR prompt (model-evaluated) |
+| **When to pick** | One-off goals: *"don't stop until the PR is green", "until the docs are committed"* | Repeatable invariants: *"don't stop with uncommitted files"* |
+
+The pattern that emerges: **Stop hooks for invariants, `/goal` for objectives.** The Workshop's existing `~/.claude/stop-hook-git-check.sh` (which has been firing throughout this session) is the invariant-shaped use case; a `/goal until-the-docs-are-pushed` would be the objective-shaped one.
+
+### How `/goal` interacts with skills
+
+A goal is a *meta-layer above skills*. The skills do the work; the goal decides when work is finished.
+
+**Useful composition patterns:**
+
+1. **Goal + auto-firing skill:** `/goal triage all inbox items` — the `triage` skill auto-fires, processes items, the goal evaluator checks "is the inbox empty?" after each turn.
+
+2. **Goal + slash command:** `/goal weekly review is complete` — Bar runs `/weekly-review` (which invokes the COO skill), the evaluator checks "did we touch all CXO inboxes and write the board update?" after each step.
+
+3. **Goal + sub-agent:** `/goal the PR is green` — Claude spawns a CI-watching sub-agent, the goal evaluator wakes Bar only when CI passes.
+
+4. **Goal with no skills:** `/goal until I've reviewed all open ADRs and decided on each` — pure conversation, the evaluator gates session-end.
+
+### Goal-shaped session design — the discipline
+
+The fundamental insight from goal-oriented prompt design literature ([Beam.ai — Goal-Oriented AI Agents](https://beam.ai/agentic-insights/architecting-autonomy-goal-oriented-agents); [apxml.com — Prompting for Goal Specification](https://apxml.com/courses/prompt-engineering-agentic-workflows/chapter-4-prompts-agent-planning-task-management/prompting-goal-specification-refinement)): *"Goal prompts outperform task prompts. Agents need context about what success looks like, not just what to do next."*
+
+A well-formed `/goal` condition:
+
+- **Names the observable outcome**, not the process (*"the inbox is empty"*, not *"keep triaging"*)
+- **Is verifiable from the conversation transcript alone** — the evaluator sees only what Claude has said
+- **Doesn't require external tool runs** — the evaluator runs no tools, only judges what's surfaced
+- **Has a clear failure mode** — if the condition is unreachable, Bar should be able to `/goal clear` and reassess
+
+**Bad goals** (ambiguous, unverifiable):
+- `/goal make it good` — what's "good"?
+- `/goal until the user is happy` — the evaluator has no signal on user happiness
+- `/goal until everything is done` — "everything" undefined
+
+**Good goals** (concrete, verifiable):
+- `/goal until the 3 research docs are written, committed, and pushed to main`
+- `/goal until the CFO charter, KPIs, and pricing.md exist with non-empty content`
+- `/goal until the inbox has zero unprocessed items as of session start`
+
+### Goal vs Skill — which encodes the "stop" condition
+
+A subtle question: if a skill has a known success criterion (e.g. the `triage` skill knows "I've succeeded when every inbox item has a category or a follow-up action"), should that live in the SKILL.md or in a `/goal`?
+
+**Recommended split:**
+- The skill encodes the *steady-state behavior* (how to triage one item, the rules)
+- The goal encodes the *session intent* (do this until done)
+
+The skill is reusable across many sessions and many goals. The goal is a one-shot intent. Conflating them — putting "keep going until everything is done" inside a skill — breaks the skill's reusability for sessions that only want to triage one or two items.
+
+### When NOT to use `/goal`
+
+- **Exploratory sessions** where Bar doesn't know what "done" looks like yet. Setting a goal too early constrains the conversation.
+- **Sessions with multiple parallel objectives** — `/goal` is one condition; multi-objective sessions need explicit human checkpointing.
+- **Conditions that require external verification** (e.g. *"until the live URL responds 200"*) — the goal evaluator can't run tools, so it can only judge what Claude has *claimed*. Use a deterministic Stop hook for that.
+
+### How this changes the Workshop's skill design
+
+The existence of `/goal` removes pressure to bake "completion criteria" into every skill. The skills can stay focused on *what to do*; the goal layer handles *when to stop*. This is consistent with the Workshop's lean-skills stance — fewer skills, each smaller, with `/goal` as the orchestration layer when needed.
+
+---
+
+## 10. Open questions for the operator
 
 1. **Where do skills live — repo or user-global?** Project-level (`.claude/skills/`) ships with the repo; user-level (`~/.claude/skills/`) follows Bar across all repos. Workshop skills should be project-level (specific to the Workshop's vocabulary). Skills that are generic to Bar's working style (e.g. *"always summarize a long output in 3 bullets"*) should be user-level.
 2. **Curation vs accretion.** Anthropic's marketplace is approaching skill bloat. Does Bar commit to a curated list (≤15 skills total) or let them accrete?
@@ -176,6 +256,21 @@ The pattern: **start as slash commands** (cheap, explicit). **Graduate to skills
 - [Young Leaders — Understanding Claude Code: Skills vs Commands vs Subagents vs Plugins](https://www.youngleaders.tech/p/claude-skills-commands-subagents-plugins)
 - [websearchapi.ai — How to Create Claude Code Skills](https://websearchapi.ai/blog/how-to-create-claude-code-skills)
 - [travisvn/awesome-claude-skills](https://github.com/travisvn/awesome-claude-skills)
+
+**`/goal` command (section 9):**
+- [Anthropic — Keep Claude working toward a goal](https://code.claude.com/docs/en/goal)
+- [Mervin Praison — /goal multi-turn sessions until a verifiable finish line](https://mer.vin/2026/05/claude-code-slash-goal-multi-turn-sessions-until-a-verifiable-finish-line/)
+- [Jason Croucher — /goal: A Field Guide with Games](https://medium.com/@jason.croucher/claude-code-goal-a-field-guide-with-games-f6f3b617ce5b)
+- [FindSkill.ai — /goal: Set a Finish Line, Walk Away](https://findskill.ai/blog/claude-code-goal-command/)
+- [wmedia.es — /goal in Claude Code: set the stop condition and walk away](https://wmedia.es/en/tips/claude-code-goal-stop-condition)
+- [Apiyi.com — Claude Code goal mode 6 key points](https://help.apiyi.com/en/claude-code-goal-mode-keep-working-until-done-guide-en.html)
+- [Pasquale Pillitteri — /goal: The AI Coding Command Codex Invented and Claude Code Copied in 11 Days](https://pasqualepillitteri.it/en/news/2514/goal-command-codex-claude-code-11-days)
+
+**Goal-oriented prompt design (section 9):**
+- [Beam.ai — Goal-Oriented AI Agents: Beyond Prompt Engineering](https://beam.ai/agentic-insights/architecting-autonomy-goal-oriented-agents)
+- [apxml.com — Prompting for Goal Specification and Refinement](https://apxml.com/courses/prompt-engineering-agentic-workflows/chapter-4-prompts-agent-planning-task-management/prompting-goal-specification-refinement)
+- [bKlug — Prompt Engineering for Agents: Roles, Goals, Behaviors](https://bklug.ai/blog/prompt-engineering-for-agents-designing-roles-goals-and-behaviors)
+- [arXiv — What Is Your Agent's GPA? Goal-Plan-Action Alignment](https://arxiv.org/pdf/2510.08847)
 
 **Related Workshop docs:**
 - [host-repo-architecture.md](./host-repo-architecture.md) (Day-1 three skills)

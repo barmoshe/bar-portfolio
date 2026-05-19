@@ -16,6 +16,8 @@ Research and design brainstorm for a future private GitHub repository that will 
 | **[cxo-folders.md](./cxo-folders.md)** | Per-CXO folder reference for all 9 seats (CEO, CTO, COO, CFO, CRO, CMO, CLO, CKO, CPO-for-agents). Mandate, knowledge, artifacts, Day-1 minimal, 6-month mature, Claude-native skills, cross-references. Sourced from Umbrex, GitLab handbook, fractional-CXO playbooks, solo-operator OSes | ~340 lines |
 | **[sub-repo-relationship.md](./sub-repo-relationship.md)** | `bar-portfolio` as the first sub-project of the host. Virtual Monorepo vs Spine vs Nested CLAUDE.md patterns. Recommended hybrid: Spine + sibling clone + per-sub-project overlay | ~180 lines |
 | **[client-lifecycle.md](./client-lifecycle.md)** | Full lifecycle for a client sub-project: Lead → Qualification → Discovery/POC → Paid Pilot → Retainer → Archive. Stage gates, 2026 pricing ranges, Shape Up pitch / `exit-criteria.md`, MADR ADR pattern, retainer cadence (thoughtbot model), Israel Amendment 13 deletion rules, 8 real-practice anti-patterns | ~290 lines |
+| **[intake-flow.md](./intake-flow.md)** | Mock walkthrough from marketing site → WhatsApp → host repo → sub-project creation. Framed as "knowledge accumulating at each touchpoint." Weighted integration options (manual paste / WhatsApp Web export / MCP server / Business API gateway / click-to-chat ads) | ~300 lines |
+| **[claude-skills.md](./claude-skills.md)** | Authoring reference for Claude Skills. Progressive-disclosure architecture (3 load stages), Skill vs Sub-agent vs Slash Command trade-offs, YAML frontmatter discipline, goal-shaped skill design, the `/goal` slash command (session-scoped stop conditions launched May 2026), anti-patterns | ~280 lines |
 
 ## What's locked
 
