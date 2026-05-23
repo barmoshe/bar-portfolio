@@ -216,6 +216,7 @@ These are the architectural sub-topics worth a dedicated brainstorm session each
 10. **Sub-project bootstrap** — when a new client engagement is born, what does the host hand it (templates, conventions, starter CLAUDE.md)?
 11. **The "near future" CXO build order** — which CXO seat earns the first definition; what pain triggers each subsequent one
 12. **Knowledge promotion across CXOs** — when does a pattern observed in one CXO's domain get promoted to the global knowledge base (CKO's job)
+13. **`/build` vs `/build-harness`** — should the company's two core verbs (build a deliverable; tune its own harness) be named commands, and is `/build` a new primitive or just the graduation ritual maturing? Options explored in [build-commands.md](./build-commands.md).
 
 ---
 

@@ -229,6 +229,12 @@ The skill is reusable across many sessions and many goals. The goal is a one-sho
 
 The existence of `/goal` removes pressure to bake "completion criteria" into every skill. The skills can stay focused on *what to do*; the goal layer handles *when to stop*. This is consistent with the Workshop's lean-skills stance — fewer skills, each smaller, with `/goal` as the orchestration layer when needed.
 
+### `/goal`-driven *command* sessions
+
+The composition patterns above generalize past skills: a **slash command** that kicks off a chunk of work is an equally natural thing to wrap in a `/goal`. The command supplies the *procedure*; `/goal` supplies the *finish line*; an optional Stop hook supplies the *invariant* that holds regardless of session. This three-layer split (command = how, `/goal` = when-done, Stop hook = never-stop-if) is the orchestration shape the Workshop's bigger verbs would use.
+
+The two command concepts explored in [build-commands.md](./build-commands.md) — `/build` (build something by the company) and `/build-harness` (the company tuning its own `.claude/` infra) — are the worked examples: both have a nameable, transcript-verifiable finish line that suits `/goal`, while the things a goal-evaluator *can't* judge (does `make check` pass? does the deploy return 200?) fall to a deterministic Stop hook instead. See that doc §4 for the split in practice.
+
 ---
 
 ## 10. Open questions for the operator
@@ -238,6 +244,7 @@ The existence of `/goal` removes pressure to bake "completion criteria" into eve
 3. **Skill author vs skill tester separation.** Anthropic recommends Claude A authors, Claude B tests. Does the Workshop have a `/create-skill` command that scaffolds the authoring loop?
 4. **Sunset rule.** Per the company-brain doc, every artifact needs a deprecation ritual. What's the rule for retiring a skill? Suggested: *"skill removed if not invoked in 60 days."*
 5. **Skill descriptions in Hebrew?** Bar is bilingual; some skills (especially CMO-flavored voice skills) might benefit from Hebrew triggers. Decide upfront whether descriptions are EN-only or bilingual.
+6. **Harness-mutation as command, skill, or MCP?** A `/build-harness`-style capability edits the repo's own `.claude/` infra — side-effecting and audit-worthy. Slash command (explicit), the §2 hybrid (command → sub-agent → apply), or MCP-gated for a reversible audit trail? See [build-commands.md §3](./build-commands.md).
 
 ---
 

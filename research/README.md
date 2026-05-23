@@ -17,7 +17,8 @@ Research and design brainstorm for a future private GitHub repository that will 
 | **[sub-repo-relationship.md](./sub-repo-relationship.md)** | `bar-portfolio` as the first sub-project of the host. Virtual Monorepo vs Spine vs Nested CLAUDE.md patterns. Recommended hybrid: Spine + sibling clone + per-sub-project overlay | ~180 lines |
 | **[client-lifecycle.md](./client-lifecycle.md)** | Full lifecycle for a client sub-project: Lead → Qualification → Discovery/POC → Paid Pilot → Retainer → Archive. Stage gates, 2026 pricing ranges, Shape Up pitch / `exit-criteria.md`, MADR ADR pattern, retainer cadence (thoughtbot model), Israel Amendment 13 deletion rules, 8 real-practice anti-patterns | ~290 lines |
 | **[intake-flow.md](./intake-flow.md)** | Mock walkthrough from marketing site → WhatsApp → host repo → sub-project creation. Framed as "knowledge accumulating at each touchpoint." Weighted integration options (manual paste / WhatsApp Web export / MCP server / Business API gateway / click-to-chat ads) | ~300 lines |
-| **[claude-skills.md](./claude-skills.md)** | Authoring reference for Claude Skills. Progressive-disclosure architecture (3 load stages), Skill vs Sub-agent vs Slash Command trade-offs, YAML frontmatter discipline, goal-shaped skill design, the `/goal` slash command (session-scoped stop conditions launched May 2026), anti-patterns | ~280 lines |
+| **[claude-skills.md](./claude-skills.md)** | Authoring reference for Claude Skills. Progressive-disclosure architecture (3 load stages), Skill vs Sub-agent vs Slash Command trade-offs, YAML frontmatter discipline, goal-shaped skill design, the `/goal` slash command (session-scoped stop conditions launched May 2026), `/goal`-driven command sessions, anti-patterns | ~290 lines |
+| **[build-commands.md](./build-commands.md)** | Options research on two command concepts: `/build` (build something by the company) and `/build-harness` (the company tuning its own `.claude/` harness) — the harness's knowledge+tools+scripts bundle applied inward vs outward. Option spaces, `/goal` orchestration (command = how, `/goal` = when-done, Stop hook = invariant), the Rule-of-Three governance tension, open questions | ~110 lines |
 
 ## What's locked
 
@@ -65,6 +66,7 @@ See [claude-skills.md § 9](./claude-skills.md#9-the-goal-slash-command--session
 5. Workshop activation rituals — daily / weekly / monthly cadences in practice
 6. Knowledge promotion across CXOs — CKO's cross-domain librarian role
 7. The "near-future" CXO build order — which seat earns the first definition; what pain triggers each subsequent one
+8. `/build` and `/build-harness` as named commands — whether the company's two core verbs earn Day-1 commands or emerge by promotion; primitive choice for harness self-mutation (command / hybrid / MCP). See [build-commands.md](./build-commands.md).
 
 ## Research method
 
