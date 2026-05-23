@@ -4,16 +4,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-`bar-portfolio` is a React 19 + Vite 6 + TypeScript site deployed to GitHub Pages at https://barmoshe.github.io/bar-portfolio/ via GitHub Actions on push to `main`. It is **four Vite entries served from one deploy** (see `vite.config.ts`):
+`bar-portfolio` is a React 19 + Vite 6 + TypeScript site deployed to GitHub Pages at https://barmoshe.github.io/bar-portfolio/ via GitHub Actions on push to `main`. It is **six Vite entries served from one deploy** (see `vite.config.ts`):
 
 | Entry | URL | Source | Role |
 |---|---|---|---|
 | `index.html` | `/bar-portfolio/` | `src/main.tsx` → `App.tsx` | English portfolio (single-page, hash-nav: `#intro`, `#background`, `#mixtape`, `#repos`, `#letter`). |
 | `business/index.html` | `/bar-portfolio/business/` | `src/marketing/main.tsx` → `MarketingApp.tsx` | Hebrew-canonical marketing landing. Bilingual HE/EN React app with `bm:lang` persistence; first-visit pick is weighted random (70/30 HE/EN), resolved in the pre-paint script. |
 | `business/en/index.html` | `/bar-portfolio/business/en/` | `src/marketing/main.tsx` → `MarketingApp.tsx` | English-canonical mirror of the marketing landing. Same React app; pre-paint script forces `bm:lang="en"` so crawlers and link previews always see EN. Mutually hreflang-linked with the HE URL. See `knowledge/08-seo-sharing.md`. |
+| `lab/index.html` | `/bar-portfolio/lab/` | `src/lab/main.tsx` → `LabApp.tsx` | Hebrew-canonical "The Lab" landing — a sister surface to `/business/` pitching a no-strings free first build. Same bilingual + weighted-random pre-paint pattern as marketing. Reuses `marketing.css` under an amber-led `.mp-lab` sub-brand. |
+| `lab/en/index.html` | `/bar-portfolio/lab/en/` | `src/lab/main.tsx` → `LabApp.tsx` | English-canonical mirror of the Lab landing. Pre-paint forces `bm:lang="en"`. Mutually hreflang-linked with the HE Lab URL. |
 | `backoffice/index.html` | `/bar-portfolio/backoffice/` | `src/backoffice/main.tsx` → `Backoffice.tsx` | Fictional Hebrew CRM demo (leads / invoices / calendar). `robots: noindex`. Storage-backed; no real backend. |
 
-All four share `src/styles.css` (root tokens + theme) and the same `bm:theme` / a11y prefs via the inline pre-paint script that lives in each `<head>`.
+All six share `src/styles.css` (root tokens + theme) and the same `bm:theme` / a11y prefs via the inline pre-paint script that lives in each `<head>`.
 
 ## Routing (open these first when relevant)
 
@@ -37,6 +39,8 @@ All four share `src/styles.css` (root tokens + theme) and the same `bm:theme` / 
 - SEO runbook for an external agent (Search Console, Wikidata, GitHub bio, LinkedIn, Medium, X) → `prompts/seo-agent-runbook.md`
 
 Slash commands: `/new-project`, `/theme-preview`, `/deploy-check`, `/typecheck` — see `.claude/commands/`.
+
+`research/` holds design notes for a **separate, future, private "host" repo** (an operator memory/workshop layer) — it is brainstorm, not part of this site's build or deploy. Ignore it for portfolio work unless explicitly asked.
 
 ## High-level architecture
 
@@ -77,15 +81,19 @@ All three branch on `FULL_MOTION_QUERY` from `src/lib/gsap.ts` and use `useGSAP`
 
 ### Accessibility prefs (Phase 2)
 
-`src/components/AccessibilityPanel.tsx` (opened from `Strip`'s ⚙ button) reads/writes `bm:contrast`, `bm:text-scale`, `bm:readable` via `src/hooks/usePreferences.ts`. The inline pre-paint script in **all three** entry HTMLs mirrors the same reads — if you add a pref, update both sides in lockstep.
+`src/components/AccessibilityPanel.tsx` (opened from `Strip`'s ⚙ button) reads/writes `bm:contrast`, `bm:text-scale`, `bm:readable` via `src/hooks/usePreferences.ts`. The inline pre-paint script in **all six** entry HTMLs mirrors the same reads — if you add a pref, update both sides in lockstep.
 
 ### Marketing site (`src/marketing/`)
 
 A separate Vite entry; not a route. `MarketingApp` wraps `LangProvider`. Strings live in `src/marketing/i18n.ts` (HE + EN dictionaries), persisted as `bm:lang` and surfaced through `useLang()` as `{ lang, setLang, toggle, t }`. Three semantic accents (`--mp-primary` magenta, `--mp-accent-2` orange, `--mp-accent-3` blue) carry fixed roles. **Under the current "BOARD" direction these map to kanban states**: magenta = TODO, orange = DOING, blue = DONE; WhatsApp green (`--mp-whatsapp`) is reserved for the dispatch CTA. See `knowledge/02-design-system.md` § Marketing color-meaning. Shares `bm:theme` with the portfolio.
 
+### Lab site (`src/lab/`)
+
+A sister landing surface to `/business/`, its own Vite entry (`lab`, `labEn`). `LabApp` wraps its own `LangProvider` (`src/lab/LangContext.tsx`) and reuses the marketing stylesheet via the `.mp-root.mp-board.mp-lab` class chain — `.mp-lab` is an amber-led sub-brand defined in `src/marketing/marketing.css`. Strings live in `src/lab/i18n.ts`; sections in `src/lab/sections/` (`LabCover`, `Process`, `About`, `LabProjectTemplates`, `LabIntake`, `LabFAQ`, `LabContactCTA`). Positioned as a soft launch from a LinkedIn post: free no-strings first build with a one-screen intake; **no cross-link to `/business/` in v1**. Shares `bm:theme` / `bm:lang` / a11y keys with every other surface.
+
 ### Backoffice (`src/backoffice/`)
 
-Standalone Hebrew/RTL CRM-style demo. Views in `views/`, primitives in `components/`, fake backend in `lib/backend.ts` + `lib/storage.ts`, route state in `lib/route.ts`/`useRoute()`. Marked `noindex,nofollow`. No real data leaves localStorage.
+Standalone Hebrew/RTL CRM-style demo. Views in `views/` (`DashboardView`, `LeadsView`, `LeadDetailView`, `InvoicesView`, `CalendarView`), primitives in `components/`, seed data in `data/`, fake backend in `lib/backend.ts` + `lib/storage.ts`, route state in `lib/route.ts`/`useRoute()`. Marked `noindex,nofollow`. No real data leaves localStorage.
 
 ### Mixtape audio (`src/lib/mixtapeAudio.ts` + `src/lib/mixtapeTracks.ts`)
 
@@ -93,15 +101,15 @@ Small flat WebAudio engine backed by pre-rendered MP3s under `public/audio/{side
 
 ## Things that must not be broken
 
-1. **Pre-paint theme script** — inline in each entry `<head>` (`index.html`, `business/index.html`, `backoffice/index.html`). Do not externalize, defer, or move into React.
+1. **Pre-paint theme script** — inline in each entry `<head>` (`index.html`, `business/index.html`, `business/en/index.html`, `lab/index.html`, `lab/en/index.html`, `backoffice/index.html`). Do not externalize, defer, or move into React.
 2. **`HeroSlides` fx cycle** — `advance()` early-returns if the previous timeline is still active (the shared `#ink-crumple` filter assumes serial execution). `resetSlide()` must clear every fx-specific inline style on completion or the next cycle starts from stale state. See `knowledge/04-animation.md`.
-3. **`base: '/bar-portfolio/'`** in `vite.config.ts` — if the repo is renamed, update this in lockstep with absolute URLs in `index.html`, `business/index.html`, `public/sitemap.xml`, `public/robots.txt`.
+3. **`base: '/bar-portfolio/'`** in `vite.config.ts` — if the repo is renamed, update this in lockstep with absolute URLs in `index.html`, `business/index.html`, `business/en/index.html`, `lab/index.html`, `lab/en/index.html`, `public/sitemap.xml`, `public/robots.txt`.
 4. **`public/.nojekyll`** — must land in `dist/`. Keeps GitHub Pages' Jekyll from stripping underscore folders.
 5. **Mixtape audio gating** — `AudioContext` only inside `unlock()`, invoked only from the Start button. Do not restore the Tone.js build or the previous procedural zero-dep engine verbatim.
-6. **Accessibility floor (WCAG 2.2 AA)** — `npm run lint` (jsx-a11y/recommended) runs in CI and **blocks the deploy** (`.github/workflows/deploy.yml`). `@axe-core/react` runs in dev only via `src/main.tsx` and `src/marketing/main.tsx`. Skip link, `<main id="main" tabIndex={-1}>`, hash-nav focus handoff, and `:focus-within` on the Repos card pattern are intentional — don't unwind. Run `recipes/a11y-check.md` after any change to navigation, focus, semantic structure, animation, color tokens, or audio controls.
+6. **Accessibility floor (WCAG 2.2 AA)** — `npm run lint` (jsx-a11y/recommended) runs in CI and **blocks the deploy** (`.github/workflows/deploy.yml`). `@axe-core/react` runs in dev only via each React entry (`src/main.tsx`, `src/marketing/main.tsx`, `src/lab/main.tsx`, `src/backoffice/main.tsx`). Skip link, `<main id="main" tabIndex={-1}>`, hash-nav focus handoff, and `:focus-within` on the Repos card pattern are intentional — don't unwind. Run `recipes/a11y-check.md` after any change to navigation, focus, semantic structure, animation, color tokens, or audio controls.
 7. **Accessibility panel parity** — `AccessibilityPanel` ↔ `usePreferences` ↔ pre-paint scripts must stay in sync. Do not install a third-party a11y overlay (UserWay, accessiBe). `HeroSlides` has a keyboard-accessible Pause button (WCAG 2.2.2); `Boot` has a focus trap.
 8. **`InkDefs` first child of `App.tsx`** — filter lookups in `attachInkBleed` go through DOM id resolution; reordering blanks every filter effect.
-9. **Vite multi-entry** — `vite.config.ts` declares four inputs (`main`, `business`, `businessEn`, `backoffice`). Removing `business/`, `business/en/`, or `backoffice/` from `rollupOptions.input` drops them from `dist/`. The two `business/` entries must stay paired — they are mutually hreflang-linked.
+9. **Vite multi-entry** — `vite.config.ts` declares six inputs (`main`, `business`, `businessEn`, `lab`, `labEn`, `backoffice`). Removing any of `business/`, `business/en/`, `lab/`, `lab/en/`, or `backoffice/` from `rollupOptions.input` drops it from `dist/`. The two `business/` entries and the two `lab/` entries must each stay paired — every HE/EN pair is mutually hreflang-linked.
 
 Full rationale and anti-patterns: `knowledge/99-caveats.md`.
 
@@ -118,10 +126,10 @@ Full rationale and anti-patterns: `knowledge/99-caveats.md`.
 
 ```
 npm install        # once
-npm run dev        # http://localhost:5173/  (note: vite dev does NOT prefix base; visit /, /business/, /backoffice/)
+npm run dev        # http://localhost:5173/  (note: vite dev does NOT prefix base; visit /, /business/, /lab/, /backoffice/)
 npm run lint       # eslint . — required to pass in CI before deploy
 npm run typecheck  # tsc -b --noEmit
-npm run build      # tsc -b && vite build → dist/  (builds all four entries)
+npm run build      # tsc -b && vite build → dist/  (builds all six entries)
 npm run preview    # http://localhost:4173/bar-portfolio/  (preview DOES use base path)
 ```
 
