@@ -13,6 +13,17 @@ base — keep it short; detail lives in skills, per-project files, and `decision
 - A **substrate operated by agents.** You direct; the agent files, builds, and
   remembers.
 
+## The harness — two directions
+
+The repo is a **harness**: a `knowledge + tools + scripts` bundle that points
+either way.
+
+- **Outward → `/build`** — use the bundle to produce the company's deliverables
+  (a client/lab/own sub-project).
+- **Inward → `/build-harness`** — use the bundle to improve *itself* (CLAUDE.md,
+  hooks, skills, settings, routing). This edits the company's own brain, so it's
+  **business scope**: propose → confirm → apply → log an ADR.
+
 ## Where state lives (canonical)
 
 - `decisions/` — append-only ADRs. The history of *why*. Never edited once
@@ -67,8 +78,8 @@ store + viewer is a later build.
 
 ## Routing — commands & skills
 
-- Commands: `/capture`, `/intake`, `/promote-to-client`, `/archive`,
-  `/weekly-review` (see `.claude/commands/`).
+- Commands: `/build`, `/build-harness`, `/capture`, `/intake`,
+  `/promote-to-client`, `/archive`, `/weekly-review` (see `.claude/commands/`).
 - Skills: `brief-intake`, `decision`, `mvp-scaffold` (see `.claude/skills/`).
 - New project scaffolding → `templates/project/`.
 
