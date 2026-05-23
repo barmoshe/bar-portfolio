@@ -76,7 +76,7 @@ What exactly Claude does, which tools/skills it gets, which flows trigger —
 
 ## What "done correctly" / success looks like
 
-Not fully certain yet, but the felt sense of success in ~6 months:
+Not fully certain yet, but the felt sense of success:
 
 - A **knowledge base that improves over time** rather than going stale.
 - It **hosts the sub-projects** worked on, each accumulating its own context.
@@ -107,7 +107,7 @@ doc is vision only.
 
 ## Open questions for a future session
 
-1. What's the minimum the repo needs on Day 1 to be *useful before it's
+1. What's the minimum the repo needs at the start to be *useful before it's
    automated*?
 2. The exact sub-project hosting model (folders/clones inside vs referenced) and
    how cloned client repos coexist with the workshop's own git history.
