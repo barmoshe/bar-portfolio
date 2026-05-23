@@ -6,6 +6,9 @@ This is a **vision / intent capture**, not a design. The goal is to record what
 Bar wants and why. No architecture, no v1 file layout, no build — those come in
 a later session, with more research. Extracted via a short interview (May 2026).
 
+> The deferred design pass has since happened — see
+> **[workshop-design.md](./workshop-design.md)** for the committed decisions.
+
 ---
 
 ## Context — why now
