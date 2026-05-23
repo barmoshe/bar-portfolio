@@ -9,7 +9,8 @@ Research and design brainstorm for a future private GitHub repository that will 
 | Doc | Focus | Length |
 |---|---|---|
 | **[workshop-vision.md](./workshop-vision.md)** | Vision & intent capture (May 2026 interview) — what Bar wants and why, before any wiring | ~120 lines |
-| **[workshop-design.md](./workshop-design.md)** | First design pass (May 2026 interview) — committed decisions: plain notes, scope-based autonomy, conversational capture, per-project hosting, deferred client-data store | ~150 lines |
+| **[workshop-design.md](./workshop-design.md)** | First design pass (May 2026 interview) — committed decisions: plain notes, scope-based autonomy, conversational capture, per-project hosting, deferred client-data store; + reconciliation against the external reports | ~200 lines |
+| **[external-reports-agent-operated-repo.md](./external-reports-agent-operated-repo.md)** | Provenance archive — two external research reports (Bar-supplied, May 2026) on agent-operated repos. Source material; reconciled in workshop-design.md | ~250 lines |
 | **[host-repo-architecture.md](./host-repo-architecture.md)** | The architecture, principles, walking skeleton, CXO model, Day-1 structure | ~270 lines |
 | **[practical-reference.md](./practical-reference.md)** | Concrete reference repos, sample CLAUDE.md / SKILL.md / hook / inbox-note artifacts, Day-1 → Year-1 evolution timeline, 2026 tooling stack, anti-patterns, migration patterns, costs | ~180 lines |
 | **[naming-and-framing.md](./naming-and-framing.md)** | Why not "brain", critical pushback, alternative names. Top recommendation: **Workshop** / `סדנה` | ~120 lines |

@@ -125,6 +125,45 @@ deferred — the spine above is the walking skeleton.
 
 ---
 
+## Reconciliation with external research (May 2026)
+
+Two external reports were captured at
+[external-reports-agent-operated-repo.md](./external-reports-agent-operated-repo.md)
+(treat their benchmark/vendor claims skeptically). Mapped against our seven
+decisions — **confirm / extend / contradict**:
+
+| # | Our decision | Research verdict | What it adds |
+|---|---|---|---|
+| 1 | Plain visible notes, not black-box memory | **Confirms (strongly)** | Letta's own benchmark: filesystem + grep (74.0% LoCoMo) beat Mem0's best graph (68.5%). Both reports say start file-first; add a memory product only when grep across `decisions/` + per-project files demonstrably fails. Note: Claude Code's **auto-memory** (`MEMORY.md`) is machine-local — keep canonical truth (scope, decisions, handoff) in *named, committed* files, not auto-memory. |
+| 2 | Sub-project hosting depends per project; new = folder inside, existing = clone in | **Extends + partially contradicts** ⚠️ | Cloning an existing repo *nested inside* the Workshop hits Git's documented embedded-repo footgun (an unusable gitlink; `git add .` by an agent makes it worse). Refined rule: **new = plain folder inside; existing = sibling clone** coordinated by a manifest (`.repos.json`), submodule only when physical nesting is truly required, `subtree --squash` only to freeze a finished engagement into `archive/`. Avoid the gitignored-nested-repo pattern. |
+| 3 | Flexible lifecycle backbone | **Confirms + extends** | Same arc (lead → qualified → active → handoff → archive). Adds: model states as **different required files**, not just tags; `STATUS.md` (where we are / next / blockers) as the keystone per project; free→paid is a state change with a *frozen brief* + lightweight SOW. |
+| 4 | Scope-based autonomy (free inside a sub-project, ask at business scope) | **Confirms the posture, supplies the mechanism** | Prose guardrails can be reasoned around; **only hooks/permissions are deterministic**. Implement the "business scope" boundary as `PreToolUse` hooks + protected-path permission rules + (optionally) OS sandbox — *not* a CLAUDE.md sentence. This is the concrete answer to our open question #1. |
+| 5 | Conversational capture — "tell Claude, it files it" | **Confirms (was over-stated as 'override')** | Both reports independently propose a `/capture <text>` command that "asks Claude to file the snippet correctly" — that *is* our model. The single-inbox question is just an implementation detail (whether an `inbox.md` sits behind the command as one append target). So: not a contradiction with the research's "inbox" — the inbox is optional plumbing, Claude-as-filer is the surface. |
+| 6 | Adaptive on-open briefing | **Confirms + extends** | A `SessionStart` hook's stdout is *injected as context Claude must process* (more reliable than CLAUDE.md, which decays in long sessions). It can be context-sensitive — read the cwd's `STATUS.md`, recent ADRs, git activity — satisfying "it depends" via logic, not a static dashboard. |
+| 7 | Client data outside git; v1 = per-project brief | **Confirms + flags a threat-model gap** | Aligns with private-repo + sensitive-data-out. Caveat to record: even a *private* GitHub repo may be unacceptable for some client data (→ self-hosted Forgejo/Gitea if a client requires it). Our deferred "store + viewer" is the right place to resolve this. |
+
+**Net:** the research validates the spine. The one decision it materially
+**changes** is #2 — *clone existing repos as siblings, not nested* — and the one
+it **operationalizes** is #4 — *enforce the project/business boundary in hooks,
+not prose*. The capture "divergence" flagged earlier in this doc is downgraded:
+the research's `/capture`-files-it pattern matches our intent.
+
+### Cross-cutting principles the research adds (not yet in our decisions)
+
+- **CLAUDE.md is a routing table, not a knowledge base** — keep root ≤~100–200
+  lines (a real instruction budget; imports don't reduce startup cost). Detail
+  lives in skills / path rules / nested per-project `CLAUDE.md`.
+- **Grow on trigger (Rule of Three)** — add a skill after the 3rd repeated
+  prompt; a subagent only for a named context-isolation reason; an MCP server
+  only for a named workflow. Matches our "start tiny" instinct.
+- **Append-only `decisions/` (ADR)** — never edit accepted records; supersede
+  them. Pairs with conversational capture and the adaptive briefing.
+- **Verify runtime/pricing before committing** — 2026 Claude Code pricing and a
+  token-inflation bug were in flux; treat any quoted price/feature as needing a
+  fresh check.
+
+---
+
 ## Still deferred (unchanged from vision)
 
 - Concrete v1 file/folder layout (the exact skeleton on disk).
@@ -139,16 +178,23 @@ deferred — the spine above is the walking skeleton.
 
 ## Next open questions (for the build session)
 
-1. **Scope mechanics for autonomy (4):** how does an agent *know* it's about to
-   cross the project→business boundary? Is "business scope" a directory, a
-   marker file, a CLAUDE.md rule, or a Stop-hook check? This is the first thing
-   to make concrete because it's the safety boundary.
-2. **Cloned-repo git coexistence (2):** nested clone vs submodule vs sibling +
-   reference — how a handed-over client repo lives inside without tangling
-   histories.
-3. **The client-data store + viewer (7):** what it is and how the per-project
-   brief points at it once it exists.
-4. **Filing conventions for "tell Claude, it files it" (5):** Claude needs
-   *some* shared placement logic so filing is consistent across sessions —
-   define the minimum so it's predictable without an inbox.
-5. The name.
+1. **Scope mechanics for autonomy (4):** research says enforce in
+   `PreToolUse` hooks + protected-path permissions, not prose. *Remaining
+   sub-question:* what concretely marks "business scope" vs a sub-project
+   sandbox — a top-level path list, a per-project marker file, or cwd-based
+   detection in the hook?
+2. **Cloned-repo git coexistence (2):** research resolves the default —
+   **sibling clones + manifest**, submodule only when nesting is required,
+   subtree only to archive. *Remaining sub-question:* do we standardize on
+   *one* (siblings) to avoid agent confusion, and where do siblings live
+   relative to the Workshop?
+3. **The client-data store + viewer (7):** what it is, and how the per-project
+   brief points at it once it exists (also resolves the private-GitHub
+   threat-model caveat — self-host if a client demands it).
+4. **Filing conventions for "tell Claude, it files it" (5):** define the minimum
+   shared placement logic (canonical files per project: `brief` / `status` /
+   `decisions` / `handoff`) so filing is consistent across sessions — with or
+   without an `inbox.md` behind the `/capture` surface.
+5. **Root `CLAUDE.md` budget:** keep it a ≤~150-line routing table; decide what
+   the business-wide invariants are vs what moves into skills / path rules.
+6. The name.
