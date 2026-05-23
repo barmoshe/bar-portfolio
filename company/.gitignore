@@ -1,0 +1,19 @@
+# secrets / client data — never commit
+.env
+.env.*
+*.key
+*secret*
+*.pem
+credentials*
+
+# personal, machine-local Claude config
+.claude/settings.local.json
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+
+# sub-projects bring their own builds
+node_modules/
+dist/
