@@ -36,7 +36,8 @@
       "WebSearch",
       "Bash(git mv *)",
       "mcp__Claude_Preview__preview_start",
-      "Bash(git pull *)"
+      "Bash(git pull *)",
+      "Bash(mkdir -p company/decisions company/lab company/leads company/clients company/projects company/archive company/templates/project/decisions company/.claude/commands company/.claude/skills/brief-intake company/.claude/skills/decision company/.claude/skills/mvp-scaffold company/.claude/hooks && echo created && ls company)"
     ]
   }
 }
