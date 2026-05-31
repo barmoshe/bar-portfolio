@@ -7,28 +7,21 @@
   Moved 2026-05-31: this surface lives on the bar_builds Next.js app
   deployed to Vercel (ADR 0040 in bar_builds/decisions/). The business
   landing is the site root after ADR 0041, so /business/ here points at
-  the apex URL on the new origin.
-
-  The host below is a placeholder. After `npx vercel --prod` assigns the
-  real origin, swap `TODO-VERCEL-URL.invalid` for that hostname (no
-  trailing slash). One-liner from this repo's root:
-
-    sed -i '' 's|https://TODO-VERCEL-URL.invalid|https://<your-vercel-host>|g' \
-      business/index.html business/en/index.html lab/index.html lab/en/index.html
-
-  (BSD sed = macOS; on Linux drop the empty quotes after `-i`.)
+  the apex URL on the new origin (https://bar-builds.vercel.app/).
+  If the site ever moves to a custom domain, update the four redirect
+  stubs (business/, business/en/, lab/, lab/en/) to the new host.
 -->
-<meta http-equiv="refresh" content="0; url=https://TODO-VERCEL-URL.invalid/">
-<link rel="canonical" href="https://TODO-VERCEL-URL.invalid/">
+<meta http-equiv="refresh" content="0; url=https://bar-builds.vercel.app/">
+<link rel="canonical" href="https://bar-builds.vercel.app/">
 <title>בר משה — הדף עבר</title>
 <style>
   body { font-family: system-ui, sans-serif; margin: 2rem; line-height: 1.5; }
   a { color: #0a66c2; }
 </style>
-<script>location.replace("https://TODO-VERCEL-URL.invalid/");</script>
+<script>location.replace("https://bar-builds.vercel.app/");</script>
 </head>
 <body>
-<p>הדף עבר אל <a href="https://TODO-VERCEL-URL.invalid/">בר משה</a>.</p>
-<p>The page has moved to <a href="https://TODO-VERCEL-URL.invalid/">Bar Moshe</a>.</p>
+<p>הדף עבר אל <a href="https://bar-builds.vercel.app/">בר משה</a>.</p>
+<p>The page has moved to <a href="https://bar-builds.vercel.app/">Bar Moshe</a>.</p>
 </body>
 </html>
