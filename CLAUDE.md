@@ -40,7 +40,7 @@ All six share `src/styles.css` (root tokens + theme) and the same `bm:theme` / a
 
 Slash commands: `/new-project`, `/theme-preview`, `/deploy-check`, `/typecheck` — see `.claude/commands/`.
 
-`research/` holds design notes for a **separate, future, private "host" repo** (an operator memory/workshop layer) — it is brainstorm, not part of this site's build or deploy. Ignore it for portfolio work unless explicitly asked.
+`research/` holds early design notes that seeded a **separate operator/workshop repo** (an operator memory/workshop layer). That repo now exists and stands on its own: `bar_builds` (public, github.com/barmoshe/bar_builds). These notes are brainstorm that predates it, not part of this site's build or deploy. Ignore them for portfolio work unless explicitly asked.
 
 ## High-level architecture
 
