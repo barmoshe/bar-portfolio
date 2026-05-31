@@ -4,18 +4,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-`bar-portfolio` is a React 19 + Vite 6 + TypeScript site deployed to GitHub Pages at https://barmoshe.github.io/bar-portfolio/ via GitHub Actions on push to `main`. It is **six Vite entries served from one deploy** (see `vite.config.ts`):
+`bar-portfolio` is a React 19 + Vite 6 + TypeScript site deployed to GitHub Pages at https://barmoshe.github.io/bar-portfolio/ via GitHub Actions on push to `main`. **Vercel auto-deploys are disabled** (`vercel.json: git.deploymentEnabled: false`) — this repo does not ship via Vercel.
+
+The four marketing surfaces (`business/`, `business/en/`, `lab/`, `lab/en/`) were retired 2026-05-31 onto the standalone `bar_builds` Next.js app on Vercel (see ADR 0040 + 0041 there). Their entry HTMLs are now tiny static redirect stubs (meta-refresh + canonical to the new origin); the React apps that used to mount on those routes (`src/marketing/`, `src/lab/`) are unreferenced from the build and slated for pruning once Search Console confirms the canonicals stuck.
+
+Live entries in `vite.config.ts`:
 
 | Entry | URL | Source | Role |
 |---|---|---|---|
 | `index.html` | `/bar-portfolio/` | `src/main.tsx` → `App.tsx` | English portfolio (single-page, hash-nav: `#intro`, `#background`, `#mixtape`, `#repos`, `#letter`). |
-| `business/index.html` | `/bar-portfolio/business/` | `src/marketing/main.tsx` → `MarketingApp.tsx` | Hebrew-canonical marketing landing. Bilingual HE/EN React app with `bm:lang` persistence; first-visit pick is weighted random (70/30 HE/EN), resolved in the pre-paint script. |
-| `business/en/index.html` | `/bar-portfolio/business/en/` | `src/marketing/main.tsx` → `MarketingApp.tsx` | English-canonical mirror of the marketing landing. Same React app; pre-paint script forces `bm:lang="en"` so crawlers and link previews always see EN. Mutually hreflang-linked with the HE URL. See `knowledge/08-seo-sharing.md`. |
-| `lab/index.html` | `/bar-portfolio/lab/` | `src/lab/main.tsx` → `LabApp.tsx` | Hebrew-canonical "The Lab" landing — a sister surface to `/business/` pitching a no-strings free first build. Same bilingual + weighted-random pre-paint pattern as marketing. Reuses `marketing.css` under an amber-led `.mp-lab` sub-brand. |
-| `lab/en/index.html` | `/bar-portfolio/lab/en/` | `src/lab/main.tsx` → `LabApp.tsx` | English-canonical mirror of the Lab landing. Pre-paint forces `bm:lang="en"`. Mutually hreflang-linked with the HE Lab URL. |
 | `backoffice/index.html` | `/bar-portfolio/backoffice/` | `src/backoffice/main.tsx` → `Backoffice.tsx` | Fictional Hebrew CRM demo (leads / invoices / calendar). `robots: noindex`. Storage-backed; no real backend. |
 
-All six share `src/styles.css` (root tokens + theme) and the same `bm:theme` / a11y prefs via the inline pre-paint script that lives in each `<head>`.
+Retired entries (still listed in `vite.config.ts` so the redirect stubs ship through `dist/`):
+
+| Entry | URL | Redirects to |
+|---|---|---|
+| `business/index.html` | `/bar-portfolio/business/` | new site root on the bar_builds Vercel origin |
+| `business/en/index.html` | `/bar-portfolio/business/en/` | `/en/` on the new origin |
+| `lab/index.html` | `/bar-portfolio/lab/` | `/lab/` on the new origin |
+| `lab/en/index.html` | `/bar-portfolio/lab/en/` | `/lab/en/` on the new origin |
+
+Both live entries share `src/styles.css` (root tokens + theme) and the same `bm:theme` / a11y prefs via the inline pre-paint script that lives in each `<head>`.
 
 ## Routing (open these first when relevant)
 
@@ -34,13 +43,13 @@ All six share `src/styles.css` (root tokens + theme) and the same `bm:theme` / a
 - Accessibility check (run after design changes) → `recipes/a11y-check.md`
 - Design critique → `prompts/design-critique.md`
 - Skill bundle that routes intents → `skills/portfolio-curator/SKILL.md`
-- Marketing/business SEO + sharing audit → `knowledge/08-seo-sharing.md`
-- Entity disambiguation, Person JSON-LD strategy ("Bar Moshe / בר משה") → `knowledge/09-entity-discoverability.md`
+- Marketing/business SEO + sharing audit → `knowledge/08-seo-sharing.md` *(historical — the marketing surfaces moved to `bar_builds`; that doc reflects the pre-migration state)*
+- Entity disambiguation, Person JSON-LD strategy ("Bar Moshe / בר משה") → `knowledge/09-entity-discoverability.md` *(parts about marketing routes are now superseded by the bar_builds equivalents; the Person/sameAs guidance still applies to `index.html`)*
 - SEO runbook for an external agent (Search Console, Wikidata, GitHub bio, LinkedIn, Medium, X) → `prompts/seo-agent-runbook.md`
 
 Slash commands: `/new-project`, `/theme-preview`, `/deploy-check`, `/typecheck` — see `.claude/commands/`.
 
-`research/` holds design notes for a **separate, future, private "host" repo** (an operator memory/workshop layer) — it is brainstorm, not part of this site's build or deploy. Ignore it for portfolio work unless explicitly asked.
+`research/` holds early design notes that seeded a **separate operator/workshop repo** (an operator memory/workshop layer). That repo now exists and stands on its own: `bar_builds` (public, github.com/barmoshe/bar_builds). These notes are brainstorm that predates it, not part of this site's build or deploy. Ignore them for portfolio work unless explicitly asked.
 
 ## High-level architecture
 

@@ -6,14 +6,14 @@ export default defineConfig({
   base: '/bar-portfolio/',
   build: {
     rollupOptions: {
-      // Multi-page: index.html is the portfolio app; business/index.html is
-      // the Hebrew marketing page (src/marketing/*); business/en/index.html is
-      // its English canonical mirror (same React app, EN-only pre-paint script,
-      // EN OG/JSON-LD) for crawlers and English-language link previews.
-      // lab/index.html + lab/en/index.html mirror the same pattern for the
-      // Lab landing — a sister surface to /business/ with a free no-strings
-      // first-build pitch (src/lab/*). Folder layout gives clean /business/,
-      // /business/en/, /lab/, and /lab/en/ URLs on GitHub Pages.
+      // Multi-page: index.html is the portfolio app. The business/ and lab/
+      // entries used to mount a marketing React app here (src/marketing/*,
+      // src/lab/*); on 2026-05-31 those surfaces moved to the Next.js app at
+      // https://barmoshe.github.io/bar_builds/. The HTML inputs are still
+      // listed below so Vite ships them, but each one is now a tiny static
+      // redirect stub (meta-refresh + canonical to the new origin); no
+      // marketing JS bundles for these routes anymore. Keep them listed until
+      // SEO has fully migrated, then drop the inputs and the folders.
       input: {
         main: 'index.html',
         business: 'business/index.html',

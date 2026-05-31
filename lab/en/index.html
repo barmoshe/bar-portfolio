@@ -2,135 +2,23 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Bar Moshe · The Lab. Bring an idea. I build.</title>
-<meta name="description" content="Bring an idea, I build. No contract, no quote, no questions. If it works,we talk. If not,you walk away with a product.">
-<meta name="author" content="Bar Moshe">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<link rel="canonical" href="https://barmoshe.github.io/bar-portfolio/lab/en/">
-<link rel="alternate" hreflang="he" href="https://barmoshe.github.io/bar-portfolio/lab/">
-<link rel="alternate" hreflang="en" href="https://barmoshe.github.io/bar-portfolio/lab/en/">
-<link rel="alternate" hreflang="x-default" href="https://barmoshe.github.io/bar-portfolio/lab/">
-<meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0f0f10" media="(prefers-color-scheme: dark)">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Bar Moshe">
-<meta property="og:title" content="Bar Moshe · The Lab. Bring an idea. I build.">
-<meta property="og:description" content="Bring an idea, I build. No contract, no quote, no questions. If it works,we talk. If not,you walk away with a product.">
-<meta property="og:url" content="https://barmoshe.github.io/bar-portfolio/lab/en/">
-<!-- TODO: swap to a lab-specific OG image when one is produced. -->
-<meta property="og:image" content="https://barmoshe.github.io/bar-portfolio/og-cover.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Bar Moshe · The Lab: bring an idea, I build.">
-<meta property="og:locale" content="en_US">
-<meta property="og:locale:alternate" content="he_IL">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@barmoshe1">
-<meta name="twitter:creator" content="@barmoshe1">
-<meta name="twitter:title" content="Bar Moshe · The Lab. Bring an idea. I build.">
-<meta name="twitter:description" content="Bring an idea, I build. No contract, no questions. If it works,we talk. If not,you walk away with a product.">
-<meta name="twitter:image" content="https://barmoshe.github.io/bar-portfolio/og-cover.jpg">
-<meta name="twitter:image:alt" content="Bar Moshe · The Lab: bring an idea, I build.">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "AboutPage",
-  "@id": "https://barmoshe.github.io/bar-portfolio/lab/en/#aboutpage",
-  "url": "https://barmoshe.github.io/bar-portfolio/lab/en/",
-  "name": "Bar Moshe · The Lab. Bring an idea. I build.",
-  "inLanguage": "en",
-  "mainEntity": { "@id": "https://barmoshe.github.io/bar-portfolio/#person" },
-  "about": { "@id": "https://barmoshe.github.io/bar-portfolio/#person" },
-  "isPartOf": { "@id": "https://barmoshe.github.io/bar-portfolio/#website" }
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "@id": "https://barmoshe.github.io/bar-portfolio/#person",
-  "name": "Bar Moshe",
-  "alternateName": ["בר משה", "barmoshe", "Bar-Moshe", "@barmoshe1"],
-  "jobTitle": ["Software Builder", "Full-Stack Developer", "Software Engineer"],
-  "description": "Bar Moshe is a software builder and full-stack developer from Israel — web apps, automation, AI-native tools, DevOps, and product-focused software.",
-  "url": "https://barmoshe.github.io/bar-portfolio/lab/en/",
-  "nationality": { "@type": "Country", "name": "Israel" },
-  "sameAs": [
-    "https://github.com/barmoshe",
-    "https://www.linkedin.com/in/barmoshe/",
-    "https://medium.com/@barmoshe",
-    "https://www.instagram.com/1barmoshe1"
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "@id": "https://barmoshe.github.io/bar-portfolio/lab/en/#service",
-  "name": "The Lab · first build free, no commitment",
-  "inLanguage": "en",
-  "serviceType": "Web and app prototype experiment",
-  "provider": { "@id": "https://barmoshe.github.io/bar-portfolio/#person" },
-  "areaServed": [
-    { "@type": "Country", "name": "Israel" },
-    { "@type": "Place", "name": "Worldwide (remote)" }
-  ],
-  "audience": {
-    "@type": "Audience",
-    "audienceType": "Anyone with an idea, technical or not"
-  },
-  "url": "https://barmoshe.github.io/bar-portfolio/lab/en/",
-  "isRelatedTo": { "@id": "https://barmoshe.github.io/bar-portfolio/lab/en/#aboutpage" },
-  "offers": [
-    {
-      "@type": "Offer",
-      "name": "Lab build · free, no commitment",
-      "description": "Send a short brief. A few days later you have a live first version. No contract, no quote, no questions.",
-      "price": "0",
-      "priceCurrency": "ILS",
-      "availability": "https://schema.org/InStock",
-      "category": "Prototype"
-    }
-  ]
-}
-</script>
-<script>
-  /* Pre-paint theme + a11y + language. This file is the English
-     canonical mirror,it forces bm:lang = "en" regardless of saved
-     state so the URL always paints in its declared language for
-     crawlers and link previews. The React app's lang toggle still
-     works in-page; users who deliberately toggle to Hebrew see HE
-     without a URL change. */
-  (function(){
-    try{
-      var html = document.documentElement;
-      var saved = localStorage.getItem("bm:theme");
-      var mq = matchMedia("(prefers-color-scheme: dark)");
-      var dark = saved === "dark" || (saved !== "light" && mq.matches);
-      if (dark) html.classList.add("dark");
-      html.dataset.themePref = saved || "auto";
-
-      var contrast = localStorage.getItem("bm:contrast");
-      if (contrast === "more" || contrast === "less") html.dataset.contrast = contrast;
-      var scale = parseFloat(localStorage.getItem("bm:text-scale"));
-      if (scale && scale !== 1) html.style.setProperty("--text-scale", String(scale));
-      if (localStorage.getItem("bm:readable") === "1") html.dataset.readable = "true";
-
-      try { localStorage.setItem("bm:lang", "en"); } catch(e2){}
-      html.lang = "en";
-      html.dir = "ltr";
-      window.__bmLang = "en";
-    }catch(e){}
-  })();
-</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&family=Suez+One&display=swap">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--
+  Moved 2026-05-31: see business/index.html for the rationale + the sed
+  one-liner that swaps the placeholder for the real Vercel host.
+  /lab/en/ here points at /lab/en/ on the new origin (unchanged segment
+  after the ADR-0041 restructure).
+-->
+<meta http-equiv="refresh" content="0; url=https://bar-builds.vercel.app/lab/en/">
+<link rel="canonical" href="https://bar-builds.vercel.app/lab/en/">
+<title>Bar Moshe · The Lab — page moved</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 2rem; line-height: 1.5; }
+  a { color: #0a66c2; }
+</style>
+<script>location.replace("https://bar-builds.vercel.app/lab/en/");</script>
 </head>
 <body>
-<div id="root"></div>
-<script type="module" src="/src/lab/main.tsx"></script>
+<p>The page has moved to <a href="https://bar-builds.vercel.app/lab/en/">Bar Moshe · The Lab</a>.</p>
 </body>
 </html>
